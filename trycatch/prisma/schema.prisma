@@ -14,9 +14,122 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ProjectStatus {
+  BUSCANDO
+  EM_ANDAMENTO
+  COMPLETO
+}
+
 model User {
-  id    Int    @id @default(autoincrement())
-  name  String
-  email String @unique
+  id                String       @id @default(cuid())
+  name              String
+  email             String       @unique
+  password          String
+  avatar            String?
+  linkedin          String?
+  github            String?
+  summary           String?
+  skills            UserSkill[]
+  projects          Project[]    @relation("ProjectOwner")
+  stacksTaken       StackTaken[]
+  feedbacksReceived Feedback[]   @relation("FeedbackReceiver")
+  feedbacksGiven    Feedback[]   @relation("FeedbackGiver")
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+}
+
+model Skill {
+  id        String         @id @default(cuid())
+  name      String         @unique
+  users     UserSkill[]
+  projects  ProjectSkill[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model Stack {
+  id          String         @id @default(cuid())
+  name        String         @unique
+  projects    ProjectStack[]
+  stacksTaken StackTaken[]   @relation("StackStacksTaken")
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model Project {
+  id          String         @id @default(cuid())
+  ownerId     String
+  owner       User           @relation("ProjectOwner", fields: [ownerId], references: [id])
+  name        String
+  description String
+  deadline    DateTime
+  totalValue  Float
+  status      ProjectStatus
+  stacks      ProjectStack[]
+  skills      ProjectSkill[]
+  stacksTaken StackTaken[]   @relation("ProjectStacksTaken")
+  feedbacks   Feedback[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model ProjectStack {
+  id         String       @id @default(cuid())
+  project    Project      @relation(fields: [projectId], references: [id])
+  projectId  String
+  stack      Stack        @relation(fields: [stackId], references: [id])
+  stackId    String
+  percentage Float // Percentual do valor total
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  StackTaken StackTaken[]
+}
+
+model StackTaken {
+  id             String       @id @default(cuid())
+  projectStackId String
+  projectStack   ProjectStack @relation(fields: [projectStackId], references: [id])
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  stackId        String
+  stack          Stack        @relation("StackStacksTaken", fields: [stackId], references: [id])
+  projectId      String
+  project        Project      @relation("ProjectStacksTaken", fields: [projectId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model UserSkill {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  skill     Skill    @relation(fields: [skillId], references: [id])
+  skillId   String
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProjectSkill {
+  id        String   @id @default(cuid())
+  project   Project  @relation(fields: [projectId], references: [id])
+  projectId String
+  skill     Skill    @relation(fields: [skillId], references: [id])
+  skillId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Feedback {
+  id         String   @id @default(cuid())
+  projectId  String
+  project    Project  @relation(fields: [projectId], references: [id])
+  fromUserId String
+  fromUser   User     @relation("FeedbackGiver", fields: [fromUserId], references: [id])
+  toUserId   String
+  toUser     User     @relation("FeedbackReceiver", fields: [toUserId], references: [id])
+  rating     Int
+  comment    String?
+  anonymous  Boolean
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
