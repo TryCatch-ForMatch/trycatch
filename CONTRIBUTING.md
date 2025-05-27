@@ -5,6 +5,10 @@ Aqui estão as regras, padrões e combinados pra garantir que todo mundo consiga
 
 ---
 
+## ✔️**Distribuição de tarefas**
+
+-Com intuito de distribuir de forma igualitária, os cards podem ser divididos em sub-issues. Basta clicar em Create-sub-issues , escolher o assunto e assinar em Assignes como responsável.
+
 ## 🗂️ **Regras e Organização**
 
 ### ✔️ Ao escolher uma tarefa (card):
@@ -57,6 +61,22 @@ Exemplos:
 
 - `fix/erro-no-formulario`
 - `fix/ajuste-no-cadastro`
+
+## Tipos de Branches
+
+feat: nova funcionalidade
+
+- fix/correcao
+
+- docs/alteracoes-em-documentacao
+
+- style/formatacao
+
+- refactor/refatoracao-de-codigo (sem mudar funcionalidade)
+
+- test/testes-adicionados-corrigidos
+
+- chore/manutencao (configs, dependências, etc.)
 
 ---
 
