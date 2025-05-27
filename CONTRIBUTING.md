@@ -58,6 +58,22 @@ Exemplos:
 - `fix/erro-no-formulario`
 - `fix/ajuste-no-cadastro`
 
+## Tipos de Branches
+
+feat: nova funcionalidade
+
+- fix/correcao
+
+- docs/alteracoes-em-documentacao
+
+- style/formatacao
+
+- refactor/refatoracao-de-codigo (sem mudar funcionalidade)
+
+- test/testes-adicionados-corrigidos
+
+- chore/manutencao (configs, dependências, etc.)
+
 ---
 
 ## 🚨 Antes de começar qualquer tarefa:
