@@ -1,97 +1,81 @@
-import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import bcrypt from 'bcrypt';
+import { hash } from 'bcrypt';
 
-// GET: Busca usuário por ID
 export async function GET(
-  request: Request,
+  _req: Request,
   { params }: { params: { id: string } }
 ) {
-  const { id } = params;
-
   const user = await prisma.user.findUnique({
-    where: { id },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      avatar: true,
-      role: true,
-      bio: true,
-      linkedin: true,
-      github: true,
-      createdAt: true,
+    where: { id: params.id },
+    include: {
+      skills: {
+        include: { skill: true },
+      },
     },
   });
 
   if (!user) {
-    return NextResponse.json(
-      { error: 'Usuário não encontrado' },
-      { status: 404 }
-    );
+    return new Response('Usuário não encontrado', { status: 404 });
   }
 
-  return NextResponse.json(user);
+  return Response.json(user);
 }
 
-// PUT: Atualiza dados do usuário
 export async function PUT(
-  request: Request,
+  req: Request,
   { params }: { params: { id: string } }
 ) {
-  const { id } = params;
-  const data = await request.json();
+  const body = await req.json();
 
-  const { name, avatar, linkedin, github, bio, password } = data;
+  const {
+    name,
+    email,
+    password,
+    avatar,
+    linkedin,
+    github,
+    bio,
+    skills, // Array de skillIds
+  } = body;
 
-  const user = await prisma.user.findUnique({ where: { id } });
+  const hashedPassword = password ? await hash(password, 10) : undefined;
 
-  if (!user) {
-    return NextResponse.json(
-      { error: 'Usuário não encontrado' },
-      { status: 404 }
-    );
-  }
-
-  const updatedUser = await prisma.user.update({
-    where: { id },
+  const user = await prisma.user.update({
+    where: { id: params.id },
     data: {
       name,
+      email,
+      password: hashedPassword,
       avatar,
       linkedin,
       github,
       bio,
-      ...(password && {
-        password: await bcrypt.hash(password, 10),
-      }),
+      skills: skills
+        ? {
+            deleteMany: {}, // Remove todas as skills atuais
+            create: skills.map((skillId: string) => ({
+              skill: { connect: { id: skillId } },
+            })),
+          }
+        : undefined,
+    },
+    include: {
+      skills: {
+        include: { skill: true },
+      },
     },
   });
 
-  return NextResponse.json(updatedUser);
+  return Response.json(user);
 }
 
-// DELETE: Soft delete (seta isActive = false)
 export async function DELETE(
-  request: Request,
+  _req: Request,
   { params }: { params: { id: string } }
 ) {
-  const { id } = params;
-
-  const user = await prisma.user.findUnique({ where: { id } });
-
-  if (!user) {
-    return NextResponse.json(
-      { error: 'Usuário não encontrado' },
-      { status: 404 }
-    );
-  }
-
-  await prisma.user.update({
-    where: { id },
-    data: {
-      isActive: false,
-    },
+  await prisma.user.delete({
+    where: { id: params.id },
   });
 
-  return NextResponse.json({ message: 'Usuário desativado com sucesso' });
+  return new Response(null, { status: 204 });
 }

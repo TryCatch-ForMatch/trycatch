@@ -1,47 +1,33 @@
-import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import bcrypt from 'bcrypt';
+import { hash } from 'bcrypt';
 
 export async function GET() {
   const users = await prisma.user.findMany({
-    where: { isActive: true },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      avatar: true,
-      role: true,
-      bio: true,
-      linkedin: true,
-      github: true,
-      createdAt: true,
+    include: {
+      skills: {
+        include: { skill: true },
+      },
     },
   });
 
-  return NextResponse.json(users);
+  return Response.json(users);
 }
 
-export async function POST(request: Request) {
-  const data = await request.json();
+export async function POST(req: Request) {
+  const body = await req.json();
 
-  const { name, email, password, avatar, linkedin, github, bio } = data;
+  const {
+    name,
+    email,
+    password,
+    avatar,
+    linkedin,
+    github,
+    bio,
+    skills, // Array de skillIds
+  } = body;
 
-  if (!name || !email || !password) {
-    return NextResponse.json(
-      { error: 'Nome, email e senha são obrigatórios' },
-      { status: 400 }
-    );
-  }
-
-  const existingUser = await prisma.user.findUnique({
-    where: { email },
-  });
-
-  if (existingUser) {
-    return NextResponse.json({ error: 'Email já cadastrado' }, { status: 400 });
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await hash(password, 10);
 
   const user = await prisma.user.create({
     data: {
@@ -52,8 +38,20 @@ export async function POST(request: Request) {
       linkedin,
       github,
       bio,
+      skills: skills
+        ? {
+            create: skills.map((skillId: string) => ({
+              skill: { connect: { id: skillId } },
+            })),
+          }
+        : undefined,
+    },
+    include: {
+      skills: {
+        include: { skill: true },
+      },
     },
   });
 
-  return NextResponse.json(user, { status: 201 });
+  return Response.json(user);
 }
