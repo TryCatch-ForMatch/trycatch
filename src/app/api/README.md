@@ -49,13 +49,14 @@ Esta API é responsável pelo gerenciamento dos usuários.
 
 ```json
 {
-  "name": "Nome do usuário",
-  "email": "email@exemplo.com",
+  "name": "Fulano",
+  "email": "fulano@email.com",
   "password": "senha123",
-  "avatar": "https://link-do-avatar.com",
-  "linkedin": "https://linkedin.com/in/usuario",
-  "github": "https://github.com/usuario",
-  "bio": "Descrição sobre o usuário"
+  "avatar": null,
+  "linkedin": "https://linkedin.com/in/fulano",
+  "github": "https://github.com/fulano",
+  "bio": "Desenvolvedor fullstack",
+  "skills": ["skillId1", "skillId2"]
 }
 ```
 
@@ -140,6 +141,46 @@ Atualizar uma skill
 {
   "name": "JavaScript"
 }
-Deletar uma skill
-DELETE /api/skill/[id]
 ```
+
+### Deletar uma skill
+
+- **DELETE** `/api/skill/[id]`
+
+# API - Stack
+
+Rotas para gerenciamento de stacks.
+
+## Endpoints
+
+### Listar stacks
+
+- **GET** `/api/stack`
+
+### Criar stack
+
+- **POST** `/api/stack`
+
+```json
+{
+  "name": "Front-End"
+}
+```
+
+### Obter uma stack
+
+- **GET** `/api/stack/[id]`
+
+### Atualizar uma stack
+
+- **PATCH** `/api/stack/[id]`
+
+```json
+{
+  "name": "Back-End"
+}
+```
+
+### Deletar uma stack
+
+- **DELETE** `/api/stack/[id]`
