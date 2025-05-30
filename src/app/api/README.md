@@ -31,7 +31,7 @@ Esta pasta contém as rotas de API do projeto.
 - O JWT gerado contém os campos:  
   `id`, `name`, `email`, `avatar`.
 
-  # API - User
+# API - User
 
 Esta API é responsável pelo gerenciamento dos usuários.
 
@@ -111,3 +111,35 @@ TypeScript
 
 🚩 Observações
 A senha é criptografada utilizando bcrypt no fluxo de autenticação, mas na criação via API não é criptografada diretamente (somente no login). Para segurança, a criação de usuário diretamente pela API não deve ser pública ou deve ter uma regra específica.
+
+## Endpoints
+
+### Listar skills
+
+- **GET** `/api/skill`
+
+### Criar skill
+
+- **POST** `/api/skill`
+
+```json
+{
+  "name": "TypeScript"
+}
+```
+
+### Obter uma skill
+
+- **GET** `/api/skill/[id]`
+
+Atualizar uma skill
+
+- **PATCH** `/api/skill/[id]`
+
+```json
+{
+  "name": "JavaScript"
+}
+Deletar uma skill
+DELETE /api/skill/[id]
+```
