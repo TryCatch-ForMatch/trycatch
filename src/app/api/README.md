@@ -31,6 +31,43 @@ Esta pasta contém as rotas de API do projeto.
 - O JWT gerado contém os campos:  
   `id`, `name`, `email`, `avatar`.
 
+# Testes Postman
+
+## Obter Token CSRF
+
+```http
+GET http://localhost:3000/api/auth/csrf
+```
+
+### Resposta de Sucesso (200 OK):
+
+```json
+{
+  "csrfToken": "seu-token-csrf-aqui"
+}
+```
+
+Guarde este csrfToken para o próximo passo.
+
+## Realizar Login
+
+```htt
+POST http://localhost:3000/api/auth/callback/credentials
+```
+
+Headers:
+Content-Type: application/json
+Accept: application/json
+
+```body
+{
+  "email": "usuario@exemplo.com",
+  "password": "senha-segura",
+  "csrfToken": "token-obtido-no-passo-1",
+  "redirect": false
+}
+```
+
 # API - User
 
 Esta API é responsável pelo gerenciamento dos usuários.
@@ -81,10 +118,13 @@ id: ID do usuário.
 ```json
 {
   "name": "Novo nome",
+  "password": "senha123",
   "avatar": "https://novo-avatar.com",
   "linkedin": "https://linkedin.com/in/usuario",
   "github": "https://github.com/usuario",
-  "bio": "Nova bio"
+  "bio": "Nova bio",
+  "skills": ["skillId1", "skillId2"]
+
 }
 ```
 
@@ -113,7 +153,8 @@ TypeScript
 🚩 Observações
 A senha é criptografada utilizando bcrypt no fluxo de autenticação, mas na criação via API não é criptografada diretamente (somente no login). Para segurança, a criação de usuário diretamente pela API não deve ser pública ou deve ter uma regra específica.
 
-## Endpoints
+## API Skill
+Rotas para gerenciamento de skills.
 
 ### Listar skills
 
@@ -184,3 +225,71 @@ Rotas para gerenciamento de stacks.
 ### Deletar uma stack
 
 - **DELETE** `/api/stack/[id]`
+
+# API - Project
+
+Esta API é responsável pelo gerenciamento dos projetos.
+
+## Rotas Disponíveis
+
+- **GET** `/api/project`
+
+- **Descrição:** Lista todos os projetos cadastrados.
+- **Resposta:** Lista de projetos.
+
+### ➕ `POST /api/project`
+
+- **Descrição:** Cria um novo projeto.
+- **Body esperado:**
+
+```json
+{
+  "ownerId": "userId",
+  "name": "Projeto Exemplo",
+  "description": "Descrição detalhada do projeto",
+  "deadline": "2025-12-31T23:59:59.000Z",
+  "totalValue": 10000,
+  "status": "BUSCANDO",
+  "skills": ["skillId1", "skillId2"],
+  "stacks": [
+    { "stackId": "stackId1", "percentage": 60 },
+    { "stackId": "stackId2", "percentage": 40 }
+  ]
+}
+```
+
+- **GET** `/api/project/:id`
+- **Descrição:** Retorna os dados de um projeto específico.
+
+- **Parâmetros:**
+
+id: ID do projeto.
+
+- **PUT** `/api/project/:id`
+- **Descrição:** Atualiza os dados de um projeto.
+
+- **Parâmetros:**
+id: ID do projeto.
+
+**Body esperado:**
+
+```json
+{
+  "name": "Novo nome do projeto",
+  "description": "Nova descrição",
+  "deadline": "2026-01-01T00:00:00.000Z",
+  "totalValue": 15000,
+  "status": "EM_ANDAMENTO",
+  "skills": ["skillId1", "skillId2"],
+  "stacks": [
+    { "stackId": "stackId1", "percentage": 50 },
+    { "stackId": "stackId2", "percentage": 50 }
+  ]
+}
+```
+
+- **DELETE** `/api/project/:id`
+- **Descrição:** Deleta um projeto específico.
+
+- **Parâmetros:** 
+id: ID do projeto.

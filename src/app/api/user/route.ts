@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     linkedin,
     github,
     bio,
-    skills, // Array de skillIds
+    skills,
   } = body;
 
   const hashedPassword = await hash(password, 10);

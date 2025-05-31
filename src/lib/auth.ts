@@ -5,6 +5,8 @@ import { NextAuthOptions } from 'next-auth';
 
 const prisma = new PrismaClient();
 
+type UserRole = 'ADMIN' | 'USER';
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -23,11 +25,17 @@ export const authOptions: NextAuthOptions = {
         const isValid = await compare(credentials!.password, user.password);
         if (!isValid) throw new Error('Senha incorreta.');
 
+        const validRoles = ['ADMIN', 'USER'] as const;
+        const role = validRoles.includes(user.role as any)
+          ? (user.role as UserRole)
+          : 'USER';
+
         return {
           id: user.id,
           name: user.name,
           email: user.email,
           avatar: user.avatar ?? undefined,
+          role,
         };
       },
     }),
@@ -39,18 +47,25 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
+        session.user.role = token.role as UserRole;
       }
       return session;
+    },
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith('/api/')) return url;
+      return baseUrl;
     },
   },
   pages: {
     signIn: '/login',
     error: '/auth/error',
   },
+  secret: process.env.NEXTAUTH_SECRET,
 };

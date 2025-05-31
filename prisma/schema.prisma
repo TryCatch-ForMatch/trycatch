@@ -33,8 +33,8 @@ model User {
   linkedin          String?
   github            String?
   bio               String?
-  role              UserRole     @default(USER) // 🚀 Adicionado
-  isActive          Boolean      @default(true) // 🚀 Adicionado (soft delete simples)
+  role              UserRole     @default(USER)
+  isActive          Boolean      @default(true)
   skills            UserSkill[]
   projects          Project[]    @relation("ProjectOwner")
   stacksTaken       StackTaken[]
