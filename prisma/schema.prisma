@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"  
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -19,6 +19,11 @@ enum ProjectStatus {
   COMPLETO
 }
 
+enum UserRole {
+  ADMIN
+  USER
+}
+
 model User {
   id                String       @id @default(cuid())
   name              String
@@ -28,6 +33,8 @@ model User {
   linkedin          String?
   github            String?
   bio               String?
+  role              UserRole     @default(USER)
+  isActive          Boolean      @default(true)
   skills            UserSkill[]
   projects          Project[]    @relation("ProjectOwner")
   stacksTaken       StackTaken[]
