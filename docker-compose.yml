@@ -4,18 +4,31 @@ services:
   db:
     image: postgres:16
     container_name: ContTrycatch_db
+    restart: always
     env_file:
       - .env
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
-      
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - '${POSTGRES_PORT:-5555}:5432'
     volumes:
-      - volume_TryCatch:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: ContTrycatch_app
     restart: always
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+      - /app/node_modules
 
 volumes:
-  volume_TryCatch:
+  postgres_data:
