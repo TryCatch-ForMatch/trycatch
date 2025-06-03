@@ -34,8 +34,8 @@ Esta pasta contém todas as rotas de API do projeto.
 
 # 🗺️ 📜 Estrutura das Rotas
 
-| Rota                | Descrição                                       |
-| ------------------- | ----------------------------------------------- |
+| Rota                | Descrição                                      |
+| ------------------- | -----------------------------------------------|
 | `/api/auth/`        | Autenticação (login, logout, sessão)           |
 | `/api/user/`        | CRUD de usuários                               |
 | `/api/skill/`       | CRUD de skills                                 |
