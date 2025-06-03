@@ -26,7 +26,9 @@ export const authOptions: NextAuthOptions = {
         if (!isValid) throw new Error('Senha incorreta.');
 
         const validRoles = ['ADMIN', 'USER'] as const;
-        const role = validRoles.includes(user.role as any)
+        const role = validRoles.includes(
+          user.role as (typeof validRoles)[number]
+        )
           ? (user.role as UserRole)
           : 'USER';
 
