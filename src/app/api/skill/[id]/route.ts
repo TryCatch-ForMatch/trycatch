@@ -1,14 +1,13 @@
 import { prisma } from '@/lib/prisma';
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
+import { getIdFromRequest } from '@/utils/url';
 
-// GET - Obter uma skill por ID
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest) {
+  const id = getIdFromRequest(request);
+
   try {
     const skill = await prisma.skill.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!skill) {
@@ -19,7 +18,7 @@ export async function GET(
     }
 
     return NextResponse.json(skill);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Erro ao buscar skill.' },
       { status: 500 }
@@ -27,28 +26,25 @@ export async function GET(
   }
 }
 
-// PATCH - Atualizar uma skill
-export async function PATCH(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(request: NextRequest) {
+  const id = getIdFromRequest(request);
+  const { name } = await request.json();
+
+  if (!name) {
+    return NextResponse.json(
+      { error: 'O nome é obrigatório.' },
+      { status: 400 }
+    );
+  }
+
   try {
-    const { name } = await request.json();
-
-    if (!name) {
-      return NextResponse.json(
-        { error: 'O nome é obrigatório.' },
-        { status: 400 }
-      );
-    }
-
     const skill = await prisma.skill.update({
-      where: { id: params.id },
+      where: { id },
       data: { name },
     });
 
     return NextResponse.json(skill);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Erro ao atualizar skill.' },
       { status: 500 }
@@ -56,18 +52,16 @@ export async function PATCH(
   }
 }
 
-// DELETE - Deletar uma skill
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest) {
+  const id = getIdFromRequest(request);
+
   try {
     await prisma.skill.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ message: 'Skill deletada com sucesso.' });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Erro ao deletar skill.' },
       { status: 500 }

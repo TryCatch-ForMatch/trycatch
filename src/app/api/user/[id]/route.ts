@@ -1,12 +1,12 @@
 import { prisma } from '@/lib/prisma';
 import { hash } from 'bcrypt';
+import { NextRequest } from 'next/server';
+import { getIdFromRequest } from '@/utils/url';
 
-export async function GET(
-  _req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest) {
+  const id = getIdFromRequest(request);
   const user = await prisma.user.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       skills: {
         include: { skill: true },
@@ -21,11 +21,9 @@ export async function GET(
   return Response.json(user);
 }
 
-export async function PUT(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const body = await req.json();
+export async function PUT(request: NextRequest) {
+  const id = getIdFromRequest(request);
+  const body = await request.json();
 
   const {
     name,
@@ -41,7 +39,7 @@ export async function PUT(
   const hashedPassword = password ? await hash(password, 10) : undefined;
 
   const user = await prisma.user.update({
-    where: { id: params.id },
+    where: { id },
     data: {
       name,
       email,
@@ -69,12 +67,10 @@ export async function PUT(
   return Response.json(user);
 }
 
-export async function DELETE(
-  _req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest) {
+  const id = getIdFromRequest(request);
   await prisma.user.delete({
-    where: { id: params.id },
+    where: { id },
   });
 
   return new Response(null, { status: 204 });

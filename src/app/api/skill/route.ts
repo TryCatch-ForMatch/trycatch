@@ -8,6 +8,7 @@ export async function GET() {
     });
     return NextResponse.json(skills);
   } catch (error) {
+    console.log(error)
     return NextResponse.json(
       { error: 'Erro ao buscar skills.' },
       { status: 500 }
@@ -32,6 +33,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(skill, { status: 201 });
   } catch (error) {
+    console.log(error)
     return NextResponse.json(
       { error: 'Erro ao criar skill.' },
       { status: 500 }

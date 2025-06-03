@@ -9,6 +9,7 @@ export async function GET() {
     });
     return NextResponse.json(stacks);
   } catch (error) {
+    console.log(error)
     return NextResponse.json(
       { error: 'Erro ao buscar stacks.' },
       { status: 500 }
@@ -34,6 +35,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(stack, { status: 201 });
   } catch (error) {
+    console.log(error)
     return NextResponse.json(
       { error: 'Erro ao criar stack.' },
       { status: 500 }
