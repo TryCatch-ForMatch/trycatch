@@ -1,14 +1,13 @@
 import { prisma } from '@/lib/prisma';
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
+import { getIdFromRequest } from '@/utils/url';
 
 // GET - Obter uma stack por ID
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest) {
+  const id = getIdFromRequest(request);
   try {
     const stack = await prisma.stack.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!stack) {
@@ -20,6 +19,7 @@ export async function GET(
 
     return NextResponse.json(stack);
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { error: 'Erro ao buscar stack.' },
       { status: 500 }
@@ -28,10 +28,8 @@ export async function GET(
 }
 
 // PATCH - Atualizar uma stack
-export async function PATCH(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(request: NextRequest) {
+  const id = getIdFromRequest(request);
   try {
     const { name } = await request.json();
 
@@ -43,12 +41,13 @@ export async function PATCH(
     }
 
     const stack = await prisma.stack.update({
-      where: { id: params.id },
+      where: { id },
       data: { name },
     });
 
     return NextResponse.json(stack);
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { error: 'Erro ao atualizar stack.' },
       { status: 500 }
@@ -57,17 +56,16 @@ export async function PATCH(
 }
 
 // DELETE - Deletar uma stack
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest) {
+  const id = getIdFromRequest(request);
   try {
     await prisma.stack.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ message: 'Stack deletada com sucesso.' });
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { error: 'Erro ao deletar stack.' },
       { status: 500 }
