@@ -1,88 +1,156 @@
-# API
+# 🚀 API
 
-Rotas da API (Backend) utilizando Next.js API Routes. Cada arquivo representa um endpoint. Ideal para requisições server-side como autenticação, manipulação de dados, webhooks, etc.
+Rotas da API (Backend) utilizando **Next.js API Routes** com **Route Handlers** (`app/api/`). Cada arquivo representa um endpoint RESTful.
 
-# 📁 Pasta `api`
+Ideal para requisições server-side como autenticação, manipulação de dados, integrações, etc.
 
-Esta pasta contém as rotas de API do projeto.
+---
 
-## 🔒 Proteção
+# 📁 Pasta `/api`
 
-- As rotas são protegidas por NextAuth, usando JWT.
-- O Middleware (`/middleware.ts`) também protege qualquer acesso às rotas `/api/**` exigindo que o usuário esteja autenticado.
+Esta pasta contém todas as rotas de API do projeto.
 
-## 🔑 Autenticação
+---
 
-- Endpoint de autenticação:  
-  `/api/auth/[...nextauth]`  
-  Implementado usando NextAuth com Provider de credenciais (email + senha).
+## 🔒 Proteção e Autenticação
 
-- Configuração da autenticação fica centralizada em:  
-  `/src/lib/auth.ts`
+- As rotas são protegidas por **NextAuth** utilizando **JWT**.
+- O **Middleware** (`/middleware.ts`) protege o acesso às rotas `/api/**`, exigindo que o usuário esteja autenticado.
 
-## 📜 Estrutura das Rotas
+### 🔑 Endpoint de autenticação:
 
-- `/api/auth/` → Autenticação (login, logout, session).
-- Outras rotas poderão ser criadas seguindo este padrão, e também estarão protegidas.
+```
+/api/auth/[...nextauth]
+```
 
-## 🚀 Observações
+- Implementado usando **NextAuth** com Provider de credenciais (email + senha).
+- Configurações centralizadas no arquivo:
 
-- A API usa Prisma como ORM.
+```
+/src/lib/auth.ts
+```
+
+---
+
+# 🗺️ 📜 Estrutura das Rotas
+
+| Rota                | Descrição                                       |
+| ------------------- | ----------------------------------------------- |
+| `/api/auth/`        | Autenticação (login, logout, sessão)           |
+| `/api/user/`        | CRUD de usuários                               |
+| `/api/skill/`       | CRUD de skills                                 |
+| `/api/stack/`       | CRUD de stacks                                 |
+| `/api/project/`     | CRUD de projetos                               |
+
+---
+
+## 📦 Gerenciamento de parâmetros na URL (`:id`)
+
+Com a atualização do Next.js (13.4+ até 15), rotas dinâmicas como `/api/user/:id` ou `/api/project/:id` **não recebem mais os parâmetros diretamente como `{ params }`** nas funções dos handlers (`GET`, `PUT`, `DELETE`).
+
+### ✅ Nova abordagem:
+
+Criamos uma função utilitária chamada `getIdFromRequest` para capturar o `id` diretamente da URL da requisição.
+
+### 🔗 Local da função:
+
+```
+/src/utils/url.ts
+```
+
+### 🔧 Funcionamento da função:
+
+```ts
+import { NextRequest } from 'next/server';
+
+export function getIdFromRequest(request: NextRequest) {
+  const id = request.nextUrl.pathname.match(/\/([^/]+)$/)?.[1];
+  if (!id) {
+    throw new Error('ID não encontrado na URL');
+  }
+  return id;
+}
+```
+
+### 🚩 Como usar nos handlers:
+
+```ts
+import { getIdFromRequest } from '@/utils/url';
+
+export async function GET(request: NextRequest) {
+  const id = getIdFromRequest(request);
+  // restante da lógica...
+}
+```
+
+Isso garante que qualquer rota que use `/:id` funciona corretamente e de forma consistente.
+
+---
+
+## 🚀 Observações Importantes
+
+- A API usa **Prisma ORM**.
+- Banco de dados: **PostgreSQL**.
+- Autenticação via **NextAuth** com estratégia JWT.
+- As senhas são criptografadas no processo de autenticação usando **bcrypt**.
 - O JWT gerado contém os campos:  
   `id`, `name`, `email`, `avatar`.
 
-# Testes Postman
+---
 
-## Obter Token CSRF
+# 🔗 Testes com Postman
+
+### ✅ Obter CSRF Token
 
 ```http
 GET http://localhost:3000/api/auth/csrf
 ```
 
-### Resposta de Sucesso (200 OK):
+**Resposta:**
 
 ```json
 {
-  "csrfToken": "seu-token-csrf-aqui"
+  "csrfToken": "token-aqui"
 }
 ```
 
-Guarde este csrfToken para o próximo passo.
+### ✅ Realizar Login
 
-## Realizar Login
-
-```htt
+```http
 POST http://localhost:3000/api/auth/callback/credentials
 ```
 
-Headers:
+**Headers:**
+
+```
 Content-Type: application/json
 Accept: application/json
+```
 
-```body
+**Body:**
+
+```json
 {
   "email": "usuario@exemplo.com",
   "password": "senha-segura",
-  "csrfToken": "token-obtido-no-passo-1",
+  "csrfToken": "token-do-passo-anterior",
   "redirect": false
 }
 ```
 
-# API - User
+---
 
-Esta API é responsável pelo gerenciamento dos usuários.
+# 🧠 API - User
 
-## Rotas Disponíveis
+## 📄 `GET /api/user`
 
-### 📄 `GET /api/user`
+- Lista todos os usuários.
 
-- **Descrição:** Lista todos os usuários.
-- **Resposta:** Lista de usuários cadastrados.
+## ➕ `POST /api/user`
 
-### ➕ `POST /api/user`
+- Cria um novo usuário.
 
-- **Descrição:** Cria um novo usuário.
-- **Body esperado:**
+**Body esperado:**
 
 ```json
 {
@@ -92,77 +160,50 @@ Esta API é responsável pelo gerenciamento dos usuários.
   "avatar": null,
   "linkedin": "https://linkedin.com/in/fulano",
   "github": "https://github.com/fulano",
-  "bio": "Desenvolvedor fullstack",
+  "bio": "Desenvolvedor Fullstack",
   "skills": ["skillId1", "skillId2"]
 }
 ```
 
-### 🔍 GET /api/user/:id
+## 🔍 `GET /api/user/:id`
 
-- **Descrição:** Retorna os dados de um usuário específico.
+- Retorna os dados de um usuário específico.
 
-- **Parâmetros:**
+## ✏️ `PUT /api/user/:id`
 
-id: ID do usuário.
-
-### ✏️ PUT /api/user/:id
-
-- **Descrição:** Atualiza os dados de um usuário.
-
-- **Parâmetros:**
-
-id: ID do usuário.
+- Atualiza os dados de um usuário.
 
 **Body permitido:**
 
 ```json
 {
-  "name": "Novo nome",
-  "password": "senha123",
-  "avatar": "https://novo-avatar.com",
+  "name": "Novo Nome",
+  "password": "novaSenha",
+  "avatar": "https://avatar.com",
   "linkedin": "https://linkedin.com/in/usuario",
   "github": "https://github.com/usuario",
   "bio": "Nova bio",
   "skills": ["skillId1", "skillId2"]
-
 }
 ```
 
-### ❌ DELETE /api/user/:id
+## ❌ `DELETE /api/user/:id`
 
-- **Descrição:** Deleta um usuário específico.
+- Deleta um usuário específico.
 
-- **Parâmetros:**
+---
 
-id: ID do usuário.
+# 🔧 API - Skill
 
-## 🗂️ Tecnologias e Dependências
+| Método | Rota                  | Descrição          |
+| ------ | ---------------------- | ------------------ |
+| GET    | `/api/skill`           | Lista todas        |
+| POST   | `/api/skill`           | Cria uma nova      |
+| GET    | `/api/skill/:id`       | Retorna uma        |
+| PATCH  | `/api/skill/:id`       | Atualiza           |
+| DELETE | `/api/skill/:id`       | Deleta             |
 
-Prisma ORM
-
-PostgreSQL
-
-Next.js (Route Handlers App Router)
-
-TypeScript
-
-## 🔗 Dependências do arquivo
-
-@/lib/prisma: Instância do Prisma Client.
-
-🚩 Observações
-A senha é criptografada utilizando bcrypt no fluxo de autenticação, mas na criação via API não é criptografada diretamente (somente no login). Para segurança, a criação de usuário diretamente pela API não deve ser pública ou deve ter uma regra específica.
-
-## API Skill
-Rotas para gerenciamento de skills.
-
-### Listar skills
-
-- **GET** `/api/skill`
-
-### Criar skill
-
-- **POST** `/api/skill`
+**Exemplo de criação:**
 
 ```json
 {
@@ -170,83 +211,37 @@ Rotas para gerenciamento de skills.
 }
 ```
 
-### Obter uma skill
+---
 
-- **GET** `/api/skill/[id]`
+# 🏗️ API - Stack
 
-Atualizar uma skill
+| Método | Rota                  | Descrição          |
+| ------ | ---------------------- | ------------------ |
+| GET    | `/api/stack`           | Lista todas        |
+| POST   | `/api/stack`           | Cria uma nova      |
+| GET    | `/api/stack/:id`       | Retorna uma        |
+| PATCH  | `/api/stack/:id`       | Atualiza           |
+| DELETE | `/api/stack/:id`       | Deleta             |
 
-- **PATCH** `/api/skill/[id]`
+---
 
-```json
-{
-  "name": "JavaScript"
-}
-```
+# 🚀 API - Project
 
-### Deletar uma skill
+| Método | Rota                    | Descrição                 |
+| ------ | ------------------------ | ------------------------- |
+| GET    | `/api/project`           | Lista todos os projetos   |
+| POST   | `/api/project`           | Cria um novo projeto      |
+| GET    | `/api/project/:id`       | Retorna um projeto        |
+| PUT    | `/api/project/:id`       | Atualiza um projeto       |
+| DELETE | `/api/project/:id`       | Deleta um projeto         |
 
-- **DELETE** `/api/skill/[id]`
-
-# API - Stack
-
-Rotas para gerenciamento de stacks.
-
-## Endpoints
-
-### Listar stacks
-
-- **GET** `/api/stack`
-
-### Criar stack
-
-- **POST** `/api/stack`
-
-```json
-{
-  "name": "Front-End"
-}
-```
-
-### Obter uma stack
-
-- **GET** `/api/stack/[id]`
-
-### Atualizar uma stack
-
-- **PATCH** `/api/stack/[id]`
-
-```json
-{
-  "name": "Back-End"
-}
-```
-
-### Deletar uma stack
-
-- **DELETE** `/api/stack/[id]`
-
-# API - Project
-
-Esta API é responsável pelo gerenciamento dos projetos.
-
-## Rotas Disponíveis
-
-- **GET** `/api/project`
-
-- **Descrição:** Lista todos os projetos cadastrados.
-- **Resposta:** Lista de projetos.
-
-### ➕ `POST /api/project`
-
-- **Descrição:** Cria um novo projeto.
-- **Body esperado:**
+## 📄 Exemplo de criação (`POST /api/project`):
 
 ```json
 {
   "ownerId": "userId",
   "name": "Projeto Exemplo",
-  "description": "Descrição detalhada do projeto",
+  "description": "Descrição detalhada",
   "deadline": "2025-12-31T23:59:59.000Z",
   "totalValue": 10000,
   "status": "BUSCANDO",
@@ -258,20 +253,7 @@ Esta API é responsável pelo gerenciamento dos projetos.
 }
 ```
 
-- **GET** `/api/project/:id`
-- **Descrição:** Retorna os dados de um projeto específico.
-
-- **Parâmetros:**
-
-id: ID do projeto.
-
-- **PUT** `/api/project/:id`
-- **Descrição:** Atualiza os dados de um projeto.
-
-- **Parâmetros:**
-id: ID do projeto.
-
-**Body esperado:**
+## 📄 Exemplo de atualização (`PUT /api/project/:id`):
 
 ```json
 {
@@ -288,8 +270,22 @@ id: ID do projeto.
 }
 ```
 
-- **DELETE** `/api/project/:id`
-- **Descrição:** Deleta um projeto específico.
+---
 
-- **Parâmetros:** 
-id: ID do projeto.
+# 🗂️ Tecnologias e Dependências
+
+- Next.js (`app/api` e Route Handlers)
+- TypeScript
+- Prisma ORM
+- PostgreSQL
+- NextAuth (autenticação)
+- bcrypt (criptografia de senha)
+
+---
+
+# 🚩 Observações de Segurança
+
+- As senhas são criptografadas no login, não diretamente na criação do usuário via API.  
+**⚠️ Atenção:** a rota de criação de usuário não deve ser pública, a menos que tenha proteções adicionais.
+
+---
