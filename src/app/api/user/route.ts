@@ -25,7 +25,19 @@ export async function POST(req: Request) {
     github,
     bio,
     skills,
+    inviteCode,
   } = body;
+
+  const invite = await prisma.invite.findFirst({
+    where: { email, code: inviteCode, used: false },
+  });
+
+  if (!invite) {
+    return Response.json(
+      { error: 'Convite inválido ou já utilizado.' },
+      { status: 403 }
+    );
+  }
 
   const hashedPassword = await hash(password, 10);
 
@@ -51,6 +63,11 @@ export async function POST(req: Request) {
         include: { skill: true },
       },
     },
+  });
+
+  await prisma.invite.update({
+    where: { id: invite.id },
+    data: { used: true },
   });
 
   return Response.json(user);
