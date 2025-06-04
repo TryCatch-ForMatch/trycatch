@@ -139,3 +139,13 @@ model Feedback {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
+
+model Invite {
+  id        String   @id @default(cuid())
+  email     String   // Email do convidado
+  code      String   // Código do convite (pode ser gerado aleatoriamente)
+  used      Boolean  @default(false)
+  invitedBy String?  // ID do usuário que enviou o convite (opcional)
+  createdAt DateTime @default(now())
+  usedAt    DateTime?
+}
