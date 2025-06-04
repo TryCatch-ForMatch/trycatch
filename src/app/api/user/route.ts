@@ -1,7 +1,17 @@
 import { prisma } from '@/lib/prisma';
 import { hash } from 'bcrypt';
+import { NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 export async function GET() {
+  const session = await getServerSession(authOptions);
+  if (!session || session.user.role !== 'ADMIN') {
+    return NextResponse.json(
+      { error: 'Acesso negado. Apenas administradores podem criar convites.' },
+      { status: 403 }
+    );
+  }
   const users = await prisma.user.findMany({
     include: {
       skills: {
@@ -40,6 +50,11 @@ export async function POST(req: Request) {
   }
 
   const hashedPassword = await hash(password, 10);
+
+  const userExists = await prisma.user.findUnique({ where: { email } });
+  if (userExists) {
+    return Response.json({ error: 'Email já cadastrado.' }, { status: 400 });
+  }
 
   const user = await prisma.user.create({
     data: {
