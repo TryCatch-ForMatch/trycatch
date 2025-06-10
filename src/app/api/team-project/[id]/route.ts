@@ -1,9 +1,29 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse, NextRequest } from 'next/server';
 import { getIdFromRequest } from '@/utils/url';
+import jwt from 'jsonwebtoken';
+
+function getUserFromRequest(request: NextRequest) {
+  const authHeader = request.headers.get('authorization');
+  if (!authHeader) return null;
+  const token = authHeader.split(' ')[1];
+  try {
+    return jwt.verify(token, process.env.JWT_SECRET as string) as {
+      id: string;
+    };
+  } catch {
+    return null;
+  }
+}
 
 export async function GET(request: NextRequest) {
   const id = getIdFromRequest(request);
+
+  const userAuth = getUserFromRequest(request);
+  if (!userAuth || userAuth.id !== id) {
+    return new Response('Acesso negado', { status: 403 });
+  }
+
   const project = await prisma.project.findUnique({
     where: { id },
     include: {
@@ -25,7 +45,13 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   const id = getIdFromRequest(request);
+
+  const userAuth = getUserFromRequest(request);
+  if (!userAuth || userAuth.id !== id) {
+    return new Response('Acesso negado', { status: 403 });
+  }
   const data = await request.json();
+
   const { name, description, deadline, totalValue, status, skills, stacks } =
     data;
 
@@ -71,6 +97,12 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   const id = getIdFromRequest(request);
+
+  const userAuth = getUserFromRequest(request);
+  if (!userAuth || userAuth.id !== id) {
+    return new Response('Acesso negado', { status: 403 });
+  }
+
   const existing = await prisma.project.findUnique({
     where: { id },
   });
