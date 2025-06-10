@@ -1,9 +1,19 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse, NextRequest } from 'next/server';
 import { getIdFromRequest } from '@/utils/url';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
-// GET - Obter uma stack por ID
 export async function GET(request: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session || session.user.role !== 'ADMIN') {
+    return NextResponse.json(
+      {
+        error: 'Acesso negado. Apenas administradores podem listar stacks.',
+      },
+      { status: 403 }
+    );
+  }
   const id = getIdFromRequest(request);
   try {
     const stack = await prisma.stack.findUnique({
@@ -27,8 +37,16 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// PATCH - Atualizar uma stack
 export async function PATCH(request: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session || session.user.role !== 'ADMIN') {
+    return NextResponse.json(
+      {
+        error: 'Acesso negado. Apenas administradores podem alterar stacks.',
+      },
+      { status: 403 }
+    );
+  }
   const id = getIdFromRequest(request);
   try {
     const { name } = await request.json();
@@ -55,8 +73,16 @@ export async function PATCH(request: NextRequest) {
   }
 }
 
-// DELETE - Deletar uma stack
 export async function DELETE(request: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session || session.user.role !== 'ADMIN') {
+    return NextResponse.json(
+      {
+        error: 'Acesso negado. Apenas administradores podem deletar stacks.',
+      },
+      { status: 403 }
+    );
+  }
   const id = getIdFromRequest(request);
   try {
     await prisma.stack.delete({
