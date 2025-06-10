@@ -89,7 +89,6 @@ export async function DELETE(request: NextRequest) {
   const id = getIdFromRequest(request);
 
   const userAuth = getUserFromRequest(request);
-
   if (!userAuth || userAuth.id !== id) {
     return new Response('Acesso negado', { status: 403 });
   }
