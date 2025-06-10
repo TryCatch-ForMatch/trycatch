@@ -5,15 +5,6 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session || session.user.role !== 'ADMIN') {
-    return NextResponse.json(
-      {
-        error: 'Acesso negado. Apenas administradores podem listar stacks.',
-      },
-      { status: 403 }
-    );
-  }
   const id = getIdFromRequest(request);
   try {
     const stack = await prisma.stack.findUnique({
