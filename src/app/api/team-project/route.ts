@@ -1,7 +1,15 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 export async function GET() {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+  }
+
   const projects = await prisma.project.findMany({
     include: {
       owner: {
@@ -20,26 +28,17 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const data = await request.json();
-  const {
-    ownerId,
-    name,
-    description,
-    deadline,
-    totalValue,
-    status,
-    skills,
-    stacks,
-  } = data;
+  const session = await getServerSession(authOptions);
 
-  if (
-    !ownerId ||
-    !name ||
-    !description ||
-    !deadline ||
-    !totalValue ||
-    !status
-  ) {
+  if (!session || !session.user?.id) {
+    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+  }
+
+  const data = await request.json();
+  const { name, description, deadline, totalValue, status, skills, stacks } =
+    data;
+
+  if (!name || !description || !deadline || !totalValue || !status) {
     return NextResponse.json(
       { error: 'Todos os campos obrigatórios devem ser preenchidos' },
       { status: 400 }
@@ -48,7 +47,7 @@ export async function POST(request: Request) {
 
   const project = await prisma.project.create({
     data: {
-      ownerId,
+      ownerId: session.user.id,
       name,
       description,
       deadline: new Date(deadline),

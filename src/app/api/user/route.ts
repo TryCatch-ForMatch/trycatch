@@ -8,7 +8,7 @@ export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session || session.user.role !== 'ADMIN') {
     return NextResponse.json(
-      { error: 'Acesso negado. Apenas administradores podem criar convites.' },
+      { error: 'Acesso negado. Apenas administradores podem listar os usuários.' },
       { status: 403 }
     );
   }
