@@ -101,6 +101,7 @@ model StackTaken {
   stack          Stack        @relation("StackStacksTaken", fields: [stackId], references: [id])
   projectId      String
   project        Project      @relation("ProjectStacksTaken", fields: [projectId], references: [id])
+  feedbacks      Feedback[]
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 }
@@ -126,26 +127,28 @@ model ProjectSkill {
 }
 
 model Feedback {
-  id         String   @id @default(cuid())
-  projectId  String
-  project    Project  @relation(fields: [projectId], references: [id])
-  fromUserId String
-  fromUser   User     @relation("FeedbackGiver", fields: [fromUserId], references: [id])
-  toUserId   String
-  toUser     User     @relation("FeedbackReceiver", fields: [toUserId], references: [id])
-  rating     Int
-  comment    String?
-  anonymous  Boolean
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id           String      @id @default(cuid())
+  projectId    String
+  project      Project     @relation(fields: [projectId], references: [id])
+  fromUserId   String
+  fromUser     User        @relation("FeedbackGiver", fields: [fromUserId], references: [id])
+  toUserId     String
+  toUser       User        @relation("FeedbackReceiver", fields: [toUserId], references: [id])
+  stackTakenId String?
+  stackTaken   StackTaken? @relation(fields: [stackTakenId], references: [id])
+  rating       Int
+  comment      String?
+  anonymous    Boolean
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
 }
 
 model Invite {
-  id        String   @id @default(cuid())
-  email     String   // Email do convidado
-  code      String   // Código do convite (pode ser gerado aleatoriamente)
-  used      Boolean  @default(false)
-  invitedBy String?  // ID do usuário que enviou o convite (opcional)
-  createdAt DateTime @default(now())
+  id        String    @id @default(cuid())
+  email     String // Email do convidado
+  code      String // Código do convite (pode ser gerado aleatoriamente)
+  used      Boolean   @default(false)
+  invitedBy String? // ID do usuário que enviou o convite (opcional)
+  createdAt DateTime  @default(now())
   usedAt    DateTime?
 }
