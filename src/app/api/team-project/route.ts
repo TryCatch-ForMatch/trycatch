@@ -1,14 +1,12 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { checkAuth } from '@/lib/check-auth';
 
 export async function GET() {
-  const session = await getServerSession(authOptions);
-
-  if (!session) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
-  }
+  const { authorized, response } = await checkAuth({
+    allowedRoles: ['ADMIN', 'USER'],
+  });
+  if (!authorized) return response;
 
   const projects = await prisma.project.findMany({
     include: {
@@ -28,11 +26,10 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const session = await getServerSession(authOptions);
-
-  if (!session || !session.user?.id) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
-  }
+  const { authorized, response, session } = await checkAuth({
+    allowedRoles: ['ADMIN', 'USER'],
+  });
+  if (!authorized || !session) return response;
 
   const data = await request.json();
   const { name, description, deadline, totalValue, status, skills, stacks } =

@@ -1,17 +1,23 @@
 import { prisma } from '@/lib/prisma';
 import { hash } from 'bcrypt';
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { checkAuth } from '@/lib/check-auth';
+import { z } from 'zod';
+
+const createUserSchema = z.object({
+  name: z.string(),
+  email: z.string().email(),
+  password: z.string().min(6),
+  avatar: z.string().url().optional(),
+  linkedin: z.string().url().optional(),
+  github: z.string().url().optional(),
+  bio: z.string().optional(),
+  skills: z.array(z.string()).optional(),
+  inviteCode: z.string(),
+});
 
 export async function GET() {
-  const session = await getServerSession(authOptions);
-  if (!session || session.user.role !== 'ADMIN') {
-    return NextResponse.json(
-      { error: 'Acesso negado. Apenas administradores podem listar os usuários.' },
-      { status: 403 }
-    );
-  }
+  const auth = await checkAuth({ requireAdmin: true });
+  if (!auth.authorized) return auth.response;
   const users = await prisma.user.findMany({
     include: {
       skills: {
@@ -24,7 +30,15 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const body = await req.json();
+  const json = await req.json();
+  const parse = createUserSchema.safeParse(json);
+
+  if (!parse.success) {
+    return Response.json(
+      { error: 'Dados inválidos.', issues: parse.error.format() },
+      { status: 400 }
+    );
+  }
 
   const {
     name,
@@ -36,7 +50,7 @@ export async function POST(req: Request) {
     bio,
     skills,
     inviteCode,
-  } = body;
+  } = parse.data;
 
   const invite = await prisma.invite.findFirst({
     where: { email, code: inviteCode, used: false },
@@ -49,12 +63,12 @@ export async function POST(req: Request) {
     );
   }
 
-  const hashedPassword = await hash(password, 10);
-
   const userExists = await prisma.user.findUnique({ where: { email } });
   if (userExists) {
     return Response.json({ error: 'Email já cadastrado.' }, { status: 400 });
   }
+
+  const hashedPassword = await hash(password, 10);
 
   const user = await prisma.user.create({
     data: {
