@@ -7,7 +7,7 @@ const createUserSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string().min(6),
-  avatar: z.string().url().optional(),
+  avatar: z.string().url().nullable(),
   linkedin: z.string().url().optional(),
   github: z.string().url().optional(),
   bio: z.string().optional(),
