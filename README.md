@@ -2,96 +2,162 @@
 
 ## 🚀 Sobre o projeto
 
-TryCatch For Match é a nossa primeira plataforma colaborativa, feita para organizar projetos, conectar pessoas, gerar portfólios reais e criar um ambiente de desenvolvimento que simula o mercado. Aqui praticamos **comprometimento, disciplina e colaboração.**
+**TryCatch For Match** é uma plataforma colaborativa desenvolvida para organizar projetos, conectar pessoas, gerar portfólios reais e criar um ambiente que simula o mercado de trabalho. Aqui praticamos **comprometimento, disciplina e colaboração.**
 
-Este projeto é mais que código — é um laboratório para aprendermos juntos, nos apoiarmos e desenvolvermos habilidades técnicas e comportamentais essenciais para qualquer profissional de tecnologia.
+Mais do que apenas código, este projeto é um laboratório de aprendizado coletivo, onde evoluímos juntos tanto em habilidades técnicas quanto comportamentais.
 
 ---
 
 ## 🔥 Objetivo
 
 - Construir uma plataforma web onde:
-  - Membros podem criar projetos internos.
-  - Dividir tarefas de acordo com as habilidades.
-  - Realizar "match" entre tarefas e membros.
-  - Gerar um histórico de participação e colaboração.
+  - Membros possam criar e gerenciar projetos internos;
+  - As tarefas sejam divididas com base em habilidades técnicas;
+  - O sistema faça "match" entre tarefas e membros com perfis compatíveis;
+  - Um histórico de colaboração seja gerado para portfólios reais.
 
 ---
 
-## 🏗️ Stack do projeto
+## 🏗️ Stack do Projeto
 
 - **Frontend:** Next.js + TypeScript + TailwindCSS
-- **Backend:** API Routes do Next.js com TypeScript + Prisma + PostgreSQL
-- **Banco:** PostgreSQL (via Prisma ORM)
+- **Backend:** API Routes do Next.js + TypeScript + Prisma
+- **Banco de Dados:** PostgreSQL
+- **ORM:** Prisma
+- **Ambiente de desenvolvimento:** Docker + Docker Compose
 - **Design:** Figma
 - **Controle de versão:** Git + GitHub
-- **Kanban:** GitHub Projects (cards por tarefa)
+- **Kanban:** GitHub Projects
 
 ---
 
-## ❤️ Bora construir juntos
+## ❤️ Construção coletiva
 
-Nosso foco não é só código. É treino real de como trabalhar em equipe, ter responsabilidade e evoluir juntos. Por isso, foco, disciplina e comprometimento, para criarmos uma vitrine real do que sabemos fazer.
+Nosso foco é o desenvolvimento real de habilidades: trabalho em equipe, responsabilidade e entrega. Todos os participantes são incentivados a colaborar de forma ativa e comprometida, simulando uma equipe de desenvolvimento profissional.
 
 ---
 
 ## 🙌 Como contribuir?
 
-Confira o [Guia de Contribuição](./CONTRIBUTING.md) para entender o fluxo de trabalho, regras, padrões e combinados da comunidade.
+Leia o [Guia de Contribuição](./CONTRIBUTING.md) para entender o fluxo de trabalho, boas práticas, padrões e combinados da equipe.
+
+---
 
 ## ⚙️ Como rodar localmente
 
-1. Clone o repositório:
+### 🧾 1. Pré-requisitos
+
+- Node.js (versão recomendada: LTS)
+- Docker + Docker Compose (caso queira rodar o banco via container)
+
+---
+
+### 📦 2. Clone o repositório
 
 ```bash
 git clone https://github.com/TryCatch-ForMatch/trycatch.git
 cd trycatch
 ```
 
-2. Instale as dependências:
+---
+
+### 📥 3. Instale as dependências
 
 ```bash
 npm install
 ```
 
-3. Configure seu arquivo .env na raiz do projeto (exemplo):
+---
+
+### 🔐 4. Configure o arquivo `.env`
+
+Crie um arquivo `.env` na raiz do projeto com base no exemplo abaixo:
 
 ```env
-DATABASE_URL="postgresql://trycatch_user:sua_senha@localhost:5432/trycatch_db"
+# Se estiver rodando o banco via Docker
+DATABASE_URL="postgresql://trycatch_user:trycatch_pass@localhost:5555/trycatch_db"
+
+# Ou, se estiver rodando localmente sem Docker
+# DATABASE_URL="postgresql://postgres:postgres@localhost:5432/trycatch_db"
+
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=um-segredo-seguro
+
+JWT_SECRET=um-outro-segredo
 ```
 
-4. Rode as migrations do Prisma:
+---
+
+### 🐳 5. Rodando com Docker (banco de dados)
+
+Caso prefira usar Docker para o banco de dados, você pode usar o `docker-compose.yml` incluído no projeto:
+
+```bash
+docker-compose up -d
+```
+
+Este comando iniciará um container PostgreSQL escutando na porta **5555**. Certifique-se de que essa porta está configurada corretamente no `.env`.
+
+---
+
+### 🔃 6. Rode as migrations do Prisma
 
 ```bash
 npx prisma migrate dev
 ```
 
-5. Inicie o servidor de desenvolvimento:
+Este comando criará as tabelas no banco e aplicará os schemas definidos no `prisma/schema.prisma`.
+
+---
+
+### ▶️ 7. Inicie o servidor de desenvolvimento
 
 ```bash
 npm run dev
 ```
 
-6. Abra http://localhost:3000 no navegador.
+Abra o navegador em: [http://localhost:3000](http://localhost:3000)
+
+---
 
 ## 🧹 Lint e formatação
 
-Para rodar o ESLint e garantir o padrão de código:
+Para verificar erros e manter o padrão de código:
 
 ```bash
 npm run lint
 ```
 
-Para formatar o código automaticamente com Prettier:
+Para formatar automaticamente com Prettier:
 
 ```bash
 npm run format
 ```
 
+---
+
 ## 🗄️ Banco de Dados
 
-Modelagem inicial criada com Prisma.
+O projeto utiliza o Prisma para modelar o banco de dados PostgreSQL.
 
-- IDs usando `CUID` para maior segurança e escalabilidade.
-- Relacionamentos mapeados conforme regras de negócio.
-- Estrutura pronta para suportar autenticação, projetos, stacks, skills e feedbacks.
+- Os IDs são do tipo `CUID`, ideais para sistemas distribuídos;
+- Todos os relacionamentos (usuário, projeto, habilidades, stacks, feedbacks) estão devidamente mapeados;
+- As migrations estão versionadas e podem ser aplicadas com `prisma migrate dev`.
+
+---
+
+## 🧠 Outras informações
+
+- O backend utiliza validações com Zod;
+- As permissões são controladas por função (`role`) e centralizadas em `lib/check-auth.ts`;
+- O frontend está sendo estruturado com autenticação via NextAuth e integração com a API.
+
+---
+
+> 💡 Dica: Utilize `npx prisma studio` para visualizar o banco de dados em uma interface web.
+
+---
+
+## 📮 Contato
+
+Sinta-se à vontade para abrir uma issue ou PR. Toda ajuda é bem-vinda! 💜
