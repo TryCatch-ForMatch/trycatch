@@ -2,11 +2,11 @@ import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
-  const { email, code } = await req.json();
+  const { email, inviteCode } = await req.json();
 
   // Verifica se o convite existe e está válido
   const invite = await prisma.invite.findFirst({
-    where: { email, code, used: false },
+    where: { email, code: inviteCode, used: false },
   });
 
   if (!invite) {
