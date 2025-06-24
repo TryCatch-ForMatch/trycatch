@@ -91,6 +91,7 @@ JWT_SECRET=um-outro-segredo
 ### 🐳 5. Rodando com Docker (banco de dados)
 
 Caso prefira usar Docker para o banco de dados, você pode usar o `docker-compose.yml` incluído no projeto:
+Com o Docker Desktop aberto,
 
 ```bash
 docker-compose up -d
@@ -119,6 +120,28 @@ npm run dev
 Abra o navegador em: [http://localhost:3000](http://localhost:3000)
 
 ---
+
+## Criar Usuário Admin para Testes
+Para facilitar os testes da API, incluímos um script que cria um usuário administrador no banco de dados.
+
+📥 Como rodar
+Após configurar o .env corretamente e rodar as migrations do Prisma, execute:
+
+```bash
+npm run seed
+```
+
+Esse comando executa o script createTestUser.js, que cria um usuário admin com os seguintes dados:
+
+Email: admin@admin.com
+
+Senha: teste123
+
+Função: ADMIN
+
+⚠️ Certifique-se de que o banco de dados esteja rodando antes de executar o script (pode ser local ou via Docker).
+
+Esse usuário pode ser usado para autenticação via API ou interface, de acordo com as permissões definidas no projeto.
 
 ## 🧹 Lint e formatação
 
