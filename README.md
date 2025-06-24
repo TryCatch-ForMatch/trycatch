@@ -57,6 +57,7 @@ Leia o [Guia de Contribuição](./CONTRIBUTING.md) para entender o fluxo de trab
 ```bash
 git clone https://github.com/TryCatch-ForMatch/trycatch.git
 cd trycatch
+git checkout develop
 ```
 
 ---
