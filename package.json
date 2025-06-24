@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "seed": "node src/scripts/createTestUser.js"
   },
   "dependencies": {
     "@prisma/client": "^6.9.0",
