@@ -105,6 +105,7 @@ Este comando iniciará um container PostgreSQL escutando na porta **5555**. Cert
 ### 🔃 6. Rode as migrations do Prisma
 
 ```bash
+npx prisma generate
 npx prisma migrate dev
 ```
 
