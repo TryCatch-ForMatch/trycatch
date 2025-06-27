@@ -10,7 +10,18 @@ interface Params {
 }
 
 export async function GET(_: Request, { params }: Params) {
-  const session = await getServerSession(authOptions);
+  let session;
+
+  try {
+    session = await getServerSession(authOptions);
+  } catch (error) {
+    console.error('Erro ao obter sessão:', error);
+    return NextResponse.json(
+      { error: 'Erro de autenticação' },
+      { status: 500 }
+    );
+  }
+
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
   }

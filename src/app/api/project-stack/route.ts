@@ -12,15 +12,32 @@ const createProjectStackSchema = z.object({
 });
 
 export async function POST(req: Request) {
-  const session = await getServerSession(authOptions);
-
-  if (!session || !session.user?.id) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+  let session;
+  try {
+    session = await getServerSession(authOptions);
+    if (!session || !session.user?.id) {
+      return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+    }
+  } catch (error) {
+    console.error('Erro ao obter sessão no POST:', error);
+    return NextResponse.json(
+      { error: 'Erro de autenticação' },
+      { status: 500 }
+    );
   }
 
-  const body = await req.json();
-  const parsed = createProjectStackSchema.safeParse(body);
+  let body;
+  try {
+    body = await req.json();
+  } catch (error) {
+    console.error('Erro ao fazer parse do JSON no POST:', error);
+    return NextResponse.json(
+      { error: 'Body inválido. Envie um JSON válido.' },
+      { status: 400 }
+    );
+  }
 
+  const parsed = createProjectStackSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
       { error: 'Dados inválidos', issues: parsed.error.issues },
@@ -41,7 +58,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(newProjectStack, { status: 201 });
   } catch (error) {
-    console.error(error);
+    console.error('Erro ao criar ProjectStack:', error);
     return NextResponse.json(
       { error: 'Erro ao criar ProjectStack' },
       { status: 500 }
@@ -50,14 +67,28 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
-  const session = await getServerSession(authOptions);
-
-  if (!session || !session.user?.id) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+  let session;
+  try {
+    session = await getServerSession(authOptions);
+    if (!session || !session.user?.id) {
+      return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+    }
+  } catch (error) {
+    console.error('Erro ao obter sessão no GET:', error);
+    return NextResponse.json(
+      { error: 'Erro de autenticação' },
+      { status: 500 }
+    );
   }
 
-  const { searchParams } = new URL(req.url);
-  const projectId = searchParams.get('projectId');
+  let projectId: string | null = null;
+  try {
+    const { searchParams } = new URL(req.url);
+    projectId = searchParams.get('projectId');
+  } catch (error) {
+    console.error('Erro ao processar URL no GET:', error);
+    return NextResponse.json({ error: 'URL inválida' }, { status: 400 });
+  }
 
   if (!projectId) {
     return NextResponse.json(
@@ -76,7 +107,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json(stacks);
   } catch (error) {
-    console.error(error);
+    console.error('Erro ao buscar ProjectStacks:', error);
     return NextResponse.json(
       { error: 'Erro ao buscar ProjectStacks' },
       { status: 500 }

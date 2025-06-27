@@ -18,9 +18,18 @@ export async function POST(req: Request) {
   });
   if (!authorized || !session) return response;
 
-  const body = await req.json();
-  const parsed = feedbackSchema.safeParse(body);
+  let body;
+  try {
+    body = await req.json();
+  } catch (error) {
+    console.error('Erro ao fazer parse do body:', error);
+    return NextResponse.json(
+      { error: 'Body inválido. Envie um JSON válido.' },
+      { status: 400 }
+    );
+  }
 
+  const parsed = feedbackSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
       { error: 'Dados inválidos', issues: parsed.error.issues },
@@ -68,9 +77,16 @@ export async function GET(req: Request) {
   });
   if (!authorized) return response;
 
-  const { searchParams } = new URL(req.url);
-  const projectId = searchParams.get('projectId');
+  let searchParams: URLSearchParams;
+  try {
+    const url = new URL(req.url);
+    searchParams = url.searchParams;
+  } catch (error) {
+    console.error('Erro ao ler os parâmetros da URL:', error);
+    return NextResponse.json({ error: 'URL inválida' }, { status: 400 });
+  }
 
+  const projectId = searchParams.get('projectId');
   if (!projectId) {
     return NextResponse.json(
       { error: 'Parâmetro projectId é obrigatório' },

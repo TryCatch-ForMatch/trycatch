@@ -18,7 +18,8 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(invite);
-  } catch {
+  } catch (error) {
+    console.error('Erro ao buscar convite:', error);
     return NextResponse.json(
       { error: 'Erro ao buscar convite.' },
       { status: 500 }
@@ -28,7 +29,19 @@ export async function GET(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   const id = getIdFromRequest(request);
-  const { email } = await request.json();
+
+  let body;
+  try {
+    body = await request.json();
+  } catch (error) {
+    console.error('Erro ao fazer parse do body no PATCH:', error);
+    return NextResponse.json(
+      { error: 'Body inválido. Envie um JSON válido.' },
+      { status: 400 }
+    );
+  }
+
+  const { email } = body;
 
   if (!email) {
     return NextResponse.json(
@@ -44,7 +57,8 @@ export async function PATCH(request: NextRequest) {
     });
 
     return NextResponse.json(invite);
-  } catch {
+  } catch (error) {
+    console.error('Erro ao atualizar convite:', error);
     return NextResponse.json(
       { error: 'Erro ao atualizar convite.' },
       { status: 500 }
@@ -61,7 +75,8 @@ export async function DELETE(request: NextRequest) {
     });
 
     return NextResponse.json({ message: 'Convite deletado com sucesso.' });
-  } catch {
+  } catch (error) {
+    console.error('Erro ao deletar convite:', error);
     return NextResponse.json(
       { error: 'Erro ao deletar convite.' },
       { status: 500 }

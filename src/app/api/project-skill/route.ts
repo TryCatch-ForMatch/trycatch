@@ -4,22 +4,38 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 
-// Validação dos dados para criação
 const createProjectSkillSchema = z.object({
   projectId: z.string(),
   skillId: z.string(),
 });
 
-// POST /api/project-skill
 export async function POST(req: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session || !session.user?.id) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+  let session;
+  try {
+    session = await getServerSession(authOptions);
+    if (!session || !session.user?.id) {
+      return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+    }
+  } catch (error) {
+    console.error('Erro ao obter sessão no POST:', error);
+    return NextResponse.json(
+      { error: 'Erro de autenticação' },
+      { status: 500 }
+    );
   }
 
-  const body = await req.json();
-  const parsed = createProjectSkillSchema.safeParse(body);
+  let body;
+  try {
+    body = await req.json();
+  } catch (error) {
+    console.error('Erro ao fazer parse do JSON no POST:', error);
+    return NextResponse.json(
+      { error: 'Body inválido. Envie um JSON válido.' },
+      { status: 400 }
+    );
+  }
 
+  const parsed = createProjectSkillSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
       { error: 'Dados inválidos', issues: parsed.error.issues },
@@ -47,7 +63,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(newProjectSkill, { status: 201 });
   } catch (error) {
-    console.error(error);
+    console.error('Erro ao adicionar skill ao projeto:', error);
     return NextResponse.json(
       { error: 'Erro ao adicionar skill ao projeto' },
       { status: 500 }
@@ -55,15 +71,29 @@ export async function POST(req: Request) {
   }
 }
 
-// GET /api/project-skill?projectId=<id>
 export async function GET(req: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session || !session.user?.id) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+  let session;
+  try {
+    session = await getServerSession(authOptions);
+    if (!session || !session.user?.id) {
+      return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+    }
+  } catch (error) {
+    console.error('Erro ao obter sessão no GET:', error);
+    return NextResponse.json(
+      { error: 'Erro de autenticação' },
+      { status: 500 }
+    );
   }
 
-  const { searchParams } = new URL(req.url);
-  const projectId = searchParams.get('projectId');
+  let projectId;
+  try {
+    const { searchParams } = new URL(req.url);
+    projectId = searchParams.get('projectId');
+  } catch (error) {
+    console.error('Erro ao processar URL no GET:', error);
+    return NextResponse.json({ error: 'URL inválida' }, { status: 400 });
+  }
 
   if (!projectId) {
     return NextResponse.json(
@@ -80,7 +110,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json(skills);
   } catch (error) {
-    console.error(error);
+    console.error('Erro ao buscar skills do projeto:', error);
     return NextResponse.json(
       { error: 'Erro ao buscar skills do projeto' },
       { status: 500 }
