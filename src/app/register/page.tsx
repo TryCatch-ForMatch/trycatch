@@ -23,7 +23,9 @@ export default function InviteRegisterPage() {
     });
 
     if (res.ok) {
-      router.push(`/signup?email=${encodeURIComponent(form.email)}`);
+      router.push(
+        `/signup?email=${encodeURIComponent(form.email)}&inviteCode=${encodeURIComponent(form.inviteCode)}`
+      );
     } else {
       const data = await res.json();
       setError(data.error || 'Código inválido');
