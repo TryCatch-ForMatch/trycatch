@@ -64,7 +64,6 @@ Exemplos:
 
 ## Tipos de Branches
 
-
 - feat/nova funcionalidade
 
 - fix/correcao
