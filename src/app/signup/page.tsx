@@ -32,7 +32,7 @@ export default function SignupPage() {
 
   useEffect(() => {
     if (!email || !inviteCode) {
-      router.push('/register'); // Protege o acesso direto
+      router.push('/register');
     }
 
     async function fetchSkills() {
@@ -67,7 +67,7 @@ export default function SignupPage() {
       return;
     }
 
-    const res = await fetch('/api/user', {
+    const res = await fetch('/api/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -90,6 +90,14 @@ export default function SignupPage() {
     <div>
       <h2>Cadastro de Usuário</h2>
       <form onSubmit={handleSubmit}>
+        <FormInput label="E-mail" name="email" value={email} disabled />
+        <FormInput
+          label="Código de Convite"
+          name="inviteCode"
+          value={inviteCode}
+          disabled
+        />
+
         <FormInput
           label="Nome"
           name="name"

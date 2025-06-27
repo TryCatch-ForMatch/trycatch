@@ -1,13 +1,12 @@
 import { prisma } from '@/lib/prisma';
 import { hash } from 'bcrypt';
-import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 
 const createUserSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string().min(6),
-  avatar: z.string().url().nullable(),
+  avatar: z.union([z.string().url(), z.literal('')]).nullable(),
   linkedin: z.string().url().optional(),
   github: z.string().url().optional(),
   bio: z.string().optional(),
@@ -48,6 +47,9 @@ export async function POST(req: Request) {
       { status: 403 }
     );
   }
+
+  console.log('Request body:', json);
+  console.log('Parse result:', parse);
 
   const userExists = await prisma.user.findUnique({ where: { email } });
   if (userExists) {
