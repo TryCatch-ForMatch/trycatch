@@ -4,22 +4,20 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 
-// PUT: validação para trocar a skill associada ao projeto
 const updateProjectSkillSchema = z.object({
   skillId: z.string(),
 });
 
-// GET /api/project-skill/[id]
 export async function GET(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  const session = await getServerSession(authOptions);
-  if (!session || !session.user?.id) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
-  }
-
   try {
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user?.id) {
+      return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+    }
+
     const projectSkill = await prisma.projectSkill.findUnique({
       where: { id: params.id },
       include: { skill: true },
@@ -34,7 +32,7 @@ export async function GET(
 
     return NextResponse.json(projectSkill);
   } catch (error) {
-    console.error(error);
+    console.error('Erro no GET /project-skill:', error);
     return NextResponse.json(
       { error: 'Erro ao buscar associação' },
       { status: 500 }
@@ -42,17 +40,35 @@ export async function GET(
   }
 }
 
-// PUT /api/project-skill/[id]
 export async function PUT(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  const session = await getServerSession(authOptions);
-  if (!session || !session.user?.id) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+  let session;
+  try {
+    session = await getServerSession(authOptions);
+    if (!session || !session.user?.id) {
+      return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+    }
+  } catch (error) {
+    console.error('Erro ao obter sessão no PUT:', error);
+    return NextResponse.json(
+      { error: 'Erro de autenticação' },
+      { status: 500 }
+    );
   }
 
-  const body = await req.json();
+  let body;
+  try {
+    body = await req.json();
+  } catch (error) {
+    console.error('Erro ao fazer parse do body no PUT:', error);
+    return NextResponse.json(
+      { error: 'Body inválido. Envie um JSON válido.' },
+      { status: 400 }
+    );
+  }
+
   const parsed = updateProjectSkillSchema.safeParse(body);
 
   if (!parsed.success) {
@@ -83,7 +99,7 @@ export async function PUT(
 
     return NextResponse.json(updated);
   } catch (error) {
-    console.error(error);
+    console.error('Erro ao atualizar skill do projeto:', error);
     return NextResponse.json(
       { error: 'Erro ao atualizar skill do projeto' },
       { status: 500 }
@@ -91,17 +107,16 @@ export async function PUT(
   }
 }
 
-// DELETE /api/project-skill/[id]
 export async function DELETE(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  const session = await getServerSession(authOptions);
-  if (!session || !session.user?.id) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
-  }
-
   try {
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user?.id) {
+      return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+    }
+
     await prisma.projectSkill.delete({
       where: { id: params.id },
     });
@@ -110,7 +125,7 @@ export async function DELETE(
       message: 'Skill removida do projeto com sucesso',
     });
   } catch (error) {
-    console.error(error);
+    console.error('Erro ao remover skill do projeto:', error);
     return NextResponse.json(
       { error: 'Erro ao remover skill' },
       { status: 500 }
