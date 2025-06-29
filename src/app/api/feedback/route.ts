@@ -49,6 +49,60 @@ export async function POST(req: Request) {
   }
 
   try {
+    // Verificar se o projeto existe
+    const project = await prisma.project.findUnique({
+      where: { id: projectId },
+    });
+    if (!project) {
+      return NextResponse.json(
+        { error: 'Projeto não encontrado.' },
+        { status: 404 }
+      );
+    }
+
+    // Verificar se o usuário avaliador participou do projeto
+    const fromUserParticipation = await prisma.stackTaken.findFirst({
+      where: {
+        projectId,
+        userId: fromUserId,
+      },
+    });
+    if (!fromUserParticipation) {
+      return NextResponse.json(
+        { error: 'Você não participou deste projeto.' },
+        { status: 400 }
+      );
+    }
+
+    // Verificar se o usuário a ser avaliado participou do projeto
+    const toUserParticipation = await prisma.stackTaken.findFirst({
+      where: {
+        projectId,
+        userId: toUserId,
+      },
+    });
+    if (!toUserParticipation) {
+      return NextResponse.json(
+        { error: 'Usuário avaliado não participou deste projeto.' },
+        { status: 400 }
+      );
+    }
+
+    // Verificar se já existe um feedback desse fromUserId para esse toUserId neste projeto
+    const existingFeedback = await prisma.feedback.findFirst({
+      where: {
+        projectId,
+        fromUserId,
+        toUserId,
+      },
+    });
+    if (existingFeedback) {
+      return NextResponse.json(
+        { error: 'Você já avaliou este usuário neste projeto.' },
+        { status: 400 }
+      );
+    }
+
     const feedback = await prisma.feedback.create({
       data: {
         projectId,
