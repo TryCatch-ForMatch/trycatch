@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
+import { checkAuth } from '@/lib/check-auth';
 
 const createProjectSkillSchema = z.object({
   projectId: z.string(),
@@ -10,19 +9,9 @@ const createProjectSkillSchema = z.object({
 });
 
 export async function POST(req: Request) {
-  let session;
-  try {
-    session = await getServerSession(authOptions);
-    if (!session || !session.user?.id) {
-      return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
-    }
-  } catch (error) {
-    console.error('Erro ao obter sessão no POST:', error);
-    return NextResponse.json(
-      { error: 'Erro de autenticação' },
-      { status: 500 }
-    );
-  }
+  const auth = await checkAuth();
+
+  if (!auth.authorized) return auth.response;
 
   let body;
   try {
@@ -72,19 +61,9 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
-  let session;
-  try {
-    session = await getServerSession(authOptions);
-    if (!session || !session.user?.id) {
-      return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
-    }
-  } catch (error) {
-    console.error('Erro ao obter sessão no GET:', error);
-    return NextResponse.json(
-      { error: 'Erro de autenticação' },
-      { status: 500 }
-    );
-  }
+  const auth = await checkAuth();
+
+  if (!auth.authorized) return auth.response;
 
   let projectId;
   try {
