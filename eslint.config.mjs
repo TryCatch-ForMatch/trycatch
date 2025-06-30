@@ -11,6 +11,10 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
+  {
+    files: ['**/tests/**/*', '**/*.{test,spec}.*'],
+    ...compat.extends('plugin:testing-library/react')[0],
+  },
 ];
 
 export default eslintConfig;
