@@ -1,9 +1,13 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse, NextRequest } from 'next/server';
 import { getIdFromRequest } from '@/utils/url';
+import { checkAuth } from '@/lib/check-auth';
 
 export async function GET(request: NextRequest) {
   const id = getIdFromRequest(request);
+  const auth = await checkAuth({ requireAdmin: true });
+
+  if (!auth.authorized) return auth.response;
 
   try {
     const invite = await prisma.invite.findUnique({
@@ -29,6 +33,9 @@ export async function GET(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   const id = getIdFromRequest(request);
+  const auth = await checkAuth({ requireAdmin: true });
+
+  if (!auth.authorized) return auth.response;
 
   let body;
   try {
@@ -51,6 +58,20 @@ export async function PATCH(request: NextRequest) {
   }
 
   try {
+    const existing = await prisma.invite.findFirst({
+      where: {
+        email,
+        NOT: { id }, // ignora o próprio convite que está sendo atualizado
+      },
+    });
+
+    if (existing) {
+      return NextResponse.json(
+        { error: 'Já existe um convite com esse email.' },
+        { status: 409 }
+      );
+    }
+
     const invite = await prisma.invite.update({
       where: { id },
       data: { email },
@@ -68,6 +89,9 @@ export async function PATCH(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   const id = getIdFromRequest(request);
+  const auth = await checkAuth({ requireAdmin: true });
+
+  if (!auth.authorized) return auth.response;
 
   try {
     await prisma.invite.delete({
