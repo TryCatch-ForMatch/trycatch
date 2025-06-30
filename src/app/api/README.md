@@ -37,16 +37,17 @@ Esta pasta contém todas as rotas de API do projeto.
 | Rota                | Descrição                                      |
 | ------------------- | -----------------------------------------------|
 | `/api/auth/`        | Autenticação (login, logout, sessão)           |
-| `/api/user/`        | CRUD de usuários                               |
+| `/api/signup/`      | POST de usuários                               |
+| `/api/user/`        | GET/PUT/DELETE de usuários                     |
 | `/api/skill/`       | CRUD de skills                                 |
-| `/api/stack/`       | CRUD de stacks                                 |
-| `/api/project/`     | CRUD de projetos                               |
+| `/api/tech-stack/`  | CRUD de stacks                                 |
+| `/api/team-project/`| CRUD de projetos                               |
 
 ---
 
 ## 📦 Gerenciamento de parâmetros na URL (`:id`)
 
-Com a atualização do Next.js (13.4+ até 15), rotas dinâmicas como `/api/user/:id` ou `/api/project/:id` **não recebem mais os parâmetros diretamente como `{ params }`** nas funções dos handlers (`GET`, `PUT`, `DELETE`).
+Com a atualização do Next.js (13.4+ até 15), rotas dinâmicas como `/api/user/:id` ou `/api/team-project/:id` **não recebem mais os parâmetros diretamente como `{ params }`** nas funções dos handlers (`GET`, `PUT`, `DELETE`).
 
 ### ✅ Nova abordagem:
 
@@ -146,7 +147,7 @@ Accept: application/json
 
 - Lista todos os usuários.
 
-## ➕ `POST /api/user`
+## ➕ `POST /api/signup`
 
 - Cria um novo usuário.
 
@@ -195,7 +196,7 @@ Accept: application/json
 
 # 🔧 API - Skill
 
-| Método | Rota                  | Descrição          |
+| Método | Rota                  | Descrição           |
 | ------ | ---------------------- | ------------------ |
 | GET    | `/api/skill`           | Lista todas        |
 | POST   | `/api/skill`           | Cria uma nova      |
@@ -215,27 +216,27 @@ Accept: application/json
 
 # 🏗️ API - Stack
 
-| Método | Rota                  | Descrição          |
-| ------ | ---------------------- | ------------------ |
-| GET    | `/api/stack`           | Lista todas        |
-| POST   | `/api/stack`           | Cria uma nova      |
-| GET    | `/api/stack/:id`       | Retorna uma        |
-| PATCH  | `/api/stack/:id`       | Atualiza           |
-| DELETE | `/api/stack/:id`       | Deleta             |
+| Método | Rota                        | Descrição          |
+| ------ | --------------------------- | ------------------ |
+| GET    | `/api/tech-stack`           | Lista todas        |
+| POST   | `/api/tech-stack`           | Cria uma nova      |
+| GET    | `/api/tech-stack/:id`       | Retorna uma        |
+| PATCH  | `/api/tech-stack/:id`       | Atualiza           |
+| DELETE | `/api/tech-stack/:id`       | Deleta             |
 
 ---
 
 # 🚀 API - Project
 
-| Método | Rota                    | Descrição                 |
-| ------ | ------------------------ | ------------------------- |
-| GET    | `/api/project`           | Lista todos os projetos   |
-| POST   | `/api/project`           | Cria um novo projeto      |
-| GET    | `/api/project/:id`       | Retorna um projeto        |
-| PUT    | `/api/project/:id`       | Atualiza um projeto       |
-| DELETE | `/api/project/:id`       | Deleta um projeto         |
+| Método | Rota                          | Descrição                 |
+| ------ | ----------------------------- | ------------------------- |
+| GET    | `/api/team-project`           | Lista todos os projetos   |
+| POST   | `/api/team-project`           | Cria um novo projeto      |
+| GET    | `/api/team-project/:id`       | Retorna um projeto        |
+| PUT    | `/api/team-project/:id`       | Atualiza um projeto       |
+| DELETE | `/api/team-project/:id`       | Deleta um projeto         |
 
-## 📄 Exemplo de criação (`POST /api/project`):
+## 📄 Exemplo de criação (`POST /api/team-project`):
 
 ```json
 {
@@ -253,7 +254,7 @@ Accept: application/json
 }
 ```
 
-## 📄 Exemplo de atualização (`PUT /api/project/:id`):
+## 📄 Exemplo de atualização (`PUT /api/team-project/:id`):
 
 ```json
 {
