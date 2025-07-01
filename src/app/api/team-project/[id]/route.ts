@@ -2,6 +2,9 @@ import { prisma } from '@/lib/prisma';
 import { NextResponse, NextRequest } from 'next/server';
 import { getIdFromRequest } from '@/utils/url';
 import jwt from 'jsonwebtoken';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+
 
 function getUserFromRequest(request: NextRequest) {
   const authHeader = request.headers.get('authorization');
@@ -17,106 +20,139 @@ function getUserFromRequest(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  const id = getIdFromRequest(request);
+  try {
+    const id = getIdFromRequest(request);
 
-  const userAuth = getUserFromRequest(request);
-  if (!userAuth || userAuth.id !== id) {
-    return new Response('Acesso negado', { status: 403 });
-  }
+    const userAuth = getUserFromRequest(request);
+    if (!userAuth || userAuth.id !== id) {
+      return new Response('Acesso negado', { status: 403 });
+    }
 
-  const project = await prisma.project.findUnique({
-    where: { id },
-    include: {
-      owner: { select: { id: true, name: true, avatar: true } },
-      skills: { include: { skill: true } },
-      stacks: { include: { stack: true } },
-    },
-  });
+    const project = await prisma.project.findUnique({
+      where: { id },
+      include: {
+        owner: { select: { id: true, name: true, avatar: true } },
+        skills: { include: { skill: true } },
+        stacks: { include: { stack: true } },
+      },
+    });
 
-  if (!project) {
+    if (!project) {
+      return NextResponse.json(
+        { error: 'Projeto não encontrado' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(project);
+  } catch (error) {
+    console.error('Erro ao buscar projeto:', error);
     return NextResponse.json(
-      { error: 'Projeto não encontrado' },
-      { status: 404 }
+      { error: 'Erro ao buscar projeto.' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(request: Request, context: { params: { id: string } }) {
+  let session;
+
+  try {
+    session = await getServerSession(authOptions);
+  } catch (error) {
+    console.error('Erro ao obter sessão:', error);
+    return NextResponse.json(
+      { error: 'Erro de autenticação' },
+      { status: 500 }
     );
   }
 
-  return NextResponse.json(project);
-}
-
-export async function PUT(request: NextRequest) {
-  const id = getIdFromRequest(request);
-
-  const userAuth = getUserFromRequest(request);
-  if (!userAuth || userAuth.id !== id) {
-    return new Response('Acesso negado', { status: 403 });
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
   }
+
+  const { id: projectId } = await context.params;
   const data = await request.json();
+  const { name, description, deadline, totalValue, status, skills, stacks } = data;
 
-  const { name, description, deadline, totalValue, status, skills, stacks } =
-    data;
+  try {
+    const updated = await prisma.project.update({
+      where: { id: projectId },
+      data: {
+        name,
+        description,
+        deadline: new Date(deadline),
+        totalValue,
+        status,
+        skills: {
+          deleteMany: {},
+          create: skills?.map((skillId: string) => ({
+            skill: { connect: { id: skillId } },
+          })),
+        },
+        stacks: {
+          deleteMany: {},
+          create: stacks?.map(
+            (item: { stackId: string; percentage: number }) => ({
+              stack: { connect: { id: item.stackId } },
+              percentage: item.percentage,
+            })
+          ),
+        },
+      },
+    });
 
-  const existing = await prisma.project.findUnique({
-    where: { id },
-  });
-
-  if (!existing) {
-    return NextResponse.json(
-      { error: 'Projeto não encontrado' },
-      { status: 404 }
-    );
+    return NextResponse.json(updated);
+  } catch (error) {
+    console.error('Erro ao atualizar projeto:', error);
+    return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
-
-  const updated = await prisma.project.update({
-    where: { id },
-    data: {
-      name,
-      description,
-      deadline: new Date(deadline),
-      totalValue,
-      status,
-      skills: {
-        deleteMany: {},
-        create: skills?.map((skillId: string) => ({
-          skill: { connect: { id: skillId } },
-        })),
-      },
-      stacks: {
-        deleteMany: {},
-        create: stacks?.map(
-          (item: { stackId: string; percentage: number }) => ({
-            stack: { connect: { id: item.stackId } },
-            percentage: item.percentage,
-          })
-        ),
-      },
-    },
-  });
-
-  return NextResponse.json(updated);
 }
 
-export async function DELETE(request: NextRequest) {
-  const id = getIdFromRequest(request);
+export async function DELETE(request: Request, context: { params: { id: string } }) {
+  try {
+    const { id: projectId } = await context.params;
 
-  const userAuth = getUserFromRequest(request);
-  if (!userAuth || userAuth.id !== id) {
-    return new Response('Acesso negado', { status: 403 });
-  }
+   
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+    }
 
-  const existing = await prisma.project.findUnique({
-    where: { id },
-  });
+    const existing = await prisma.project.findUnique({
+      where: { id: projectId },
+    });
 
-  if (!existing) {
+    if (!existing) {
+      return NextResponse.json(
+        { error: 'Projeto não encontrado' },
+        { status: 404 }
+      );
+    }
+
+    if (existing.ownerId !== session.user.id) {
+      return NextResponse.json(
+      { error: 'Você não tem permissão para deletar este projeto.' },
+      { status: 403 }
+    );
+    }
+
+    await prisma.projectSkill.deleteMany({
+      where: { projectId },
+    });
+    await prisma.projectStack.deleteMany({
+      where: { projectId },
+    });
+    await prisma.project.delete({
+      where: { id: projectId },
+    });
+
+    return NextResponse.json({ message: 'Projeto deletado com sucesso' });
+  } catch (error) {
+    console.error('Erro ao deletar projeto:', error);
     return NextResponse.json(
-      { error: 'Projeto não encontrado' },
-      { status: 404 }
+      { error: 'Erro ao deletar projeto.' },
+      { status: 500 }
     );
   }
-
-  await prisma.project.delete({
-    where: { id },
-  });
-
-  return NextResponse.json({ message: 'Projeto deletado com sucesso' });
 }

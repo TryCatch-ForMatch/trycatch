@@ -4,8 +4,10 @@ import { getIdFromRequest } from '@/utils/url';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
+
 export async function GET(request: NextRequest) {
   const id = getIdFromRequest(request);
+
   try {
     const stack = await prisma.stack.findUnique({
       where: { id },
@@ -30,6 +32,7 @@ export async function GET(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   const session = await getServerSession(authOptions);
+
   if (!session || session.user.role !== 'ADMIN') {
     return NextResponse.json(
       {
@@ -39,6 +42,7 @@ export async function PATCH(request: NextRequest) {
     );
   }
   const id = getIdFromRequest(request);
+
   try {
     const { name } = await request.json();
 
@@ -66,6 +70,7 @@ export async function PATCH(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   const session = await getServerSession(authOptions);
+
   if (!session || session.user.role !== 'ADMIN') {
     return NextResponse.json(
       {
@@ -75,6 +80,7 @@ export async function DELETE(request: NextRequest) {
     );
   }
   const id = getIdFromRequest(request);
+  
   try {
     await prisma.stack.delete({
       where: { id },
