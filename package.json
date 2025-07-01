@@ -16,12 +16,16 @@
   },
   "dependencies": {
     "@prisma/client": "^6.9.0",
+    "@tailwindcss/postcss": "^4.1.11",
     "bcrypt": "^6.0.0",
     "jsonwebtoken": "^9.0.2",
     "next": "15.3.2",
     "next-auth": "^4.24.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss": "^4.1.11",
+    "ts-node": "^10.9.2",
     "zod": "^3.25.64"
   },
   "devDependencies": {
@@ -47,13 +51,10 @@
     "eslint-plugin-prettier": "^5.4.0",
     "eslint-plugin-testing-library": "^7.5.3",
     "init": "^0.1.2",
-    "jest": "^30.0.3",
-    "jest-fixed-jsdom": "^0.0.9",
-    "postcss": "^8.5.3",
+    "postcss": "^8.5.6",
     "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.13",
     "prisma": "^6.8.2",
-    "tailwindcss": "^3.4.17",
-    "ts-node": "^10.9.2",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3"
   }
