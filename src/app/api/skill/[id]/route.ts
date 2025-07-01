@@ -1,8 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse, NextRequest } from 'next/server';
 import { getIdFromRequest } from '@/utils/url';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { checkAuth } from '@/lib/check-auth';
 
 export async function GET(request: NextRequest) {
   const id = getIdFromRequest(request);
@@ -29,15 +28,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session || session.user.role !== 'ADMIN') {
-    return NextResponse.json(
-      {
-        error: 'Acesso negado. Apenas administradores podem cadastrar skills.',
-      },
-      { status: 403 }
-    );
-  }
+  const auth = await checkAuth({ requireAdmin: true });
+  if (!auth.authorized) return auth.response;
+
   const id = getIdFromRequest(request);
   const { name } = await request.json();
 
@@ -64,15 +57,9 @@ export async function PATCH(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session || session.user.role !== 'ADMIN') {
-    return NextResponse.json(
-      {
-        error: 'Acesso negado. Apenas administradores podem deletar skills.',
-      },
-      { status: 403 }
-    );
-  }
+  const auth = await checkAuth({ requireAdmin: true });
+  if (!auth.authorized) return auth.response;
+
   const id = getIdFromRequest(request);
 
   try {
