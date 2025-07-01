@@ -8,7 +8,11 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
-    "seed": "node src/scripts/createTestUser.js"
+    "seed": "node src/scripts/createTestUser.js",
+    "test": "jest  --passWithNoTests --maxWorkers=50%",
+    "test:watchAll": "jest --watchAll",
+    "test:watch": "jest --watch --maxWorkers=25%",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@prisma/client": "^6.9.0",
@@ -26,7 +30,14 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@swc/core": "^1.12.7",
+    "@swc/jest": "^0.2.38",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/bcrypt": "^5.0.2",
+    "@types/jest": "^30.0.0",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^20.17.57",
     "@types/react": "^19",
@@ -38,6 +49,7 @@
     "eslint-config-next": "^15.1.8",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.4.0",
+    "eslint-plugin-testing-library": "^7.5.3",
     "init": "^0.1.2",
     "postcss": "^8.5.6",
     "prettier": "^3.5.3",

@@ -16,29 +16,36 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        const user = await prisma.user.findUnique({
-          where: { email: credentials?.email },
-        });
+        try {
+          const user = await prisma.user.findUnique({
+            where: { email: credentials?.email },
+          });
 
-        if (!user) throw new Error('Email não encontrado.');
+          if (!user) throw new Error('Email não encontrado.');
 
-        const isValid = await compare(credentials!.password, user.password);
-        if (!isValid) throw new Error('Senha incorreta.');
+          const isValid = await compare(credentials!.password, user.password);
 
-        const validRoles = ['ADMIN', 'USER'] as const;
-        const role = validRoles.includes(
-          user.role as (typeof validRoles)[number]
-        )
-          ? (user.role as UserRole)
-          : 'USER';
+          if (!isValid) throw new Error('Senha incorreta.');
+          
+          const validRoles = ['ADMIN', 'USER'] as const;
+          const role = validRoles.includes(
+            user.role as (typeof validRoles)[number]
+          )
+            ? (user.role as UserRole)
+            : 'USER';
 
-        return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          avatar: user.avatar ?? undefined,
-          role,
-        };
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            avatar: user.avatar ?? undefined,
+            role,
+          };
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+          throw new Error('Erro ao autenticar. Verifique suas credenciais.');
+        }
       },
     }),
   ],
