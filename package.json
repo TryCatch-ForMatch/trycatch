@@ -6,13 +6,17 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "commit": "cz",
     "lint": "next lint",
     "format": "prettier --write .",
     "seed": "node src/scripts/createTestUser.js",
     "test": "jest  --passWithNoTests --maxWorkers=50%",
     "test:watchAll": "jest --watchAll",
     "test:watch": "jest --watch --maxWorkers=25%",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "test:staged": "jest --findRelatedTests --passWithNoTests",
+    "test:push": "jest --coverage --passWithNoTests",
+    "prepare": "husky"
   },
   "dependencies": {
     "@prisma/client": "^6.9.0",
@@ -29,6 +33,8 @@
     "zod": "^3.25.64"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@eslint/eslintrc": "^3",
     "@swc/core": "^1.12.7",
     "@swc/jest": "^0.2.38",
@@ -45,17 +51,24 @@
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
     "autoprefixer": "^10.4.21",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.27.0",
     "eslint-config-next": "^15.1.8",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.4.0",
     "eslint-plugin-testing-library": "^7.5.3",
     "init": "^0.1.2",
+    "lint-staged": "^16.1.2",
     "postcss": "^8.5.6",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.13",
     "prisma": "^6.8.2",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
