@@ -1,6 +1,11 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
+import { z } from 'zod';
+
+const createSkillSchema = z.object({
+  name: z.string().min(1, 'O nome da skill é obrigatório.'),
+});
 
 export async function GET() {
   try {
@@ -22,12 +27,22 @@ export async function POST(request: Request) {
   if (!auth.authorized) return auth.response;
 
   try {
-    const { name } = await request.json();
+    const body = await request.json();
+    const parse = createSkillSchema.safeParse(body);
 
-    if (!name) {
+    if (!parse.success) {
       return NextResponse.json(
-        { error: 'O nome da skill é obrigatório.' },
+        { error: parse.error.format() },
         { status: 400 }
+      );
+    }
+
+    const { name } = parse.data;
+    const existingSkill = await prisma.skill.findUnique({ where: { name } });
+    if (existingSkill) {
+      return NextResponse.json(
+        { error: 'Já existe uma skill com esse nome.' },
+        { status: 409 }
       );
     }
 
@@ -37,7 +52,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(skill, { status: 201 });
   } catch (error) {
-    console.log(error);
+    console.error('Erro ao criar skill:', error);
     return NextResponse.json(
       { error: 'Erro ao criar skill.' },
       { status: 500 }
