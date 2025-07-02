@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { checkAuth } from '@/lib/check-auth';
 
 export async function GET() {
   try {
@@ -19,15 +18,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session || session.user.role !== 'ADMIN') {
-    return NextResponse.json(
-      {
-        error: 'Acesso negado. Apenas administradores podem cadastrar skills.',
-      },
-      { status: 403 }
-    );
-  }
+  const auth = await checkAuth({ requireAdmin: true });
+  if (!auth.authorized) return auth.response;
+
   try {
     const { name } = await request.json();
 
