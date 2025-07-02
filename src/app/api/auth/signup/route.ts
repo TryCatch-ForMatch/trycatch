@@ -107,7 +107,12 @@ export async function POST(req: Request) {
       data: { used: true },
     });
 
-    return NextResponse.json(user);
+    return NextResponse.json({
+      message: 'Usuário criado com sucesso.',
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    });
   } catch (error) {
     console.error('Erro interno ao criar usuário:', error);
     return NextResponse.json(

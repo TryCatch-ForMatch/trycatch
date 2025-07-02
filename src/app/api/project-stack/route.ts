@@ -36,6 +36,35 @@ export async function POST(req: Request) {
   const { projectId, stackId, percentage } = parsed.data;
 
   try {
+    const [project, stack] = await Promise.all([
+      prisma.project.findUnique({ where: { id: projectId } }),
+      prisma.stack.findUnique({ where: { id: stackId } }),
+    ]);
+
+    if (!project || !stack) {
+      return NextResponse.json(
+        { error: 'Projeto ou Stack não encontrados' },
+        { status: 404 }
+      );
+    }
+
+    const existingStacks = await prisma.projectStack.findMany({
+      where: { projectId },
+    });
+
+    const total =
+      existingStacks.reduce((acc, item) => acc + item.percentage, 0) +
+      percentage;
+
+    if (total > 100) {
+      return NextResponse.json(
+        {
+          error: 'A soma dos percentuais das stacks não pode ultrapassar 100%',
+        },
+        { status: 400 }
+      );
+    }
+
     const newProjectStack = await prisma.projectStack.create({
       data: {
         projectId,
