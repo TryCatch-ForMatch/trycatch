@@ -4,7 +4,7 @@ import { getIdFromRequest } from '@/utils/url';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 
-const idSchema = z.string().uuid('ID inválido.');
+const idSchema = z.string().min(1, 'ID inválido.');
 const updateSkillSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
 });
