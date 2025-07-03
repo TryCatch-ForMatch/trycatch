@@ -22,13 +22,13 @@ npm run build-storybook
 Crie arquivos `.stories.tsx` ao lado dos seus componentes:
 
 ```tsx
-// src/components/Button.stories.tsx
+// src/components/dashboard/footer/footer.stories.tsx
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { Button } from './Button';
+import { DashboardFooter } from './footer';
 
-const meta: Meta<typeof Button> = {
-  title: 'Components/Button',
-  component: Button,
+const meta: Meta<typeof DashboardFooter> = {
+  title: 'Components/Dashboard/Footer',
+  component: DashboardFooter,
   parameters: {
     layout: 'centered',
   },
@@ -38,12 +38,7 @@ const meta: Meta<typeof Button> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = {
-  args: {
-    primary: true,
-    label: 'Button',
-  },
-};
+export const Default: Story = {};
 ```
 
 ## Configuração Atual
