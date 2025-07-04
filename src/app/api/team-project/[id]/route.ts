@@ -5,7 +5,6 @@ import jwt from 'jsonwebtoken';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
-
 function getUserFromRequest(request: NextRequest) {
   const authHeader = request.headers.get('authorization');
   if (!authHeader) return null;
@@ -54,7 +53,10 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function PUT(request: Request, context: { params: { id: string } }) {
+export async function PUT(
+  request: NextRequest,
+  context: { params: { id: string } }
+) {
   let session;
 
   try {
@@ -73,7 +75,8 @@ export async function PUT(request: Request, context: { params: { id: string } })
 
   const { id: projectId } = await context.params;
   const data = await request.json();
-  const { name, description, deadline, totalValue, status, skills, stacks } = data;
+  const { name, description, deadline, totalValue, status, skills, stacks } =
+    data;
 
   try {
     const updated = await prisma.project.update({
@@ -109,11 +112,13 @@ export async function PUT(request: Request, context: { params: { id: string } })
   }
 }
 
-export async function DELETE(request: Request, context: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  context: { params: { id: string } }
+) {
   try {
     const { id: projectId } = await context.params;
 
-   
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
@@ -132,9 +137,9 @@ export async function DELETE(request: Request, context: { params: { id: string }
 
     if (existing.ownerId !== session.user.id) {
       return NextResponse.json(
-      { error: 'Você não tem permissão para deletar este projeto.' },
-      { status: 403 }
-    );
+        { error: 'Você não tem permissão para deletar este projeto.' },
+        { status: 403 }
+      );
     }
 
     await prisma.projectSkill.deleteMany({

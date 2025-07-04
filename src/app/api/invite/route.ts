@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import crypto from 'crypto';
 import { checkAuth } from '@/lib/check-auth';
 
@@ -21,7 +21,7 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const auth = await checkAuth({ requireAdmin: true });
   if (!auth.authorized) return auth.response;
 
