@@ -16,19 +16,11 @@ function getUserFromRequest(request: NextRequest) {
   } catch {
     return null;
   }
-}
+  const projectId = idParse.data;
 
-export async function GET(request: NextRequest) {
   try {
-    const id = getIdFromRequest(request);
-
-    const userAuth = getUserFromRequest(request);
-    if (!userAuth || userAuth.id !== id) {
-      return new Response('Acesso negado', { status: 403 });
-    }
-
     const project = await prisma.project.findUnique({
-      where: { id },
+      where: { id: projectId },
       include: {
         owner: { select: { id: true, name: true, avatar: true } },
         skills: { include: { skill: true } },
@@ -41,6 +33,10 @@ export async function GET(request: NextRequest) {
         { error: 'Projeto não encontrado' },
         { status: 404 }
       );
+    }
+
+    if (project.ownerId !== session.user.id && session.user.role !== 'ADMIN') {
+      return NextResponse.json({ error: 'Acesso negado' }, { status: 403 });
     }
 
     return NextResponse.json(project);
@@ -69,9 +65,7 @@ export async function PUT(
     );
   }
 
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
-  }
+  const projectId = idParse.data;
 
   const { id: projectId } = await context.params;
   const data = await request.json();
@@ -79,6 +73,27 @@ export async function PUT(
     data;
 
   try {
+    const existing = await prisma.project.findUnique({
+      where: { id: projectId },
+    });
+
+    if (!existing) {
+      return NextResponse.json(
+        { error: 'Projeto não encontrado' },
+        { status: 404 }
+      );
+    }
+
+    if (existing.ownerId !== session.user.id && session.user.role !== 'ADMIN') {
+      return NextResponse.json(
+        { error: 'Você não tem permissão para editar este projeto.' },
+        { status: 403 }
+      );
+    }
+
+    const { name, description, deadline, totalValue, status, skills, stacks } =
+      parse.data;
+
     const updated = await prisma.project.update({
       where: { id: projectId },
       data: {
@@ -124,6 +139,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
     }
 
+  try {
     const existing = await prisma.project.findUnique({
       where: { id: projectId },
     });
@@ -135,22 +151,15 @@ export async function DELETE(
       );
     }
 
-    if (existing.ownerId !== session.user.id) {
+    if (existing.ownerId !== session.user.id && session.user.role !== 'ADMIN') {
       return NextResponse.json(
         { error: 'Você não tem permissão para deletar este projeto.' },
         { status: 403 }
       );
     }
-
-    await prisma.projectSkill.deleteMany({
-      where: { projectId },
-    });
-    await prisma.projectStack.deleteMany({
-      where: { projectId },
-    });
-    await prisma.project.delete({
-      where: { id: projectId },
-    });
+    await prisma.projectSkill.deleteMany({ where: { projectId } });
+    await prisma.projectStack.deleteMany({ where: { projectId } });
+    await prisma.project.delete({ where: { id: projectId } });
 
     return NextResponse.json({ message: 'Projeto deletado com sucesso' });
   } catch (error) {
