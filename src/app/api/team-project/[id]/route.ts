@@ -1,42 +1,20 @@
 import { prisma } from '@/lib/prisma';
-import { NextResponse } from 'next/server';
-import { checkAuth } from '@/lib/check-auth';
-import { z } from 'zod';
+import { NextResponse, NextRequest } from 'next/server';
+import { getIdFromRequest } from '@/utils/url';
+import jwt from 'jsonwebtoken';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
-const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
-const updateProjectSchema = z.object({
-  name: z.string().min(1, 'O nome é obrigatório.'),
-  description: z.string().min(1, 'A descrição é obrigatória.'),
-  deadline: z
-    .string()
-    .refine((val) => !isNaN(Date.parse(val)), { message: 'Data inválida.' }),
-  totalValue: z.number({
-    invalid_type_error: 'Valor total deve ser um número.',
-  }),
-  status: z.enum(['BUSCANDO', 'EM_ANDAMENTO', 'COMPLETO']),
-  skills: z.array(z.string().uuid('ID da skill inválido')).optional(),
-  stacks: z
-    .array(
-      z.object({
-        stackId: z.string().uuid('ID da stack inválido'),
-        percentage: z.number().min(0).max(100),
-      })
-    )
-    .optional(),
-});
-
-export async function GET(
-  request: Request,
-  context: { params: { id: string } }
-) {
-  const { authorized, response, session } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
-  });
-  if (!authorized || !session) return response;
-
-  const idParse = idSchema.safeParse(context.params.id);
-  if (!idParse.success) {
-    return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
+function getUserFromRequest(request: NextRequest) {
+  const authHeader = request.headers.get('authorization');
+  if (!authHeader) return null;
+  const token = authHeader.split(' ')[1];
+  try {
+    return jwt.verify(token, process.env.JWT_SECRET as string) as {
+      id: string;
+    };
+  } catch {
+    return null;
   }
   const projectId = idParse.data;
 
@@ -72,26 +50,27 @@ export async function GET(
 }
 
 export async function PUT(
-  request: Request,
+  request: NextRequest,
   context: { params: { id: string } }
 ) {
-  const { authorized, response, session } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
-  });
-  if (!authorized || !session) return response;
+  let session;
 
-  const idParse = idSchema.safeParse(context.params.id);
-  if (!idParse.success) {
-    return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
+  try {
+    session = await getServerSession(authOptions);
+  } catch (error) {
+    console.error('Erro ao obter sessão:', error);
+    return NextResponse.json(
+      { error: 'Erro de autenticação' },
+      { status: 500 }
+    );
   }
 
   const projectId = idParse.data;
 
-  const body = await request.json();
-  const parse = updateProjectSchema.safeParse(body);
-  if (!parse.success) {
-    return NextResponse.json({ error: parse.error.format() }, { status: 400 });
-  }
+  const { id: projectId } = await context.params;
+  const data = await request.json();
+  const { name, description, deadline, totalValue, status, skills, stacks } =
+    data;
 
   try {
     const existing = await prisma.project.findUnique({
@@ -149,20 +128,16 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: Request,
+  request: NextRequest,
   context: { params: { id: string } }
 ) {
-  const { authorized, response, session } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
-  });
-  if (!authorized || !session) return response;
+  try {
+    const { id: projectId } = await context.params;
 
-  const idParse = idSchema.safeParse(context.params.id);
-  if (!idParse.success) {
-    return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
-  }
-
-  const projectId = idParse.data;
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+    }
 
   try {
     const existing = await prisma.project.findUnique({
