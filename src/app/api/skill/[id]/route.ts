@@ -59,6 +59,19 @@ export async function PATCH(request: NextRequest) {
   const { name } = parse.data;
 
   try {
+    const existing = await prisma.skill.findFirst({
+      where: {
+        name,
+        NOT: { id }, // ignora a própria skill que está sendo atualizada
+      },
+    });
+
+    if (existing) {
+      return NextResponse.json(
+        { error: 'Já existe uma skill com esse nome.' },
+        { status: 409 }
+      );
+    }
     const skill = await prisma.skill.update({
       where: { id },
       data: { name },
