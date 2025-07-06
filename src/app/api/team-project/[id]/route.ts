@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 
@@ -26,7 +26,7 @@ const updateProjectSchema = z.object({
 });
 
 export async function GET(
-  request: Request,
+  request: NextRequest,
   context: { params: { id: string } }
 ) {
   const { authorized, response, session } = await checkAuth({
@@ -72,7 +72,7 @@ export async function GET(
 }
 
 export async function PUT(
-  request: Request,
+  request: NextRequest,
   context: { params: { id: string } }
 ) {
   const { authorized, response, session } = await checkAuth({
@@ -149,7 +149,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: Request,
+  request: NextRequest,
   context: { params: { id: string } }
 ) {
   const { authorized, response, session } = await checkAuth({
