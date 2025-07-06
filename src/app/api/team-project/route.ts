@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { NextResponse, NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 
 import { z } from 'zod';
@@ -48,7 +48,7 @@ export async function GET() {
   return NextResponse.json(projects);
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   const { authorized, response, session } = await checkAuth({
     allowedRoles: ['ADMIN', 'USER'],
   });
