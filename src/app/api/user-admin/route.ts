@@ -9,8 +9,8 @@ const adminCreateUserSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
   avatar: z.union([z.string().url(), z.literal('')]).nullable(),
-  linkedin: z.string().url().optional(),
-  github: z.string().url().optional(),
+  linkedin: z.union([z.string().url(), z.literal(''), z.null()]).optional(),
+  github: z.union([z.string().url(), z.literal(''), z.null()]).optional(),
   bio: z.string().optional(),
   role: z.enum(['USER', 'ADMIN']),
   skills: z.array(z.string()).optional(),
@@ -24,6 +24,7 @@ export async function POST(request: NextRequest) {
   const parse = adminCreateUserSchema.safeParse(json);
 
   if (!parse.success) {
+    console.log('Erro no parse:', parse.error.format());
     return NextResponse.json(
       { error: 'Dados inválidos.', issues: parse.error.format() },
       { status: 400 }
@@ -40,32 +41,46 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   }
+  let hashedPassword;
 
-  const hashedPassword = await hash(password, 10);
+  try {
+    hashedPassword = await hash(password, 10);
 
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-      password: hashedPassword,
-      avatar,
-      linkedin,
-      github,
-      bio,
-      role,
-      skills: skills
-        ? {
-            create: skills.map((skillId) => ({
-              skill: { connect: { id: skillId } },
-            })),
-          }
-        : undefined,
-    },
-  });
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        avatar,
+        linkedin,
+        github,
+        bio,
+        role,
+        skills: skills
+          ? {
+              create: skills.map((skillId) => ({
+                skill: { connect: { id: skillId } },
+              })),
+            }
+          : undefined,
+      },
+      include: {
+        skills: {
+          include: { skill: true },
+        },
+      },
+    });
 
-  return NextResponse.json({
-    message: 'Usuário criado com sucesso.',
-    id: user.id,
-    role: user.role,
-  });
+    return NextResponse.json({
+      message: 'Usuário criado com sucesso.',
+      id: user.id,
+      role: user.role,
+    });
+  } catch (error) {
+    console.error('Erro interno ao criar usuário:', error);
+    return NextResponse.json(
+      { error: 'Erro interno ao criar usuário.' },
+      { status: 500 }
+    );
+  }
 }
