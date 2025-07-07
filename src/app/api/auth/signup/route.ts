@@ -4,9 +4,9 @@ import { z } from 'zod';
 import { NextResponse, NextRequest } from 'next/server';
 
 const createUserSchema = z.object({
-  name: z.string(),
-  email: z.string().email(),
-  password: z.string().min(6),
+  name: z.string().min(1, 'O nome é obrigatório.'),
+  email: z.string().email('Email inválido.'),
+  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres.'),
   avatar: z.union([z.string().url(), z.literal('')]).nullable(),
   linkedin: z.string().url().optional(),
   github: z.string().url().optional(),
