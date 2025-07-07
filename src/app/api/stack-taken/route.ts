@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
@@ -9,13 +9,13 @@ const createStackTakenSchema = z.object({
   stackId: z.string().uuid('ID da stack inválido.'),
 });
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   const { authorized, response, session } = await checkAuth({
     allowedRoles: ['ADMIN', 'USER'],
   });
   if (!authorized || !session) return response;
 
-  const body = await req.json();
+  const body = await request.json();
   const parsed = createStackTakenSchema.safeParse(body);
 
   if (!parsed.success) {
@@ -47,13 +47,13 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET(req: Request) {
+export async function GET(request: NextRequest) {
   const { authorized, response, session } = await checkAuth({
     allowedRoles: ['ADMIN', 'USER'],
   });
   if (!authorized || !session) return response;
 
-  const { searchParams } = new URL(req.url);
+  const { searchParams } = new URL(request.url);
   const projectId = searchParams.get('projectId');
 
   try {

@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
@@ -9,13 +9,13 @@ const addSkillSchema = z.object({
   skillId: z.string(),
 });
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session || !session.user?.id) {
     return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
   }
 
-  const body = await req.json();
+  const body = await request.json();
   const parsed = addSkillSchema.safeParse(body);
 
   if (!parsed.success) {
