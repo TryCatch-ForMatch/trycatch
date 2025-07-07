@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
-
 import { z } from 'zod';
 
 const createProjectSchema = z.object({
