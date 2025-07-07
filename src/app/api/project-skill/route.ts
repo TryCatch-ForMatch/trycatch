@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
@@ -8,14 +8,14 @@ const createProjectSkillSchema = z.object({
   skillId: z.string(),
 });
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   const auth = await checkAuth();
 
   if (!auth.authorized) return auth.response;
 
   let body;
   try {
-    body = await req.json();
+    body = await request.json();
   } catch (error) {
     console.error('Erro ao fazer parse do JSON no POST:', error);
     return NextResponse.json(
@@ -60,14 +60,14 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET(req: Request) {
+export async function GET(request: NextRequest) {
   const auth = await checkAuth();
 
   if (!auth.authorized) return auth.response;
 
   let projectId;
   try {
-    const { searchParams } = new URL(req.url);
+    const { searchParams } = new URL(request.url);
     projectId = searchParams.get('projectId');
   } catch (error) {
     console.error('Erro ao processar URL no GET:', error);

@@ -1,7 +1,7 @@
 import { checkAuth } from '@/lib/check-auth';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { hash } from 'bcrypt';
 
 const adminCreateUserSchema = z.object({
@@ -16,11 +16,11 @@ const adminCreateUserSchema = z.object({
   skills: z.array(z.string()).optional(),
 });
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   const auth = await checkAuth({ requireAdmin: true });
   if (!auth.authorized) return auth.response;
 
-  const json = await req.json();
+  const json = await request.json();
   const parse = adminCreateUserSchema.safeParse(json);
 
   if (!parse.success) {

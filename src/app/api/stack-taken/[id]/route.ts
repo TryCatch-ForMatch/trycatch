@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
@@ -11,7 +11,7 @@ const updateStackTakenSchema = z.object({
 const idSchema = z.string().uuid('ID inválido.');
 
 export async function GET(
-  req: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const { authorized, response, session } = await checkAuth({
@@ -53,7 +53,7 @@ export async function GET(
 }
 
 export async function PUT(
-  req: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const { authorized, response, session } = await checkAuth({
@@ -61,7 +61,7 @@ export async function PUT(
   });
   if (!authorized || !session) return response;
 
-  const body = await req.json();
+  const body = await request.json();
   const parsed = updateStackTakenSchema.safeParse(body);
 
   if (!parsed.success) {
@@ -106,7 +106,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-  req: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const { authorized, response, session } = await checkAuth({

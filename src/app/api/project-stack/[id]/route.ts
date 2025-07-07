@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
@@ -9,7 +9,7 @@ const updatePercentageSchema = z.object({
 });
 
 export async function GET(
-  req: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const auth = await checkAuth();
@@ -42,7 +42,7 @@ export async function GET(
 }
 
 export async function DELETE(
-  req: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const auth = await checkAuth();
@@ -98,7 +98,7 @@ export async function DELETE(
 }
 
 export async function PATCH(
-  req: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const auth = await checkAuth();
@@ -106,7 +106,7 @@ export async function PATCH(
 
   let body;
   try {
-    body = await req.json();
+    body = await request.json();
   } catch (error) {
     console.error('Erro ao fazer parse do JSON no PATCH:', error);
     return NextResponse.json(
