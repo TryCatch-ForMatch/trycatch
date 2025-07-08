@@ -4,9 +4,10 @@ import { getIdFromRequest } from '@/utils/url';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 
-const idSchema = z.string().uuid('ID inválido.');
+const idSchema = z.string().min(1, 'ID inválido.');
 const updateSkillSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
+  forceUpdate: z.boolean().optional(),
 });
 
 export async function GET(request: NextRequest) {
@@ -56,9 +57,40 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: parse.error.format() }, { status: 400 });
   }
 
-  const { name } = parse.data;
+  const { name, forceUpdate } = parse.data;
 
   try {
+    const existing = await prisma.skill.findFirst({
+      where: {
+        name,
+        NOT: { id }, // ignora a própria skill que está sendo atualizada
+      },
+    });
+
+    if (existing) {
+      return NextResponse.json(
+        { error: 'Já existe uma skill com esse nome.' },
+        { status: 409 }
+      );
+    }
+
+    const linkedProjectSkill = await prisma.projectSkill.findFirst({
+      where: { skillId: id },
+    });
+
+    const linkedUserSkill = await prisma.userSkill.findFirst({
+      where: { skillId: id },
+    });
+    if ((linkedProjectSkill || linkedUserSkill) && !forceUpdate) {
+      return NextResponse.json(
+        {
+          error:
+            'Esta skill está sendo usada em projetos ou por usuários. Alterações podem impactar dados existentes.',
+        },
+        { status: 409 }
+      );
+    }
+
     const skill = await prisma.skill.update({
       where: { id },
       data: { name },

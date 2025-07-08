@@ -1,7 +1,11 @@
 import { prisma } from '@/lib/prisma';
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { NextResponse, NextRequest } from 'next/server';
+import { checkAuth } from '@/lib/check-auth';
+import { z } from 'zod';
+
+const createStackSchema = z.object({
+  name: z.string().min(1, 'O nome da stack é obrigatório.'),
+});
 
 export async function GET() {
   try {
@@ -18,23 +22,27 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session || session.user.role !== 'ADMIN') {
-    return NextResponse.json(
-      {
-        error: 'Acesso negado. Apenas administradores podem cadastrar stacks.',
-      },
-      { status: 403 }
-    );
-  }
-  try {
-    const { name } = await request.json();
+export async function POST(request: NextRequest) {
+  const auth = await checkAuth({ requireAdmin: true });
+  if (!auth.authorized) return auth.response;
 
-    if (!name) {
+  try {
+    const body = await request.json();
+    const parse = createStackSchema.safeParse(body);
+
+    if (!parse.success) {
       return NextResponse.json(
-        { error: 'O nome da stack é obrigatório.' },
+        { error: parse.error.format() },
         { status: 400 }
+      );
+    }
+
+    const { name } = parse.data;
+    const existingStack = await prisma.stack.findUnique({ where: { name } });
+    if (existingStack) {
+      return NextResponse.json(
+        { error: 'Já existe uma stack com esse nome.' },
+        { status: 409 }
       );
     }
 
@@ -44,7 +52,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(stack, { status: 201 });
   } catch (error) {
-    console.log(error);
+    console.error('Erro ao criar stack:', error);
     return NextResponse.json(
       { error: 'Erro ao criar stack.' },
       { status: 500 }

@@ -1,12 +1,12 @@
 import { prisma } from '@/lib/prisma';
 import { hash } from 'bcrypt';
 import { z } from 'zod';
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 
 const createUserSchema = z.object({
-  name: z.string(),
-  email: z.string().email(),
-  password: z.string().min(6),
+  name: z.string().min(1, 'O nome é obrigatório.'),
+  email: z.string().email('Email inválido.'),
+  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres.'),
   avatar: z.union([z.string().url(), z.literal('')]).nullable(),
   linkedin: z.string().url().optional(),
   github: z.string().url().optional(),
@@ -15,10 +15,10 @@ const createUserSchema = z.object({
   inviteCode: z.string(),
 });
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   let json;
   try {
-    json = await req.json();
+    json = await request.json();
   } catch (error) {
     console.error('Erro ao fazer parse do JSON:', error);
     return NextResponse.json(

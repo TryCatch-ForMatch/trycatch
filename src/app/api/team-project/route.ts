@@ -1,6 +1,28 @@
 import { prisma } from '@/lib/prisma';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
+import { z } from 'zod';
+
+const createProjectSchema = z.object({
+  name: z.string().min(1, 'O nome é obrigatório'),
+  description: z.string().min(1, 'A descrição é obrigatória'),
+  deadline: z
+    .string()
+    .refine((val) => !isNaN(Date.parse(val)), 'Data inválida'),
+  totalValue: z
+    .number()
+    .nonnegative('O valor total deve ser um número positivo'),
+  status: z.enum(['BUSCANDO', 'EM_ANDAMENTO', 'COMPLETO']),
+  skills: z.array(z.string().uuid()).optional(),
+  stacks: z
+    .array(
+      z.object({
+        stackId: z.string().uuid(),
+        percentage: z.number().min(0).max(100),
+      })
+    )
+    .optional(),
+});
 
 export async function GET() {
   const { authorized, response } = await checkAuth({
@@ -25,23 +47,21 @@ export async function GET() {
   return NextResponse.json(projects);
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const { authorized, response, session } = await checkAuth({
     allowedRoles: ['ADMIN', 'USER'],
   });
   if (!authorized || !session) return response;
 
-  const data = await request.json();
-  const { name, description, deadline, totalValue, status, skills, stacks } =
-    data;
+  const body = await request.json();
+  const parse = createProjectSchema.safeParse(body);
 
-  if (!name || !description || !deadline || !totalValue || !status) {
-    return NextResponse.json(
-      { error: 'Todos os campos obrigatórios devem ser preenchidos' },
-      { status: 400 }
-    );
+  if (!parse.success) {
+    return NextResponse.json({ error: parse.error.format() }, { status: 400 });
   }
 
+  const { name, description, deadline, totalValue, status, skills, stacks } =
+    parse.data;
   const project = await prisma.project.create({
     data: {
       ownerId: session.user.id,

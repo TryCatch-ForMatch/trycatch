@@ -1,22 +1,26 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
 
-const updateProjectSkillSchema = z.object({
-  skillId: z.string(),
-});
+const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 
 export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: { id: string } }
 ) {
   const auth = await checkAuth();
   if (!auth.authorized) return auth.response;
 
+  const idParse = idSchema.safeParse(context.params.id);
+  if (!idParse.success) {
+    return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
+  }
+  const projectId = idParse.data;
+
   try {
     const projectSkill = await prisma.projectSkill.findUnique({
-      where: { id: params.id },
+      where: { id: projectId },
       include: { skill: true },
     });
 
@@ -38,7 +42,7 @@ export async function GET(
 }
 
 export async function DELETE(
-  req: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const auth = await checkAuth();
