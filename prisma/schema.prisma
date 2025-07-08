@@ -16,7 +16,7 @@ datasource db {
 enum ProjectStatus {
   BUSCANDO
   EM_ANDAMENTO
-  COMPLETO
+  CONCLUÍDO
 }
 
 enum UserRole {

@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import { ProjectStatus } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
@@ -12,12 +13,12 @@ const createProjectSchema = z.object({
   totalValue: z
     .number()
     .nonnegative('O valor total deve ser um número positivo'),
-  status: z.enum(['BUSCANDO', 'EM_ANDAMENTO', 'COMPLETO']),
-  skills: z.array(z.string().uuid()).optional(),
+  status: z.nativeEnum(ProjectStatus),
+  skills: z.array(z.string().min(1, 'ID inválido.')).optional(),
   stacks: z
     .array(
       z.object({
-        stackId: z.string().uuid(),
+        stackId: z.string().min(1, 'ID inválido.'),
         percentage: z.number().min(0).max(100),
       })
     )

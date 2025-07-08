@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import { ProjectStatus } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
@@ -13,7 +14,7 @@ const updateProjectSchema = z.object({
   totalValue: z.number({
     invalid_type_error: 'Valor total deve ser um número.',
   }),
-  status: z.enum(['BUSCANDO', 'EM_ANDAMENTO', 'COMPLETO']),
+  status: z.nativeEnum(ProjectStatus),
   skills: z.array(z.string().uuid('ID da skill inválido')).optional(),
   stacks: z
     .array(
