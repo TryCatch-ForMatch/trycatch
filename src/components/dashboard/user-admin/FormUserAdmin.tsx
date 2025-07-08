@@ -127,9 +127,10 @@ export default function FormUserAdmin() {
   );
 
   return (
-    <Card className="mx-auto mt-8 max-w-lg rounded-2xl p-6 shadow-lg">
-      <CardContent className="space-y-6">
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <Card className="mx-auto mt-1 max-w-4xl rounded-2xl p-6 shadow-lg">
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-3">
+          {/* Nome */}
           <div className="space-y-1">
             <Label>Nome</Label>
             <Input
@@ -139,75 +140,50 @@ export default function FormUserAdmin() {
             />
           </div>
 
-          <div className="space-y-1">
-            <Label>Email</Label>
-            <Input
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleChange('email', e.target.value)}
-              required
-            />
+          {/* Email + Senha */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="space-y-1">
+              <Label>Email</Label>
+              <Input
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleChange('email', e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label>Senha</Label>
+              <Input
+                type="password"
+                autoComplete="new-password"
+                value={formData.password}
+                onChange={(e) => handleChange('password', e.target.value)}
+                required
+              />
+            </div>
           </div>
 
-          <div className="space-y-1">
-            <Label>Senha</Label>
-            <Input
-              type="password"
-              autoComplete="new-password"
-              value={formData.password}
-              onChange={(e) => handleChange('password', e.target.value)}
-              required
-            />
+          {/* Linkedin + Github */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="space-y-1">
+              <Label>LinkedIn</Label>
+              <Input
+                value={formData.linkedin}
+                onChange={(e) => handleChange('linkedin', e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label>GitHub</Label>
+              <Input
+                value={formData.github}
+                onChange={(e) => handleChange('github', e.target.value)}
+              />
+            </div>
           </div>
 
-          <div className="space-y-1">
-            <Label>Avatar (URL)</Label>
-            <Input
-              value={formData.avatar}
-              onChange={(e) => handleChange('avatar', e.target.value)}
-            />
-          </div>
-
-          <div className="space-y-1">
-            <Label>LinkedIn</Label>
-            <Input
-              value={formData.linkedin}
-              onChange={(e) => handleChange('linkedin', e.target.value)}
-            />
-          </div>
-
-          <div className="space-y-1">
-            <Label>GitHub</Label>
-            <Input
-              value={formData.github}
-              onChange={(e) => handleChange('github', e.target.value)}
-            />
-          </div>
-
-          <div className="space-y-1">
-            <Label>Bio</Label>
-            <Textarea
-              value={formData.bio}
-              onChange={(e) => handleChange('bio', e.target.value)}
-            />
-          </div>
-
-          <div className="space-y-1">
-            <Label>Permissão</Label>
-            <Select
-              value={formData.role}
-              onValueChange={(value) => handleChange('role', value)}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Selecione a permissão" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="USER">Usuário</SelectItem>
-                <SelectItem value="ADMIN">Administrador</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
+          {/* Skills */}
           <div className="space-y-1">
             <Label>Skills</Label>
             <Select onValueChange={handleAddSkill} value="">
@@ -245,14 +221,61 @@ export default function FormUserAdmin() {
             </div>
           </div>
 
-          {error && <p className="text-sm font-medium text-red-500">{error}</p>}
-          {success && (
-            <p className="text-sm font-medium text-green-500">{success}</p>
-          )}
+          {/* Bio */}
+          <div className="space-y-1">
+            <Label>Bio</Label>
+            <Textarea
+              value={formData.bio}
+              onChange={(e) => handleChange('bio', e.target.value)}
+            />
+          </div>
 
-          <Button type="submit" disabled={loading} className="w-full">
-            {loading ? 'Cadastrando...' : 'Cadastrar Usuário'}
-          </Button>
+          {/* Avatar + Permissão */}
+          <div className="grid grid-cols-1 items-center gap-4 md:grid-cols-2">
+            <div className="space-y-1">
+              <Label>Avatar (URL)</Label>
+              <Input
+                value={formData.avatar}
+                onChange={(e) => handleChange('avatar', e.target.value)}
+              />
+              {formData.avatar && (
+                <img
+                  src={formData.avatar}
+                  alt="Avatar Preview"
+                  className="mt-2 h-16 w-16 rounded-full border object-cover"
+                />
+              )}
+            </div>
+
+            <div className="space-y-1">
+              <Label>Permissão</Label>
+              <Select
+                value={formData.role}
+                onValueChange={(value) => handleChange('role', value)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Selecione a permissão" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="USER">Usuário</SelectItem>
+                  <SelectItem value="ADMIN">Administrador</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Mensagens + Botão */}
+          <div className="space-y-2">
+            {error && (
+              <p className="text-sm font-medium text-red-500">{error}</p>
+            )}
+            {success && (
+              <p className="text-sm font-medium text-green-500">{success}</p>
+            )}
+            <Button type="submit" disabled={loading} className="w-full">
+              {loading ? 'Cadastrando...' : 'Cadastrar Usuário'}
+            </Button>
+          </div>
         </form>
       </CardContent>
     </Card>
