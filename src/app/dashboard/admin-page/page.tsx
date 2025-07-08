@@ -21,14 +21,16 @@ export default function AdminPage() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card className="rounded-2xl p-4 shadow">
           <CardContent className="space-y-2">
-            <p className="text-sm text-muted-foreground">Projetos Ativos</p>
+            <p className="text-sm text-muted-foreground">Projetos </p>
             <p className="text-2xl font-bold">[Número]</p>
           </CardContent>
         </Card>
 
         <Card className="rounded-2xl p-4 shadow">
           <CardContent className="space-y-2">
-            <p className="text-sm text-muted-foreground">Usuários</p>
+            <p className="text-sm text-muted-foreground">
+              Usuários Cadastrados
+            </p>
             <p className="text-2xl font-bold">[Número]</p>
           </CardContent>
         </Card>
@@ -42,7 +44,14 @@ export default function AdminPage() {
 
         <Card className="rounded-2xl p-4 shadow">
           <CardContent className="space-y-2">
-            <p className="text-sm text-muted-foreground">Skills & Stacks</p>
+            <p className="text-sm text-muted-foreground">Skills</p>
+            <p className="text-2xl font-bold">[Número]</p>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-2xl p-4 shadow">
+          <CardContent className="space-y-2">
+            <p className="text-sm text-muted-foreground">Stacks</p>
             <p className="text-2xl font-bold">[Número]</p>
           </CardContent>
         </Card>
@@ -51,9 +60,7 @@ export default function AdminPage() {
       {/* Botões de Ação */}
       <div className="mt-6 flex flex-wrap gap-4">
         <Button onClick={() => setOpenInvite(true)}>Cadastrar Convite</Button>
-        <Button onClick={() => setOpenSkill(true)}>
-          Cadastrar Skill / Stack
-        </Button>
+        <Button onClick={() => setOpenSkill(true)}>Cadastrar Skill</Button>
         <Button onClick={() => setOpenUserAdmin(true)}>
           Cadastrar User Admin
         </Button>
