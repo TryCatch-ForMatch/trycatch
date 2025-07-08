@@ -2,11 +2,15 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import InviteForm from '@/components/dashboard/invite/inviteForm';
 import SkillForm from '@/components/dashboard/skill/skillForm';
 import FormUserAdmin from '@/components/dashboard/user-admin/FormUserAdmin';
-import Modal from '@/components/ui/modal'; // Crie esse componente simples de modal ou use o shadcn/ui dialog
+import Modal from '@/components/ui/modal';
+import ProjectCard from '@/components/dashboard/PainelCards/CountProjectCard';
+import UserCard from '@/components/dashboard/PainelCards/CountUserCard';
+import InviteCard from '@/components/dashboard/PainelCards/CountInviteCard';
+import SkillCard from '@/components/dashboard/PainelCards/CountSkillCard';
+import StackCard from '@/components/dashboard/PainelCards/CountStackCard';
 
 export default function AdminPage() {
   const [openInvite, setOpenInvite] = useState(false);
@@ -18,43 +22,12 @@ export default function AdminPage() {
       <h1 className="text-2xl font-bold">Painel Administrativo</h1>
 
       {/* Painel com os números e status */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card className="rounded-2xl p-4 shadow">
-          <CardContent className="space-y-2">
-            <p className="text-sm text-muted-foreground">Projetos </p>
-            <p className="text-2xl font-bold">[Número]</p>
-          </CardContent>
-        </Card>
-
-        <Card className="rounded-2xl p-4 shadow">
-          <CardContent className="space-y-2">
-            <p className="text-sm text-muted-foreground">
-              Usuários Cadastrados
-            </p>
-            <p className="text-2xl font-bold">[Número]</p>
-          </CardContent>
-        </Card>
-
-        <Card className="rounded-2xl p-4 shadow">
-          <CardContent className="space-y-2">
-            <p className="text-sm text-muted-foreground">Convites Pendentes</p>
-            <p className="text-2xl font-bold">[Número]</p>
-          </CardContent>
-        </Card>
-
-        <Card className="rounded-2xl p-4 shadow">
-          <CardContent className="space-y-2">
-            <p className="text-sm text-muted-foreground">Skills</p>
-            <p className="text-2xl font-bold">[Número]</p>
-          </CardContent>
-        </Card>
-
-        <Card className="rounded-2xl p-4 shadow">
-          <CardContent className="space-y-2">
-            <p className="text-sm text-muted-foreground">Stacks</p>
-            <p className="text-2xl font-bold">[Número]</p>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <ProjectCard></ProjectCard>
+        <UserCard></UserCard>
+        <InviteCard></InviteCard>
+        <SkillCard></SkillCard>
+        <StackCard></StackCard>
       </div>
 
       {/* Botões de Ação */}
