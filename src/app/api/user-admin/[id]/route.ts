@@ -2,20 +2,15 @@ import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
-import { hash } from 'bcrypt';
 
-const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
+const idSchema = z.string().min(24, 'ID inválido').max(36, 'ID inválido');
 
 const updateUserSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
   email: z.string().email('Email inválido.'),
-  password: z
-    .string()
-    .min(6, 'A senha deve ter pelo menos 6 caracteres.')
-    .optional(),
   avatar: z.union([z.string().url(), z.literal('')]).nullable(),
-  linkedin: z.string().url().optional(),
-  github: z.string().url().optional(),
+  linkedin: z.union([z.string().url(), z.literal('')]).optional(),
+  github: z.union([z.string().url(), z.literal('')]).optional(),
   bio: z.string().optional(),
   role: z.enum(['USER', 'ADMIN']),
   skills: z.array(z.string()).optional(),
@@ -28,7 +23,9 @@ export async function GET(
   const { authorized, response } = await checkAuth({ requireAdmin: true });
   if (!authorized) return response;
 
-  const idParse = idSchema.safeParse(context.params.id);
+  const params = await context.params;
+
+  const idParse = idSchema.safeParse(params.id);
   if (!idParse.success) {
     return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
   }
@@ -67,17 +64,21 @@ export async function PUT(
   const { authorized, response } = await checkAuth({ requireAdmin: true });
   if (!authorized) return response;
 
-  const idParse = idSchema.safeParse(context.params.id);
+  const params = await context.params;
+
+  const idParse = idSchema.safeParse(params.id);
   if (!idParse.success) {
     return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
   }
 
   const id = idParse.data;
+
   let body;
 
   try {
     body = await request.json();
-  } catch {
+  } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: 'Erro ao ler os dados.' },
       { status: 400 }
@@ -92,7 +93,7 @@ export async function PUT(
     );
   }
 
-  const { name, email, password, avatar, linkedin, github, bio, role, skills } =
+  const { name, email, avatar, linkedin, github, bio, role, skills } =
     parse.data;
 
   try {
@@ -104,14 +105,22 @@ export async function PUT(
       );
     }
 
-    const hashedPassword = password ? await hash(password, 10) : undefined;
+    const existingEmailUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingEmailUser && existingEmailUser.id !== id) {
+      return NextResponse.json(
+        { error: 'Já existe um usuário com este e-mail.' },
+        { status: 400 }
+      );
+    }
 
     const updatedUser = await prisma.user.update({
       where: { id },
       data: {
         name,
         email,
-        password: hashedPassword,
         avatar,
         linkedin,
         github,
@@ -133,7 +142,7 @@ export async function PUT(
 
     return NextResponse.json(updatedUser);
   } catch (error) {
-    console.error(error);
+    console.log('Erro ao atualizar usuário: ', error);
     return NextResponse.json(
       { error: 'Erro ao atualizar usuário.' },
       { status: 500 }
@@ -148,7 +157,9 @@ export async function DELETE(
   const { authorized, response } = await checkAuth({ requireAdmin: true });
   if (!authorized) return response;
 
-  const idParse = idSchema.safeParse(context.params.id);
+  const params = await context.params;
+
+  const idParse = idSchema.safeParse(params.id);
   if (!idParse.success) {
     return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
   }
