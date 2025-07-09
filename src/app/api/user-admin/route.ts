@@ -84,3 +84,26 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export async function GET() {
+  const { authorized, response } = await checkAuth({ requireAdmin: true });
+  if (!authorized) return response;
+
+  try {
+    const users = await prisma.user.findMany({
+      include: {
+        skills: {
+          include: { skill: true },
+        },
+      },
+    });
+
+    return NextResponse.json(users);
+  } catch (error) {
+    console.error('Erro ao buscar usuários:', error);
+    return NextResponse.json(
+      { error: 'Erro ao buscar usuários.' },
+      { status: 500 }
+    );
+  }
+}
