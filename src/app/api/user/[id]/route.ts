@@ -79,7 +79,7 @@ export async function PUT(
 
   if (session.user.id !== id) {
     return NextResponse.json(
-      { error: 'Acesso negado. Você só não é o dono desse perfil.' },
+      { error: 'Acesso negado. Você não é o dono desse perfil.' },
       { status: 403 }
     );
   }
@@ -117,6 +117,17 @@ export async function PUT(
     }
 
     const hashedPassword = password ? await hash(password, 10) : undefined;
+
+    const existingEmailUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingEmailUser && existingEmailUser.id !== id) {
+      return NextResponse.json(
+        { error: 'Já existe um usuário com este e-mail.' },
+        { status: 400 }
+      );
+    }
 
     const user = await prisma.user.update({
       where: { id },
