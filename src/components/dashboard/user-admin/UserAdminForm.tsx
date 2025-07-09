@@ -15,11 +15,7 @@ import {
   SelectItem,
 } from '@/components/ui/select';
 import { X } from 'lucide-react';
-
-interface Skill {
-  id: string;
-  name: string;
-}
+import { Skill } from '@prisma/client';
 
 export default function FormUserAdmin() {
   const router = useRouter();
@@ -47,7 +43,7 @@ export default function FormUserAdmin() {
         if (!res.ok) throw new Error('Erro ao carregar as skills.');
         const data = await res.json();
         setSkills(data);
-      } catch (error: unknown) {
+      } catch (error) {
         if (error instanceof Error) {
           setError(error.message);
         } else {
@@ -58,6 +54,47 @@ export default function FormUserAdmin() {
 
     fetchSkills();
   }, []);
+
+  // useEffect(() => {
+  //   if (user) {
+  //     setFormData({
+  //       name: user.name || '',
+  //       email: user.email || '',
+  //       password: '',
+  //       avatar: user.avatar || '',
+  //       linkedin: user.linkedin || '',
+  //       github: user.github || '',
+  //       bio: user.bio || '',
+  //       role: user.role || 'USER',
+  //       skills: user.skills?.map((s: UserSkill) => s.skill.id) || [],
+  //     });
+  //   } else if (userId) {
+  //     const fetchUserData = async () => {
+  //       try {
+  //         const res = await fetch(`/api/user-admin/${userId}`);
+  //         if (!res.ok) throw new Error('Erro ao carregar dados do usuário.');
+  //         const data = await res.json();
+
+  //         setFormData({
+  //           name: data.name || '',
+  //           email: data.email || '',
+  //           password: '',
+  //           avatar: data.avatar || '',
+  //           linkedin: data.linkedin || '',
+  //           github: data.github || '',
+  //           bio: data.bio || '',
+  //           role: data.role || 'USER',
+  //           skills: data.skills?.map((s: UserSkill) => s.skill.id) || [],
+  //         });
+  //       } catch (error) {
+  //         console.error(error);
+  //         setError('Erro ao carregar dados do usuário.');
+  //       }
+  //     };
+
+  //     fetchUserData();
+  //   }
+  // }, [user, userId]);
 
   const handleChange = (
     field: keyof typeof formData,
@@ -95,8 +132,10 @@ export default function FormUserAdmin() {
         body: JSON.stringify(formData),
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Erro ao criar usuário.');
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Erro ao cadastrar usuário.');
+      }
 
       setSuccess('Usuário criado com sucesso!');
       setFormData({
@@ -111,12 +150,8 @@ export default function FormUserAdmin() {
         skills: [],
       });
       router.refresh();
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError('Erro desconhecido.');
-      }
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Erro desconhecido.');
     } finally {
       setLoading(false);
     }
@@ -130,7 +165,6 @@ export default function FormUserAdmin() {
     <Card className="mx-auto mt-1 max-w-4xl rounded-2xl p-6 shadow-lg">
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-3">
-          {/* Nome */}
           <div className="space-y-1">
             <Label>Nome</Label>
             <Input
@@ -140,7 +174,6 @@ export default function FormUserAdmin() {
             />
           </div>
 
-          {/* Email + Senha */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1">
               <Label>Email</Label>
@@ -164,7 +197,6 @@ export default function FormUserAdmin() {
             </div>
           </div>
 
-          {/* Linkedin + Github */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1">
               <Label>LinkedIn</Label>
@@ -183,7 +215,6 @@ export default function FormUserAdmin() {
             </div>
           </div>
 
-          {/* Skills */}
           <div className="space-y-1">
             <Label>Skills</Label>
             <Select onValueChange={handleAddSkill} value="">
@@ -221,7 +252,6 @@ export default function FormUserAdmin() {
             </div>
           </div>
 
-          {/* Bio */}
           <div className="space-y-1">
             <Label>Bio</Label>
             <Textarea
@@ -230,7 +260,6 @@ export default function FormUserAdmin() {
             />
           </div>
 
-          {/* Avatar + Permissão */}
           <div className="grid grid-cols-1 items-center gap-4 md:grid-cols-2">
             <div className="space-y-1">
               <Label>Avatar (URL)</Label>
@@ -264,7 +293,6 @@ export default function FormUserAdmin() {
             </div>
           </div>
 
-          {/* Mensagens + Botão */}
           <div className="space-y-2">
             {error && (
               <p className="text-sm font-medium text-red-500">{error}</p>
