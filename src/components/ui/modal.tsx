@@ -33,7 +33,7 @@ export default function Modal({
       open={open}
       onOpenChange={(isOpen: boolean) => !isOpen && onClose()}
     >
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="w-auto max-w-3xl overflow-hidden rounded-2xl p-6 shadow-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             <span>{title}</span>
