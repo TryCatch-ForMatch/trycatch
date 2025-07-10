@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-export default function InviteForm() {
+export function InviteForm() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');

@@ -8,7 +8,7 @@ type Invite = {
   code: string;
 };
 
-export default function InviteList() {
+export function InviteList() {
   const [invites, setInvites] = useState<Invite[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editedEmail, setEditedEmail] = useState('');
