@@ -4,9 +4,9 @@ import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 
 const createStackTakenSchema = z.object({
-  projectId: z.string().uuid('ID do projeto inválido.'),
-  projectStackId: z.string().uuid('ID do projectStack inválido.'),
-  stackId: z.string().uuid('ID da stack inválido.'),
+  projectId: z.string().min(25, 'ID inválido').max(36, 'ID inválido'),
+  projectStackId: z.string().min(25, 'ID inválido').max(36, 'ID inválido'),
+  stackId: z.string().min(25, 'ID inválido').max(36, 'ID inválido'),
 });
 
 export async function POST(request: NextRequest) {
