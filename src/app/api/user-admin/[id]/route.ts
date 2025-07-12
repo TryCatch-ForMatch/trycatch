@@ -174,13 +174,39 @@ export async function DELETE(
         { status: 404 }
       );
     }
+    // Verifica se o usuário tem vínculos em StackTaken
+    const hasStackTaken = await prisma.stackTaken.findFirst({
+      where: { userId: id },
+    });
 
-    await prisma.user.delete({ where: { id } });
+    if (hasStackTaken) {
+      // Soft delete: apenas desativa
+      await prisma.user.update({
+        where: { id },
+        data: { isActive: false },
+      });
 
-    return NextResponse.json(
-      { message: 'Usuário deletado com sucesso.' },
-      { status: 204 }
-    );
+      return NextResponse.json(
+        {
+          message:
+            'Usuário desativado (soft delete) devido a vínculos em StackTaken.',
+        },
+        { status: 200 }
+      );
+    } else {
+      // Hard delete: se não tem vinculo com a tabela StackTaken, exclui do banco
+      await prisma.userSkill.deleteMany({
+        where: { userId: id },
+      });
+      await prisma.user.delete({
+        where: { id },
+      });
+
+      return NextResponse.json(
+        { message: 'Usuário excluído com sucesso.' },
+        { status: 204 }
+      );
+    }
   } catch (error) {
     console.error(error);
     return NextResponse.json(
