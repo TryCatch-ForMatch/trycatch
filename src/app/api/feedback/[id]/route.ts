@@ -1,30 +1,15 @@
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { checkAuth } from '@/lib/check-auth';
 
-interface Params {
-  params: {
-    id: string;
-  };
-}
-
-export async function GET(_: Request, { params }: Params) {
-  let session;
-
-  try {
-    session = await getServerSession(authOptions);
-  } catch (error) {
-    console.error('Erro ao obter sessão:', error);
-    return NextResponse.json(
-      { error: 'Erro de autenticação' },
-      { status: 500 }
-    );
-  }
-
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
-  }
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { authorized, response, session } = await checkAuth({
+    allowedRoles: ['ADMIN', 'USER'],
+  });
+  if (!authorized || !session) return response;
 
   const feedbackId = params.id;
 

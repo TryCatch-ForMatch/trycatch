@@ -1,24 +1,21 @@
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { NextRequest, NextResponse } from 'next/server';
+import { checkAuth } from '@/lib/check-auth';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 
-// Validação com Zod - biblioteca TypeScript para validação de dados
 const createStackTakenSchema = z.object({
-  projectId: z.string(),
-  projectStackId: z.string(),
-  stackId: z.string(),
+  projectId: z.string().uuid('ID do projeto inválido.'),
+  projectStackId: z.string().uuid('ID do projectStack inválido.'),
+  stackId: z.string().uuid('ID da stack inválido.'),
 });
 
-export async function POST(req: Request) {
-  const session = await getServerSession(authOptions);
+export async function POST(request: NextRequest) {
+  const { authorized, response, session } = await checkAuth({
+    allowedRoles: ['ADMIN', 'USER'],
+  });
+  if (!authorized || !session) return response;
 
-  if (!session || !session.user?.id) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
-  }
-
-  const body = await req.json();
+  const body = await request.json();
   const parsed = createStackTakenSchema.safeParse(body);
 
   if (!parsed.success) {
@@ -42,7 +39,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(newStackTaken, { status: 201 });
   } catch (error) {
-    console.error(error);
+    console.error('Erro ao criar StackTaken:', error);
     return NextResponse.json(
       { error: 'Erro ao criar StackTaken' },
       { status: 500 }
@@ -50,14 +47,13 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET(req: Request) {
-  const session = await getServerSession(authOptions);
+export async function GET(request: NextRequest) {
+  const { authorized, response, session } = await checkAuth({
+    allowedRoles: ['ADMIN', 'USER'],
+  });
+  if (!authorized || !session) return response;
 
-  if (!session || !session.user?.id) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
-  }
-
-  const { searchParams } = new URL(req.url);
+  const { searchParams } = new URL(request.url);
   const projectId = searchParams.get('projectId');
 
   try {
@@ -72,7 +68,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json(stackTakens);
   } catch (error) {
-    console.error(error);
+    console.error('Erro ao buscar StackTakens:', error);
     return NextResponse.json(
       { error: 'Erro ao buscar StackTakens' },
       { status: 500 }

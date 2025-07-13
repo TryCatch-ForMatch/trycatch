@@ -1,12 +1,22 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse, NextRequest } from 'next/server';
 import { getIdFromRequest } from '@/utils/url';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { checkAuth } from '@/lib/check-auth';
+import { z } from 'zod';
 
+const idSchema = z.string().min(1, 'ID inválido.');
+const updateTechStackSchema = z.object({
+  name: z.string().min(1, 'O nome é obrigatório.'),
+  forceUpdate: z.boolean().optional(),
+});
 
 export async function GET(request: NextRequest) {
   const id = getIdFromRequest(request);
+
+  const idParse = idSchema.safeParse(id);
+  if (!idParse.success) {
+    return NextResponse.json({ error: 'ID inválido.' }, { status: 400 });
+  }
 
   try {
     const stack = await prisma.stack.findUnique({
@@ -31,25 +41,50 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
-  const session = await getServerSession(authOptions);
+  const auth = await checkAuth({ requireAdmin: true });
+  if (!auth.authorized) return auth.response;
 
-  if (!session || session.user.role !== 'ADMIN') {
-    return NextResponse.json(
-      {
-        error: 'Acesso negado. Apenas administradores podem alterar stacks.',
-      },
-      { status: 403 }
-    );
-  }
   const id = getIdFromRequest(request);
 
-  try {
-    const { name } = await request.json();
+  const idParse = idSchema.safeParse(id);
+  if (!idParse.success) {
+    return NextResponse.json({ error: 'ID inválido.' }, { status: 400 });
+  }
 
-    if (!name) {
+  const body = await request.json();
+  const parse = updateTechStackSchema.safeParse(body);
+
+  if (!parse.success) {
+    return NextResponse.json({ error: parse.error.format() }, { status: 400 });
+  }
+
+  const { name, forceUpdate } = parse.data;
+
+  try {
+    const existing = await prisma.stack.findFirst({
+      where: {
+        name,
+        NOT: { id }, // ignora a própria stack que está sendo atualizada
+      },
+    });
+
+    if (existing) {
       return NextResponse.json(
-        { error: 'O nome é obrigatório.' },
-        { status: 400 }
+        { error: 'Já existe uma stack com esse nome.' },
+        { status: 409 }
+      );
+    }
+
+    const linkedStack = await prisma.projectStack.findFirst({
+      where: { stackId: id },
+    });
+    if (linkedStack && !forceUpdate) {
+      return NextResponse.json(
+        {
+          error:
+            'Esta stack está sendo usada em projetos. Alterações podem impactar dados existentes.',
+        },
+        { status: 409 }
       );
     }
 
@@ -61,6 +96,7 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json(stack);
   } catch (error) {
     console.log(error);
+    console.error('Erro ao atualizar stack:', error);
     return NextResponse.json(
       { error: 'Erro ao atualizar stack.' },
       { status: 500 }
@@ -69,19 +105,28 @@ export async function PATCH(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  const session = await getServerSession(authOptions);
+  const auth = await checkAuth({ requireAdmin: true });
+  if (!auth.authorized) return auth.response;
 
-  if (!session || session.user.role !== 'ADMIN') {
-    return NextResponse.json(
-      {
-        error: 'Acesso negado. Apenas administradores podem deletar stacks.',
-      },
-      { status: 403 }
-    );
-  }
   const id = getIdFromRequest(request);
-  
+
+  const idParse = idSchema.safeParse(id);
+  if (!idParse.success) {
+    return NextResponse.json({ error: 'ID inválido.' }, { status: 400 });
+  }
+
   try {
+    const projectStack = await prisma.projectStack.findFirst({
+      where: { stackId: id },
+    });
+
+    if (projectStack) {
+      return NextResponse.json(
+        { error: 'Não é possível deletar uma stack que está em uso.' },
+        { status: 400 }
+      );
+    }
+
     await prisma.stack.delete({
       where: { id },
     });
