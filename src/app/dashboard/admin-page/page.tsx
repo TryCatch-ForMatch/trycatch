@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import InviteForm from '@/components/dashboard/invite/inviteForm';
 import SkillForm from '@/components/dashboard/skill/skillForm';
-import UserAdminForm from '@/components/dashboard/user-admin/UserAdminForm';
+import UserAdminForm from '@/components/dashboard/UserAdmin/UserAdminForm';
 import Modal from '@/components/ui/modal';
 import ProjectCard from '@/components/dashboard/PainelCards/CountProjectCard';
 import UserCard from '@/components/dashboard/PainelCards/CountUserCard';
@@ -13,7 +13,7 @@ import SkillCard from '@/components/dashboard/PainelCards/CountSkillCard';
 import StackCard from '@/components/dashboard/PainelCards/CountStackCard';
 import InviteList from '@/components/dashboard/invite/inviteList';
 import SkillList from '@/components/dashboard/skill/skillList';
-import UserAdminList from '@/components/dashboard/user-admin/UserAdminList';
+import UserAdminList from '@/components/dashboard/UserAdmin/UserAdminList';
 
 export default function AdminPage() {
   const [openInvite, setOpenInvite] = useState(false);
