@@ -10,9 +10,10 @@ import ProjectCard from '@/components/dashboard/PainelCards/CountProjectCard';
 import UserCard from '@/components/dashboard/PainelCards/CountUserCard';
 import InviteCard from '@/components/dashboard/PainelCards/CountInviteCard';
 import SkillCard from '@/components/dashboard/PainelCards/CountSkillCard';
-import StackCard from '@/components/dashboard/PainelCards/CountStackCard';
+
 import InviteList from '@/components/dashboard/invite/inviteList';
 import SkillList from '@/components/dashboard/skill/skillList';
+import FormStacks from '@/components/dashboard/stack/stackForm';
 import UserAdminList from '@/components/dashboard/UserAdmin/UserAdminList';
 
 export default function AdminPage() {
@@ -34,7 +35,7 @@ export default function AdminPage() {
         <UserCard></UserCard>
         <InviteCard></InviteCard>
         <SkillCard></SkillCard>
-        <StackCard></StackCard>
+        <FormStacks></FormStacks>
       </div>
 
       {/* Botões de Ação */}
