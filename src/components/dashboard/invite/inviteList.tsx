@@ -6,6 +6,7 @@ type Invite = {
   id: string;
   email: string;
   code: string;
+  used: boolean;
 };
 
 export default function InviteList() {
@@ -76,14 +77,35 @@ export default function InviteList() {
             className="flex items-center justify-between py-3"
           >
             {editingId === invite.id ? (
-              <input
-                type="email"
-                className="w-2/3 rounded border p-1"
-                value={editedEmail}
-                onChange={(e) => setEditedEmail(e.target.value)}
-              />
+              <div className="flex flex-col gap-2">
+                {/* Campo editável apenas para o email */}
+                <input
+                  type="email"
+                  className="w-2/3 rounded border p-1"
+                  value={editedEmail}
+                  onChange={(e) => setEditedEmail(e.target.value)}
+                />
+
+                {/* Campos apenas de leitura */}
+                <p>
+                  <strong>Código:</strong> {invite.code}
+                </p>
+                <p>
+                  <strong>Usado:</strong> {invite.used ? 'Sim' : 'Não'}
+                </p>
+              </div>
             ) : (
-              <span>{invite.email}</span>
+              <div className="flex flex-col">
+                <span>
+                  <strong>Email:</strong> {invite.email}
+                </span>
+                <span>
+                  <strong>Código:</strong> {invite.code}
+                </span>
+                <span>
+                  <strong>Usado:</strong> {invite.used ? 'Sim' : 'Não'}
+                </span>
+              </div>
             )}
 
             <div className="space-x-2">
