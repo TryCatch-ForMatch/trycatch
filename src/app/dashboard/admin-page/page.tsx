@@ -2,20 +2,20 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import InviteForm from '@/components/dashboard/invite/inviteForm';
-import SkillForm from '@/components/dashboard/skill/skillForm';
-import UserAdminForm from '@/components/dashboard/UserAdmin/UserAdminForm';
+import InviteForm from '@/components/Dashboard/Invite/InviteForm';
+import SkillForm from '@/components/Dashboard/Skill/SkillForm';
+import UserAdminForm from '@/components/Dashboard/UserAdmin/UserAdminForm';
 import Modal from '@/components/ui/modal';
-import ProjectCard from '@/components/dashboard/PainelCards/CountProjectCard';
-import UserCard from '@/components/dashboard/PainelCards/CountUserCard';
-import InviteCard from '@/components/dashboard/PainelCards/CountInviteCard';
-import SkillCard from '@/components/dashboard/PainelCards/CountSkillCard';
+import ProjectCard from '@/components/Dashboard/PainelCards/CountProjectCard';
+import UserCard from '@/components/Dashboard/PainelCards/CountUserCard';
+import InviteCard from '@/components/Dashboard/PainelCards/CountInviteCard';
+import SkillCard from '@/components/Dashboard/PainelCards/CountSkillCard';
 
-import InviteList from '@/components/dashboard/invite/inviteList';
-import SkillList from '@/components/dashboard/skill/skillList';
-import FormStacks from '@/components/dashboard/stack/stackForm';
-import UserAdminList from '@/components/dashboard/UserAdmin/UserAdminList';
-import ListStacks from '@/components/dashboard/stack/stackList';
+import InviteList from '@/components/Dashboard/Invite/InviteList';
+import SkillList from '@/components/Dashboard/Skill/SkillList';
+import FormStacks from '@/components/Dashboard/TechStack/TechStackForm';
+import UserAdminList from '@/components/Dashboard/UserAdmin/UserAdminList';
+import ListStacks from '@/components/Dashboard/TechStack/TechStackList';
 
 export default function AdminPage() {
   const [openInvite, setOpenInvite] = useState(false);
