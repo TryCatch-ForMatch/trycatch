@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Pencil, Trash, Check, X } from 'lucide-react';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 
 type Stack = {
   id: string;
@@ -14,6 +15,17 @@ export default function ListStacks() {
   const [errorMessage, setErrorMessage] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editedName, setEditedName] = useState('');
+
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [pendingUpdateId, setPendingUpdateId] = useState<string | null>(null);
+
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [deleteMode, setDeleteMode] = useState<'confirm' | 'blocked'>(
+    'confirm'
+  );
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalDescription, setModalDescription] = useState('');
 
   const fetchStacks = async () => {
     try {
@@ -34,28 +46,55 @@ export default function ListStacks() {
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDeleteClick = (id: string) => {
+    setPendingDeleteId(id);
+    setDeleteMode('confirm');
+    setModalTitle('Confirmar exclusão');
+    setModalDescription(
+      'Tem certeza que deseja excluir esta stack? Esta ação não pode ser desfeita.'
+    );
+    setConfirmDeleteOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!pendingDeleteId) return;
+
     try {
-      const res = await fetch(`/api/tech-stack/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/tech-stack/${pendingDeleteId}`, {
+        method: 'DELETE',
+      });
       const data = await res.json();
 
       if (res.ok) {
-        setStacks((prev) => prev.filter((stack) => stack.id !== id));
-        console.log(`Stack "${data.name}" deletada com sucesso.`);
+        // Sucesso → remove do estado e fecha modal
+        setStacks((prev) => prev.filter((s) => s.id !== pendingDeleteId));
+        console.log(data.message);
+        setConfirmDeleteOpen(false);
+        setPendingDeleteId(null);
+      } else if (res.status === 409) {
+        // Backend disse que está vinculada → bloqueia exclusão
+        setDeleteMode('blocked');
+        setModalTitle('Exclusão bloqueada');
+        setModalDescription(data.error);
       } else {
-        console.error('Erro ao deletar stack:', data.error);
+        console.error('Erro inesperado ao deletar:', data.error);
       }
     } catch (error) {
       console.error('Erro ao deletar stack:', error);
     }
   };
 
-  const handleUpdate = async (id: string) => {
+  const cancelDelete = () => {
+    setConfirmDeleteOpen(false);
+    setPendingDeleteId(null);
+  };
+
+  const handleUpdate = async (id: string, forceUpdate = false) => {
     try {
       const res = await fetch(`/api/tech-stack/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: editedName }),
+        body: JSON.stringify({ name: editedName, forceUpdate }),
       });
 
       const data = await res.json();
@@ -70,11 +109,32 @@ export default function ListStacks() {
         setEditedName('');
         console.log(`Stack atualizada para "${data.name}"`);
       } else {
-        console.error('Erro ao atualizar stack:', data.error);
+        // Se for conflito por estar vinculada
+        if (
+          res.status === 409 &&
+          data.error?.includes('Alterações podem impactar dados existentes')
+        ) {
+          setPendingUpdateId(id);
+          setConfirmOpen(true);
+        } else {
+          console.error('Erro ao atualizar stack:', data.error);
+        }
       }
     } catch (error) {
       console.error('Erro ao atualizar stack:', error);
     }
+  };
+
+  const confirmForceUpdate = async () => {
+    if (!pendingUpdateId) return;
+    setConfirmOpen(false);
+    await handleUpdate(pendingUpdateId, true);
+    setPendingUpdateId(null);
+  };
+
+  const cancelForceUpdate = () => {
+    setConfirmOpen(false);
+    setPendingUpdateId(null);
   };
 
   useEffect(() => {
@@ -142,7 +202,7 @@ export default function ListStacks() {
                       <Pencil size={18} />
                     </button>
                     <button
-                      onClick={() => handleDelete(stack.id)}
+                      onClick={() => handleDeleteClick(stack.id)}
                       className="text-red-600 hover:text-red-800"
                     >
                       <Trash size={18} />
@@ -154,6 +214,20 @@ export default function ListStacks() {
           ))}
         </ul>
       )}
+      <ConfirmDialog
+        open={confirmDeleteOpen}
+        onConfirm={deleteMode === 'confirm' ? confirmDelete : cancelDelete}
+        onCancel={cancelDelete}
+        title={modalTitle}
+        description={modalDescription}
+      />
+      <ConfirmDialog
+        open={confirmOpen}
+        onConfirm={confirmForceUpdate}
+        onCancel={cancelForceUpdate}
+        title="Stack vinculada a projetos"
+        description="Esta stack está sendo usada em projetos. Alterações podem impactar dados existentes. Deseja continuar mesmo assim?"
+      />
     </div>
   );
 }
