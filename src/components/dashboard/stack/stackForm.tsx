@@ -2,16 +2,8 @@
 
 import { useState } from 'react';
 
-const predefinedStacks = [
-  'Front-end',
-  'Back-end',
-  'Banco de Dados',
-  'Deploy',
-  'Design',
-];
-
 export default function FormStack() {
-  const [stackName, setStackName] = useState('');
+  const [name, setName] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -26,14 +18,14 @@ export default function FormStack() {
       const response = await fetch('/api/tech-stack', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: stackName }),
+        body: JSON.stringify({ name }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
         setSuccessMessage(`Stack "${data.name}" cadastrada com sucesso!`);
-        setStackName('');
+        setName('');
       } else {
         setErrorMessage(data.error || 'Erro ao cadastrar stack.');
       }
@@ -59,25 +51,20 @@ export default function FormStack() {
         >
           Selecione uma Stack
         </label>
-        <select
+        <input
+          type="text"
           id="stack"
           required
-          value={stackName}
-          onChange={(e) => setStackName(e.target.value)}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Digite o nome da Stack"
           className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:outline-none"
-        >
-          <option value="">Selecione...</option>
-          {predefinedStacks.map((stack) => (
-            <option key={stack} value={stack}>
-              {stack}
-            </option>
-          ))}
-        </select>
+        ></input>
       </div>
 
       <button
         type="submit"
-        disabled={loading || !stackName}
+        disabled={loading || !name}
         className="w-full rounded-md bg-blue-600 px-4 py-2 font-semibold text-white transition hover:bg-blue-700"
       >
         {loading ? 'Salvando...' : 'Cadastrar Stack'}

@@ -15,6 +15,7 @@ import InviteList from '@/components/dashboard/invite/inviteList';
 import SkillList from '@/components/dashboard/skill/skillList';
 import FormStacks from '@/components/dashboard/stack/stackForm';
 import UserAdminList from '@/components/dashboard/UserAdmin/UserAdminList';
+import ListStacks from '@/components/dashboard/stack/stackList';
 
 export default function AdminPage() {
   const [openInvite, setOpenInvite] = useState(false);
@@ -36,6 +37,7 @@ export default function AdminPage() {
         <InviteCard></InviteCard>
         <SkillCard></SkillCard>
         <FormStacks></FormStacks>
+        <ListStacks></ListStacks>
       </div>
 
       {/* Botões de Ação */}
