@@ -122,16 +122,20 @@ export async function DELETE(request: NextRequest) {
 
     if (projectStack) {
       return NextResponse.json(
-        { error: 'Não é possível deletar uma stack que está em uso.' },
-        { status: 400 }
+        {
+          error:
+            'Esta stack está vinculada a projetos e não pode ser excluída.',
+        },
+        { status: 409 }
       );
     }
 
-    await prisma.stack.delete({
-      where: { id },
-    });
+    const deleted = await prisma.stack.delete({ where: { id } });
 
-    return NextResponse.json({ message: 'Stack deletada com sucesso.' });
+    return NextResponse.json({
+      message: `Stack "${deleted.name}" deletada com sucesso.`,
+      deletedId: deleted.id,
+    });
   } catch (error) {
     console.log(error);
     return NextResponse.json(
