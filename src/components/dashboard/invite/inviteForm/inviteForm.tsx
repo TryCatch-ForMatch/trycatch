@@ -1,6 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 export function InviteForm() {
   const [email, setEmail] = useState('');
@@ -38,44 +42,38 @@ export function InviteForm() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="mx-auto mt-8 max-w-md space-y-4 rounded-md bg-white p-6 shadow-md"
-    >
-      <h2 className="text-2xl font-semibold text-gray-800">Criar Convite</h2>
+    <Card className="mx-auto mt-4 max-w-md rounded-2xl p-6 shadow-lg">
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <h2 className="text-xl font-semibold text-gray-800">Criar Convite</h2>
 
-      <div>
-        <label
-          htmlFor="email"
-          className="block text-sm font-medium text-gray-700"
-        >
-          E-mail do convidado
-        </label>
-        <input
-          id="email"
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:outline-none"
-          placeholder="nome@email.com"
-        />
-      </div>
+          <div className="space-y-1">
+            <Label htmlFor="email">E-mail do convidado</Label>
+            <Input
+              id="email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="nome@email.com"
+            />
+          </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full rounded-md bg-blue-600 px-4 py-2 font-semibold text-white transition hover:bg-blue-700"
-      >
-        {loading ? 'Enviando...' : 'Criar Convite'}
-      </button>
+          {/* Mensagens de erro/sucesso */}
+          {successMessage && (
+            <p className="text-sm font-medium text-green-500">
+              {successMessage}
+            </p>
+          )}
+          {errorMessage && (
+            <p className="text-sm font-medium text-red-500">{errorMessage}</p>
+          )}
 
-      {successMessage && (
-        <p className="mt-2 text-sm text-green-600">{successMessage}</p>
-      )}
-      {errorMessage && (
-        <p className="mt-2 text-sm text-red-600">{errorMessage}</p>
-      )}
-    </form>
+          <Button type="submit" disabled={loading} className="w-full">
+            {loading ? 'Enviando...' : 'Criar Convite'}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 }

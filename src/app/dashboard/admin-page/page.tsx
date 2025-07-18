@@ -14,14 +14,17 @@ import {
 } from '@/components/Dashboard/PainelCards';
 import { SkillForm, SkillList } from '@/components/Dashboard/Skill';
 import { UserAdminForm, UserAdminList } from '@/components/Dashboard/UserAdmin';
+import { TechStackForm, TechStackList } from '@/components/Dashboard/TechStack';
 
 export default function AdminPage() {
   const [openInvite, setOpenInvite] = useState(false);
   const [openSkill, setOpenSkill] = useState(false);
+  const [openStack, setOpenStack] = useState(false);
   const [openUserAdmin, setOpenUserAdmin] = useState(false);
 
   const [inviteList, setInviteList] = useState(false);
   const [skillList, setSkillList] = useState(false);
+  const [stackList, setStackList] = useState(false);
   const [userAdminList, setUserAdminList] = useState(false);
 
   return (
@@ -46,6 +49,10 @@ export default function AdminPage() {
         <div className="flex flex-col space-y-6 p-6">
           <Button onClick={() => setOpenSkill(true)}>Cadastrar Skill</Button>
           <Button onClick={() => setSkillList(true)}>Listar Skills</Button>
+        </div>
+        <div className="flex flex-col space-y-6 p-6">
+          <Button onClick={() => setOpenStack(true)}>Cadastrar Stack</Button>
+          <Button onClick={() => setStackList(true)}>Listar Stacks</Button>
         </div>
         <div className="flex flex-col space-y-6 p-6">
           <Button onClick={() => setOpenUserAdmin(true)}>
@@ -87,6 +94,22 @@ export default function AdminPage() {
         title="Listar Skills"
       >
         <SkillList />
+      </Modal>
+
+      {/* Modal Stack */}
+      <Modal
+        open={openStack}
+        onClose={() => setOpenStack(false)}
+        title="Cadastro de Stack"
+      >
+        <TechStackForm />
+      </Modal>
+      <Modal
+        open={stackList}
+        onClose={() => setStackList(false)}
+        title="Listar Stacks"
+      >
+        <TechStackList />
       </Modal>
 
       {/* Modal User Admin */}

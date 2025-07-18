@@ -1,8 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
-export  function SkillForm() {
+export function SkillForm() {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
@@ -38,42 +42,40 @@ export  function SkillForm() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="mx-auto mt-8 max-w-md space-y-4 rounded-md bg-white p-6 shadow-md"
-    >
-      <h2 className="text-2xl font-semibold text-gray-800">Cadastrar Skill</h2>
+    <Card className="mx-auto mt-4 max-w-md rounded-2xl p-6 shadow-lg">
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <h2 className="text-xl font-semibold text-gray-800">
+            Cadastrar Skill
+          </h2>
 
-      <div>
-        <label
-          htmlFor="skill"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Nome da Skill
-        </label>
-        <input
-          id="skill"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Ex: React, Tailwind, Node.js..."
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:outline-none"
-          required
-        />
-      </div>
+          <div className="space-y-1">
+            <Label htmlFor="skill">Nome da Skill</Label>
+            <Input
+              id="skill"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Ex: React, Tailwind, Node.js..."
+              required
+            />
+          </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full rounded-md bg-blue-600 px-4 py-2 font-semibold text-white transition hover:bg-blue-700"
-      >
-        {loading ? 'Enviando...' : 'Cadastrar Skill'}
-      </button>
+          {/* Mensagens de sucesso/erro */}
+          {successMessage && (
+            <p className="text-sm font-medium text-green-500">
+              {successMessage}
+            </p>
+          )}
+          {errorMessage && (
+            <p className="text-sm font-medium text-red-500">{errorMessage}</p>
+          )}
 
-      {successMessage && (
-        <p className="text-sm text-green-600">{successMessage}</p>
-      )}
-      {errorMessage && <p className="text-sm text-red-600">{errorMessage}</p>}
-    </form>
+          <Button type="submit" disabled={loading} className="w-full">
+            {loading ? 'Enviando...' : 'Cadastrar Skill'}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 }

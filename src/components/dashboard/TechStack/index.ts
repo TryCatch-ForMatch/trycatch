@@ -1,2 +1,2 @@
-export { FormStack } from './TechStackForm';
-export { ListStacks } from './TechStackList';
+export { TechStackForm } from './TechStackForm';
+export { TechStackList } from './TechStackList';

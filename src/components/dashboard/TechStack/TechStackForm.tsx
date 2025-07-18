@@ -1,8 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
-export  function FormStack() {
+export function TechStackForm() {
   const [name, setName] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -38,42 +42,40 @@ export  function FormStack() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="mx-auto mt-8 max-w-md space-y-4 rounded-md bg-white p-6 shadow-md"
-    >
-      <h2 className="text-2xl font-semibold text-gray-800">Cadastrar Stack</h2>
+    <Card className="mx-auto mt-4 max-w-md rounded-2xl p-6 shadow-lg">
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <h2 className="text-xl font-semibold text-gray-800">
+            Cadastrar Stack
+          </h2>
 
-      <div>
-        <label
-          htmlFor="stack"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Selecione uma Stack
-        </label>
-        <input
-          type="text"
-          id="stack"
-          required
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Digite o nome da Stack"
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:ring focus:outline-none"
-        ></input>
-      </div>
+          <div className="space-y-1">
+            <Label htmlFor="stack">Nome da Stack</Label>
+            <Input
+              id="stack"
+              type="text"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Ex: React, Node.js, PostgreSQL..."
+            />
+          </div>
 
-      <button
-        type="submit"
-        disabled={loading || !name}
-        className="w-full rounded-md bg-blue-600 px-4 py-2 font-semibold text-white transition hover:bg-blue-700"
-      >
-        {loading ? 'Salvando...' : 'Cadastrar Stack'}
-      </button>
+          {/* Feedback de sucesso/erro */}
+          {successMessage && (
+            <p className="text-sm font-medium text-green-500">
+              {successMessage}
+            </p>
+          )}
+          {errorMessage && (
+            <p className="text-sm font-medium text-red-500">{errorMessage}</p>
+          )}
 
-      {successMessage && (
-        <p className="text-sm text-green-600">{successMessage}</p>
-      )}
-      {errorMessage && <p className="text-sm text-red-600">{errorMessage}</p>}
-    </form>
+          <Button type="submit" disabled={loading || !name} className="w-full">
+            {loading ? 'Salvando...' : 'Cadastrar Stack'}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 }
