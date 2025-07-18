@@ -2,18 +2,18 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { InviteForm } from '@/components/dashboard/invite';
+import { InviteForm } from '@/components/Dashboard/Invite';
 import Modal from '@/components/ui/modal';
-import { InviteList } from '@/components/dashboard/invite';
+import { InviteList } from '@/components/Dashboard/Invite';
 import {
   InviteCard,
   ProjectCard,
   SkillCard,
   StackCard,
   UserCard,
-} from '@/components/dashboard/PainelCards';
-import { SkillForm, SkillList } from '@/components/dashboard/skill';
-import { UserAdminForm, UserAdminList } from '@/components/dashboard/UserAdmin';
+} from '@/components/Dashboard/PainelCards';
+import { SkillForm, SkillList } from '@/components/Dashboard/Skill';
+import { UserAdminForm, UserAdminList } from '@/components/Dashboard/UserAdmin';
 
 export default function AdminPage() {
   const [openInvite, setOpenInvite] = useState(false);

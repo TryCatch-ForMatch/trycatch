@@ -2,8 +2,8 @@ import { ReactNode } from 'react';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-import { DashboardHeader } from '@/components/dashboard/Header';
-import { DashboardFooter } from '@/components/dashboard/Footer';
+import { DashboardHeader } from '@/components/Dashboard/Header';
+import { DashboardFooter } from '@/components/Dashboard/Footer';
 
 type DashboardLayoutProps = {
   children: ReactNode;
