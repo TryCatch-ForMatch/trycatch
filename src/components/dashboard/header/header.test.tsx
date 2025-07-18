@@ -1,4 +1,4 @@
-import { DashboardHeader } from '@/components/dashboard/Header';
+import { DashboardHeader } from '@/components/Dashboard/Header';
 import { render, screen } from '@testing-library/react'; // TODO quando o arquivo test-utils.tsx estiver pronto, importar isso de lá
 import { User } from 'next-auth';
 
