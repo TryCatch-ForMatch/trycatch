@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { Pencil, Trash, Check, X } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 
 type Stack = {
@@ -9,16 +12,14 @@ type Stack = {
   name: string;
 };
 
-export function ListStacks() {
+export function TechStackList() {
   const [stacks, setStacks] = useState<Stack[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editedName, setEditedName] = useState('');
 
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [pendingUpdateId, setPendingUpdateId] = useState<string | null>(null);
-
+  // Controle de modal para DELETE
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const [deleteMode, setDeleteMode] = useState<'confirm' | 'blocked'>(
@@ -26,6 +27,10 @@ export function ListStacks() {
   );
   const [modalTitle, setModalTitle] = useState('');
   const [modalDescription, setModalDescription] = useState('');
+
+  // Controle de modal para FORCE UPDATE
+  const [confirmUpdateOpen, setConfirmUpdateOpen] = useState(false);
+  const [pendingUpdateId, setPendingUpdateId] = useState<string | null>(null);
 
   const fetchStacks = async () => {
     try {
@@ -36,15 +41,18 @@ export function ListStacks() {
         setStacks(data);
       } else {
         setErrorMessage(data.error || 'Erro ao carregar stacks.');
-        console.error('Erro ao carregar stacks:', data.error);
       }
     } catch (error) {
-      console.error('Erro na requisição ao buscar stacks:', error);
+      console.error('Erro ao buscar stacks:', error);
       setErrorMessage('Erro na requisição. Tente novamente.');
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchStacks();
+  }, []);
 
   const handleDeleteClick = (id: string) => {
     setPendingDeleteId(id);
@@ -66,13 +74,11 @@ export function ListStacks() {
       const data = await res.json();
 
       if (res.ok) {
-        // Sucesso → remove do estado e fecha modal
         setStacks((prev) => prev.filter((s) => s.id !== pendingDeleteId));
-        console.log(data.message);
         setConfirmDeleteOpen(false);
         setPendingDeleteId(null);
       } else if (res.status === 409) {
-        // Backend disse que está vinculada → bloqueia exclusão
+        // Backend informou que está vinculada → bloqueia exclusão
         setDeleteMode('blocked');
         setModalTitle('Exclusão bloqueada');
         setModalDescription(data.error);
@@ -107,18 +113,14 @@ export function ListStacks() {
         );
         setEditingId(null);
         setEditedName('');
-        console.log(`Stack atualizada para "${data.name}"`);
+      } else if (
+        res.status === 409 &&
+        data.error?.includes('Alterações podem impactar')
+      ) {
+        setPendingUpdateId(id);
+        setConfirmUpdateOpen(true);
       } else {
-        // Se for conflito por estar vinculada
-        if (
-          res.status === 409 &&
-          data.error?.includes('Alterações podem impactar dados existentes')
-        ) {
-          setPendingUpdateId(id);
-          setConfirmOpen(true);
-        } else {
-          console.error('Erro ao atualizar stack:', data.error);
-        }
+        console.error('Erro ao atualizar stack:', data.error);
       }
     } catch (error) {
       console.error('Erro ao atualizar stack:', error);
@@ -127,107 +129,112 @@ export function ListStacks() {
 
   const confirmForceUpdate = async () => {
     if (!pendingUpdateId) return;
-    setConfirmOpen(false);
+    setConfirmUpdateOpen(false);
     await handleUpdate(pendingUpdateId, true);
     setPendingUpdateId(null);
   };
 
   const cancelForceUpdate = () => {
-    setConfirmOpen(false);
+    setConfirmUpdateOpen(false);
     setPendingUpdateId(null);
   };
 
-  useEffect(() => {
-    fetchStacks();
-  }, []);
-
   return (
-    <div className="mx-auto mt-10 max-w-3xl rounded-md bg-white p-6 shadow">
-      <h2 className="mb-4 text-2xl font-bold text-gray-800">
-        Stacks Cadastradas
-      </h2>
+    <Card className="mx-auto mt-6 max-w-3xl rounded-2xl shadow-md">
+      <CardContent className="space-y-4 p-6">
+        <h2 className="text-xl font-semibold text-gray-800">
+          Stacks Cadastradas
+        </h2>
 
-      {loading ? (
-        <p className="text-gray-600">Carregando...</p>
-      ) : errorMessage ? (
-        <p className="text-red-600">{errorMessage}</p>
-      ) : stacks.length === 0 ? (
-        <p className="text-gray-600">Nenhuma stack cadastrada ainda.</p>
-      ) : (
-        <ul className="space-y-2">
-          {stacks.map((stack) => (
-            <li
-              key={stack.id}
-              className="flex items-center justify-between rounded border px-4 py-2 hover:bg-gray-50"
-            >
-              {editingId === stack.id ? (
-                <input
-                  type="text"
-                  value={editedName}
-                  onChange={(e) => setEditedName(e.target.value)}
-                  className="w-full max-w-sm rounded border px-2 py-1"
-                />
-              ) : (
-                <span>{stack.name}</span>
-              )}
-
-              <div className="flex gap-2">
+        {loading ? (
+          <p className="text-gray-600">Carregando...</p>
+        ) : errorMessage ? (
+          <p className="text-red-600">{errorMessage}</p>
+        ) : stacks.length === 0 ? (
+          <p className="text-gray-600">Nenhuma stack cadastrada ainda.</p>
+        ) : (
+          <ul className="space-y-2">
+            {stacks.map((stack) => (
+              <li
+                key={stack.id}
+                className="flex items-center justify-between rounded-md border p-3 hover:bg-gray-50"
+              >
                 {editingId === stack.id ? (
-                  <>
-                    <button
-                      onClick={() => handleUpdate(stack.id)}
-                      className="text-green-600 hover:text-green-800"
-                    >
-                      <Check size={18} />
-                    </button>
-                    <button
-                      onClick={() => {
-                        setEditingId(null);
-                        setEditedName('');
-                      }}
-                      className="text-gray-600 hover:text-gray-800"
-                    >
-                      <X size={18} />
-                    </button>
-                  </>
+                  <Input
+                    value={editedName}
+                    onChange={(e) => setEditedName(e.target.value)}
+                    className="max-w-sm"
+                  />
                 ) : (
-                  <>
-                    <button
-                      onClick={() => {
-                        setEditingId(stack.id);
-                        setEditedName(stack.name);
-                      }}
-                      className="text-blue-600 hover:text-blue-800"
-                    >
-                      <Pencil size={18} />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteClick(stack.id)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <Trash size={18} />
-                    </button>
-                  </>
+                  <span className="font-medium">{stack.name}</span>
                 )}
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
-      <ConfirmDialog
-        open={confirmDeleteOpen}
-        onConfirm={deleteMode === 'confirm' ? confirmDelete : cancelDelete}
-        onCancel={cancelDelete}
-        title={modalTitle}
-        description={modalDescription}
-      />
-      <ConfirmDialog
-        open={confirmOpen}
-        onConfirm={confirmForceUpdate}
-        onCancel={cancelForceUpdate}
-        title="Stack vinculada a projetos"
-        description="Esta stack está sendo usada em projetos. Alterações podem impactar dados existentes. Deseja continuar mesmo assim?"
-      />
-    </div>
+
+                <div className="flex gap-2">
+                  {editingId === stack.id ? (
+                    <>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleUpdate(stack.id)}
+                      >
+                        <Check size={16} className="mr-1" /> Salvar
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => {
+                          setEditingId(null);
+                          setEditedName('');
+                        }}
+                      >
+                        <X size={16} className="mr-1" /> Cancelar
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          setEditingId(stack.id);
+                          setEditedName(stack.name);
+                        }}
+                      >
+                        <Pencil size={16} className="mr-1" /> Editar
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleDeleteClick(stack.id)}
+                      >
+                        <Trash size={16} className="mr-1" /> Excluir
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {/* Modal de confirmação para deletar */}
+        <ConfirmDialog
+          open={confirmDeleteOpen}
+          onConfirm={deleteMode === 'confirm' ? confirmDelete : cancelDelete}
+          onCancel={cancelDelete}
+          title={modalTitle}
+          description={modalDescription}
+        />
+
+        {/* Modal de confirmação para atualização forçada */}
+        <ConfirmDialog
+          open={confirmUpdateOpen}
+          onConfirm={confirmForceUpdate}
+          onCancel={cancelForceUpdate}
+          title="Stack vinculada a projetos"
+          description="Esta stack está em uso. Alterações podem impactar projetos existentes. Deseja continuar?"
+        />
+      </CardContent>
+    </Card>
   );
 }
