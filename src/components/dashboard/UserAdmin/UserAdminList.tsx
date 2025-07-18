@@ -5,10 +5,10 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Pencil, Trash } from 'lucide-react';
 import { BasicUser, FullUser } from '@/types/user';
-import EditUserAdminForm from './EditUserAdminForm';
+import { EditUserAdminForm } from './EditUserAdminForm';
 import Modal from '@/components/ui/modal';
 
-export default function ListUserAdmin() {
+export function UserAdminList() {
   const [users, setUsers] = useState<BasicUser[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<FullUser | null>(null);

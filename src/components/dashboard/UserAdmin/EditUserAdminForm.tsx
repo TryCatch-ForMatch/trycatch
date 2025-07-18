@@ -1,5 +1,3 @@
-'use client';
-
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
@@ -7,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import Image from 'next/image';
 import {
   Select,
   SelectTrigger,
@@ -16,19 +15,29 @@ import {
 } from '@/components/ui/select';
 import { X } from 'lucide-react';
 import { Skill } from '@prisma/client';
+import { FullUser } from '@/types/user';
 
-export default function FormUserAdmin() {
+interface EditUserAdminFormProps {
+  user: FullUser;
+  onClose: () => void;
+  onSuccess: () => void;
+}
+
+export  function EditUserAdminForm({
+  user,
+  onClose,
+  onSuccess,
+}: EditUserAdminFormProps) {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    avatar: '',
-    linkedin: '',
-    github: '',
-    bio: '',
-    role: 'USER',
-    skills: [] as string[],
+    name: user.name || '',
+    email: user.email || '',
+    avatar: user.avatar || '',
+    linkedin: user.linkedin || '',
+    github: user.github || '',
+    bio: user.bio || '',
+    role: user.role || 'USER',
+    skills: user.skills?.map((s) => s.skill.id) || [],
   });
 
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -44,71 +53,24 @@ export default function FormUserAdmin() {
         const data = await res.json();
         setSkills(data);
       } catch (error) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError('Erro desconhecido.');
-        }
+        console.error('Erro ao carregar as skills:', error);
+        setError('Erro ao carregar as skills.');
       }
     };
 
     fetchSkills();
   }, []);
 
-  // useEffect(() => {
-  //   if (user) {
-  //     setFormData({
-  //       name: user.name || '',
-  //       email: user.email || '',
-  //       password: '',
-  //       avatar: user.avatar || '',
-  //       linkedin: user.linkedin || '',
-  //       github: user.github || '',
-  //       bio: user.bio || '',
-  //       role: user.role || 'USER',
-  //       skills: user.skills?.map((s: UserSkill) => s.skill.id) || [],
-  //     });
-  //   } else if (userId) {
-  //     const fetchUserData = async () => {
-  //       try {
-  //         const res = await fetch(`/api/user-admin/${userId}`);
-  //         if (!res.ok) throw new Error('Erro ao carregar dados do usuário.');
-  //         const data = await res.json();
-
-  //         setFormData({
-  //           name: data.name || '',
-  //           email: data.email || '',
-  //           password: '',
-  //           avatar: data.avatar || '',
-  //           linkedin: data.linkedin || '',
-  //           github: data.github || '',
-  //           bio: data.bio || '',
-  //           role: data.role || 'USER',
-  //           skills: data.skills?.map((s: UserSkill) => s.skill.id) || [],
-  //         });
-  //       } catch (error) {
-  //         console.error(error);
-  //         setError('Erro ao carregar dados do usuário.');
-  //       }
-  //     };
-
-  //     fetchUserData();
-  //   }
-  // }, [user, userId]);
-
   const handleChange = (
     field: keyof typeof formData,
-    value: string | string[] | null
+    value: string | string[]
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleAddSkill = (skillId: string) => {
     if (!formData.skills.includes(skillId)) {
-      setFormData((prev) => ({
-        ...prev,
-        skills: [...prev.skills, skillId],
-      }));
+      setFormData((prev) => ({ ...prev, skills: [...prev.skills, skillId] }));
     }
   };
 
@@ -126,32 +88,22 @@ export default function FormUserAdmin() {
     setSuccess('');
 
     try {
-      const res = await fetch('/api/user-admin', {
-        method: 'POST',
+      const res = await fetch(`/api/user-admin/${user.id}`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || 'Erro ao cadastrar usuário.');
-      }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erro ao atualizar usuário.');
 
-      setSuccess('Usuário criado com sucesso!');
-      setFormData({
-        name: '',
-        email: '',
-        password: '',
-        avatar: '',
-        linkedin: '',
-        github: '',
-        bio: '',
-        role: 'USER',
-        skills: [],
-      });
+      setSuccess('Usuário atualizado com sucesso!');
+      onSuccess();
+      onClose();
       router.refresh();
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Erro desconhecido.');
+      console.error('Erro ao atualizar usuário:', error);
+      setError('Erro ao atualizar usuário.');
     } finally {
       setLoading(false);
     }
@@ -162,7 +114,7 @@ export default function FormUserAdmin() {
   );
 
   return (
-    <Card className="mx-auto mt-1 max-w-4xl rounded-2xl p-6 shadow-lg">
+    <Card className="rounded-2xl p-6 shadow-lg">
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-3">
           <div className="space-y-1">
@@ -181,17 +133,6 @@ export default function FormUserAdmin() {
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleChange('email', e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="space-y-1">
-              <Label>Senha</Label>
-              <Input
-                type="password"
-                autoComplete="new-password"
-                value={formData.password}
-                onChange={(e) => handleChange('password', e.target.value)}
                 required
               />
             </div>
@@ -260,7 +201,7 @@ export default function FormUserAdmin() {
             />
           </div>
 
-          <div className="grid grid-cols-1 items-center gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1">
               <Label>Avatar (URL)</Label>
               <Input
@@ -268,7 +209,7 @@ export default function FormUserAdmin() {
                 onChange={(e) => handleChange('avatar', e.target.value)}
               />
               {formData.avatar && (
-                <img
+                <Image
                   src={formData.avatar}
                   alt="Avatar Preview"
                   className="mt-2 h-16 w-16 rounded-full border object-cover"
@@ -301,7 +242,7 @@ export default function FormUserAdmin() {
               <p className="text-sm font-medium text-green-500">{success}</p>
             )}
             <Button type="submit" disabled={loading} className="w-full">
-              {loading ? 'Cadastrando...' : 'Cadastrar Usuário'}
+              {loading ? 'Salvando...' : 'Salvar Alterações'}
             </Button>
           </div>
         </form>

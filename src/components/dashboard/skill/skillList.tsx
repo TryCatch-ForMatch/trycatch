@@ -7,7 +7,7 @@ type Skill = {
   name: string;
 };
 
-export default function SkillList() {
+export function SkillList() {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editedName, setEditedName] = useState('');

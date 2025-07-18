@@ -3,17 +3,17 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { InviteForm } from '@/components/dashboard/invite';
-import SkillForm from '@/components/dashboard/skill/skillForm';
-import UserAdminForm from '@/components/dashboard/user-admin/UserAdminForm';
 import Modal from '@/components/ui/modal';
-import ProjectCard from '@/components/dashboard/PainelCards/CountProjectCard';
-import UserCard from '@/components/dashboard/PainelCards/CountUserCard';
-import InviteCard from '@/components/dashboard/PainelCards/CountInviteCard';
-import SkillCard from '@/components/dashboard/PainelCards/CountSkillCard';
-import StackCard from '@/components/dashboard/PainelCards/CountStackCard';
 import { InviteList } from '@/components/dashboard/invite';
-import SkillList from '@/components/dashboard/skill/skillList';
-import UserAdminList from '@/components/dashboard/user-admin/UserAdminList';
+import {
+  InviteCard,
+  ProjectCard,
+  SkillCard,
+  StackCard,
+  UserCard,
+} from '@/components/dashboard/PainelCards';
+import { SkillForm, SkillList } from '@/components/dashboard/skill';
+import { UserAdminForm, UserAdminList } from '@/components/dashboard/UserAdmin';
 
 export default function AdminPage() {
   const [openInvite, setOpenInvite] = useState(false);
@@ -61,7 +61,7 @@ export default function AdminPage() {
       <Modal
         open={openInvite}
         onClose={() => setOpenInvite(false)}
-        title="Cadastro de Convite"
+        // title="Cadastro de Convite"
       >
         <InviteForm />
       </Modal>

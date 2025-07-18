@@ -4,11 +4,11 @@ import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 
 const updateStackTakenSchema = z.object({
-  projectStackId: z.string().uuid().optional(),
-  stackId: z.string().uuid().optional(),
+  projectStackId: z.string().min(1, 'ID inválido.'),
+  stackId: z.string().min(1, 'ID inválido.'),
 });
 
-const idSchema = z.string().uuid('ID inválido.');
+const idSchema = z.string().min(1, 'ID inválido.');
 
 export async function GET(
   request: NextRequest,

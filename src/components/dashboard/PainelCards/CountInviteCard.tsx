@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 
-export default function InviteCard() {
+export function InviteCard() {
   const [inviteCount, setInviteCount] = useState<number | null>(null);
 
   useEffect(() => {

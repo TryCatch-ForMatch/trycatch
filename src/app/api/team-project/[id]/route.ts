@@ -15,11 +15,11 @@ const updateProjectSchema = z.object({
     invalid_type_error: 'Valor total deve ser um número.',
   }),
   status: z.nativeEnum(ProjectStatus),
-  skills: z.array(z.string().uuid('ID da skill inválido')).optional(),
+  skills: z.array(z.string().min(1, 'ID inválido.')),
   stacks: z
     .array(
       z.object({
-        stackId: z.string().uuid('ID da stack inválido'),
+        stackId: z.string().min(1, 'ID inválido.'),
         percentage: z.number().min(0).max(100),
       })
     )
