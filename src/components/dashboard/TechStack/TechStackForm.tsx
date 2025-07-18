@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-export default function FormStack() {
+export  function FormStack() {
   const [name, setName] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');

@@ -9,7 +9,7 @@ type Stack = {
   name: string;
 };
 
-export default function ListStacks() {
+export function ListStacks() {
   const [stacks, setStacks] = useState<Stack[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');

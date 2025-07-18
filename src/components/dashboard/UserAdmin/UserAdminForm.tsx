@@ -17,7 +17,7 @@ import {
 import { X } from 'lucide-react';
 import { Skill } from '@prisma/client';
 
-export default function FormUserAdmin() {
+export  function UserAdminForm() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',

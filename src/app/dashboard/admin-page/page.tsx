@@ -2,20 +2,18 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import InviteForm from '@/components/Dashboard/Invite/InviteForm';
-import SkillForm from '@/components/Dashboard/Skill/SkillForm';
-import UserAdminForm from '@/components/Dashboard/UserAdmin/UserAdminForm';
+import { InviteForm } from '@/components/dashboard/invite';
 import Modal from '@/components/ui/modal';
-import ProjectCard from '@/components/Dashboard/PainelCards/CountProjectCard';
-import UserCard from '@/components/Dashboard/PainelCards/CountUserCard';
-import InviteCard from '@/components/Dashboard/PainelCards/CountInviteCard';
-import SkillCard from '@/components/Dashboard/PainelCards/CountSkillCard';
-
-import InviteList from '@/components/Dashboard/Invite/InviteList';
-import SkillList from '@/components/Dashboard/Skill/SkillList';
-import FormStacks from '@/components/Dashboard/TechStack/TechStackForm';
-import UserAdminList from '@/components/Dashboard/UserAdmin/UserAdminList';
-import ListStacks from '@/components/Dashboard/TechStack/TechStackList';
+import { InviteList } from '@/components/dashboard/invite';
+import {
+  InviteCard,
+  ProjectCard,
+  SkillCard,
+  StackCard,
+  UserCard,
+} from '@/components/dashboard/PainelCards';
+import { SkillForm, SkillList } from '@/components/dashboard/skill';
+import { UserAdminForm, UserAdminList } from '@/components/dashboard/UserAdmin';
 
 export default function AdminPage() {
   const [openInvite, setOpenInvite] = useState(false);
@@ -36,8 +34,7 @@ export default function AdminPage() {
         <UserCard></UserCard>
         <InviteCard></InviteCard>
         <SkillCard></SkillCard>
-        <FormStacks></FormStacks>
-        <ListStacks></ListStacks>
+        <StackCard></StackCard>
       </div>
 
       {/* Botões de Ação */}
@@ -64,7 +61,7 @@ export default function AdminPage() {
       <Modal
         open={openInvite}
         onClose={() => setOpenInvite(false)}
-        title="Cadastro de Convite"
+        // title="Cadastro de Convite"
       >
         <InviteForm />
       </Modal>

@@ -23,7 +23,7 @@ interface EditUserAdminFormProps {
   onSuccess: () => void;
 }
 
-export default function EditUserAdminForm({
+export  function EditUserAdminForm({
   user,
   onClose,
   onSuccess,

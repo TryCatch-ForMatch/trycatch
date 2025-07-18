@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-export default function SkillForm() {
+export  function SkillForm() {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');

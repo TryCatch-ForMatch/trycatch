@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 
-export default function UserCard() {
+export function UserCard() {
   const [userCount, setUserCount] = useState<number | null>(null);
 
   useEffect(() => {

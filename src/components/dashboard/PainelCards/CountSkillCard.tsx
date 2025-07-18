@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 
-export default function SkillCard() {
+export function SkillCard() {
   const [skillCount, setSkillCount] = useState<number | null>(null);
 
   useEffect(() => {
