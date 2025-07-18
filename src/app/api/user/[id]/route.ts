@@ -227,7 +227,7 @@ export async function DELETE(
 
       return NextResponse.json(
         { message: 'Usuário excluído com sucesso.' },
-        { status: 204 }
+        { status: 200 }
       );
     }
   } catch (error) {
