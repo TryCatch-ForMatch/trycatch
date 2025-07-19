@@ -2,6 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -17,22 +21,52 @@ import {
 import { X } from 'lucide-react';
 import { Skill } from '@prisma/client';
 
-export  function UserAdminForm() {
+const userAdminSchema = z.object({
+  name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
+  email: z.string().email('Email inválido'),
+  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
+  avatar: z.string().url('URL inválida').optional().or(z.literal('')),
+  linkedin: z.string().url('URL inválida').optional().or(z.literal('')),
+  github: z.string().url('URL inválida').optional().or(z.literal('')),
+  bio: z.string().optional(),
+  role: z.enum(['USER', 'ADMIN']),
+  skills: z.array(z.string()).optional(),
+});
+
+type FormValues = z.infer<typeof userAdminSchema>;
+
+export function UserAdminForm() {
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    avatar: '',
-    linkedin: '',
-    github: '',
-    bio: '',
-    role: 'USER',
-    skills: [] as string[],
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(userAdminSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      avatar: '',
+      linkedin: '',
+      github: '',
+      bio: '',
+      role: 'USER',
+      skills: [],
+    },
   });
+
+  const avatarUrl = watch('avatar');
+  const selectedSkills = watch('skills');
+  const selectedRole = watch('role');
 
   const [skills, setSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -44,83 +78,63 @@ export  function UserAdminForm() {
         const data = await res.json();
         setSkills(data);
       } catch (error) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError('Erro desconhecido.');
-        }
+        setError(error instanceof Error ? error.message : 'Erro desconhecido.');
       }
     };
-
     fetchSkills();
   }, []);
 
-  // useEffect(() => {
-  //   if (user) {
-  //     setFormData({
-  //       name: user.name || '',
-  //       email: user.email || '',
-  //       password: '',
-  //       avatar: user.avatar || '',
-  //       linkedin: user.linkedin || '',
-  //       github: user.github || '',
-  //       bio: user.bio || '',
-  //       role: user.role || 'USER',
-  //       skills: user.skills?.map((s: UserSkill) => s.skill.id) || [],
-  //     });
-  //   } else if (userId) {
-  //     const fetchUserData = async () => {
-  //       try {
-  //         const res = await fetch(`/api/user-admin/${userId}`);
-  //         if (!res.ok) throw new Error('Erro ao carregar dados do usuário.');
-  //         const data = await res.json();
+  async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-  //         setFormData({
-  //           name: data.name || '',
-  //           email: data.email || '',
-  //           password: '',
-  //           avatar: data.avatar || '',
-  //           linkedin: data.linkedin || '',
-  //           github: data.github || '',
-  //           bio: data.bio || '',
-  //           role: data.role || 'USER',
-  //           skills: data.skills?.map((s: UserSkill) => s.skill.id) || [],
-  //         });
-  //       } catch (error) {
-  //         console.error(error);
-  //         setError('Erro ao carregar dados do usuário.');
-  //       }
-  //     };
+    setUploadingAvatar(true);
+    setError('');
 
-  //     fetchUserData();
-  //   }
-  // }, [user, userId]);
+    try {
+      const formDataUpload = new FormData();
+      formDataUpload.append('file', file);
 
-  const handleChange = (
-    field: keyof typeof formData,
-    value: string | string[] | null
-  ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
+      const res = await fetch('/api/upload/avatar', {
+        method: 'POST',
+        body: formDataUpload,
+      });
+
+      if (!res.ok) throw new Error('Falha no upload do avatar');
+
+      const json = await res.json();
+      if (json.url) {
+        setValue('avatar', json.url); // Atualiza o campo avatar no hook form
+      } else {
+        throw new Error('URL do avatar não retornada');
+      }
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Erro desconhecido');
+    } finally {
+      setUploadingAvatar(false);
+    }
+  }
 
   const handleAddSkill = (skillId: string) => {
-    if (!formData.skills.includes(skillId)) {
-      setFormData((prev) => ({
-        ...prev,
-        skills: [...prev.skills, skillId],
-      }));
+    const currentSkills = watch('skills') ?? [];
+    if (!currentSkills.includes(skillId)) {
+      setValue('skills', [...currentSkills, skillId]);
     }
   };
 
   const handleRemoveSkill = (skillId: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      skills: prev.skills.filter((id) => id !== skillId),
-    }));
+    const currentSkills = watch('skills') ?? [];
+    setValue(
+      'skills',
+      currentSkills.filter((id) => id !== skillId)
+    );
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const availableSkills = skills.filter(
+    (skill) => !selectedSkills?.includes(skill.id)
+  );
+
+  const onSubmit = async (data: FormValues) => {
     setLoading(true);
     setError('');
     setSuccess('');
@@ -129,26 +143,16 @@ export  function UserAdminForm() {
       const res = await fetch('/api/user-admin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(data),
       });
 
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || 'Erro ao cadastrar usuário.');
+        const json = await res.json();
+        throw new Error(json.error || 'Erro ao cadastrar usuário.');
       }
 
       setSuccess('Usuário criado com sucesso!');
-      setFormData({
-        name: '',
-        email: '',
-        password: '',
-        avatar: '',
-        linkedin: '',
-        github: '',
-        bio: '',
-        role: 'USER',
-        skills: [],
-      });
+      reset(); // limpa todos os campos
       router.refresh();
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Erro desconhecido.');
@@ -157,32 +161,27 @@ export  function UserAdminForm() {
     }
   };
 
-  const availableSkills = skills.filter(
-    (skill) => !formData.skills.includes(skill.id)
-  );
-
   return (
     <Card className="mx-auto mt-1 max-w-4xl rounded-2xl p-6 shadow-lg">
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-3">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+          {/* Nome */}
           <div className="space-y-1">
             <Label>Nome</Label>
-            <Input
-              value={formData.name}
-              onChange={(e) => handleChange('name', e.target.value)}
-              required
-            />
+            <Input {...register('name')} />
+            {errors.name && (
+              <p className="text-xs text-red-500">{errors.name.message}</p>
+            )}
           </div>
 
+          {/* Email e Senha */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1">
               <Label>Email</Label>
-              <Input
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleChange('email', e.target.value)}
-                required
-              />
+              <Input type="email" {...register('email')} />
+              {errors.email && (
+                <p className="text-xs text-red-500">{errors.email.message}</p>
+              )}
             </div>
 
             <div className="space-y-1">
@@ -190,31 +189,38 @@ export  function UserAdminForm() {
               <Input
                 type="password"
                 autoComplete="new-password"
-                value={formData.password}
-                onChange={(e) => handleChange('password', e.target.value)}
-                required
+                {...register('password')}
               />
+              {errors.password && (
+                <p className="text-xs text-red-500">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
           </div>
 
+          {/* LinkedIn e GitHub */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1">
               <Label>LinkedIn</Label>
-              <Input
-                value={formData.linkedin}
-                onChange={(e) => handleChange('linkedin', e.target.value)}
-              />
+              <Input {...register('linkedin')} />
+              {errors.linkedin && (
+                <p className="text-xs text-red-500">
+                  {errors.linkedin.message}
+                </p>
+              )}
             </div>
 
             <div className="space-y-1">
               <Label>GitHub</Label>
-              <Input
-                value={formData.github}
-                onChange={(e) => handleChange('github', e.target.value)}
-              />
+              <Input {...register('github')} />
+              {errors.github && (
+                <p className="text-xs text-red-500">{errors.github.message}</p>
+              )}
             </div>
           </div>
 
+          {/* Skills */}
           <div className="space-y-1">
             <Label>Skills</Label>
             <Select onValueChange={handleAddSkill} value="">
@@ -231,7 +237,7 @@ export  function UserAdminForm() {
             </Select>
 
             <div className="mt-3 flex flex-wrap gap-2">
-              {formData.skills.map((skillId) => {
+              {selectedSkills?.map((skillId) => {
                 const skill = skills.find((s) => s.id === skillId);
                 return (
                   <span
@@ -252,35 +258,46 @@ export  function UserAdminForm() {
             </div>
           </div>
 
+          {/* Bio */}
           <div className="space-y-1">
             <Label>Bio</Label>
-            <Textarea
-              value={formData.bio}
-              onChange={(e) => handleChange('bio', e.target.value)}
-            />
+            <Textarea {...register('bio')} />
           </div>
 
+          {/* Avatar e Permissão */}
           <div className="grid grid-cols-1 items-center gap-4 md:grid-cols-2">
             <div className="space-y-1">
-              <Label>Avatar (URL)</Label>
-              <Input
-                value={formData.avatar}
-                onChange={(e) => handleChange('avatar', e.target.value)}
+              <Label>Avatar</Label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarChange}
+                disabled={uploadingAvatar}
+                className="block w-full text-sm text-gray-900 file:mr-4 file:rounded-full file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 hover:file:bg-indigo-100"
               />
-              {formData.avatar && (
+              {errors.avatar && (
+                <p className="text-xs text-red-500">{errors.avatar.message}</p>
+              )}
+
+              {avatarUrl && (
                 <img
-                  src={formData.avatar}
+                  src={avatarUrl}
                   alt="Avatar Preview"
                   className="mt-2 h-16 w-16 rounded-full border object-cover"
                 />
+              )}
+              {uploadingAvatar && (
+                <p className="text-sm text-gray-500">Enviando avatar...</p>
               )}
             </div>
 
             <div className="space-y-1">
               <Label>Permissão</Label>
               <Select
-                value={formData.role}
-                onValueChange={(value) => handleChange('role', value)}
+                value={selectedRole}
+                onValueChange={(value: 'USER' | 'ADMIN') =>
+                  setValue('role', value)
+                }
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Selecione a permissão" />
@@ -290,9 +307,13 @@ export  function UserAdminForm() {
                   <SelectItem value="ADMIN">Administrador</SelectItem>
                 </SelectContent>
               </Select>
+              {errors.role && (
+                <p className="text-xs text-red-500">{errors.role.message}</p>
+              )}
             </div>
           </div>
 
+          {/* Mensagens de erro/sucesso */}
           <div className="space-y-2">
             {error && (
               <p className="text-sm font-medium text-red-500">{error}</p>
