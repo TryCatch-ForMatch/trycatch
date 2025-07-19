@@ -87,6 +87,34 @@ NEXTAUTH_SECRET=um-segredo-seguro
 JWT_SECRET=um-outro-segredo
 ```
 
+## 📸 Upload de Avatar com Cloudinary
+
+Este projeto utiliza o **[Cloudinary](https://cloudinary.com)** para armazenar e otimizar os avatares dos usuários.  
+O upload é feito automaticamente para o Cloudinary, e a URL da imagem é salva no banco de dados.
+
+---
+
+### 📝 Passo 1: Criar conta gratuita no Cloudinary
+
+1. Acesse [https://cloudinary.com](https://cloudinary.com)
+2. Clique em **Sign Up Free** e crie uma conta (plano gratuito já é suficiente).
+3. No painel do Cloudinary, vá em **Dashboard → API Keys** e copie:
+   - **Cloud name**
+   - **API Key**
+   - **API Secret**
+
+---
+
+### ⚙️ Passo 2: Configurar variáveis de ambiente
+
+No ambiente **local**, adicione essas variáveis no arquivo `.env` (que já está no `.gitignore`):
+
+```env
+CLOUDINARY_CLOUD_NAME=seu_cloud_name
+CLOUDINARY_API_KEY=sua_api_key
+CLOUDINARY_API_SECRET=sua_api_secret
+```
+
 ---
 
 ### 🐳 5. Rodando com Docker (banco de dados)
