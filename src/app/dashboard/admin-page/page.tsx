@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { InviteForm } from '@/components/Dashboard/Invite';
+import { InviteForm, InviteList } from '@/components/Dashboard/Invite';
 import Modal from '@/components/ui/modal';
-import { InviteList } from '@/components/Dashboard/Invite';
 import {
   InviteCard,
   ProjectCard,
