@@ -52,7 +52,13 @@ export async function POST(request: NextRequest) {
       data: { email, code },
     });
 
-    return NextResponse.json(invite, { status: 201 });
+    return NextResponse.json(
+      {
+        email: invite.email,
+        code: invite.code,
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error('Erro ao criar convite:', error);
     return NextResponse.json(
