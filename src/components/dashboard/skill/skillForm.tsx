@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 
 export function SkillForm() {
   const [name, setName] = useState('');
+  const [iconUrl, setIconUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -22,7 +23,7 @@ export function SkillForm() {
       const response = await fetch('/api/skill', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ name, iconUrl }),
       });
 
       const data = await response.json();
@@ -60,6 +61,34 @@ export function SkillForm() {
               required
             />
           </div>
+
+          <div className="space-y-1">
+            <Label htmlFor="skill-icon">Icone da Skill</Label>
+            <Input
+              id="skill-icon"
+              type="url"
+              value={iconUrl}
+              onChange={(e) => setIconUrl(e.target.value)}
+              placeholder="Ex: https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
+              required
+            />
+          </div>
+
+          {/* Pré-visualização do ícone */}
+          {iconUrl && (
+            <div className="flex flex-col items-center space-y-2">
+              <p className="text-sm text-gray-500">Pré-visualização:</p>
+              <img
+                src={iconUrl}
+                alt="Prévia do ícone"
+                className="h-12 w-12 object-contain"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src =
+                    'https://via.placeholder.com/48?text=?';
+                }}
+              />
+            </div>
+          )}
 
           {/* Mensagens de sucesso/erro */}
           {successMessage && (
