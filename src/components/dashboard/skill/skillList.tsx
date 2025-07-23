@@ -9,12 +9,14 @@ import { Pencil, Trash, Check, X } from 'lucide-react';
 type Skill = {
   id: string;
   name: string;
+  iconUrl?: string | null;
 };
 
 export function SkillList() {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editedName, setEditedName] = useState('');
+  const [editedIconUrl, setEditedIconUrl] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -60,6 +62,7 @@ export function SkillList() {
   const handleEdit = (skill: Skill) => {
     setEditingId(skill.id);
     setEditedName(skill.name);
+    setEditedIconUrl(skill.iconUrl ?? '');
     setErrorMessage('');
     setSuccessMessage('');
   };
@@ -72,7 +75,7 @@ export function SkillList() {
       const res = await fetch(`/api/skill/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: editedName }),
+        body: JSON.stringify({ name: editedName, iconUrl: editedIconUrl }),
       });
 
       const data = await res.json();
@@ -81,7 +84,9 @@ export function SkillList() {
 
       setSkills((prev) =>
         prev.map((skill) =>
-          skill.id === id ? { ...skill, name: editedName } : skill
+          skill.id === id
+            ? { ...skill, name: editedName, iconUrl: editedIconUrl }
+            : skill
         )
       );
       setSuccessMessage('Skill atualizada com sucesso.');
@@ -109,17 +114,40 @@ export function SkillList() {
           key={skill.id}
           className="flex flex-col gap-3 p-4 shadow-sm md:flex-row md:items-center md:justify-between"
         >
-          {/* Se está editando, mostra campo editável */}
-          {editingId === skill.id ? (
-            <Input
-              type="text"
-              value={editedName}
-              onChange={(e) => setEditedName(e.target.value)}
-              className="w-full md:w-64"
+          <div className="flex items-center gap-3">
+            {/* Ícone da skill */}
+            <img
+              src={skill.iconUrl || 'https://via.placeholder.com/40?text=?'}
+              alt={skill.name}
+              className="h-10 w-10 rounded object-contain"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src =
+                  'https://via.placeholder.com/40?text=?';
+              }}
             />
-          ) : (
-            <span className="truncate font-medium">{skill.name}</span>
-          )}
+
+            {/* Se está editando, mostra campo editável */}
+            {editingId === skill.id ? (
+              <div className="flex flex-col gap-2">
+                <Input
+                  type="text"
+                  value={editedName}
+                  onChange={(e) => setEditedName(e.target.value)}
+                  placeholder="Nome da skill"
+                  className="w-48"
+                />
+                <Input
+                  type="url"
+                  value={editedIconUrl}
+                  onChange={(e) => setEditedIconUrl(e.target.value)}
+                  placeholder="URL do ícone"
+                  className="w-64"
+                />
+              </div>
+            ) : (
+              <span className="truncate font-medium">{skill.name}</span>
+            )}
+          </div>
 
           {/* Ações */}
           <div className="mt-3 flex gap-2 md:mt-0">
