@@ -5,6 +5,7 @@ import { z } from 'zod';
 
 const createSkillSchema = z.object({
   name: z.string().min(1, 'O nome da skill é obrigatório.'),
+  iconUrl: z.string().url('A URL do ícone deve ser válida.').optional(),
 });
 
 export async function GET() {
@@ -37,7 +38,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { name } = parse.data;
+    const { name, iconUrl } = parse.data;
     const existingSkill = await prisma.skill.findUnique({ where: { name } });
     if (existingSkill) {
       return NextResponse.json(
@@ -47,7 +48,7 @@ export async function POST(request: NextRequest) {
     }
 
     const skill = await prisma.skill.create({
-      data: { name },
+      data: { name, iconUrl },
     });
 
     return NextResponse.json(skill, { status: 201 });

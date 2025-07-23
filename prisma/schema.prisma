@@ -48,6 +48,7 @@ model User {
 model Skill {
   id        String         @id @default(cuid())
   name      String         @unique
+  iconUrl   String?
   users     UserSkill[]
   projects  ProjectSkill[]
   createdAt DateTime       @default(now())

@@ -7,6 +7,7 @@ import { z } from 'zod';
 const idSchema = z.string().min(1, 'ID inválido.');
 const updateSkillSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
+  iconUrl: z.string().url('A URL do ícone deve ser válida.').optional(),
   forceUpdate: z.boolean().optional(),
 });
 
@@ -57,7 +58,7 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: parse.error.format() }, { status: 400 });
   }
 
-  const { name, forceUpdate } = parse.data;
+  const { name, iconUrl, forceUpdate } = parse.data;
 
   try {
     const existing = await prisma.skill.findFirst({
@@ -93,7 +94,7 @@ export async function PATCH(request: NextRequest) {
 
     const skill = await prisma.skill.update({
       where: { id },
-      data: { name },
+      data: { name, iconUrl },
     });
 
     return NextResponse.json(skill);
