@@ -65,7 +65,10 @@ function CardContent({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-content"
-      className={cn('px-6', className)}
+      className={cn(
+        'max-h-[calc(100vh-200px)] overflow-y-auto px-6',
+        className
+      )}
       {...props}
     />
   );
