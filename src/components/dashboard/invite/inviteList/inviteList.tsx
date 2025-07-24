@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Pencil, Trash, Check, X } from 'lucide-react';
@@ -87,92 +87,97 @@ export function InviteList() {
   };
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Lista de Convites</h2>
+    <Card className="space-y-4">
+      <CardContent className="max-h-[500px] overflow-y-auto">
+        {/* Título */}
+        <h2 className="text-xl font-semibold">Lista de Convites</h2>
 
-      {errorMessage && (
-        <p className="text-sm font-medium text-red-500">{errorMessage}</p>
-      )}
+        {/* Mensagem de erro */}
+        {errorMessage && (
+          <p className="text-sm font-medium text-red-500">{errorMessage}</p>
+        )}
 
-      {invites.map((invite) => (
-        <Card
-          key={invite.id}
-          className="flex flex-col gap-3 p-4 shadow-sm md:flex-row md:items-center md:justify-between"
-        >
-          {/* Se está editando, mostra campo editável */}
-          {editingId === invite.id ? (
-            <div className="flex w-full flex-col gap-2">
-              <div>
-                <span className="text-sm text-gray-600">Email:</span>
-                <Input
-                  type="email"
-                  value={editedEmail}
-                  onChange={(e) => setEditedEmail(e.target.value)}
-                  className="mt-1 w-full md:w-64"
-                />
-              </div>
-              <div className="text-sm text-gray-700">
-                <strong>Código:</strong> {invite.code}
-              </div>
-              <div className="text-sm text-gray-700">
-                <strong>Usado:</strong> {invite.used ? 'Sim' : 'Não'}
-              </div>
-            </div>
-          ) : (
-            <div className="flex flex-col">
-              <span className="truncate font-medium">{invite.email}</span>
-              <span className="text-sm text-gray-600">
-                Código: {invite.code}
-              </span>
-              <span className="text-sm text-gray-600">
-                Usado: {invite.used ? 'Sim' : 'Não'}
-              </span>
-            </div>
-          )}
-
-          {/* Ações */}
-          <div className="mt-3 flex gap-2 md:mt-0">
+        {/* Lista de convites */}
+        {invites.map((invite) => (
+          <div
+            key={invite.id}
+            className="flex flex-col gap-3 p-4 shadow-sm md:flex-row md:items-center md:justify-between"
+          >
+            {/* Se está editando, mostra campo editável */}
             {editingId === invite.id ? (
-              <>
-                <Button
-                  size="sm"
-                  onClick={() => handleSaveEdit(invite.id)}
-                  className="flex items-center gap-1"
-                >
-                  <Check size={14} /> Salvar
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => setEditingId(null)}
-                  className="flex items-center gap-1"
-                >
-                  <X size={14} /> Cancelar
-                </Button>
-              </>
+              <div className="flex w-full flex-col gap-2">
+                <div>
+                  <span className="text-sm text-gray-600">Email:</span>
+                  <Input
+                    type="email"
+                    value={editedEmail}
+                    onChange={(e) => setEditedEmail(e.target.value)}
+                    className="mt-1 w-full md:w-64"
+                  />
+                </div>
+                <div className="text-sm text-gray-700">
+                  <strong>Código:</strong> {invite.code}
+                </div>
+                <div className="text-sm text-gray-700">
+                  <strong>Usado:</strong> {invite.used ? 'Sim' : 'Não'}
+                </div>
+              </div>
             ) : (
-              <>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => handleEdit(invite)}
-                  className="flex items-center gap-1"
-                >
-                  <Pencil size={14} /> Editar
-                </Button>
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  onClick={() => handleDelete(invite.id)}
-                  className="flex items-center gap-1"
-                >
-                  <Trash size={14} /> Deletar
-                </Button>
-              </>
+              <div className="flex flex-col">
+                <span className="truncate font-medium">{invite.email}</span>
+                <span className="text-sm text-gray-600">
+                  Código: {invite.code}
+                </span>
+                <span className="text-sm text-gray-600">
+                  Usado: {invite.used ? 'Sim' : 'Não'}
+                </span>
+              </div>
             )}
+
+            {/* Ações */}
+            <div className="mt-3 flex gap-2 md:mt-0">
+              {editingId === invite.id ? (
+                <>
+                  <Button
+                    size="sm"
+                    onClick={() => handleSaveEdit(invite.id)}
+                    className="flex items-center gap-1"
+                  >
+                    <Check size={14} /> Salvar
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setEditingId(null)}
+                    className="flex items-center gap-1"
+                  >
+                    <X size={14} /> Cancelar
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleEdit(invite)}
+                    className="flex items-center gap-1"
+                  >
+                    <Pencil size={14} /> Editar
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => handleDelete(invite.id)}
+                    className="flex items-center gap-1"
+                  >
+                    <Trash size={14} /> Deletar
+                  </Button>
+                </>
+              )}
+            </div>
           </div>
-        </Card>
-      ))}
-    </div>
+        ))}
+      </CardContent>
+    </Card>
   );
 }
