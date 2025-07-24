@@ -1,4 +1,5 @@
 import { User } from 'next-auth';
+import { LogoutButton } from '@/components/Dashboard/LogoutButton/LogoutButton';
 
 type DashboardHeaderProps = {
   user: User;
@@ -6,8 +7,11 @@ type DashboardHeaderProps = {
 
 export function DashboardHeader({ user }: DashboardHeaderProps) {
   return (
-    <header>
-      <h1>Dashboard - Bem-vindo, {user.name ?? 'Usuário'}</h1>
+    <header className="flex items-center justify-between p-4">
+      <div>
+        <h1>Dashboard - Bem-vindo, {user.name ?? 'Usuário'}</h1>
+      </div>
+      <LogoutButton />
     </header>
   );
 }
