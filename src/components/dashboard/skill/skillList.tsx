@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Pencil, Trash, Check, X } from 'lucide-react';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 
 type Skill = {
   id: string;
@@ -14,22 +15,42 @@ type Skill = {
 
 export function SkillList() {
   const [skills, setSkills] = useState<Skill[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editedName, setEditedName] = useState('');
   const [editedIconUrl, setEditedIconUrl] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+
+  // Controle de modal para DELETE
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [deleteMode, setDeleteMode] = useState<'confirm' | 'blocked'>(
+    'confirm'
+  );
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalDescription, setModalDescription] = useState('');
+
+  // Controle de modal para FORCE UPDATE
+  const [confirmUpdateOpen, setConfirmUpdateOpen] = useState(false);
+  const [pendingUpdateId, setPendingUpdateId] = useState<string | null>(null);
 
   const fetchSkills = async () => {
     try {
       const res = await fetch('/api/skill');
-      if (!res.ok) throw new Error('Erro ao carregar skills.');
       const data = await res.json();
-      setSkills(data);
+
+      if (res.ok) {
+        setSkills(data);
+      } else {
+        setErrorMessage(data.error || 'Erro ao carregar skills.');
+      }
     } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : 'Erro ao carregar skills.'
-      );
+      console.error('Erro ao buscar skills:', error);
+      setErrorMessage('Erro na requisição. Tente novamente.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -37,28 +58,53 @@ export function SkillList() {
     fetchSkills();
   }, []);
 
-  const handleDelete = async (id: string) => {
-    const confirmed = confirm('Deseja realmente deletar esta skill?');
-    if (!confirmed) return;
+  // Abrir modal de confirmação de exclusão
+  const handleDeleteClick = (id: string) => {
+    setPendingDeleteId(id);
+    setDeleteMode('confirm');
+    setModalTitle('Confirmar exclusão');
+    setModalDescription(
+      'Tem certeza que deseja excluir esta skill? Esta ação não pode ser desfeita.'
+    );
+    setConfirmDeleteOpen(true);
+  };
 
-    setErrorMessage('');
-    setSuccessMessage('');
+  // Confirmar exclusão
+  const confirmDelete = async () => {
+    if (!pendingDeleteId) return;
 
     try {
-      const res = await fetch(`/api/skill/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/skill/${pendingDeleteId}`, {
+        method: 'DELETE',
+      });
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data.error || 'Erro ao deletar skill.');
-
-      setSkills((prev) => prev.filter((skill) => skill.id !== id));
-      setSuccessMessage(data.message || 'Skill deletada com sucesso.');
+      if (res.ok) {
+        setSkills((prev) => prev.filter((s) => s.id !== pendingDeleteId));
+        setConfirmDeleteOpen(false);
+        setPendingDeleteId(null);
+        setSuccessMessage('Skill excluída com sucesso!');
+      } else if (res.status === 409) {
+        // Vinculada → bloqueia exclusão
+        setDeleteMode('blocked');
+        setModalTitle('Exclusão bloqueada');
+        setModalDescription(data.error);
+      } else {
+        console.error('Erro inesperado ao deletar skill:', data.error);
+        setErrorMessage(data.error || 'Erro inesperado ao deletar.');
+      }
     } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : 'Erro ao deletar skill.'
-      );
+      console.error('Erro ao deletar skill:', error);
+      setErrorMessage('Erro na requisição ao deletar skill.');
     }
   };
 
+  const cancelDelete = () => {
+    setConfirmDeleteOpen(false);
+    setPendingDeleteId(null);
+  };
+
+  // Abrir edição
   const handleEdit = (skill: Skill) => {
     setEditingId(skill.id);
     setEditedName(skill.name);
@@ -67,7 +113,8 @@ export function SkillList() {
     setSuccessMessage('');
   };
 
-  const handleSaveEdit = async (id: string) => {
+  // PATCH da atualização
+  const handleUpdate = async (id: string, forceUpdate = false) => {
     setErrorMessage('');
     setSuccessMessage('');
 
@@ -75,123 +122,180 @@ export function SkillList() {
       const res = await fetch(`/api/skill/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: editedName, iconUrl: editedIconUrl }),
+        body: JSON.stringify({
+          name: editedName,
+          iconUrl: editedIconUrl,
+          forceUpdate,
+        }),
       });
 
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data.error || 'Erro ao atualizar skill.');
-
-      setSkills((prev) =>
-        prev.map((skill) =>
-          skill.id === id
-            ? { ...skill, name: editedName, iconUrl: editedIconUrl }
-            : skill
-        )
-      );
-      setSuccessMessage('Skill atualizada com sucesso.');
-      setEditingId(null);
+      if (res.ok) {
+        // Atualiza localmente
+        setSkills((prev) =>
+          prev.map((skill) =>
+            skill.id === id
+              ? { ...skill, name: editedName, iconUrl: editedIconUrl }
+              : skill
+          )
+        );
+        setEditingId(null);
+        setSuccessMessage('Skill atualizada com sucesso!');
+      } else if (
+        res.status === 409 &&
+        data.error?.includes('Alterações podem impactar')
+      ) {
+        // Backend informou que está vinculada → abrir modal de confirmação
+        setPendingUpdateId(id);
+        setConfirmUpdateOpen(true);
+      } else {
+        console.error('Erro ao atualizar skill:', data.error);
+        setErrorMessage(data.error || 'Erro inesperado ao atualizar.');
+      }
     } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : 'Erro ao atualizar skill.'
-      );
+      console.error('Erro ao atualizar skill:', error);
+      setErrorMessage('Erro na requisição ao atualizar skill.');
     }
   };
 
+  // Confirma forçar update
+  const confirmForceUpdate = async () => {
+    if (!pendingUpdateId) return;
+    setConfirmUpdateOpen(false);
+    await handleUpdate(pendingUpdateId, true);
+    setPendingUpdateId(null);
+  };
+
+  const cancelForceUpdate = () => {
+    setConfirmUpdateOpen(false);
+    setPendingUpdateId(null);
+  };
+
   return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Lista de Skills</h2>
+    <Card className="mx-auto mt-6 max-w-4xl rounded-2xl shadow-md">
+      <CardContent className="space-y-4 p-6">
+        <h2 className="text-xl font-semibold text-gray-800">Lista de Skills</h2>
 
-      {successMessage && (
-        <p className="text-sm font-medium text-green-500">{successMessage}</p>
-      )}
-      {errorMessage && (
-        <p className="text-sm font-medium text-red-500">{errorMessage}</p>
-      )}
-
-      {skills.map((skill) => (
-        <Card
-          key={skill.id}
-          className="flex flex-col gap-3 p-4 shadow-sm md:flex-row md:items-center md:justify-between"
-        >
-          <div className="flex items-center gap-3">
-            {/* Ícone da skill */}
-            <img
-              src={skill.iconUrl || 'https://via.placeholder.com/40?text=?'}
-              alt={skill.name}
-              className="h-10 w-10 rounded object-contain"
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).src =
-                  'https://via.placeholder.com/40?text=?';
-              }}
-            />
-
-            {/* Se está editando, mostra campo editável */}
-            {editingId === skill.id ? (
-              <div className="flex flex-col gap-2">
-                <Input
-                  type="text"
-                  value={editedName}
-                  onChange={(e) => setEditedName(e.target.value)}
-                  placeholder="Nome da skill"
-                  className="w-48"
-                />
-                <Input
-                  type="url"
-                  value={editedIconUrl}
-                  onChange={(e) => setEditedIconUrl(e.target.value)}
-                  placeholder="URL do ícone"
-                  className="w-64"
-                />
-              </div>
-            ) : (
-              <span className="truncate font-medium">{skill.name}</span>
+        {/* Feedback visual */}
+        {loading ? (
+          <p className="text-gray-600">Carregando...</p>
+        ) : errorMessage ? (
+          <p className="text-red-600">{errorMessage}</p>
+        ) : skills.length === 0 ? (
+          <p className="text-gray-600">Nenhuma skill cadastrada ainda.</p>
+        ) : (
+          <>
+            {successMessage && (
+              <p className="text-sm font-medium text-green-500">
+                {successMessage}
+              </p>
             )}
-          </div>
 
-          {/* Ações */}
-          <div className="mt-3 flex gap-2 md:mt-0">
-            {editingId === skill.id ? (
-              <>
-                <Button
-                  size="sm"
-                  onClick={() => handleSaveEdit(skill.id)}
-                  className="flex items-center gap-1"
+            <ul className="space-y-2">
+              {skills.map((skill) => (
+                <li
+                  key={skill.id}
+                  className="flex items-center justify-between rounded-md border p-3 hover:bg-gray-50"
                 >
-                  <Check size={14} /> Salvar
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => setEditingId(null)}
-                  className="flex items-center gap-1"
-                >
-                  <X size={14} /> Cancelar
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => handleEdit(skill)}
-                  className="flex items-center gap-1"
-                >
-                  <Pencil size={14} /> Editar
-                </Button>
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  onClick={() => handleDelete(skill.id)}
-                  className="flex items-center gap-1"
-                >
-                  <Trash size={14} /> Deletar
-                </Button>
-              </>
-            )}
-          </div>
-        </Card>
-      ))}
-    </div>
+                  {/* Ícone + nome ou inputs */}
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={
+                        skill.iconUrl || 'https://via.placeholder.com/40?text=?'
+                      }
+                      alt={skill.name}
+                      className="h-10 w-10 rounded object-contain"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src =
+                          'https://via.placeholder.com/40?text=?';
+                      }}
+                    />
+
+                    {editingId === skill.id ? (
+                      <div className="flex flex-col gap-2">
+                        <Input
+                          type="text"
+                          value={editedName}
+                          onChange={(e) => setEditedName(e.target.value)}
+                          placeholder="Nome da skill"
+                          className="w-48"
+                        />
+                        <Input
+                          type="url"
+                          value={editedIconUrl}
+                          onChange={(e) => setEditedIconUrl(e.target.value)}
+                          placeholder="URL do ícone"
+                          className="w-64"
+                        />
+                      </div>
+                    ) : (
+                      <span className="truncate font-medium">{skill.name}</span>
+                    )}
+                  </div>
+
+                  {/* Botões de ação */}
+                  <div className="flex gap-2">
+                    {editingId === skill.id ? (
+                      <>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleUpdate(skill.id)}
+                        >
+                          <Check size={16} className="mr-1" /> Salvar
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => setEditingId(null)}
+                        >
+                          <X size={16} className="mr-1" /> Cancelar
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEdit(skill)}
+                        >
+                          <Pencil size={16} className="mr-1" /> Editar
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleDeleteClick(skill.id)}
+                        >
+                          <Trash size={16} className="mr-1" /> Excluir
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+
+        {/* Modal de confirmação para deletar */}
+        <ConfirmDialog
+          open={confirmDeleteOpen}
+          onConfirm={deleteMode === 'confirm' ? confirmDelete : cancelDelete}
+          onCancel={cancelDelete}
+          title={modalTitle}
+          description={modalDescription}
+        />
+
+        {/* Modal de confirmação para atualização forçada */}
+        <ConfirmDialog
+          open={confirmUpdateOpen}
+          onConfirm={confirmForceUpdate}
+          onCancel={cancelForceUpdate}
+          title="Skill vinculada a projetos/usuários"
+          description="Esta skill está em uso. Alterações podem impactar projetos e usuários existentes. Deseja continuar?"
+        />
+      </CardContent>
+    </Card>
   );
 }
