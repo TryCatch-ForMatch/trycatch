@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Pencil, Trash } from 'lucide-react';
 import { BasicUser, FullUser } from '@/types/user';
@@ -54,15 +54,22 @@ export function UserAdminList() {
   };
 
   return (
-    <div className="space-y-4">
-      {users.map((user) => (
-        <Card
-          key={user.id}
-          className="flex items-center justify-between p-4 shadow-sm"
-        >
-          <div className="flex items-center gap-1">
-            <p className="w-40 truncate font-semibold">{user.name}</p>
-            <p className="w-40 truncate text-sm text-gray-600">{user.email}</p>
+    <Card className="space-y-4">
+      {/* Conteúdo com scroll, se necessário */}
+      <CardContent className="max-h-[500px] space-y-2 overflow-y-auto">
+        {users.map((user) => (
+          <Card
+            key={user.id}
+            className="flex items-center justify-between p-4 shadow-sm"
+          >
+            <div className="flex items-center gap-1">
+              <p className="w-40 truncate font-semibold">{user.name}</p>
+              <p className="w-40 truncate text-sm text-gray-600">
+                {user.email}
+              </p>
+            </div>
+
+            {/* Botões de ação */}
             <div className="flex gap-3">
               <Button
                 size="sm"
@@ -79,10 +86,11 @@ export function UserAdminList() {
                 <Trash size={12} className="mr-1" /> Excluir
               </Button>
             </div>
-          </div>
-        </Card>
-      ))}
+          </Card>
+        ))}
+      </CardContent>
 
+      {/* Modal fora do CardContent para não rolar junto */}
       <Modal
         open={isDialogOpen}
         onClose={handleDialogClose}
@@ -96,6 +104,6 @@ export function UserAdminList() {
           />
         )}
       </Modal>
-    </div>
+    </Card>
   );
 }
