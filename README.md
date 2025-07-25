@@ -24,7 +24,7 @@ Mais do que apenas código, este projeto é um laboratório de aprendizado colet
 - **Backend:** API Routes do Next.js + TypeScript + Prisma
 - **Banco de Dados:** PostgreSQL
 - **ORM:** Prisma
-- **Ambiente de desenvolvimento:** Docker + Docker Compose
+- **Ambiente de desenvolvimento:** Docker + Docker Compose ou Neon (PostgreSQL na nuvem)
 - **Design:** Figma
 - **Controle de versão:** Git + GitHub
 - **Kanban:** GitHub Projects
@@ -75,17 +75,68 @@ npm install
 Crie um arquivo `.env` na raiz do projeto com base no exemplo abaixo:
 
 ```env
-# Se estiver rodando o banco via Docker
-DATABASE_URL="postgresql://trycatch_user:trycatch_pass@localhost:5555/trycatch_db"
+# 👉 Opção 1: Banco compartilhado (Neon - recomendado para o time)
+DATABASE_URL="postgresql://neondb_owner:SUA_SENHA_AQUI@ep-autumn-surf-acr8iv80-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 
-# Ou, se estiver rodando localmente sem Docker
+# 👉 Opção 2: Banco rodando via Docker local
+# DATABASE_URL="postgresql://trycatch_user:trycatch_pass@localhost:5555/trycatch_db"
+
+# 👉 Opção 3: Banco rodando localmente sem Docker
 # DATABASE_URL="postgresql://postgres:postgres@localhost:5432/trycatch_db"
 
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=um-segredo-seguro
-
 JWT_SECRET=um-outro-segredo
 ```
+
+---
+
+### 🐳 5. Escolha como rodar o banco de dados
+
+Você tem **3 opções** para usar o banco PostgreSQL no ambiente de desenvolvimento:
+
+✅ **Opção 1 – Usar o banco compartilhado no Neon (recomendado)**  
+Não precisa instalar ou subir Docker. Basta configurar o `.env` com a URL do Neon e rodar as migrations normalmente:
+
+```bash
+npx prisma migrate deploy
+npm run seed   # opcional, para criar usuário admin de testes
+```
+
+✅ **Opção 2 – Usar Docker localmente**  
+Caso prefira rodar seu próprio container PostgreSQL localmente:
+
+```bash
+docker-compose up -d
+```
+
+Isso cria um banco PostgreSQL acessível em `localhost:5555`.  
+Depois, aplique as migrations:
+
+```bash
+npx prisma migrate dev
+npm run seed
+```
+
+✅ **Opção 3 – Usar PostgreSQL local instalado na máquina**  
+Se você já tem o PostgreSQL instalado, basta ajustar a `DATABASE_URL` para usar a porta padrão `5432` e rodar as migrations normalmente.
+
+---
+
+### 🔃 6. Rode as migrations do Prisma
+
+Independente da opção escolhida, aplique as migrations do Prisma para criar as tabelas:
+
+```bash
+npx prisma generate
+npx prisma migrate deploy   # se estiver usando Neon
+# ou
+npx prisma migrate dev      # se estiver usando Docker/local
+```
+
+💡 **Dica:** Utilize `npx prisma studio` para visualizar o banco de dados em uma interface web.
+
+---
 
 ## 📸 Upload de Avatar com Cloudinary
 
@@ -117,30 +168,6 @@ CLOUDINARY_API_SECRET=sua_api_secret
 
 ---
 
-### 🐳 5. Rodando com Docker (banco de dados)
-
-Caso prefira usar Docker para o banco de dados, você pode usar o `docker-compose.yml` incluído no projeto:
-Com o Docker Desktop aberto,
-
-```bash
-docker-compose up -d
-```
-
-Este comando iniciará um container PostgreSQL escutando na porta **5555**. Certifique-se de que essa porta está configurada corretamente no `.env`.
-
----
-
-### 🔃 6. Rode as migrations do Prisma
-
-```bash
-npx prisma generate
-npx prisma migrate dev
-```
-
-Este comando criará as tabelas no banco e aplicará os schemas definidos no `prisma/schema.prisma`.
-
----
-
 ### ▶️ 7. Inicie o servidor de desenvolvimento
 
 ```bash
@@ -151,27 +178,28 @@ Abra o navegador em: [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## Criar Usuário Admin para Testes
+## 👤 Criar Usuário Admin para Testes
+
 Para facilitar os testes da API, incluímos um script que cria um usuário administrador no banco de dados.
 
-📥 Como rodar
-Após configurar o .env corretamente e rodar as migrations do Prisma, execute:
+📥 **Como rodar**  
+Após configurar o `.env` corretamente e rodar as migrations do Prisma, execute:
 
 ```bash
 npm run seed
 ```
 
-Esse comando executa o script createTestUser.js, que cria um usuário admin com os seguintes dados:
+Esse comando executa o script que cria um usuário admin com os seguintes dados:
 
-Email: admin@admin.com
+- **Email:** admin@admin.com  
+- **Senha:** teste123  
+- **Função:** ADMIN
 
-Senha: teste123
-
-Função: ADMIN
-
-⚠️ Certifique-se de que o banco de dados esteja rodando antes de executar o script (pode ser local ou via Docker).
+⚠️ Certifique-se de que o banco de dados esteja rodando antes de executar o script (pode ser local, Docker ou Neon).
 
 Esse usuário pode ser usado para autenticação via API ou interface, de acordo com as permissões definidas no projeto.
+
+---
 
 ## 🧹 Lint e formatação
 
@@ -195,19 +223,15 @@ O projeto utiliza o Prisma para modelar o banco de dados PostgreSQL.
 
 - Os IDs são do tipo `CUID`, ideais para sistemas distribuídos;
 - Todos os relacionamentos (usuário, projeto, habilidades, stacks, feedbacks) estão devidamente mapeados;
-- As migrations estão versionadas e podem ser aplicadas com `prisma migrate dev`.
+- As migrations estão versionadas e podem ser aplicadas com `prisma migrate dev` ou `prisma migrate deploy`.
 
 ---
 
 ## 🧠 Outras informações
 
-- O backend utiliza validações com Zod;
+- O backend utiliza validações com **Zod**;
 - As permissões são controladas por função (`role`) e centralizadas em `lib/check-auth.ts`;
-- O frontend está sendo estruturado com autenticação via NextAuth e integração com a API.
-
----
-
-> 💡 Dica: Utilize `npx prisma studio` para visualizar o banco de dados em uma interface web.
+- O frontend está estruturado com autenticação via **NextAuth** e integração com a API.
 
 ---
 
