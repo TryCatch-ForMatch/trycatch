@@ -87,8 +87,8 @@ export function InviteList() {
   };
 
   return (
-    <Card className="space-y-4">
-      <CardContent className="max-h-[500px] overflow-y-auto">
+    <Card className="mx-auto mt-6 max-w-4xl rounded-2xl shadow-md">
+      <CardContent className="space-y-4 p-6">
         {/* Título */}
         <h2 className="text-xl font-semibold">Lista de Convites</h2>
 
