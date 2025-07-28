@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Calendar, DollarSign, User } from 'lucide-react';
 import { ProjectDetailsType } from '@/types/team-project';
 import { useCurrentUser } from '@/lib/use-current-user';
+import Image from 'next/image';
 
 interface ProjectDetailsProps {
   projectId: string;
@@ -101,11 +102,13 @@ export function ProjectDetails({ projectId }: ProjectDetailsProps) {
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
           {(project.skills ?? []).map((skill) => (
-            <img
+            <Image
               key={skill.id}
               src={skill.iconUrl || '/placeholder.png'}
               alt={skill.name}
               title={skill.name}
+              width={32}
+              height={32}
               className="h-8 w-8"
             />
           ))}
