@@ -13,13 +13,23 @@ import { Button } from './button';
 import { X } from 'lucide-react';
 import { ReactNode } from 'react';
 
+type ModalSize = 'sm' | 'md' | 'lg' | 'xl';
+
 interface ModalProps {
   open: boolean;
   onClose: () => void;
   title?: string;
   description?: string;
   children: ReactNode;
+  size?: ModalSize;
 }
+
+const sizeClasses: Record<ModalSize, string> = {
+  sm: 'max-w-md',
+  md: 'max-w-lg',
+  lg: 'max-w-3xl',
+  xl: 'max-w-6xl',
+};
 
 export default function Modal({
   open,
@@ -27,13 +37,16 @@ export default function Modal({
   title,
   description,
   children,
+  size = 'lg',
 }: ModalProps) {
   return (
     <Dialog
       open={open}
       onOpenChange={(isOpen: boolean) => !isOpen && onClose()}
     >
-      <DialogContent className="w-auto max-w-3xl overflow-hidden rounded-2xl p-6 shadow-lg">
+      <DialogContent
+        className={`w-auto ${sizeClasses[size]} overflow-hidden rounded-2xl p-6 shadow-lg`}
+      >
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             <span>{title}</span>
