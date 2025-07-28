@@ -35,7 +35,10 @@ export async function GET(
   });
   if (!authorized || !session) return response;
 
-  const idParse = idSchema.safeParse(context.params.id);
+  const { id } = context.params;
+
+  const idParse = idSchema.safeParse(id);
+
   if (!idParse.success) {
     return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
   }
@@ -47,7 +50,16 @@ export async function GET(
       include: {
         owner: { select: { id: true, name: true, avatar: true } },
         skills: { include: { skill: true } },
-        stacks: { include: { stack: true } },
+        stacks: {
+          include: {
+            stack: true,
+            StackTaken: {
+              include: {
+                user: { select: { id: true, name: true, avatar: true } },
+              },
+            },
+          },
+        },
       },
     });
 
@@ -58,11 +70,38 @@ export async function GET(
       );
     }
 
-    if (project.ownerId !== session.user.id && session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Acesso negado' }, { status: 403 });
-    }
+    const formatted = {
+      id: project.id,
+      name: project.name,
+      description: project.description,
+      deadline: project.deadline.toISOString(),
+      totalValue: project.totalValue,
+      owner: project.owner,
+      skills: project.skills.map((ps) => ({
+        id: ps.skill.id,
+        name: ps.skill.name,
+        iconUrl: ps.skill.iconUrl,
+      })),
+      stacks: project.stacks.map((s) => {
+        const taken = s.StackTaken[0]; // só pode haver 1 taken por stack
+        return {
+          id: s.id,
+          stackId: s.stackId,
+          name: s.stack.name,
+          percentage: s.percentage,
+          takenBy: taken
+            ? {
+                id: taken.user.id,
+                name: taken.user.name,
+                avatar: taken.user.avatar,
+                stackTakenId: taken.id,
+              }
+            : null,
+        };
+      }),
+    };
 
-    return NextResponse.json(project);
+    return NextResponse.json(formatted);
   } catch (error) {
     console.error('Erro ao buscar projeto:', error);
     return NextResponse.json(
@@ -82,6 +121,7 @@ export async function PUT(
   if (!authorized || !session) return response;
 
   const idParse = idSchema.safeParse(context.params.id);
+
   if (!idParse.success) {
     return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
   }
@@ -159,6 +199,7 @@ export async function DELETE(
   if (!authorized || !session) return response;
 
   const idParse = idSchema.safeParse(context.params.id);
+
   if (!idParse.success) {
     return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
   }
