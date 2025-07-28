@@ -122,7 +122,7 @@ export default function AdminPage() {
       <Modal
         open={userAdminList}
         onClose={() => setUserAdminList(false)}
-        title="ListarUsuários"
+        title="Listar Usuários"
       >
         <UserAdminList />
       </Modal>

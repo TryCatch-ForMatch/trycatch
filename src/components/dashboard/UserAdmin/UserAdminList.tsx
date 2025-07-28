@@ -54,9 +54,9 @@ export function UserAdminList() {
   };
 
   return (
-    <Card className="space-y-4">
+    <Card className="mx-auto mt-6 max-w-4xl rounded-2xl shadow-md">
       {/* Conteúdo com scroll, se necessário */}
-      <CardContent className="max-h-[500px] space-y-2 overflow-y-auto">
+      <CardContent className="space-y-4 p-6">
         {users.map((user) => (
           <Card
             key={user.id}

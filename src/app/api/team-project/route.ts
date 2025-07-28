@@ -60,7 +60,6 @@ export async function POST(request: NextRequest) {
   if (!parse.success) {
     return NextResponse.json({ error: parse.error.format() }, { status: 400 });
   }
-
   const { name, description, deadline, totalValue, status, skills, stacks } =
     parse.data;
   const project = await prisma.project.create({
