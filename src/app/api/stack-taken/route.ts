@@ -28,6 +28,53 @@ export async function POST(request: NextRequest) {
   const { projectId, projectStackId, stackId } = parsed.data;
 
   try {
+    console.log('➡ Dados recebidos:', {
+      projectId,
+      projectStackId,
+      stackId,
+      userId: session.user.id,
+    });
+
+    const projectExists = await prisma.project.findUnique({
+      where: { id: projectId },
+    });
+    if (!projectExists) {
+      return NextResponse.json(
+        { error: 'Projeto não encontrado' },
+        { status: 400 }
+      );
+    }
+
+    const projectStackExists = await prisma.projectStack.findUnique({
+      where: { id: projectStackId },
+    });
+    if (!projectStackExists) {
+      return NextResponse.json(
+        { error: 'ProjectStack não encontrado' },
+        { status: 400 }
+      );
+    }
+
+    const stackExists = await prisma.stack.findUnique({
+      where: { id: stackId },
+    });
+    if (!stackExists) {
+      return NextResponse.json(
+        { error: 'Stack não encontrada' },
+        { status: 400 }
+      );
+    }
+
+    const alreadyTaken = await prisma.stackTaken.findFirst({
+      where: { projectStackId },
+    });
+    if (alreadyTaken) {
+      return NextResponse.json(
+        { error: 'Essa stack já foi assumida por outro usuário' },
+        { status: 400 }
+      );
+    }
+
     const newStackTaken = await prisma.stackTaken.create({
       data: {
         userId: session.user.id,
