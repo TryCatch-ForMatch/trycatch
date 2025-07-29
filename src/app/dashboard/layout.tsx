@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { DashboardHeader } from '@/components/Dashboard/Header';
 import { DashboardFooter } from '@/components/Dashboard/Footer';
+import { Navbar } from '@/components/layout/navbar/navbar';
 
 type DashboardLayoutProps = {
   children: ReactNode;
@@ -20,9 +21,12 @@ export default async function DashboardLayout({
 
   return (
     <div>
-      <DashboardHeader user={session.user} />
-      <main>{children}</main>
-      <DashboardFooter />
+      <Navbar></Navbar>
+      <div className="pl-[272px]">
+        <DashboardHeader user={session.user} />
+        <main>{children}</main>
+        <DashboardFooter />
+      </div>
     </div>
   );
 }
