@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { InviteForm, InviteList } from '@/components/Dashboard/Invite';
 import Modal from '@/components/ui/modal';
@@ -14,8 +16,12 @@ import {
 import { SkillForm, SkillList } from '@/components/Dashboard/Skill';
 import { UserAdminForm, UserAdminList } from '@/components/Dashboard/UserAdmin';
 import { TechStackForm, TechStackList } from '@/components/Dashboard/TechStack';
+import { useState } from 'react';
 
 export default function AdminPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
   const [openInvite, setOpenInvite] = useState(false);
   const [openSkill, setOpenSkill] = useState(false);
   const [openStack, setOpenStack] = useState(false);
@@ -25,6 +31,19 @@ export default function AdminPage() {
   const [skillList, setSkillList] = useState(false);
   const [stackList, setStackList] = useState(false);
   const [userAdminList, setUserAdminList] = useState(false);
+
+  useEffect(() => {
+    if (status === 'loading') return;
+    if (!session) {
+      router.push('/dashboard');
+    } else if (session.user.role !== 'ADMIN') {
+      router.push('/dashboard');
+    }
+  }, [session, status, router]);
+
+  if (status === 'loading') {
+    return <div className="p-6">Carregando...</div>;
+  }
 
   return (
     <main className="space-y-6 p-6">
