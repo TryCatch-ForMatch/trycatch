@@ -7,6 +7,7 @@ import Image from 'next/image';
 export function Navbar() {
   const { data: session } = useSession();
   const user = session?.user;
+  console.log('Sessão do usuário:', user);
 
   return (
     <aside className="fixed top-0 left-0 flex h-screen w-60 flex-col justify-between border-r border-gray-300 bg-transparent px-4 py-6 backdrop-blur-md">
@@ -20,7 +21,7 @@ export function Navbar() {
           <div className="mb-10 flex items-center gap-3">
             {user.avatar && (
               <Image
-                src={user.avatar}
+                src={user.avatar || '/default-avatar.png'}
                 alt={user.name || 'Avatar'}
                 width={40}
                 height={40}
