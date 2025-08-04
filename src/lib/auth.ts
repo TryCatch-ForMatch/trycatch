@@ -26,7 +26,7 @@ export const authOptions: NextAuthOptions = {
           const isValid = await compare(credentials!.password, user.password);
 
           if (!isValid) throw new Error('Senha incorreta.');
-          
+
           const validRoles = ['ADMIN', 'USER'] as const;
           const role = validRoles.includes(
             user.role as (typeof validRoles)[number]
@@ -42,7 +42,7 @@ export const authOptions: NextAuthOptions = {
             role,
           };
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
           throw new Error('Erro ao autenticar. Verifique suas credenciais.');
         }
@@ -57,6 +57,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.role = user.role;
+        token.avatar = user.avatar;
       }
       return token;
     },
@@ -64,6 +65,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role as UserRole;
+        session.user.avatar = token.avatar as string;
       }
       return session;
     },
