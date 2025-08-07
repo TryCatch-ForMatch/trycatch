@@ -24,7 +24,7 @@ export default function TeamProjectPage() {
       </div>
 
       {/* Cards dos projetos resumidos */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
         {projects.map((project) => (
           <CardProjectSummary
             key={project.id}
