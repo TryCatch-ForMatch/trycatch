@@ -7,6 +7,7 @@ const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 
 const userAvailabilityUpdateSchema = z.object({
   isMentor: z.boolean().optional(),
+  skills: z.array(z.string()).optional(),
   weekday: z.number().int().min(0).max(6).optional(),
   startTime: z
     .string()
@@ -122,6 +123,7 @@ export async function PUT(
 
     const body = await request.json();
     const parsed = userAvailabilityUpdateSchema.safeParse(body);
+
     if (!parsed.success) {
       return NextResponse.json(
         { error: 'Dados inválidos', details: parsed.error.format() },
@@ -129,10 +131,33 @@ export async function PUT(
       );
     }
 
+    const { skills, ...availabilityData } = parsed.data;
+
     const updated = await prisma.userAvailability.update({
       where: { id: availabilityId },
-      data: parsed.data,
+      data: {
+        ...availabilityData,
+        userId: session.user.id,
+      },
     });
+
+    if (skills) {
+      // Remove vínculos antigos do usuário
+      await prisma.userSkill.deleteMany({
+        where: { userId: session.user.id },
+      });
+
+      // Cria vínculos novos
+      if (skills.length > 0) {
+        await prisma.userSkill.createMany({
+          data: skills.map((skillId) => ({
+            userId: session.user.id,
+            skillId,
+          })),
+          skipDuplicates: true,
+        });
+      }
+    }
 
     return NextResponse.json(updated);
   } catch (error) {
