@@ -16,7 +16,6 @@ const updateUserSchema = z.object({
   linkedin: z.string().url().optional(),
   github: z.string().url().optional(),
   bio: z.string().optional(),
-  skills: z.array(z.string()).optional(),
 });
 
 export async function GET(
@@ -104,8 +103,7 @@ export async function PUT(
     );
   }
 
-  const { name, email, password, avatar, linkedin, github, bio, skills } =
-    parse.data;
+  const { name, email, password, avatar, linkedin, github, bio } = parse.data;
 
   try {
     const userExists = await prisma.user.findUnique({ where: { id } });
@@ -139,19 +137,6 @@ export async function PUT(
         linkedin,
         github,
         bio,
-        skills: skills
-          ? {
-              deleteMany: {},
-              create: skills.map((skillId: string) => ({
-                skill: { connect: { id: skillId } },
-              })),
-            }
-          : undefined,
-      },
-      include: {
-        skills: {
-          include: { skill: true },
-        },
       },
     });
 

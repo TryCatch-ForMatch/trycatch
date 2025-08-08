@@ -11,7 +11,6 @@ const createUserSchema = z.object({
   linkedin: z.union([z.string().url(), z.literal('')]).nullable(),
   github: z.union([z.string().url(), z.literal('')]).nullable(),
   bio: z.string().optional(),
-  skills: z.array(z.string()).optional(),
   inviteCode: z.string(),
 });
 
@@ -35,17 +34,8 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const {
-    name,
-    email,
-    password,
-    avatar,
-    linkedin,
-    github,
-    bio,
-    skills,
-    inviteCode,
-  } = parse.data;
+  const { name, email, password, avatar, linkedin, github, bio, inviteCode } =
+    parse.data;
 
   try {
     const invite = await prisma.invite.findFirst({
@@ -87,18 +77,6 @@ export async function POST(request: NextRequest) {
         linkedin,
         github,
         bio,
-        skills: skills
-          ? {
-              create: skills.map((skillId: string) => ({
-                skill: { connect: { id: skillId } },
-              })),
-            }
-          : undefined,
-      },
-      include: {
-        skills: {
-          include: { skill: true },
-        },
       },
     });
 
