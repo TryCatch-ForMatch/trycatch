@@ -6,6 +6,7 @@ import { checkAuth } from '@/lib/check-auth';
 const userAvailabilitySchema = z.object({
   isMentor: z.boolean().optional().default(false),
   weekday: z.number().int().min(0).max(6),
+  skills: z.array(z.string()).optional(),
   startTime: z
     .string()
     .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Formato inválido (HH:MM)'),
@@ -77,14 +78,24 @@ export async function POST(req: Request) {
       );
     }
 
-    const data = parsed.data;
+    const { skills, ...availabilityData } = parsed.data;
 
     const created = await prisma.userAvailability.create({
       data: {
-        ...data,
+        ...availabilityData,
         userId: session.user.id,
       },
     });
+
+    if (skills?.length) {
+      await prisma.userSkill.createMany({
+        data: skills.map((skillId) => ({
+          userId: session.user.id,
+          skillId,
+        })),
+        skipDuplicates: true,
+      });
+    }
 
     return NextResponse.json(created, { status: 201 });
   } catch (error) {
