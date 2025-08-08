@@ -38,7 +38,7 @@ export function Navbar() {
         <nav>
           <ul className="flex flex-col gap-4 text-sm text-gray-800">
             <li>
-              <Link href="/projects" className="hover:text-blue-600">
+              <Link href="/team-projects" className="hover:text-blue-600">
                 Projetos
               </Link>
             </li>
