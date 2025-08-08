@@ -39,6 +39,7 @@ model User {
   skills            UserSkill[]
   projects          Project[]    @relation("ProjectOwner")
   stacksTaken       StackTaken[]
+  availability UserAvailability[]
   feedbacksReceived Feedback[]   @relation("FeedbackReceiver")
   feedbacksGiven    Feedback[]   @relation("FeedbackGiver")
   createdAt         DateTime     @default(now())
@@ -153,4 +154,16 @@ model Invite {
   invitedBy String? // ID do usuário que enviou o convite (opcional)
   createdAt DateTime  @default(now())
   usedAt    DateTime?
+}
+
+model UserAvailability {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  isMentor  Boolean   @default(false)
+  weekday   Int      // 0 (Domingo) até 6 (Sábado)
+  startTime String   // Ex: "18:00"
+  endTime   String   // Ex: "21:00"
+  createdAt DateTime @default(now())
+  updatedAt    DateTime    @updatedAt
 }
