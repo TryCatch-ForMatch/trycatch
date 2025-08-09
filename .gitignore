@@ -41,3 +41,9 @@ next-env.d.ts
 # storybook
 *storybook.log
 storybook-static
+
+#.vscode folder
+.vscode
+
+#yarn.lock para evitar conflito com npm
+yarn.lock

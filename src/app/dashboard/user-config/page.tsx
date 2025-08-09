@@ -1,6 +1,6 @@
 'use cliente';
 
-import { UserAvailabilityForm } from '@/components/Dashboard/User';
+import { UserAvailabilityForm } from '@/components/dashboard/User';
 
 export default function UserConfigPage() {
   return (
