@@ -3,9 +3,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
+
+//import components
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+//import icons
+import { Loader2 } from 'lucide-react';
 
 const inviteSchema = z.object({
   email: z.string().email({ message: 'Email inválido.' }),
@@ -23,6 +27,7 @@ export default function RegisterForm() {
     email?: string;
     inviteCode?: string;
   }>({});
+
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -73,53 +78,63 @@ export default function RegisterForm() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
-      <Card className="w-full max-w-md shadow-xl">
-        <CardHeader>
-          <CardTitle className="text-center text-2xl">
-            Registro com Convite
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {formError && (
-              <div className="text-center text-sm font-medium text-red-500">
-                {formError}
-              </div>
+    <section className="flex min-h-screen items-center justify-center">
+      {formError && (
+        <div className="mx-auto text-center text-sm font-medium text-red-500">
+          {formError}
+        </div>
+      )}
+
+      <div className="flex w-full max-w-md flex-col gap-4 rounded-md p-8 px-4 shadow-sm">
+        <h2 className="mx-auto text-2xl font-bold text-[#3B38A0]">
+          Faca o seu Registro
+        </h2>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+          <div className="space-y-1">
+            <Input
+              label="Email"
+              type="email"
+              placeholder="Seu email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            {fieldErrors.email && (
+              <p className="text-xs text-red-500">{fieldErrors.email}</p>
             )}
+          </div>
 
-            <div className="space-y-1">
-              <Input
-                type="email"
-                placeholder="Seu email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-              {fieldErrors.email && (
-                <p className="text-xs text-red-500">{fieldErrors.email}</p>
-              )}
-            </div>
+          <div className="space-y-1">
+            <Input
+              label="Codigo de Convite"
+              type="text"
+              placeholder="Seu codigo de convite"
+              value={inviteCode}
+              onChange={(e) => setInviteCode(e.target.value)}
+              required
+            />
+            {fieldErrors.inviteCode && (
+              <p className="text-xs text-red-500">{fieldErrors.inviteCode}</p>
+            )}
+          </div>
 
-            <div className="space-y-1">
-              <Input
-                type="text"
-                placeholder="Código do convite"
-                value={inviteCode}
-                onChange={(e) => setInviteCode(e.target.value)}
-                required
-              />
-              {fieldErrors.inviteCode && (
-                <p className="text-xs text-red-500">{fieldErrors.inviteCode}</p>
-              )}
-            </div>
-
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Validando...' : 'Validar Convite'}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={loading}
+            variant="default"
+          >
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>Validando seu convite</span>
+              </span>
+            ) : (
+              <span>Validar o convite</span>
+            )}
+          </Button>
+        </form>
+      </div>
+    </section>
   );
 }

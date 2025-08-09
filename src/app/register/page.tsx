@@ -1,12 +1,11 @@
-'use client';
-
+import { Metadata } from 'next';
 import RegisterForm from '@/components/form/RegisterForm/RegisterForm';
 
-export default function InviteRegisterPage() {
+export const metadata:Mea
+export default function RegisterPage() {
   return (
-    <div>
-      <h2>Registro por convite</h2>
-      <RegisterForm></RegisterForm>
-    </div>
+    <section>
+      <RegisterForm />
+    </section>
   );
 }
