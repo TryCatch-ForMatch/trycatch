@@ -1,24 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { X } from 'lucide-react';
-import { Skill } from '@prisma/client';
 import { User } from '@/types/user';
 import { z } from 'zod';
 
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 
@@ -34,7 +25,6 @@ const userEditFormSchema = z.object({
   linkedin: z.string().url('URL inválida').optional().or(z.literal('')),
   github: z.string().url('URL inválida').optional().or(z.literal('')),
   bio: z.string().optional(),
-  skills: z.array(z.string()).optional(),
 });
 
 type UserEditFormValues = z.infer<typeof userEditFormSchema>;
@@ -46,8 +36,6 @@ interface UserEditProps {
 export function UserEdit({ user }: UserEditProps) {
   const router = useRouter();
 
-  const [skills, setSkills] = useState<Skill[]>([]);
-  const [loadingSkills, setLoadingSkills] = useState(true);
   const [apiError, setApiError] = useState<string | null>(null);
   const [apiSuccess, setApiSuccess] = useState<string | null>(null);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -68,11 +56,9 @@ export function UserEdit({ user }: UserEditProps) {
       linkedin: user.linkedin || '',
       github: user.github || '',
       bio: user.bio || '',
-      skills: user.skills?.map((s) => s.skill.id) || [],
     },
   });
 
-  const selectedSkills = watch('skills') || [];
   const avatarPreview = watch('avatar');
 
   async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -109,37 +95,6 @@ export function UserEdit({ user }: UserEditProps) {
       setUploadingAvatar(false);
     }
   }
-
-  useEffect(() => {
-    const fetchSkills = async () => {
-      try {
-        const res = await fetch('/api/skill');
-        const data = await res.json();
-        setSkills(data);
-      } catch (error) {
-        console.error('Erro ao carregar skills', error);
-      } finally {
-        setLoadingSkills(false);
-      }
-    };
-    fetchSkills();
-  }, []);
-
-  const availableSkills = skills.filter(
-    (skill) => !selectedSkills.includes(skill.id)
-  );
-
-  const handleAddSkill = (skillId: string) => {
-    setValue('skills', [...selectedSkills, skillId], { shouldValidate: true });
-  };
-
-  const handleRemoveSkill = (skillId: string) => {
-    setValue(
-      'skills',
-      selectedSkills.filter((id) => id !== skillId),
-      { shouldValidate: true }
-    );
-  };
 
   const onSubmit = async (values: UserEditFormValues) => {
     setApiError(null);
@@ -258,7 +213,7 @@ export function UserEdit({ user }: UserEditProps) {
           </div>
 
           {/* Skills */}
-          <div>
+          {/* <div>
             <Label>Skills</Label>
             {!loadingSkills && (
               <>
@@ -296,7 +251,7 @@ export function UserEdit({ user }: UserEditProps) {
                 </div>
               </>
             )}
-          </div>
+          </div> */}
 
           {/* API errors/success */}
           {apiError && <p className="text-sm text-red-500">{apiError}</p>}
