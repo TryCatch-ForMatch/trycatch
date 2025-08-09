@@ -38,7 +38,10 @@ export function Navbar() {
         <nav>
           <ul className="flex flex-col gap-4 text-sm text-gray-800">
             <li>
-              <Link href="/team-projects" className="hover:text-blue-600">
+              <Link
+                href="/dashboard/team-projects"
+                className="hover:text-blue-600"
+              >
                 Projetos
               </Link>
             </li>
@@ -48,8 +51,16 @@ export function Navbar() {
               </Link>
             </li>
             <li>
-              <Link href="/forum" className="hover:text-blue-600">
+              <Link href="/dashboard/forum" className="hover:text-blue-600">
                 Fórum
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/dashboard/user-config"
+                className="hover:text-blue-600"
+              >
+                Configuração
               </Link>
             </li>
           </ul>
