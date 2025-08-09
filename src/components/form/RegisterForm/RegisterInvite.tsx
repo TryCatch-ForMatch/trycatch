@@ -52,6 +52,7 @@ export default function RegisterForm() {
       return;
     }
 
+    //// Verificacao pendente
     try {
       const res = await fetch('/api/invite', {
         method: 'POST',
@@ -87,7 +88,7 @@ export default function RegisterForm() {
 
       <div className="flex w-full max-w-md flex-col gap-4 rounded-md p-8 px-4 shadow-sm">
         <h2 className="mx-auto text-2xl font-bold text-[#3B38A0]">
-          Faca o seu Registro
+          Registre seu Convite
         </h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
           <div className="space-y-1">
