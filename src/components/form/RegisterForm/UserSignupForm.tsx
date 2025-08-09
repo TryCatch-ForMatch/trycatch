@@ -3,9 +3,15 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+import { X, Loader2 } from 'lucide-react';
+import { Skill } from '@prisma/client';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+//import components
+import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -15,10 +21,6 @@ import {
   SelectContent,
   SelectItem,
 } from '@/components/ui/select';
-import { X } from 'lucide-react';
-import { Skill } from '@prisma/client';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 
 const schema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
@@ -155,48 +157,47 @@ export default function UserSignupForm() {
   const availableSkills = skills.filter((s) => !selectedSkills.includes(s.id));
 
   return (
-    <Card className="mx-auto mt-1 max-w-4xl rounded-2xl p-6 shadow-lg">
-      <CardContent>
+    <section className="my-10 flex min-h-screen flex-col items-center justify-center gap-3">
+      <section className="flex w-full max-w-md flex-col gap-4 rounded-md p-8 px-4 shadow-sm">
+        <h2 className="mx-auto text-2xl font-bold text-[#3B38A0]">
+          Cadastro de Usuario
+        </h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-          {/* Nome */}
           <div className="space-y-1">
-            <Label>Nome</Label>
-            <Input {...register('name')} />
+            <Input {...register('name')} label="Nome" placeholder="Seu nome" />
             {errors.name && (
               <p className="text-sm text-red-500">{errors.name.message}</p>
             )}
           </div>
 
-          {/* Email e Senha */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div className="space-y-1">
-              <Label>Email</Label>
-              <Input {...register('email')} disabled />
-              {errors.email && (
-                <p className="text-sm text-red-500">{errors.email.message}</p>
-              )}
-            </div>
+          <div className="space-y-1">
+            <Input {...register('email')} label="Email" disabled />
+            {errors.email && (
+              <p className="text-sm text-red-500">{errors.email.message}</p>
+            )}
+          </div>
 
-            <div className="space-y-1">
-              <Label>Senha</Label>
-              <Input
-                type="password"
-                autoComplete="new-password"
-                {...register('password')}
-              />
-              {errors.password && (
-                <p className="text-sm text-red-500">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
+          <div className="space-y-1">
+            <Input
+              type="password"
+              label="Senha"
+              placeholder="Sua senha"
+              autoComplete="new-password"
+              {...register('password')}
+            />
+            {errors.password && (
+              <p className="text-sm text-red-500">{errors.password.message}</p>
+            )}
           </div>
 
           {/* LinkedIn e GitHub */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1">
-              <Label>LinkedIn</Label>
-              <Input {...register('linkedin')} />
+              <Input
+                {...register('linkedin')}
+                label="Linkedin"
+                placeholder="Seu Linkedin"
+              />
               {errors.linkedin && (
                 <p className="text-sm text-red-500">
                   {errors.linkedin.message}
@@ -205,8 +206,11 @@ export default function UserSignupForm() {
             </div>
 
             <div className="space-y-1">
-              <Label>GitHub</Label>
-              <Input {...register('github')} />
+              <Input
+                {...register('github')}
+                label="Github"
+                placeholder="Seu github"
+              />
               {errors.github && (
                 <p className="text-sm text-red-500">{errors.github.message}</p>
               )}
@@ -239,7 +243,7 @@ export default function UserSignupForm() {
               <p className="text-sm text-red-500">{errors.skills.message}</p>
             )}
 
-            {/* Listagem das skills selecionadas */}
+            {/* Skills selecionadas */}
             <div className="mt-3 flex flex-wrap gap-2">
               {selectedSkills.map((skillId: string) => {
                 const skill = skills.find((s) => s.id === skillId);
@@ -254,7 +258,7 @@ export default function UserSignupForm() {
                       onClick={() =>
                         setValue(
                           'skills',
-                          selectedSkills.filter((id) => id !== skillId)
+                          selectedSkills.filter((id: string) => id !== skillId)
                         )
                       }
                       className="ml-1 text-gray-500 hover:text-red-500"
@@ -284,13 +288,13 @@ export default function UserSignupForm() {
               accept="image/*"
               onChange={handleAvatarChange}
               disabled={uploadingAvatar}
-              className="block w-full text-sm text-gray-900 file:mr-4 file:rounded-full file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 hover:file:bg-indigo-100"
+              className="block w-full cursor-pointer text-sm text-gray-900 file:mr-4 file:rounded-full file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 hover:file:bg-indigo-100"
             />
             {errors.avatar && (
               <p className="text-sm text-red-500">{errors.avatar.message}</p>
             )}
             {avatarUrl && (
-              <img
+              <Image
                 src={avatarUrl}
                 alt="Avatar Preview"
                 className="mt-2 h-16 w-16 rounded-full border object-cover"
@@ -312,11 +316,19 @@ export default function UserSignupForm() {
             <p className="text-sm font-medium text-green-500">{success}</p>
           )}
 
+          {/* Botão */}
           <Button type="submit" disabled={isSubmitting} className="w-full">
-            {isSubmitting ? 'Cadastrando...' : 'Cadastrar Usuário'}
+            {isSubmitting ? (
+              <span className="flex items-center justify-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>Cadastrando...</span>
+              </span>
+            ) : (
+              <span>Cadastrar Usuário</span>
+            )}
           </Button>
         </form>
-      </CardContent>
-    </Card>
+      </section>
+    </section>
   );
 }
