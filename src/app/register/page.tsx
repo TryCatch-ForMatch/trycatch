@@ -1,6 +1,6 @@
 'use client';
 
-import RegisterForm from '@/components/RegisterForm/RegisterForm';
+import RegisterForm from '@/components/form/RegisterForm/RegisterForm';
 
 export default function InviteRegisterPage() {
   return (

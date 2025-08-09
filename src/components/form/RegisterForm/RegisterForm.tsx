@@ -9,11 +9,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const inviteSchema = z.object({
   email: z.string().email({ message: 'Email inválido.' }),
-  inviteCode: z
-    .string()
-    .min(4, {
-      message: 'O código do convite deve ter pelo menos 4 caracteres.',
-    }),
+  inviteCode: z.string().min(4, {
+    message: 'O código do convite deve ter pelo menos 4 caracteres.',
+  }),
 });
 
 export default function RegisterForm() {
