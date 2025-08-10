@@ -14,13 +14,6 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from '@/components/ui/select';
 
 const schema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
@@ -30,9 +23,6 @@ const schema = z.object({
   github: z.string().url('GitHub inválido').optional().or(z.literal('')),
   avatar: z.string().url('URL inválida').optional().or(z.literal('')),
   bio: z.string().optional(),
-  skills: z.array(z.string(), {
-    required_error: 'Selecione ao menos uma skill',
-  }),
   inviteCode: z.string().min(1, 'Código do convite é obrigatório'),
 });
 
@@ -42,7 +32,6 @@ export default function UserSignupForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [skills, setSkills] = useState<Skill[]>([]);
   const [submitError, setSubmitError] = useState('');
   const [success, setSuccess] = useState('');
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -63,12 +52,10 @@ export default function UserSignupForm() {
       github: '',
       avatar: '',
       bio: '',
-      skills: [],
       inviteCode: '',
     },
   });
 
-  const selectedSkills = watch('skills');
   const avatarUrl = watch('avatar');
 
   async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -91,7 +78,7 @@ export default function UserSignupForm() {
 
       const json = await res.json();
       if (json.url) {
-        setValue('avatar', json.url); // ✅ Atualiza direto no RHF
+        setValue('avatar', json.url);
       } else {
         throw new Error('Servidor não retornou a URL do avatar');
       }
@@ -101,20 +88,6 @@ export default function UserSignupForm() {
       setUploadingAvatar(false);
     }
   }
-
-  useEffect(() => {
-    const fetchSkills = async () => {
-      try {
-        const res = await fetch('/api/skill');
-        if (!res.ok) throw new Error('Erro ao carregar as skills.');
-        const data = await res.json();
-        setSkills(data);
-      } catch (error) {
-        console.error('Erro ao buscar skills:', error);
-      }
-    };
-    fetchSkills();
-  }, []);
 
   useEffect(() => {
     const email = searchParams.get('email');
@@ -153,8 +126,6 @@ export default function UserSignupForm() {
       }
     }
   };
-
-  const availableSkills = skills.filter((s) => !selectedSkills.includes(s.id));
 
   return (
     <section className="my-10 flex min-h-screen flex-col items-center justify-center gap-3">
@@ -214,60 +185,6 @@ export default function UserSignupForm() {
               {errors.github && (
                 <p className="text-sm text-red-500">{errors.github.message}</p>
               )}
-            </div>
-          </div>
-
-          {/* Skills */}
-          <div className="space-y-1">
-            <Label>Skills</Label>
-            <Select
-              onValueChange={(value: string) => {
-                if (!selectedSkills.includes(value)) {
-                  setValue('skills', [...selectedSkills, value]);
-                }
-              }}
-              value=""
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione uma skill" />
-              </SelectTrigger>
-              <SelectContent>
-                {availableSkills.map((skill) => (
-                  <SelectItem key={skill.id} value={skill.id}>
-                    {skill.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {errors.skills && (
-              <p className="text-sm text-red-500">{errors.skills.message}</p>
-            )}
-
-            {/* Skills selecionadas */}
-            <div className="mt-3 flex flex-wrap gap-2">
-              {selectedSkills.map((skillId: string) => {
-                const skill = skills.find((s) => s.id === skillId);
-                return (
-                  <span
-                    key={skillId}
-                    className="flex items-center gap-1 rounded-full bg-gray-200 px-3 py-1 text-xs"
-                  >
-                    {skill?.name || skillId}
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setValue(
-                          'skills',
-                          selectedSkills.filter((id: string) => id !== skillId)
-                        )
-                      }
-                      className="ml-1 text-gray-500 hover:text-red-500"
-                    >
-                      <X size={12} />
-                    </button>
-                  </span>
-                );
-              })}
             </div>
           </div>
 

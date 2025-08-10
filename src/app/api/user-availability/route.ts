@@ -5,14 +5,14 @@ import { checkAuth } from '@/lib/check-auth';
 
 const userAvailabilitySchema = z.object({
   isMentor: z.boolean().optional().default(false),
-  weekday: z.number().int().min(0).max(6),
+  availabilities: z.array(
+    z.object({
+      weekday: z.number().int().min(0).max(6),
+      startTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/),
+      endTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/),
+    })
+  ),
   skills: z.array(z.string()).optional(),
-  startTime: z
-    .string()
-    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Formato inválido (HH:MM)'),
-  endTime: z
-    .string()
-    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Formato inválido (HH:MM)'),
 });
 
 export type UserAvailabilityInput = z.infer<typeof userAvailabilitySchema>;
@@ -78,13 +78,16 @@ export async function POST(req: Request) {
       );
     }
 
-    const { skills, ...availabilityData } = parsed.data;
+    const { skills, availabilities, isMentor } = parsed.data;
 
-    const created = await prisma.userAvailability.create({
-      data: {
-        ...availabilityData,
+    await prisma.userAvailability.createMany({
+      data: availabilities.map(({ weekday, startTime, endTime }) => ({
         userId: session.user.id,
-      },
+        isMentor,
+        weekday,
+        startTime,
+        endTime,
+      })),
     });
 
     if (skills?.length) {
@@ -97,7 +100,10 @@ export async function POST(req: Request) {
       });
     }
 
-    return NextResponse.json(created, { status: 201 });
+    return NextResponse.json(
+      { message: 'Disponibilidades criadas com sucesso' },
+      { status: 201 }
+    );
   } catch (error) {
     console.error('[USER_AVAILABILITY_POST]', error);
     return NextResponse.json(
