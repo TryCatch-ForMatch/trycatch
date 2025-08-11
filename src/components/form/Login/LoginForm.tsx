@@ -25,6 +25,7 @@ export function LoginForm() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
+
     try {
       const res = await signIn('credentials', {
         redirect: false,
