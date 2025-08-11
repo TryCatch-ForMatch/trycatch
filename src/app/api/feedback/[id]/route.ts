@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { checkAuth } from '@/lib/check-auth';
+import { MESSAGES, buildResponse } from '@/constants/messages';
 
 export async function GET(
   request: NextRequest,
@@ -29,15 +30,20 @@ export async function GET(
     });
 
     if (!feedback) {
-      return NextResponse.json(
-        { error: 'Feedback não encontrado' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.FEEDBACK.NOT_FOUND,
+        status: 404,
+      });
     }
 
     return NextResponse.json(feedback);
   } catch (error) {
     console.error('Erro ao buscar feedback:', error);
-    return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.FEEDBACK.INTERNAL_ERROR,
+      status: 500,
+    });
   }
 }
