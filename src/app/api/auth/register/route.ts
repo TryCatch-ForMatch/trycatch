@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { MESSAGES, buildResponse } from '@/constants/messages';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,18 +11,23 @@ export async function POST(request: NextRequest) {
     });
 
     if (!invite) {
-      return NextResponse.json(
-        { error: 'Convite inválido ou já utilizado.' },
-        { status: 403 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.REGISTER.INVALID,
+        status: 403,
+      });
     }
-
-    return NextResponse.json({ message: 'Convite válido.' }, { status: 200 });
+    return buildResponse({
+      success: true,
+      message: MESSAGES.INVITE.VALID,
+      status: 200,
+    });
   } catch (error) {
-    console.error('Erro ao validar convite:', error);
-    return NextResponse.json(
-      { error: 'Erro interno ao validar convite.' },
-      { status: 500 }
-    );
+    console.error('Erro de validação:', error);
+    return buildResponse({
+      success: false,
+      message: MESSAGES.REGISTER.VALIDATION_ERROR,
+      status: 500,
+    });
   }
 }

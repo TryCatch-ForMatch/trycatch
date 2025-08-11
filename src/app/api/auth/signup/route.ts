@@ -1,7 +1,8 @@
 import { prisma } from '@/lib/prisma';
 import { hash } from 'bcrypt';
 import { z } from 'zod';
-import { NextResponse, NextRequest } from 'next/server';
+import { NextRequest } from 'next/server';
+import { MESSAGES, buildResponse } from '@/constants/messages';
 
 const createUserSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
@@ -19,19 +20,22 @@ export async function POST(request: NextRequest) {
   try {
     json = await request.json();
   } catch (error) {
-    console.error('Erro ao fazer parse do JSON:', error);
-    return NextResponse.json(
-      { error: 'Body inválido. Envie um JSON válido.' },
-      { status: 400 }
-    );
+    console.error('Erro ao ler o corpo da requisição:', error);
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+    });
   }
 
   const parse = createUserSchema.safeParse(json);
   if (!parse.success) {
-    return NextResponse.json(
-      { error: 'Dados inválidos.', issues: parse.error.format() },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      errors: parse.error.format(),
+      status: 400,
+    });
   }
 
   const { name, email, password, avatar, linkedin, github, bio, inviteCode } =
@@ -43,18 +47,20 @@ export async function POST(request: NextRequest) {
     });
 
     if (!invite) {
-      return NextResponse.json(
-        { error: 'Convite inválido ou já utilizado.' },
-        { status: 403 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.REGISTER.INVALID,
+        status: 403,
+      });
     }
 
     const userExists = await prisma.user.findUnique({ where: { email } });
     if (userExists) {
-      return NextResponse.json(
-        { error: 'Email já cadastrado.' },
-        { status: 400 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.USER.ALREADY_EXISTS,
+        status: 400,
+      });
     }
 
     let hashedPassword;
@@ -62,10 +68,11 @@ export async function POST(request: NextRequest) {
       hashedPassword = await hash(password, 10);
     } catch (error) {
       console.error('Erro ao hashear senha:', error);
-      return NextResponse.json(
-        { error: 'Erro interno no processamento da senha.' },
-        { status: 500 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.USER.INTERNAL_ERROR,
+        status: 500,
+      });
     }
 
     const user = await prisma.user.create({
@@ -85,17 +92,18 @@ export async function POST(request: NextRequest) {
       data: { used: true },
     });
 
-    return NextResponse.json({
-      message: 'Usuário criado com sucesso.',
-      id: user.id,
-      name: user.name,
-      email: user.email,
+    return buildResponse({
+      success: true,
+      message: MESSAGES.USER.CREATED,
+      data: { id: user.id, name: user.name, email: user.email },
+      status: 201,
     });
   } catch (error) {
     console.error('Erro interno ao criar usuário:', error);
-    return NextResponse.json(
-      { error: 'Erro interno ao criar usuário.' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER.USER_CREATION_ERROR,
+      status: 500,
+    });
   }
 }
