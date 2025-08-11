@@ -3,6 +3,7 @@
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import Link from 'next/link';
 
 //import components
 import { Button } from '@/components/ui/button';
@@ -36,6 +37,7 @@ export function LoginForm() {
       } else {
         setError('E-mail ou senha inválidos');
       }
+      console.log(res);
     } catch (error) {
       console.log('Ocorreu um erro, tente novamente!', error);
     } finally {
@@ -90,6 +92,8 @@ export function LoginForm() {
             )}
           </Button>
         </form>
+
+        <Link href='/login' className="">Clique aqui para registrar</Link>
       </section>
     </section>
   );
