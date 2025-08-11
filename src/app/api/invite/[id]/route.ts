@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { NextResponse, NextRequest } from 'next/server';
 import { getIdFromRequest } from '@/utils/url';
 import { checkAuth } from '@/lib/check-auth';
+import { MESSAGES, buildResponse } from '@/constants/messages';
 
 export async function GET(request: NextRequest) {
   const id = getIdFromRequest(request);
@@ -15,19 +16,21 @@ export async function GET(request: NextRequest) {
     });
 
     if (!invite) {
-      return NextResponse.json(
-        { error: 'Convite não encontrado.' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.INVITE.NOT_FOUND,
+        status: 404,
+      });
     }
 
     return NextResponse.json(invite);
   } catch (error) {
     console.error('Erro ao buscar convite:', error);
-    return NextResponse.json(
-      { error: 'Erro ao buscar convite.' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.INVITE.INTERNAL_ERROR,
+      status: 500,
+    });
   }
 }
 
@@ -42,19 +45,21 @@ export async function PATCH(request: NextRequest) {
     body = await request.json();
   } catch (error) {
     console.error('Erro ao fazer parse do body no PATCH:', error);
-    return NextResponse.json(
-      { error: 'Body inválido. Envie um JSON válido.' },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+    });
   }
 
   const { email } = body;
 
   if (!email) {
-    return NextResponse.json(
-      { error: 'O email é obrigatório.' },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+    });
   }
 
   try {
@@ -66,10 +71,11 @@ export async function PATCH(request: NextRequest) {
     });
 
     if (existing) {
-      return NextResponse.json(
-        { error: 'Já existe um convite com esse email.' },
-        { status: 409 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.INVITE.ALREADY_EXISTS,
+        status: 409,
+      });
     }
 
     const invite = await prisma.invite.update({
@@ -80,10 +86,11 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json(invite);
   } catch (error) {
     console.error('Erro ao atualizar convite:', error);
-    return NextResponse.json(
-      { error: 'Erro ao atualizar convite.' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.INVITE.INTERNAL_ERROR,
+      status: 500,
+    });
   }
 }
 
@@ -101,9 +108,10 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ message: 'Convite deletado com sucesso.' });
   } catch (error) {
     console.error('Erro ao deletar convite:', error);
-    return NextResponse.json(
-      { error: 'Erro ao deletar convite.' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.INVITE.INTERNAL_DELETE_ERROR,
+      status: 500,
+    });
   }
 }
