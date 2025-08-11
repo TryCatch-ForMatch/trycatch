@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 
@@ -86,7 +87,7 @@ export default function RegisterForm() {
         </div>
       )}
 
-      <div className="flex w-full max-w-md flex-col gap-4 rounded-md p-8 px-4 shadow-sm">
+      <div className="flex w-full max-w-md flex-col gap-4 rounded-md border border-[#71717b67] p-8 px-4">
         <h2 className="mx-auto text-2xl font-bold text-[#3B38A0]">
           Registre seu Convite
         </h2>
@@ -135,6 +136,10 @@ export default function RegisterForm() {
             )}
           </Button>
         </form>
+
+        <Link href="/login" className="text-center text-sm text-zinc-500">
+          Ja tem uma conta ? <span className="underline">Entrar</span>
+        </Link>
       </div>
     </section>
   );

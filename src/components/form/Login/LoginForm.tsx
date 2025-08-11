@@ -47,7 +47,7 @@ export function LoginForm() {
 
   return (
     <section className="flex min-h-screen flex-col items-center justify-center gap-3">
-      <section className="flex w-full max-w-md flex-col gap-4 rounded-md p-8 px-4 shadow-sm">
+      <section className="flex w-full max-w-md flex-col gap-4 rounded-md border border-[#71717b67] p-8 px-4">
         {error && (
           <p className="absolute top-10 mx-auto rounded-md bg-red-300 p-4 px-8 text-red-600">
             {error}
@@ -83,7 +83,7 @@ export function LoginForm() {
             disabled={loading}
           >
             {loading ? (
-              <span className="flex items-center justify-center gap-2">
+              <span className="flex items-center justify-center gap-2 text-gray-50">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 <span>Entrando</span>
               </span>
@@ -93,7 +93,9 @@ export function LoginForm() {
           </Button>
         </form>
 
-        <Link href='/login' className="">Clique aqui para registrar</Link>
+        <Link href="/login" className="text-center text-sm text-zinc-500">
+          Nao tem uma conta ? <span className="underline">Resgistrar</span>
+        </Link>
       </section>
     </section>
   );

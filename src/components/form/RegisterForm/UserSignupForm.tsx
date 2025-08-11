@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { X, Loader2 } from 'lucide-react';
-import { Skill } from '@prisma/client';
+import { Loader2 } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
@@ -129,7 +129,7 @@ export default function UserSignupForm() {
 
   return (
     <section className="my-10 flex min-h-screen flex-col items-center justify-center gap-3">
-      <section className="flex w-full max-w-md flex-col gap-4 rounded-md p-8 px-4 shadow-sm">
+      <section className="flex w-full max-w-md flex-col gap-4 rounded-md border border-[#71717b67] p-8 px-4">
         <h2 className="mx-auto text-2xl font-bold text-[#3B38A0]">
           Cadastro de Usuario
         </h2>
@@ -245,6 +245,9 @@ export default function UserSignupForm() {
             )}
           </Button>
         </form>
+        <Link href="/register" className="text-center text-sm text-zinc-500">
+          Ja tem uma conta ? <span className="underline">Entrar</span>
+        </Link>
       </section>
     </section>
   );
