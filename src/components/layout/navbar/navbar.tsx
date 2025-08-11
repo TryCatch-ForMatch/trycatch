@@ -11,28 +11,31 @@ export function Navbar() {
 
   return (
     <aside className="fixed top-0 left-0 flex h-screen w-60 flex-col justify-between border-r border-gray-300 bg-transparent px-4 py-6 backdrop-blur-md">
-      {/* TOPO - Logo + Avatar */}
       <div>
         {/* Logo */}
-        <div className="mb-8 text-xl font-bold text-gray-800">TryCatch</div>
+        <Link href="/home">
+          <div className="mb-8 text-xl font-bold text-gray-800">TryCatch</div>
+        </Link>
 
         {/* Avatar + Nome do usuário */}
-        {user && (
-          <div className="mb-10 flex items-center gap-3">
-            {user.avatar && (
-              <Image
-                src={user.avatar || '/default-avatar.png'}
-                alt={user.name || 'Avatar'}
-                width={40}
-                height={40}
-                className="rounded-full"
-              />
-            )}
-            <span className="text-sm font-medium text-gray-700">
-              {user.name}
-            </span>
-          </div>
-        )}
+        <Link href={'/dashboard/profile'}>
+          {user && (
+            <div className="mb-10 flex items-center gap-3">
+              {user.avatar && (
+                <Image
+                  src={user.avatar || '/default-avatar.png'}
+                  alt={user.name || 'Avatar'}
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+              )}
+              <span className="text-sm font-medium text-gray-700">
+                {user.name}
+              </span>
+            </div>
+          )}
+        </Link>
 
         {/* Links principais */}
         <nav>
@@ -60,7 +63,7 @@ export function Navbar() {
                 href="/dashboard/user-config"
                 className="hover:text-blue-600"
               >
-                Configuração
+                Configurações do Usuário
               </Link>
             </li>
           </ul>
