@@ -114,6 +114,8 @@ export const MESSAGES = {
     DELETED: 'Stack removida com sucesso.',
     FETCH_SUCCESS: 'Stacks carregadas com sucesso.',
     INTERNAL_ERROR: 'Erro interno ao processar stack.',
+    LINKED_TO_PROJECT: 'Esta stack está sendo usada em projetos.',
+    ALREADY_EXISTS: 'Já existe uma stack com esse nome.',
   },
   USER: {
     NOT_FOUND: 'Usuário não encontrado.',

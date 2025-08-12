@@ -1,8 +1,9 @@
 import { prisma } from '@/lib/prisma';
-import { NextResponse, NextRequest } from 'next/server';
+import { NextRequest } from 'next/server';
 import { getIdFromRequest } from '@/utils/url';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
+import { MESSAGES, buildResponse } from '@/constants/messages';
 
 const idSchema = z.string().min(1, 'ID inválido.');
 const updateTechStackSchema = z.object({
@@ -15,7 +16,11 @@ export async function GET(request: NextRequest) {
 
   const idParse = idSchema.safeParse(id);
   if (!idParse.success) {
-    return NextResponse.json({ error: 'ID inválido.' }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_ID,
+      status: 400,
+    });
   }
 
   try {
@@ -24,19 +29,28 @@ export async function GET(request: NextRequest) {
     });
 
     if (!stack) {
-      return NextResponse.json(
-        { error: 'Stack não encontrada.' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.TECH_STACK.NOT_FOUND,
+        status: 404,
+      });
     }
 
-    return NextResponse.json(stack);
+    return buildResponse({
+      success: true,
+      message: MESSAGES.TECH_STACK.FETCH_SUCCESS,
+      data: stack,
+    });
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { error: 'Erro ao buscar stack.' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INTERNAL_ERROR,
+      status: 500,
+      errors: [
+        error instanceof Error ? error.message : 'Erro ao buscar stack.',
+      ],
+    });
   }
 }
 
@@ -48,14 +62,23 @@ export async function PATCH(request: NextRequest) {
 
   const idParse = idSchema.safeParse(id);
   if (!idParse.success) {
-    return NextResponse.json({ error: 'ID inválido.' }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_ID,
+      status: 400,
+    });
   }
 
   const body = await request.json();
   const parse = updateTechStackSchema.safeParse(body);
 
   if (!parse.success) {
-    return NextResponse.json({ error: parse.error.format() }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+      errors: parse.error.errors.map((e) => e.message),
+    });
   }
 
   const { name, forceUpdate } = parse.data;
@@ -69,23 +92,25 @@ export async function PATCH(request: NextRequest) {
     });
 
     if (existing) {
-      return NextResponse.json(
-        { error: 'Já existe uma stack com esse nome.' },
-        { status: 409 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.TECH_STACK.ALREADY_EXISTS,
+        status: 409,
+      });
     }
 
     const linkedStack = await prisma.projectStack.findFirst({
       where: { stackId: id },
     });
     if (linkedStack && !forceUpdate) {
-      return NextResponse.json(
-        {
-          error:
-            'Esta stack está sendo usada em projetos. Alterações podem impactar dados existentes.',
-        },
-        { status: 409 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.TECH_STACK.LINKED_TO_PROJECT,
+        status: 409,
+        errors: [
+          'Esta stack está sendo usada em projetos. Alterações podem impactar dados existentes.',
+        ],
+      });
     }
 
     const stack = await prisma.stack.update({
@@ -93,14 +118,22 @@ export async function PATCH(request: NextRequest) {
       data: { name },
     });
 
-    return NextResponse.json(stack);
+    return buildResponse({
+      success: true,
+      message: MESSAGES.TECH_STACK.UPDATED,
+      data: stack,
+    });
   } catch (error) {
     console.log(error);
     console.error('Erro ao atualizar stack:', error);
-    return NextResponse.json(
-      { error: 'Erro ao atualizar stack.' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.TECH_STACK.INTERNAL_ERROR,
+      status: 500,
+      errors: [
+        error instanceof Error ? error.message : 'Erro ao atualizar stack.',
+      ],
+    });
   }
 }
 
@@ -112,7 +145,11 @@ export async function DELETE(request: NextRequest) {
 
   const idParse = idSchema.safeParse(id);
   if (!idParse.success) {
-    return NextResponse.json({ error: 'ID inválido.' }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_ID,
+      status: 400,
+    });
   }
 
   try {
@@ -121,26 +158,32 @@ export async function DELETE(request: NextRequest) {
     });
 
     if (projectStack) {
-      return NextResponse.json(
-        {
-          error:
-            'Esta stack está vinculada a projetos e não pode ser excluída.',
-        },
-        { status: 409 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.TECH_STACK.LINKED_TO_PROJECT,
+        status: 409,
+        errors: [
+          'Esta stack está sendo usada em projetos. Não pode ser excluída.',
+        ],
+      });
     }
 
     const deleted = await prisma.stack.delete({ where: { id } });
 
-    return NextResponse.json({
-      message: `Stack "${deleted.name}" deletada com sucesso.`,
-      deletedId: deleted.id,
+    return buildResponse({
+      success: true,
+      message: MESSAGES.TECH_STACK.DELETED,
+      data: { deletedId: deleted.id },
     });
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { error: 'Erro ao deletar stack.' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.TECH_STACK.INTERNAL_ERROR,
+      status: 500,
+      errors: [
+        error instanceof Error ? error.message : 'Erro ao deletar stack.',
+      ],
+    });
   }
 }

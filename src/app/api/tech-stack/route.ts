@@ -1,7 +1,8 @@
 import { prisma } from '@/lib/prisma';
-import { NextResponse, NextRequest } from 'next/server';
+import { NextRequest } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
+import { MESSAGES, buildResponse } from '@/constants/messages';
 
 const createStackSchema = z.object({
   name: z.string().min(1, 'O nome da stack é obrigatório.'),
@@ -12,13 +13,22 @@ export async function GET() {
     const stacks = await prisma.stack.findMany({
       orderBy: { name: 'asc' },
     });
-    return NextResponse.json(stacks);
+    return buildResponse({
+      success: true,
+      message: MESSAGES.TECH_STACK.FETCH_SUCCESS,
+      data: stacks,
+      status: 200,
+    });
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { error: 'Erro ao buscar stacks.' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.TECH_STACK.INTERNAL_ERROR,
+      status: 500,
+      errors: [
+        error instanceof Error ? error.message : 'Erro ao buscar stacks.',
+      ],
+    });
   }
 }
 
@@ -31,31 +41,41 @@ export async function POST(request: NextRequest) {
     const parse = createStackSchema.safeParse(body);
 
     if (!parse.success) {
-      return NextResponse.json(
-        { error: parse.error.format() },
-        { status: 400 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.GENERAL.INVALID_DATA,
+        status: 400,
+        errors: parse.error.errors.map((e) => e.message),
+      });
     }
 
     const { name } = parse.data;
     const existingStack = await prisma.stack.findUnique({ where: { name } });
     if (existingStack) {
-      return NextResponse.json(
-        { error: 'Já existe uma stack com esse nome.' },
-        { status: 409 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.TECH_STACK.ALREADY_EXISTS,
+        status: 409,
+      });
     }
 
     const stack = await prisma.stack.create({
       data: { name },
     });
 
-    return NextResponse.json(stack, { status: 201 });
+    return buildResponse({
+      success: true,
+      message: MESSAGES.TECH_STACK.CREATED,
+      data: stack,
+      status: 201,
+    });
   } catch (error) {
     console.error('Erro ao criar stack:', error);
-    return NextResponse.json(
-      { error: 'Erro ao criar stack.' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.TECH_STACK.INTERNAL_ERROR,
+      status: 500,
+      errors: [error instanceof Error ? error.message : 'Erro ao criar stack.'],
+    });
   }
 }
