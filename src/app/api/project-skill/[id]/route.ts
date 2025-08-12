@@ -1,7 +1,8 @@
-import { NextResponse, NextRequest } from 'next/server';
+import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
+import { MESSAGES, buildResponse } from '@/constants/messages';
 
 const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 
@@ -14,7 +15,12 @@ export async function GET(
 
   const idParse = idSchema.safeParse(context.params.id);
   if (!idParse.success) {
-    return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
+    return buildResponse({
+      success: false,
+      errors: idParse.error.errors,
+      message: MESSAGES.PROJECT_SKILL.NOT_FOUND,
+      status: 400,
+    });
   }
   const projectId = idParse.data;
 
@@ -25,19 +31,26 @@ export async function GET(
     });
 
     if (!projectSkill) {
-      return NextResponse.json(
-        { error: 'Associação não encontrada' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.PROJECT_SKILL.NOT_FOUND,
+        status: 404,
+      });
     }
 
-    return NextResponse.json(projectSkill);
+    return buildResponse({
+      success: true,
+      message: MESSAGES.PROJECT_SKILL.FETCH_SUCCESS,
+      data: projectSkill,
+      status: 200,
+    });
   } catch (error) {
     console.error('Erro no GET /project-skill:', error);
-    return NextResponse.json(
-      { error: 'Erro ao buscar associação' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.PROJECT_SKILL.INTERNAL_ERROR,
+      status: 500,
+    });
   }
 }
 
@@ -53,14 +66,24 @@ export async function DELETE(
       where: { id: params.id },
     });
 
-    return NextResponse.json({
-      message: 'Skill removida do projeto com sucesso',
+    return buildResponse({
+      success: true,
+      message: MESSAGES.PROJECT_SKILL.DELETED,
     });
   } catch (error) {
     console.error('Erro ao remover skill do projeto:', error);
-    return NextResponse.json(
-      { error: 'Erro ao remover skill' },
-      { status: 500 }
-    );
+    if (error instanceof z.ZodError) {
+      return buildResponse({
+        success: false,
+        errors: error.errors,
+        message: MESSAGES.PROJECT_SKILL.DELETE_ERROR,
+        status: 400,
+      });
+    }
+    return buildResponse({
+      success: false,
+      message: MESSAGES.PROJECT_SKILL.INTERNAL_ERROR,
+      status: 500,
+    });
   }
 }

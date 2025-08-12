@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
       console.error('Erro ao hashear senha:', error);
       return buildResponse({
         success: false,
-        message: MESSAGES.USER.INTERNAL_ERROR,
+        message: MESSAGES.USER.INTERNAL_ERROR_HASH,
         status: 500,
       });
     }
