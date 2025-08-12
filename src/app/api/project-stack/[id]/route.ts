@@ -1,7 +1,8 @@
-import { NextResponse, NextRequest } from 'next/server';
+import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
+import { MESSAGES, buildResponse } from '@/constants/messages';
 
 // Validação para atualização de percentage
 const updatePercentageSchema = z.object({
@@ -25,19 +26,27 @@ export async function GET(
     });
 
     if (!projectStack) {
-      return NextResponse.json(
-        { error: 'ProjectStack não encontrado' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.PROJECT_STACK.NOT_FOUND,
+        status: 404,
+      });
     }
 
-    return NextResponse.json(projectStack);
+    return buildResponse({
+      success: true,
+      message: MESSAGES.PROJECT_STACK.FETCH_SUCCESS,
+      data: projectStack,
+      status: 200,
+    });
   } catch (error) {
     console.error('Erro ao buscar ProjectStack:', error);
-    return NextResponse.json(
-      { error: 'Erro ao buscar ProjectStack' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INTERNAL_ERROR,
+      errors: { message: 'Erro ao buscar ProjectStack' },
+      status: 500,
+    });
   }
 }
 
@@ -54,10 +63,11 @@ export async function DELETE(
     });
 
     if (!target) {
-      return NextResponse.json(
-        { error: 'ProjectStack não encontrado' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.PROJECT_STACK.NOT_FOUND,
+        status: 404,
+      });
     }
 
     // Busca stacks restantes do projeto, exeto a atual, garantir regra de 100%
@@ -74,26 +84,34 @@ export async function DELETE(
     );
 
     if (totalRemaining !== 100 - target.percentage) {
-      return NextResponse.json(
-        {
-          error:
+      return buildResponse({
+        success: false,
+        message: MESSAGES.PROJECT_STACK.DELETE_ERROR,
+        errors: {
+          message:
             'A remoção desta stack resultaria em um total de percentuais diferente de 100%',
         },
-        { status: 400 }
-      );
+        status: 400,
+      });
     }
 
     await prisma.projectStack.delete({
       where: { id: params.id },
     });
 
-    return NextResponse.json({ message: 'ProjectStack removido com sucesso' });
+    return buildResponse({
+      success: true,
+      message: MESSAGES.PROJECT_STACK.DELETED,
+      status: 200,
+    });
   } catch (error) {
     console.error('Erro ao remover ProjectStack:', error);
-    return NextResponse.json(
-      { error: 'Erro ao remover ProjectStack' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.PROJECT_STACK.INTERNAL_ERROR,
+      errors: { message: 'Erro ao remover ProjectStack' },
+      status: 500,
+    });
   }
 }
 
@@ -109,18 +127,22 @@ export async function PATCH(
     body = await request.json();
   } catch (error) {
     console.error('Erro ao fazer parse do JSON no PATCH:', error);
-    return NextResponse.json(
-      { error: 'Body inválido. Envie um JSON válido.' },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      errors: { message: 'Body inválido. Envie um JSON válido.' },
+      status: 400,
+    });
   }
 
   const parsed = updatePercentageSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json(
-      { error: 'Dados inválidos', issues: parsed.error.issues },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      errors: { issues: parsed.error.issues },
+      status: 400,
+    });
   }
 
   const { percentage } = parsed.data;
@@ -131,10 +153,11 @@ export async function PATCH(
     });
 
     if (!target) {
-      return NextResponse.json(
-        { error: 'ProjectStack não encontrado' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.PROJECT_STACK.NOT_FOUND,
+        status: 404,
+      });
     }
 
     // Busca stacks restantes do projeto, exeto a atual, garantir regra de 100%
@@ -149,13 +172,15 @@ export async function PATCH(
     const newTotal = totalOthers + percentage;
 
     if (newTotal !== 100) {
-      return NextResponse.json(
-        {
-          error:
+      return buildResponse({
+        success: false,
+        message: MESSAGES.PROJECT_STACK.PERCENTAGE_ERROR,
+        errors: {
+          message:
             'A nova soma dos percentuais do projeto deve ser exatamente 100%',
         },
-        { status: 400 }
-      );
+        status: 400,
+      });
     }
 
     const updated = await prisma.projectStack.update({
@@ -163,12 +188,19 @@ export async function PATCH(
       data: { percentage },
     });
 
-    return NextResponse.json(updated);
+    return buildResponse({
+      success: true,
+      message: MESSAGES.PROJECT_STACK.UPDATED,
+      data: updated,
+      status: 200,
+    });
   } catch (error) {
     console.error('Erro ao atualizar ProjectStack:', error);
-    return NextResponse.json(
-      { error: 'Erro ao atualizar ProjectStack' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.PROJECT_STACK.INTERNAL_ERROR,
+      errors: { message: 'Erro ao atualizar ProjectStack' },
+      status: 500,
+    });
   }
 }
