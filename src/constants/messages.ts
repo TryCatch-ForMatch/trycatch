@@ -98,21 +98,22 @@ export const MESSAGES = {
     FETCH_SUCCESS: 'Skills carregadas com sucesso.',
     INTERNAL_ERROR: 'Erro interno ao processar skill.',
   },
-  STACK: {
+  STACK_TAKEN: {
+    ALREADY_TAKEN: 'Essa stack já foi assumida por outro usuário.',
+    NOT_FOUND: 'Stack taken não encontrada.',
+    CREATED: 'Stack taken registrada com sucesso.',
+    UPDATED: 'Stack taken atualizada com sucesso.',
+    DELETED: 'Stack taken removida com sucesso.',
+    FETCH_SUCCESS: 'Stacks taken carregadas com sucesso.',
+    INTERNAL_ERROR: 'Erro interno ao processar stack taken.',
+  },
+  TECH_STACK: {
     NOT_FOUND: 'Stack não encontrada.',
     CREATED: 'Stack criada com sucesso.',
     UPDATED: 'Stack atualizada com sucesso.',
     DELETED: 'Stack removida com sucesso.',
     FETCH_SUCCESS: 'Stacks carregadas com sucesso.',
     INTERNAL_ERROR: 'Erro interno ao processar stack.',
-  },
-  STACK_TAKEN: {
-    NOT_FOUND: 'Stack tomada não encontrada.',
-    CREATED: 'Stack tomada registrada com sucesso.',
-    UPDATED: 'Stack tomada atualizada com sucesso.',
-    DELETED: 'Stack tomada removida com sucesso.',
-    FETCH_SUCCESS: 'Stacks tomadas carregadas com sucesso.',
-    INTERNAL_ERROR: 'Erro interno ao processar stack tomada.',
   },
   USER: {
     NOT_FOUND: 'Usuário não encontrado.',
