@@ -1,8 +1,9 @@
 import { prisma } from '@/lib/prisma';
-import { NextResponse, NextRequest } from 'next/server';
+import { NextRequest } from 'next/server';
 import { getIdFromRequest } from '@/utils/url';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
+import { MESSAGES, buildResponse } from '@/constants/messages';
 
 const idSchema = z.string().min(1, 'ID inválido.');
 const updateSkillSchema = z.object({
@@ -16,7 +17,12 @@ export async function GET(request: NextRequest) {
 
   const idParse = idSchema.safeParse(id);
   if (!idParse.success) {
-    return NextResponse.json({ error: 'ID inválido.' }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_ID,
+      errors: idParse.error.format(),
+      status: 400,
+    });
   }
 
   try {
@@ -25,18 +31,26 @@ export async function GET(request: NextRequest) {
     });
 
     if (!skill) {
-      return NextResponse.json(
-        { error: 'Skill não encontrada.' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.SKILL.NOT_FOUND,
+        status: 404,
+      });
     }
 
-    return NextResponse.json(skill);
+    return buildResponse({
+      success: true,
+      message: MESSAGES.SKILL.FETCH_SUCCESS,
+      data: skill,
+      status: 200,
+    });
   } catch {
-    return NextResponse.json(
-      { error: 'Erro ao buscar skill.' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.SKILL.INTERNAL_ERROR,
+      status: 500,
+      errors: { message: 'Erro ao buscar skill.' },
+    });
   }
 }
 
@@ -48,14 +62,24 @@ export async function PATCH(request: NextRequest) {
 
   const idParse = idSchema.safeParse(id);
   if (!idParse.success) {
-    return NextResponse.json({ error: 'ID inválido.' }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_ID,
+      errors: idParse.error.format(),
+      status: 400,
+    });
   }
 
   const body = await request.json();
   const parse = updateSkillSchema.safeParse(body);
 
   if (!parse.success) {
-    return NextResponse.json({ error: parse.error.format() }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      errors: parse.error.format(),
+      status: 400,
+    });
   }
 
   const { name, iconUrl, forceUpdate } = parse.data;
@@ -69,10 +93,11 @@ export async function PATCH(request: NextRequest) {
     });
 
     if (existing) {
-      return NextResponse.json(
-        { error: 'Já existe uma skill com esse nome.' },
-        { status: 409 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.SKILL.ALREADY_EXISTS,
+        status: 409,
+      });
     }
 
     const linkedProjectSkill = await prisma.projectSkill.findFirst({
@@ -83,13 +108,11 @@ export async function PATCH(request: NextRequest) {
       where: { skillId: id },
     });
     if ((linkedProjectSkill || linkedUserSkill) && !forceUpdate) {
-      return NextResponse.json(
-        {
-          error:
-            'Esta skill está sendo usada em projetos ou por usuários. Alterações podem impactar dados existentes.',
-        },
-        { status: 409 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.SKILL.UPDATE_CONFLICT,
+        status: 409,
+      });
     }
 
     const skill = await prisma.skill.update({
@@ -97,13 +120,20 @@ export async function PATCH(request: NextRequest) {
       data: { name, iconUrl },
     });
 
-    return NextResponse.json(skill);
+    return buildResponse({
+      success: true,
+      message: MESSAGES.SKILL.UPDATED,
+      data: skill,
+      status: 200,
+    });
   } catch (error) {
     console.error('Erro ao atualizar skill:', error);
-    return NextResponse.json(
-      { error: 'Erro ao atualizar skill.' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.SKILL.INTERNAL_ERROR,
+      status: 500,
+      errors: { message: 'Erro ao atualizar skill.' },
+    });
   }
 }
 
@@ -115,7 +145,12 @@ export async function DELETE(request: NextRequest) {
 
   const idParse = idSchema.safeParse(id);
   if (!idParse.success) {
-    return NextResponse.json({ error: 'ID inválido.' }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_ID,
+      errors: idParse.error.format(),
+      status: 400,
+    });
   }
 
   try {
@@ -127,21 +162,31 @@ export async function DELETE(request: NextRequest) {
     });
 
     if (userSkills || projectSkills) {
-      return NextResponse.json(
-        { error: 'Não é possível deletar uma skill que está em uso.' },
-        { status: 400 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.SKILL.DELETE_ERROR,
+        status: 400,
+        errors: {
+          message: 'Não é possível deletar uma skill que está em uso.',
+        },
+      });
     }
     await prisma.skill.delete({
       where: { id },
     });
 
-    return NextResponse.json({ message: 'Skill deletada com sucesso.' });
+    return buildResponse({
+      success: true,
+      message: MESSAGES.SKILL.DELETED,
+      status: 200,
+    });
   } catch (error) {
     console.error('Erro ao deletar skill:', error);
-    return NextResponse.json(
-      { error: 'Erro ao deletar skill.' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.SKILL.INTERNAL_ERROR,
+      status: 500,
+      errors: { message: 'Erro ao deletar skill.' },
+    });
   }
 }
