@@ -1,8 +1,9 @@
 import { prisma } from '@/lib/prisma';
 import { ProjectStatus } from '@prisma/client';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
+import { MESSAGES, buildResponse } from '@/constants/messages';
 
 const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 const updateProjectSchema = z.object({
@@ -40,7 +41,11 @@ export async function GET(
   const idParse = idSchema.safeParse(id);
 
   if (!idParse.success) {
-    return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_ID,
+      status: 400,
+    });
   }
   const projectId = idParse.data;
 
@@ -64,10 +69,11 @@ export async function GET(
     });
 
     if (!project) {
-      return NextResponse.json(
-        { error: 'Projeto não encontrado' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.PROJECT.NOT_FOUND,
+        status: 404,
+      });
     }
 
     const formatted = {
@@ -101,13 +107,20 @@ export async function GET(
       }),
     };
 
-    return NextResponse.json(formatted);
+    return buildResponse({
+      success: true,
+      message: MESSAGES.PROJECT.FETCH_SUCCESS,
+      data: formatted,
+      status: 200,
+    });
   } catch (error) {
     console.error('Erro ao buscar projeto:', error);
-    return NextResponse.json(
-      { error: 'Erro ao buscar projeto.' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.PROJECT.INTERNAL_ERROR,
+      status: 500,
+      errors: [error instanceof Error ? error.message : String(error)],
+    });
   }
 }
 
@@ -123,7 +136,11 @@ export async function PUT(
   const idParse = idSchema.safeParse(context.params.id);
 
   if (!idParse.success) {
-    return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_ID,
+      status: 400,
+    });
   }
 
   const projectId = idParse.data;
@@ -131,7 +148,12 @@ export async function PUT(
   const body = await request.json();
   const parse = updateProjectSchema.safeParse(body);
   if (!parse.success) {
-    return NextResponse.json({ error: parse.error.format() }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+      errors: parse.error.errors.map((e) => e.message),
+    });
   }
 
   try {
@@ -140,17 +162,20 @@ export async function PUT(
     });
 
     if (!existing) {
-      return NextResponse.json(
-        { error: 'Projeto não encontrado' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.PROJECT.NOT_FOUND,
+        status: 404,
+      });
     }
 
     if (existing.ownerId !== session.user.id && session.user.role !== 'ADMIN') {
-      return NextResponse.json(
-        { error: 'Você não tem permissão para editar este projeto.' },
-        { status: 403 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.AUTH.UNAUTHORIZED,
+        status: 403,
+        errors: ['Você não tem permissão para editar este projeto.'],
+      });
     }
 
     const { name, description, deadline, totalValue, status, skills, stacks } =
@@ -182,10 +207,20 @@ export async function PUT(
       },
     });
 
-    return NextResponse.json(updated);
+    return buildResponse({
+      success: true,
+      message: MESSAGES.PROJECT.UPDATED,
+      data: updated,
+      status: 200,
+    });
   } catch (error) {
     console.error('Erro ao atualizar projeto:', error);
-    return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.PROJECT.INTERNAL_ERROR,
+      status: 500,
+      errors: [error instanceof Error ? error.message : String(error)],
+    });
   }
 }
 
@@ -201,7 +236,11 @@ export async function DELETE(
   const idParse = idSchema.safeParse(context.params.id);
 
   if (!idParse.success) {
-    return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_ID,
+      status: 400,
+    });
   }
 
   const projectId = idParse.data;
@@ -212,28 +251,37 @@ export async function DELETE(
     });
 
     if (!existing) {
-      return NextResponse.json(
-        { error: 'Projeto não encontrado' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.PROJECT.NOT_FOUND,
+        status: 404,
+      });
     }
 
     if (existing.ownerId !== session.user.id && session.user.role !== 'ADMIN') {
-      return NextResponse.json(
-        { error: 'Você não tem permissão para deletar este projeto.' },
-        { status: 403 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.AUTH.UNAUTHORIZED,
+        status: 403,
+        errors: ['Você não tem permissão para deletar este projeto.'],
+      });
     }
     await prisma.projectSkill.deleteMany({ where: { projectId } });
     await prisma.projectStack.deleteMany({ where: { projectId } });
     await prisma.project.delete({ where: { id: projectId } });
 
-    return NextResponse.json({ message: 'Projeto deletado com sucesso' });
+    return buildResponse({
+      success: true,
+      message: MESSAGES.PROJECT.DELETED,
+      status: 200,
+    });
   } catch (error) {
     console.error('Erro ao deletar projeto:', error);
-    return NextResponse.json(
-      { error: 'Erro ao deletar projeto.' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.PROJECT.INTERNAL_ERROR,
+      status: 500,
+      errors: [error instanceof Error ? error.message : String(error)],
+    });
   }
 }
