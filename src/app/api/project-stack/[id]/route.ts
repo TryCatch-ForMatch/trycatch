@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
@@ -33,12 +33,7 @@ export async function GET(
       });
     }
 
-    return buildResponse({
-      success: true,
-      message: MESSAGES.PROJECT_STACK.FETCH_SUCCESS,
-      data: projectStack,
-      status: 200,
-    });
+    return NextResponse.json(projectStack, { status: 200 });
   } catch (error) {
     console.error('Erro ao buscar ProjectStack:', error);
     return buildResponse({
@@ -188,12 +183,7 @@ export async function PATCH(
       data: { percentage },
     });
 
-    return buildResponse({
-      success: true,
-      message: MESSAGES.PROJECT_STACK.UPDATED,
-      data: updated,
-      status: 200,
-    });
+    return NextResponse.json(updated, { status: 200 });
   } catch (error) {
     console.error('Erro ao atualizar ProjectStack:', error);
     return buildResponse({

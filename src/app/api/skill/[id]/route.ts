@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getIdFromRequest } from '@/utils/url';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
@@ -38,12 +38,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    return buildResponse({
-      success: true,
-      message: MESSAGES.SKILL.FETCH_SUCCESS,
-      data: skill,
-      status: 200,
-    });
+    return NextResponse.json(skill, { status: 200 });
   } catch {
     return buildResponse({
       success: false,
@@ -120,12 +115,7 @@ export async function PATCH(request: NextRequest) {
       data: { name, iconUrl },
     });
 
-    return buildResponse({
-      success: true,
-      message: MESSAGES.SKILL.UPDATED,
-      data: skill,
-      status: 200,
-    });
+    return NextResponse.json(skill, { status: 200 });
   } catch (error) {
     console.error('Erro ao atualizar skill:', error);
     return buildResponse({

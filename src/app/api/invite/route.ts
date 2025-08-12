@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { checkAuth } from '@/lib/check-auth';
 import { MESSAGES, buildResponse } from '@/constants/messages';
@@ -12,12 +12,7 @@ export async function GET() {
     const invites = await prisma.invite.findMany({
       orderBy: { email: 'asc' },
     });
-    return buildResponse({
-      success: true,
-      message: MESSAGES.INVITE.FETCH_SUCCESS,
-      data: invites,
-      status: 200,
-    });
+    return NextResponse.json(invites, { status: 200 });
   } catch (error) {
     console.error('Erro ao buscar convites:', error);
     return buildResponse({

@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
@@ -130,12 +130,7 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return buildResponse({
-      success: true,
-      message: MESSAGES.STACK_TAKEN.FETCH_SUCCESS,
-      data: stackTakens,
-      status: 200,
-    });
+    return NextResponse.json(stackTakens, { status: 200 });
   } catch (error) {
     console.error('Erro ao buscar StackTakens:', error);
     return buildResponse({

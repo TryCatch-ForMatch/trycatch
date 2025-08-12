@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { ProjectStatus } from '@prisma/client';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
@@ -107,12 +107,7 @@ export async function GET(
       }),
     };
 
-    return buildResponse({
-      success: true,
-      message: MESSAGES.PROJECT.FETCH_SUCCESS,
-      data: formatted,
-      status: 200,
-    });
+    return NextResponse.json(formatted, { status: 200 });
   } catch (error) {
     console.error('Erro ao buscar projeto:', error);
     return buildResponse({

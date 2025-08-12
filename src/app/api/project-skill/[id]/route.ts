@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
@@ -38,12 +38,7 @@ export async function GET(
       });
     }
 
-    return buildResponse({
-      success: true,
-      message: MESSAGES.PROJECT_SKILL.FETCH_SUCCESS,
-      data: projectSkill,
-      status: 200,
-    });
+    return NextResponse.json(projectSkill, { status: 200 });
   } catch (error) {
     console.error('Erro no GET /project-skill:', error);
     return buildResponse({

@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
@@ -50,12 +50,7 @@ export async function GET(
       });
     }
 
-    return buildResponse({
-      success: true,
-      message: MESSAGES.STACK_TAKEN.FETCH_SUCCESS,
-      data: stackTaken,
-      status: 200,
-    });
+    return NextResponse.json(stackTaken, { status: 200 });
   } catch (error) {
     console.error(error);
     return buildResponse({
@@ -115,12 +110,7 @@ export async function PUT(
       data: parsed.data,
     });
 
-    return buildResponse({
-      success: true,
-      message: MESSAGES.STACK_TAKEN.UPDATED,
-      data: updated,
-      status: 200,
-    });
+    return NextResponse.json(updated, { status: 200 });
   } catch (error) {
     console.error('Erro ao atualizar StackTaken:', error);
     return buildResponse({

@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
-import { MESSAGES, buildResponse } from '@/constants/messages';
 import { checkAuth } from '@/lib/check-auth';
+import { NextResponse } from 'next/server';
 
 export async function GET() {
   const { authorized, response } = await checkAuth({
@@ -32,10 +32,5 @@ export async function GET() {
     stacksTotal: p.stacks.length,
   }));
 
-  return buildResponse({
-    success: true,
-    message: MESSAGES.PROJECT.FETCH_SUCCESS,
-    data: result,
-    status: 200,
-  });
+  return NextResponse.json(result, { status: 200 });
 }

@@ -180,12 +180,7 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return buildResponse({
-      success: true,
-      message: MESSAGES.FEEDBACK.FETCH_SUCCESS,
-      data: feedbacks,
-      status: 200,
-    });
+    return NextResponse.json(feedbacks, { status: 200 });
   } catch (error) {
     console.error('Erro ao buscar feedbacks:', error);
     return buildResponse({

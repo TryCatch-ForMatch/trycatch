@@ -1,14 +1,12 @@
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { prisma } from '@/lib/prisma';
+import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
     const count = await prisma.skill.count();
-    return buildResponse({
-      success: true,
-      message: MESSAGES.SKILL.FETCH_SUCCESS,
-      data: { count },
-    });
+
+    return NextResponse.json({ count });
   } catch (error) {
     console.error('Erro ao buscar número de skills:', error);
     return buildResponse({

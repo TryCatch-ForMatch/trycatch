@@ -1,15 +1,12 @@
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { prisma } from '@/lib/prisma';
+import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
     const count = await prisma.stack.count();
-    return buildResponse({
-      success: true,
-      message: MESSAGES.TECH_STACK.FETCH_SUCCESS,
-      data: { count },
-      status: 200,
-    });
+
+    return NextResponse.json(count, { status: 200 });
   } catch (error) {
     console.error('Erro ao buscar número de stacks:', error);
     return buildResponse({

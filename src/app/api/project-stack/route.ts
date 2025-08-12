@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
@@ -135,12 +135,7 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return buildResponse({
-      success: true,
-      message: MESSAGES.PROJECT_STACK.FETCH_SUCCESS,
-      data: stacks,
-      status: 200,
-    });
+    return NextResponse.json(stacks, { status: 200 });
   } catch (error) {
     console.error('Erro ao buscar ProjectStacks:', error);
     return buildResponse({

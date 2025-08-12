@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
@@ -14,12 +14,8 @@ export async function GET() {
     const skills = await prisma.skill.findMany({
       orderBy: { name: 'asc' },
     });
-    return buildResponse({
-      success: true,
-      message: MESSAGES.SKILL.FETCH_SUCCESS,
-      data: skills,
-      status: 200,
-    });
+
+    return NextResponse.json(skills, { status: 200 });
   } catch (error) {
     console.log(error);
     return buildResponse({
