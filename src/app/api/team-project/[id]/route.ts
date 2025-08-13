@@ -202,12 +202,7 @@ export async function PUT(
       },
     });
 
-    return buildResponse({
-      success: true,
-      message: MESSAGES.PROJECT.UPDATED,
-      data: updated,
-      status: 200,
-    });
+    return NextResponse.json(updated, { status: 200 });
   } catch (error) {
     console.error('Erro ao atualizar projeto:', error);
     return buildResponse({

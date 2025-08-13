@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { NextResponse, NextRequest } from 'next/server';
 import { hash } from 'bcrypt';
+import { buildResponse, MESSAGES } from '@/constants/messages';
 
 const adminCreateUserSchema = z.object({
   name: z.string(),
@@ -25,10 +26,12 @@ export async function POST(request: NextRequest) {
 
   if (!parse.success) {
     console.log('Erro no parse:', parse.error.format());
-    return NextResponse.json(
-      { error: 'Dados inválidos.', issues: parse.error.format() },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+      errors: ['Dados inválidos.', parse.error.format()],
+    });
   }
 
   const { name, email, password, avatar, linkedin, github, bio, role, skills } =
@@ -36,11 +39,14 @@ export async function POST(request: NextRequest) {
 
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
-    return NextResponse.json(
-      { error: 'Email já cadastrado.' },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER.ALREADY_EXISTS,
+      status: 400,
+      errors: ['Email já cadastrado.'],
+    });
   }
+
   let hashedPassword;
 
   try {
@@ -71,17 +77,23 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json({
-      message: 'Usuário criado com sucesso.',
+    const userCreated = {
       id: user.id,
+      nome: user.name,
       role: user.role,
+    };
+
+    return NextResponse.json(userCreated, {
+      status: 200,
     });
   } catch (error) {
     console.error('Erro interno ao criar usuário:', error);
-    return NextResponse.json(
-      { error: 'Erro interno ao criar usuário.' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INTERNAL_ERROR,
+      status: 500,
+      errors: ['Erro interno ao criar usuário.'],
+    });
   }
 }
 
@@ -98,12 +110,14 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json(users);
+    return NextResponse.json(users, { status: 200 });
   } catch (error) {
     console.error('Erro ao buscar usuários:', error);
-    return NextResponse.json(
-      { error: 'Erro ao buscar usuários.' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INTERNAL_ERROR,
+      status: 500,
+      errors: ['Erro ao buscar usuários.'],
+    });
   }
 }
