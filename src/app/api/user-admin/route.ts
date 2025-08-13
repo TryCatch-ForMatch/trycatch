@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
     console.error('Erro interno ao criar usuário:', error);
     return buildResponse({
       success: false,
-      message: MESSAGES.GENERAL.INTERNAL_ERROR,
+      message: MESSAGES.USER.INTERNAL_ERROR,
       status: 500,
       errors: ['Erro interno ao criar usuário.'],
     });
@@ -115,7 +115,7 @@ export async function GET() {
     console.error('Erro ao buscar usuários:', error);
     return buildResponse({
       success: false,
-      message: MESSAGES.GENERAL.INTERNAL_ERROR,
+      message: MESSAGES.USER.INTERNAL_ERROR,
       status: 500,
       errors: ['Erro ao buscar usuários.'],
     });

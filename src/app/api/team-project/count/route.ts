@@ -11,7 +11,7 @@ export async function GET() {
     console.error('Erro ao buscar número de projetos:', error);
     return buildResponse({
       success: false,
-      message: MESSAGES.GENERAL.INTERNAL_ERROR,
+      message: MESSAGES.PROJECT.INTERNAL_ERROR,
       status: 500,
       errors: [error instanceof Error ? error.message : String(error)],
     });

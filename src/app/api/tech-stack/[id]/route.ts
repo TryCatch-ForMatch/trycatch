@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
     console.log(error);
     return buildResponse({
       success: false,
-      message: MESSAGES.GENERAL.INTERNAL_ERROR,
+      message: MESSAGES.TECH_STACK.INTERNAL_ERROR,
       status: 500,
       errors: [
         error instanceof Error ? error.message : 'Erro ao buscar stack.',

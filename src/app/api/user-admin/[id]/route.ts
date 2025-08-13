@@ -59,7 +59,7 @@ export async function GET(
 
     return buildResponse({
       success: false,
-      message: MESSAGES.GENERAL.INTERNAL_ERROR,
+      message: MESSAGES.USER.INTERNAL_ERROR,
       status: 500,
       errors: ['Erro ao buscar usuário.'],
     });
@@ -165,7 +165,7 @@ export async function PUT(
     console.log('Erro ao atualizar usuário: ', error);
     return buildResponse({
       success: false,
-      message: MESSAGES.GENERAL.INTERNAL_ERROR,
+      message: MESSAGES.USER.INTERNAL_ERROR,
       status: 500,
       errors: ['Erro ao atualizar usuário.'],
     });
@@ -239,7 +239,7 @@ export async function DELETE(
     console.error(error);
     return buildResponse({
       success: false,
-      message: MESSAGES.GENERAL.INTERNAL_ERROR,
+      message: MESSAGES.USER.INTERNAL_ERROR,
       status: 500,
       errors: ['Erro ao excluir usuário.'],
     });

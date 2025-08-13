@@ -125,6 +125,7 @@ export const MESSAGES = {
     ALREADY_EXISTS: 'Usuário já existe.',
     INTERNAL_ERROR_HASH: 'Erro ao hashear senha.',
     USER_CREATION_ERROR: 'Erro interno ao criar usuário.',
+    INTERNAL_ERROR: 'Erro interno ao processar usuário.',
   },
   USER_AVAILABILITY: {
     NOT_FOUND: 'Disponibilidade de usuário não encontrada.',

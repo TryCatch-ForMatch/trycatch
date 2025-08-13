@@ -38,7 +38,7 @@ export async function GET(
     console.error('Erro ao buscar ProjectStack:', error);
     return buildResponse({
       success: false,
-      message: MESSAGES.GENERAL.INTERNAL_ERROR,
+      message: MESSAGES.PROJECT_STACK.INTERNAL_ERROR,
       errors: { message: 'Erro ao buscar ProjectStack' },
       status: 500,
     });

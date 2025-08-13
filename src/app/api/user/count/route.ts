@@ -11,9 +11,9 @@ export async function GET() {
     console.error('Erro ao buscar número de usuários:', error);
     return buildResponse({
       success: false,
-      message: MESSAGES.GENERAL.INTERNAL_ERROR,
+      message: MESSAGES.USER.INTERNAL_ERROR,
       status: 500,
-      errors: ['Erro ao buscar usuários'],
+      errors: ['Erro ao contar usuários'],
     });
   }
 }
