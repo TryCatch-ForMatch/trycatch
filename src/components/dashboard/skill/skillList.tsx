@@ -144,14 +144,17 @@ export function SkillList() {
         setSuccessMessage('Skill atualizada com sucesso!');
       } else if (
         res.status === 409 &&
-        data.error?.includes('Alterações podem impactar')
+        (data.error?.includes('Alterações podem impactar') ||
+          data.message?.includes('Alterações podem impactar'))
       ) {
         // Backend informou que está vinculada → abrir modal de confirmação
         setPendingUpdateId(id);
         setConfirmUpdateOpen(true);
       } else {
-        console.error('Erro ao atualizar skill:', data.error);
-        setErrorMessage(data.error || 'Erro inesperado ao atualizar.');
+        console.error('Erro ao atualizar skill:', data.error || data.message);
+        setErrorMessage(
+          data.error || data.message || 'Erro inesperado ao atualizar.'
+        );
       }
     } catch (error) {
       console.error('Erro ao atualizar skill:', error);

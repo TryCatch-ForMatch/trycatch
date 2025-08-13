@@ -20,6 +20,7 @@ export async function GET(request: NextRequest) {
       success: false,
       message: MESSAGES.GENERAL.INVALID_ID,
       status: 400,
+      errors: idParse.error.format(),
     });
   }
 
@@ -43,9 +44,7 @@ export async function GET(request: NextRequest) {
       success: false,
       message: MESSAGES.TECH_STACK.INTERNAL_ERROR,
       status: 500,
-      errors: [
-        error instanceof Error ? error.message : 'Erro ao buscar stack.',
-      ],
+      errors: { message: 'Erro ao buscar stack.' },
     });
   }
 }
@@ -62,6 +61,7 @@ export async function PATCH(request: NextRequest) {
       success: false,
       message: MESSAGES.GENERAL.INVALID_ID,
       status: 400,
+      errors: idParse.error.format(),
     });
   }
 
@@ -73,7 +73,7 @@ export async function PATCH(request: NextRequest) {
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
       status: 400,
-      errors: parse.error.errors.map((e) => e.message),
+      errors: parse.error.format(),
     });
   }
 
@@ -101,24 +101,17 @@ export async function PATCH(request: NextRequest) {
     if (linkedStack && !forceUpdate) {
       return buildResponse({
         success: false,
-        message: MESSAGES.TECH_STACK.LINKED_TO_PROJECT,
+        message: MESSAGES.TECH_STACK.UPDATE_CONFLICT,
         status: 409,
-        errors: [
-          'Esta stack está sendo usada em projetos. Alterações podem impactar dados existentes.',
-        ],
       });
     }
 
-    const stack = await prisma.stack.update({
+    const updated = await prisma.stack.update({
       where: { id },
       data: { name },
     });
 
-    return buildResponse({
-      success: true,
-      message: MESSAGES.TECH_STACK.UPDATED,
-      data: stack,
-    });
+    return NextResponse.json(updated, { status: 200 });
   } catch (error) {
     console.log(error);
     console.error('Erro ao atualizar stack:', error);
@@ -126,9 +119,7 @@ export async function PATCH(request: NextRequest) {
       success: false,
       message: MESSAGES.TECH_STACK.INTERNAL_ERROR,
       status: 500,
-      errors: [
-        error instanceof Error ? error.message : 'Erro ao atualizar stack.',
-      ],
+      errors: { message: 'Erro ao atualizar stack.' },
     });
   }
 }
@@ -145,6 +136,7 @@ export async function DELETE(request: NextRequest) {
       success: false,
       message: MESSAGES.GENERAL.INVALID_ID,
       status: 400,
+      errors: idParse.error.format(),
     });
   }
 
@@ -158,9 +150,10 @@ export async function DELETE(request: NextRequest) {
         success: false,
         message: MESSAGES.TECH_STACK.LINKED_TO_PROJECT,
         status: 409,
-        errors: [
-          'Esta stack está sendo usada em projetos. Não pode ser excluída.',
-        ],
+        errors: {
+          message:
+            'Esta stack está sendo usada em projetos. Não pode ser excluída.',
+        },
       });
     }
 
@@ -177,9 +170,7 @@ export async function DELETE(request: NextRequest) {
       success: false,
       message: MESSAGES.TECH_STACK.INTERNAL_ERROR,
       status: 500,
-      errors: [
-        error instanceof Error ? error.message : 'Erro ao deletar stack.',
-      ],
+      errors: { message: 'Erro ao deletar stack.' },
     });
   }
 }

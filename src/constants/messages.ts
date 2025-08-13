@@ -110,6 +110,8 @@ export const MESSAGES = {
   TECH_STACK: {
     NOT_FOUND: 'Stack não encontrada.',
     CREATED: 'Stack criada com sucesso.',
+    UPDATE_CONFLICT:
+      'Esta stack está sendo usada em projetos. Alterações podem impactar dados existentes.',
     UPDATED: 'Stack atualizada com sucesso.',
     DELETED: 'Stack removida com sucesso.',
     FETCH_SUCCESS: 'Stacks carregadas com sucesso.',

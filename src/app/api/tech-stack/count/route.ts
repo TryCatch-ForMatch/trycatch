@@ -6,7 +6,7 @@ export async function GET() {
   try {
     const count = await prisma.stack.count();
 
-    return NextResponse.json(count, { status: 200 });
+    return NextResponse.json({ count });
   } catch (error) {
     console.error('Erro ao buscar número de stacks:', error);
     return buildResponse({
