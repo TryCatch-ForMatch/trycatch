@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 import { NextResponse, NextRequest } from 'next/server';
+import { buildResponse, MESSAGES } from '@/constants/messages';
 
 const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 
@@ -33,7 +34,11 @@ export async function GET(
   const idParse = idSchema.safeParse(id);
 
   if (!idParse.success) {
-    return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_ID,
+      status: 400,
+    });
   }
 
   const availabilityId = idParse.data;
@@ -69,19 +74,22 @@ export async function GET(
     });
 
     if (!availability) {
-      return NextResponse.json(
-        { error: 'Disponibilidade não encontrada' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.USER_AVAILABILITY.NOT_FOUND,
+        status: 404,
+      });
     }
 
-    return NextResponse.json(availability);
+    return NextResponse.json(availability, { status: 200 });
   } catch (error) {
     console.error('[USER_AVAILABILITY_GET_ID]', error);
-    return NextResponse.json(
-      { message: 'Erro ao buscar disponibilidade' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER_AVAILABILITY.INTERNAL_ERROR,
+      status: 500,
+      errors: ['Erro ao buscar disponibilidade'],
+    });
   }
 }
 
@@ -97,7 +105,11 @@ export async function PUT(
   const idParse = idSchema.safeParse(context.params.id);
 
   if (!idParse.success) {
-    return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_ID,
+      status: 400,
+    });
   }
 
   const availabilityId = idParse.data;
@@ -108,27 +120,32 @@ export async function PUT(
     });
 
     if (!existing) {
-      return NextResponse.json(
-        { error: 'Disponibilidade não encontrada' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.USER_AVAILABILITY.NOT_FOUND,
+        status: 404,
+      });
     }
 
     if (existing.userId !== session.user.id) {
-      return NextResponse.json(
-        { error: 'Você não tem permissão para editar essa disponibilidade' },
-        { status: 403 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.AUTH.UNAUTHORIZED,
+        status: 403,
+        errors: ['Você não tem permissão para editar essa disponibilidade'],
+      });
     }
 
     const body = await request.json();
     const parsed = userAvailabilityUpdateSchema.safeParse(body);
 
     if (!parsed.success) {
-      return NextResponse.json(
-        { error: 'Dados inválidos', details: parsed.error.format() },
-        { status: 400 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.GENERAL.INVALID_DATA,
+        status: 400,
+        errors: ['Dados inválidos', parsed.error.format()],
+      });
     }
 
     const { skills, ...availabilityData } = parsed.data;
@@ -159,13 +176,15 @@ export async function PUT(
       }
     }
 
-    return NextResponse.json(updated);
+    return NextResponse.json(updated, { status: 200 });
   } catch (error) {
     console.error('[USER_AVAILABILITY_PUT_ID]', error);
-    return NextResponse.json(
-      { message: 'Erro ao atualizar disponibilidade' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER_AVAILABILITY.INTERNAL_ERROR,
+      status: 500,
+      errors: ['Erro ao atualizar disponibilidade e skills'],
+    });
   }
 }
 
@@ -181,7 +200,11 @@ export async function DELETE(
   const idParse = idSchema.safeParse(context.params.id);
 
   if (!idParse.success) {
-    return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_ID,
+      status: 400,
+    });
   }
 
   const availabilityId = idParse.data;
@@ -192,31 +215,38 @@ export async function DELETE(
     });
 
     if (!existing) {
-      return NextResponse.json(
-        { error: 'Disponibilidade não encontrada' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.USER_AVAILABILITY.NOT_FOUND,
+        status: 404,
+      });
     }
 
     if (existing.userId !== session.user.id) {
-      return NextResponse.json(
-        { error: 'Você não tem permissão para excluir essa disponibilidade' },
-        { status: 403 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.AUTH.UNAUTHORIZED,
+        status: 403,
+        errors: ['Você não tem permissão para excluir essa disponibilidade'],
+      });
     }
 
     await prisma.userAvailability.delete({
       where: { id: availabilityId },
     });
 
-    return NextResponse.json({
-      message: 'Disponibilidade excluída com sucesso',
+    return buildResponse({
+      success: true,
+      message: MESSAGES.USER_AVAILABILITY.DELETED,
+      status: 200,
     });
   } catch (error) {
     console.error('[USER_AVAILABILITY_DELETE_ID]', error);
-    return NextResponse.json(
-      { message: 'Erro ao excluir disponibilidade' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER_AVAILABILITY.INTERNAL_ERROR,
+      status: 500,
+      errors: ['Erro ao excluir disponibilidade'],
+    });
   }
 }
