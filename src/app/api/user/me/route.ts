@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { checkAuth } from '@/lib/check-auth';
+import { buildResponse, MESSAGES } from '@/constants/messages';
 
 export async function GET() {
   const { authorized, session, response } = await checkAuth({
@@ -19,10 +20,11 @@ export async function GET() {
   });
 
   if (!user) {
-    return NextResponse.json(
-      { error: 'Usuário não encontrado' },
-      { status: 404 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER.NOT_FOUND,
+      status: 404,
+    });
   }
 
   return NextResponse.json(user);
