@@ -139,6 +139,7 @@ export const MESSAGES = {
     NOT_FOUND: 'Associação de habilidade ao usuário não encontrada.',
     CREATED: 'Habilidade adicionada ao usuário com sucesso.',
     UPDATED: 'Associação de habilidade ao usuário atualizada com sucesso.',
+    ALREADY_EXISTS: 'Skill já adicionada para este usuário',
     DELETED: 'Habilidade removida do usuário com sucesso.',
     FETCH_SUCCESS:
       'Associações de habilidade ao usuário carregadas com sucesso.',
