@@ -8,7 +8,7 @@ const createUserSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
   email: z.string().email('Email inválido.'),
   password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres.'),
-  avatar: z.union([z.string().url(), z.literal('')]).nullable(),
+  avatar: z.string(),
   linkedin: z.union([z.string().url(), z.literal('')]).nullable(),
   github: z.union([z.string().url(), z.literal('')]).nullable(),
   bio: z.string().optional(),
