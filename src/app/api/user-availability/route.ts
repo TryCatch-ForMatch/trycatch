@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { checkAuth } from '@/lib/check-auth';
+import { buildResponse, MESSAGES } from '@/constants/messages';
 
 const userAvailabilitySchema = z.object({
   isMentor: z.boolean().optional().default(false),
@@ -72,10 +73,11 @@ export async function POST(req: Request) {
     const parsed = userAvailabilitySchema.safeParse(body);
 
     if (!parsed.success) {
-      return NextResponse.json(
-        { error: 'Dados inválidos', details: parsed.error.format() },
-        { status: 400 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.GENERAL.INVALID_DATA,
+        status: 400,
+      });
     }
 
     const { skills, availabilities, isMentor } = parsed.data;
@@ -100,15 +102,18 @@ export async function POST(req: Request) {
       });
     }
 
-    return NextResponse.json(
-      { message: 'Disponibilidades criadas com sucesso' },
-      { status: 201 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER_AVAILABILITY.CREATED,
+      status: 201,
+    });
   } catch (error) {
     console.error('[USER_AVAILABILITY_POST]', error);
-    return NextResponse.json(
-      { message: 'Erro ao criar disponibilidade' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER_AVAILABILITY.INTERNAL_ERROR,
+      status: 500,
+      errors: ['Erro ao criar disponibilidade'],
+    });
   }
 }

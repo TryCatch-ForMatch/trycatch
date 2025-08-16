@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { MESSAGES, buildResponse } from '@/constants/messages';
 
 export async function GET() {
   try {
@@ -11,9 +12,11 @@ export async function GET() {
     return NextResponse.json({ count });
   } catch (error) {
     console.error('Erro ao buscar número de convites:', error);
-    return NextResponse.json(
-      { error: 'Erro ao buscar convites' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.INVITE.INTERNAL_ERROR,
+      errors: error,
+      status: 500,
+    });
   }
 }

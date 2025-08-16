@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
-import { NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
+import { NextResponse } from 'next/server';
 
 export async function GET() {
   const { authorized, response } = await checkAuth({
@@ -32,5 +32,5 @@ export async function GET() {
     stacksTotal: p.stacks.length,
   }));
 
-  return NextResponse.json(result);
+  return NextResponse.json(result, { status: 200 });
 }

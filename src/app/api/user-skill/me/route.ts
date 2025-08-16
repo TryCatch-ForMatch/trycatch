@@ -12,7 +12,7 @@ export async function GET() {
       include: { skill: true },
     });
 
-    return NextResponse.json(userSkills);
+    return NextResponse.json(userSkills, { status: 200 });
   } catch (error) {
     console.log('Error fetching user skills:', error);
     return NextResponse.json(

@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
+import { buildResponse, MESSAGES } from '@/constants/messages';
 
 const userSkillSchema = z.object({
   userId: z.string(),
@@ -18,18 +19,22 @@ export async function POST(request: NextRequest) {
     body = await request.json();
   } catch (error) {
     console.error('Erro ao fazer parse do JSON no POST:', error);
-    return NextResponse.json(
-      { error: 'Body inválido. Envie um JSON válido.' },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+      errors: ['Body inválido. Envie um JSON válido.'],
+    });
   }
 
   const parsed = userSkillSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json(
-      { error: 'Dados inválidos', issues: parsed.error.issues },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+      errors: ['Dados inválidos', parsed.error.issues],
+    });
   }
 
   const { userId, skillId } = parsed.data;
@@ -41,10 +46,11 @@ export async function POST(request: NextRequest) {
     ]);
 
     if (!user || !skill) {
-      return NextResponse.json(
-        { error: 'Usuário ou Skill não encontrados' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.USER_SKILL.NOT_FOUND,
+        status: 404,
+      });
     }
 
     const alreadyExists = await prisma.userSkill.findFirst({
@@ -52,10 +58,11 @@ export async function POST(request: NextRequest) {
     });
 
     if (alreadyExists) {
-      return NextResponse.json(
-        { error: 'Skill já adicionada' },
-        { status: 400 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.USER_SKILL.ALREADY_EXISTS,
+        status: 400,
+      });
     }
 
     const newUserSkill = await prisma.userSkill.create({
@@ -68,10 +75,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(newUserSkill, { status: 201 });
   } catch (error) {
     console.error('Erro ao criar UserSkill:', error);
-    return NextResponse.json(
-      { error: 'Erro ao adicionar skill' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER_SKILL.INTERNAL_ERROR,
+      status: 500,
+      errors: ['Erro ao adicionar skill'],
+    });
   }
 }
 
@@ -87,12 +96,14 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json(allUserSkills);
+    return NextResponse.json(allUserSkills, { status: 200 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      { error: 'Erro ao buscar vínculos de skills' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER_SKILL.INTERNAL_ERROR,
+      status: 500,
+      errors: ['Erro ao buscar vínculos de skills'],
+    });
   }
 }

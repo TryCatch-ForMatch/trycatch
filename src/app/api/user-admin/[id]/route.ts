@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
+import { buildResponse, MESSAGES } from '@/constants/messages';
 
 const idSchema = z.string().min(24, 'ID inválido').max(36, 'ID inválido');
 
@@ -27,7 +28,11 @@ export async function GET(
 
   const idParse = idSchema.safeParse(params.id);
   if (!idParse.success) {
-    return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_ID,
+      status: 400,
+    });
   }
 
   const id = idParse.data;
@@ -41,19 +46,23 @@ export async function GET(
     });
 
     if (!user) {
-      return NextResponse.json(
-        { error: 'Usuário não encontrado' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.USER.NOT_FOUND,
+        status: 404,
+      });
     }
 
-    return NextResponse.json(user);
+    return NextResponse.json(user, { status: 200 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      { error: 'Erro ao buscar usuário.' },
-      { status: 500 }
-    );
+
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER.INTERNAL_ERROR,
+      status: 500,
+      errors: ['Erro ao buscar usuário.'],
+    });
   }
 }
 
@@ -68,7 +77,11 @@ export async function PUT(
 
   const idParse = idSchema.safeParse(params.id);
   if (!idParse.success) {
-    return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_ID,
+      status: 400,
+    });
   }
 
   const id = idParse.data;
@@ -79,18 +92,22 @@ export async function PUT(
     body = await request.json();
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      { error: 'Erro ao ler os dados.' },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+      errors: ['Erro ao ler os dados do usuário.'],
+    });
   }
 
   const parse = updateUserSchema.safeParse(body);
   if (!parse.success) {
-    return NextResponse.json(
-      { error: 'Dados inválidos.', issues: parse.error.format() },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+      errors: ['Dados inválidos.', parse.error.format()],
+    });
   }
 
   const { name, email, avatar, linkedin, github, bio, role, skills } =
@@ -99,10 +116,11 @@ export async function PUT(
   try {
     const userExists = await prisma.user.findUnique({ where: { id } });
     if (!userExists) {
-      return NextResponse.json(
-        { error: 'Usuário não encontrado.' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.USER.NOT_FOUND,
+        status: 404,
+      });
     }
 
     const existingEmailUser = await prisma.user.findUnique({
@@ -110,10 +128,12 @@ export async function PUT(
     });
 
     if (existingEmailUser && existingEmailUser.id !== id) {
-      return NextResponse.json(
-        { error: 'Já existe um usuário com este e-mail.' },
-        { status: 400 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.USER.ALREADY_EXISTS,
+        status: 400,
+        errors: ['Já existe um usuário com este e-mail.'],
+      });
     }
 
     const updatedUser = await prisma.user.update({
@@ -140,13 +160,15 @@ export async function PUT(
       },
     });
 
-    return NextResponse.json(updatedUser);
+    return NextResponse.json(updatedUser, { status: 200 });
   } catch (error) {
     console.log('Erro ao atualizar usuário: ', error);
-    return NextResponse.json(
-      { error: 'Erro ao atualizar usuário.' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER.INTERNAL_ERROR,
+      status: 500,
+      errors: ['Erro ao atualizar usuário.'],
+    });
   }
 }
 
@@ -161,7 +183,11 @@ export async function DELETE(
 
   const idParse = idSchema.safeParse(params.id);
   if (!idParse.success) {
-    return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_ID,
+      status: 400,
+    });
   }
 
   const id = idParse.data;
@@ -169,10 +195,11 @@ export async function DELETE(
   try {
     const userExists = await prisma.user.findUnique({ where: { id } });
     if (!userExists) {
-      return NextResponse.json(
-        { error: 'Usuário não encontrado.' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.USER.NOT_FOUND,
+        status: 404,
+      });
     }
     // Verifica se o usuário tem vínculos em StackTaken
     const hasStackTaken = await prisma.stackTaken.findFirst({
@@ -202,16 +229,19 @@ export async function DELETE(
         where: { id },
       });
 
-      return NextResponse.json(
-        { message: 'Usuário excluído com sucesso.' },
-        { status: 200 }
-      );
+      return buildResponse({
+        success: true,
+        message: MESSAGES.USER.DELETED,
+        status: 200,
+      });
     }
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      { error: 'Erro ao excluir usuário.' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER.INTERNAL_ERROR,
+      status: 500,
+      errors: ['Erro ao excluir usuário.'],
+    });
   }
 }

@@ -3,6 +3,7 @@ import { ProjectStatus } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
+import { MESSAGES, buildResponse } from '@/constants/messages';
 
 const createProjectSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório'),
@@ -45,7 +46,7 @@ export async function GET() {
     },
   });
 
-  return NextResponse.json(projects);
+  return NextResponse.json(projects, { status: 200 });
 }
 
 export async function POST(request: NextRequest) {
@@ -58,7 +59,12 @@ export async function POST(request: NextRequest) {
   const parse = createProjectSchema.safeParse(body);
 
   if (!parse.success) {
-    return NextResponse.json({ error: parse.error.format() }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      errors: parse.error.format(),
+      status: 400,
+    });
   }
   const { name, description, deadline, totalValue, status, skills, stacks } =
     parse.data;
@@ -86,5 +92,10 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  return NextResponse.json(project, { status: 201 });
+  return buildResponse({
+    success: true,
+    message: MESSAGES.PROJECT.CREATED,
+    data: project,
+    status: 201,
+  });
 }

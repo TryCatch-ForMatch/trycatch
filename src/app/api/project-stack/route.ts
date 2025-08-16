@@ -1,7 +1,8 @@
-import { NextResponse, NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
+import { MESSAGES, buildResponse } from '@/constants/messages';
 
 // Validação de criação
 const createProjectStackSchema = z.object({
@@ -19,18 +20,22 @@ export async function POST(request: NextRequest) {
     body = await request.json();
   } catch (error) {
     console.error('Erro ao fazer parse do JSON no POST:', error);
-    return NextResponse.json(
-      { error: 'Body inválido. Envie um JSON válido.' },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+      errors: { message: 'Body inválido. Envie um JSON válido.' },
+    });
   }
 
   const parsed = createProjectStackSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json(
-      { error: 'Dados inválidos', issues: parsed.error.issues },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+      errors: parsed.error.flatten().fieldErrors,
+    });
   }
 
   const { projectId, stackId, percentage } = parsed.data;
@@ -42,10 +47,12 @@ export async function POST(request: NextRequest) {
     ]);
 
     if (!project || !stack) {
-      return NextResponse.json(
-        { error: 'Projeto ou Stack não encontrados' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.PROJECT_STACK.NOT_FOUND,
+        status: 404,
+        errors: { message: 'Projeto ou Stack não encontrados.' },
+      });
     }
 
     const existingStacks = await prisma.projectStack.findMany({
@@ -57,12 +64,15 @@ export async function POST(request: NextRequest) {
       percentage;
 
     if (total > 100) {
-      return NextResponse.json(
-        {
-          error: 'A soma dos percentuais das stacks não pode ultrapassar 100%',
+      return buildResponse({
+        success: false,
+        message: MESSAGES.PROJECT_STACK.PERCENTAGE_ERROR,
+        status: 400,
+        errors: {
+          percentage:
+            'A soma dos percentuais das stacks não pode ultrapassar 100%',
         },
-        { status: 400 }
-      );
+      });
     }
 
     const newProjectStack = await prisma.projectStack.create({
@@ -73,13 +83,20 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(newProjectStack, { status: 201 });
+    return buildResponse({
+      success: true,
+      message: MESSAGES.PROJECT_STACK.CREATED,
+      status: 201,
+      data: newProjectStack,
+    });
   } catch (error) {
     console.error('Erro ao criar ProjectStack:', error);
-    return NextResponse.json(
-      { error: 'Erro ao criar ProjectStack' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.PROJECT_STACK.INTERNAL_ERROR,
+      status: 500,
+      errors: { message: 'Erro interno ao criar ProjectStack.' },
+    });
   }
 }
 
@@ -93,14 +110,21 @@ export async function GET(request: NextRequest) {
     projectId = searchParams.get('projectId');
   } catch (error) {
     console.error('Erro ao processar URL no GET:', error);
-    return NextResponse.json({ error: 'URL inválida' }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+      errors: { message: 'projectId inválido.' },
+    });
   }
 
   if (!projectId) {
-    return NextResponse.json(
-      { error: 'projectId é obrigatório' },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+      errors: { message: 'projectId é obrigatório.' },
+    });
   }
 
   try {
@@ -111,12 +135,14 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(stacks);
+    return NextResponse.json(stacks, { status: 200 });
   } catch (error) {
     console.error('Erro ao buscar ProjectStacks:', error);
-    return NextResponse.json(
-      { error: 'Erro ao buscar ProjectStacks' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.PROJECT_STACK.INTERNAL_ERROR,
+      status: 500,
+      errors: { message: 'Erro interno ao buscar ProjectStacks.' },
+    });
   }
 }

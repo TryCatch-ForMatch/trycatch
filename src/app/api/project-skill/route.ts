@@ -1,7 +1,8 @@
-import { NextResponse, NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
+import { MESSAGES, buildResponse } from '@/constants/messages';
 
 const createProjectSkillSchema = z.object({
   projectId: z.string(),
@@ -18,18 +19,22 @@ export async function POST(request: NextRequest) {
     body = await request.json();
   } catch (error) {
     console.error('Erro ao fazer parse do JSON no POST:', error);
-    return NextResponse.json(
-      { error: 'Body inválido. Envie um JSON válido.' },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+      errors: { body: 'Body inválido. Envie um JSON válido.' },
+    });
   }
 
   const parsed = createProjectSkillSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json(
-      { error: 'Dados inválidos', issues: parsed.error.issues },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+      errors: parsed.error.flatten().fieldErrors,
+    });
   }
 
   const { projectId, skillId } = parsed.data;
@@ -40,23 +45,31 @@ export async function POST(request: NextRequest) {
     });
 
     if (exists) {
-      return NextResponse.json(
-        { error: 'Skill já associada ao projeto' },
-        { status: 400 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.PROJECT_SKILL.CREATE_ERROR,
+        status: 400,
+        errors: { projectSkill: 'Skill já associada ao projeto.' },
+      });
     }
 
     const newProjectSkill = await prisma.projectSkill.create({
       data: { projectId, skillId },
     });
 
-    return NextResponse.json(newProjectSkill, { status: 201 });
+    return buildResponse({
+      success: true,
+      message: MESSAGES.PROJECT_SKILL.CREATED,
+      data: newProjectSkill,
+      status: 201,
+    });
   } catch (error) {
     console.error('Erro ao adicionar skill ao projeto:', error);
-    return NextResponse.json(
-      { error: 'Erro ao adicionar skill ao projeto' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.PROJECT_SKILL.CREATE_ERROR,
+      status: 500,
+    });
   }
 }
 
@@ -71,14 +84,21 @@ export async function GET(request: NextRequest) {
     projectId = searchParams.get('projectId');
   } catch (error) {
     console.error('Erro ao processar URL no GET:', error);
-    return NextResponse.json({ error: 'URL inválida' }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.PROJECT_SKILL.NOT_FOUND,
+      errors: { url: 'URL inválida.' },
+      status: 400,
+    });
   }
 
   if (!projectId) {
-    return NextResponse.json(
-      { error: 'projectId é obrigatório na query' },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      errors: { projectId: 'projectId é obrigatório na query' },
+      status: 400,
+    });
   }
 
   try {
@@ -87,12 +107,14 @@ export async function GET(request: NextRequest) {
       include: { skill: true },
     });
 
-    return NextResponse.json(skills);
+    return NextResponse.json(skills, { status: 200 });
   } catch (error) {
     console.error('Erro ao buscar skills do projeto:', error);
-    return NextResponse.json(
-      { error: 'Erro ao buscar skills do projeto' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.PROJECT_SKILL.INTERNAL_ERROR,
+      status: 500,
+      errors: { database: 'Erro ao buscar skills do projeto.' },
+    });
   }
 }

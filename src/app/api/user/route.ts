@@ -12,5 +12,5 @@ export async function GET() {
     },
   });
 
-  return Response.json(users);
+  return Response.json(users, { status: 200 });
 }

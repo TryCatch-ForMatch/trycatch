@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
+import { MESSAGES, buildResponse } from '@/constants/messages';
 
 const createStackTakenSchema = z.object({
   projectId: z.string().min(25, 'ID inválido').max(36, 'ID inválido'),
@@ -19,10 +20,12 @@ export async function POST(request: NextRequest) {
   const parsed = createStackTakenSchema.safeParse(body);
 
   if (!parsed.success) {
-    return NextResponse.json(
-      { error: 'Dados inválidos', issues: parsed.error.issues },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      errors: parsed.error.issues,
+      status: 400,
+    });
   }
 
   const { projectId, projectStackId, stackId } = parsed.data;
@@ -39,40 +42,47 @@ export async function POST(request: NextRequest) {
       where: { id: projectId },
     });
     if (!projectExists) {
-      return NextResponse.json(
-        { error: 'Projeto não encontrado' },
-        { status: 400 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.PROJECT.NOT_FOUND,
+        status: 400,
+        errors: ['Projeto não encontrado'],
+      });
     }
 
     const projectStackExists = await prisma.projectStack.findUnique({
       where: { id: projectStackId },
     });
     if (!projectStackExists) {
-      return NextResponse.json(
-        { error: 'ProjectStack não encontrado' },
-        { status: 400 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.STACK_TAKEN.NOT_FOUND,
+        status: 400,
+        errors: ['ProjectStack não encontrada'],
+      });
     }
 
     const stackExists = await prisma.stack.findUnique({
       where: { id: stackId },
     });
     if (!stackExists) {
-      return NextResponse.json(
-        { error: 'Stack não encontrada' },
-        { status: 400 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.TECH_STACK.NOT_FOUND,
+        status: 400,
+        errors: ['Stack não encontrada'],
+      });
     }
 
     const alreadyTaken = await prisma.stackTaken.findFirst({
       where: { projectStackId },
     });
     if (alreadyTaken) {
-      return NextResponse.json(
-        { error: 'Essa stack já foi assumida por outro usuário' },
-        { status: 400 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.STACK_TAKEN.ALREADY_TAKEN,
+        status: 400,
+      });
     }
 
     const newStackTaken = await prisma.stackTaken.create({
@@ -84,13 +94,20 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(newStackTaken, { status: 201 });
+    return buildResponse({
+      success: true,
+      message: MESSAGES.STACK_TAKEN.CREATED,
+      data: newStackTaken,
+      status: 201,
+    });
   } catch (error) {
     console.error('Erro ao criar StackTaken:', error);
-    return NextResponse.json(
-      { error: 'Erro ao criar StackTaken' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.STACK_TAKEN.INTERNAL_ERROR,
+      status: 500,
+      errors: ['Erro ao criar StackTaken'],
+    });
   }
 }
 
@@ -113,12 +130,14 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(stackTakens);
+    return NextResponse.json(stackTakens, { status: 200 });
   } catch (error) {
     console.error('Erro ao buscar StackTakens:', error);
-    return NextResponse.json(
-      { error: 'Erro ao buscar StackTakens' },
-      { status: 500 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.STACK_TAKEN.INTERNAL_ERROR,
+      status: 500,
+      errors: ['Erro ao buscar StackTakens'],
+    });
   }
 }

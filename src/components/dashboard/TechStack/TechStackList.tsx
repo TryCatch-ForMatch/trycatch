@@ -40,7 +40,9 @@ export function TechStackList() {
       if (res.ok) {
         setStacks(data);
       } else {
-        setErrorMessage(data.error || 'Erro ao carregar stacks.');
+        setErrorMessage(
+          data.error || data.message || 'Erro ao carregar stacks.'
+        );
       }
     } catch (error) {
       console.error('Erro ao buscar stacks:', error);
@@ -115,12 +117,16 @@ export function TechStackList() {
         setEditedName('');
       } else if (
         res.status === 409 &&
-        data.error?.includes('Alterações podem impactar')
+        (data.error?.includes('Alterações podem impactar') ||
+          data.message?.includes('Alterações podem impactar'))
       ) {
         setPendingUpdateId(id);
         setConfirmUpdateOpen(true);
       } else {
-        console.error('Erro ao atualizar stack:', data.error);
+        console.error('Erro ao atualizar stack:', data.error || data.message);
+        setErrorMessage(
+          data.error || data.message || 'Erro inesperado ao atualizar.'
+        );
       }
     } catch (error) {
       console.error('Erro ao atualizar stack:', error);
