@@ -82,24 +82,36 @@ export async function POST(req: Request) {
 
     const { skills, availabilities, isMentor } = parsed.data;
 
-    await prisma.userAvailability.createMany({
-      data: availabilities.map(({ weekday, startTime, endTime }) => ({
-        userId: session.user.id,
-        isMentor,
-        weekday,
-        startTime,
-        endTime,
-      })),
-    });
-
-    if (skills?.length) {
-      await prisma.userSkill.createMany({
-        data: skills.map((skillId) => ({
+    await prisma.$transaction([
+      // faz os dois juntos → ou salva tudo certo ou não salva nada
+      prisma.userAvailability.deleteMany({
+        where: { userId: session.user.id },
+      }),
+      prisma.userAvailability.createMany({
+        data: availabilities.map(({ weekday, startTime, endTime }) => ({
           userId: session.user.id,
-          skillId,
+          isMentor,
+          weekday,
+          startTime,
+          endTime,
         })),
-        skipDuplicates: true,
+      }),
+    ]);
+
+    // salva skills
+    if (skills) {
+      await prisma.userSkill.deleteMany({
+        where: { userId: session.user.id },
       });
+
+      if (skills.length > 0) {
+        await prisma.userSkill.createMany({
+          data: skills.map((skillId) => ({
+            userId: session.user.id,
+            skillId,
+          })),
+        });
+      }
     }
 
     return buildResponse({
