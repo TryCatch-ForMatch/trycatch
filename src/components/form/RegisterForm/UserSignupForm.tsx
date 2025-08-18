@@ -9,7 +9,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
 //import components
-import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -21,7 +20,7 @@ const schema = z.object({
   password: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres'),
   linkedin: z.string().url('LinkedIn inválido').optional().or(z.literal('')),
   github: z.string().url('GitHub inválido').optional().or(z.literal('')),
-  avatar: z.string().url('URL inválida').optional().or(z.literal('')),
+  avatar: z.string(),
   bio: z.string().optional(),
   inviteCode: z.string().min(1, 'Código do convite é obrigatório'),
 });
@@ -34,13 +33,11 @@ export default function UserSignupForm() {
 
   const [submitError, setSubmitError] = useState('');
   const [success, setSuccess] = useState('');
-  const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
   const {
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -50,44 +47,12 @@ export default function UserSignupForm() {
       password: '',
       linkedin: '',
       github: '',
-      avatar: '',
+      avatar:
+        'https://res.cloudinary.com/daxa1bpny/image/upload/v1755176016/default-avatar1_woxb42.png',
       bio: '',
       inviteCode: '',
     },
   });
-
-  const avatarUrl = watch('avatar');
-
-  async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploadingAvatar(true);
-    setSubmitError('');
-
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const res = await fetch('/api/upload/avatar', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!res.ok) throw new Error('Falha no upload do avatar');
-
-      const json = await res.json();
-      if (json.url) {
-        setValue('avatar', json.url);
-      } else {
-        throw new Error('Servidor não retornou a URL do avatar');
-      }
-    } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : 'Erro desconhecido');
-    } finally {
-      setUploadingAvatar(false);
-    }
-  }
 
   useEffect(() => {
     const email = searchParams.get('email');
@@ -194,31 +159,6 @@ export default function UserSignupForm() {
             <Textarea {...register('bio')} />
             {errors.bio && (
               <p className="text-sm text-red-500">{errors.bio.message}</p>
-            )}
-          </div>
-
-          {/* Avatar */}
-          <div className="space-y-1">
-            <Label>Avatar</Label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleAvatarChange}
-              disabled={uploadingAvatar}
-              className="block w-full cursor-pointer text-sm text-gray-900 file:mr-4 file:rounded-full file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 hover:file:bg-indigo-100"
-            />
-            {errors.avatar && (
-              <p className="text-sm text-red-500">{errors.avatar.message}</p>
-            )}
-            {avatarUrl && (
-              <Image
-                src={avatarUrl}
-                alt="Avatar Preview"
-                className="mt-2 h-16 w-16 rounded-full border object-cover"
-              />
-            )}
-            {uploadingAvatar && (
-              <p className="text-sm text-gray-500">Enviando avatar...</p>
             )}
           </div>
 

@@ -10,12 +10,14 @@ const updateUserSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
   email: z.string().email('Email inválido.'),
   password: z
-    .string()
-    .min(6, 'A senha deve ter pelo menos 6 caracteres.')
+    .union([
+      z.string().min(6, 'A senha deve ter pelo menos 6 caracteres.'),
+      z.literal(''),
+    ])
     .optional(),
   avatar: z.union([z.string().url(), z.literal('')]).nullable(),
-  linkedin: z.string().url().optional(),
-  github: z.string().url().optional(),
+  linkedin: z.union([z.string().url().optional(), z.literal('')]),
+  github: z.union([z.string().url().optional(), z.literal('')]),
   bio: z.string().optional(),
 });
 
@@ -153,7 +155,7 @@ export async function PUT(
       data: {
         name,
         email,
-        password: hashedPassword,
+        ...(hashedPassword && { password: hashedPassword }),
         avatar,
         linkedin,
         github,
