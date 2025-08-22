@@ -1,5 +1,5 @@
 name: ✍️ Tarefa Simples
-about: Uma tarefa direta, como a criação de um componente ou a correção de algo pequeno.
+description: Uma tarefa direta, como a criação de um componente ou a correção de algo pequeno.
 title: "[TASK]"
 labels: ['task']
 assignees: []
@@ -10,6 +10,7 @@ body:
       label: "📝 Descrição"
       description: "Descreva a tarefa em uma ou duas frases. O que precisa ser feito?"
       placeholder: "Ex: Criar o componente de botão conforme Figma."
+    validations:
       required: true
   - type: textarea
     id: criterios
@@ -17,6 +18,7 @@ body:
       label: "✅ Critérios de Conclusão"
       description: "Como saberemos que a tarefa foi concluída com sucesso?"
       placeholder: "Ex: O botão deve estar funcionando e seguir o design."
+    validations:
       required: true
   - type: textarea
     id: contexto
@@ -24,4 +26,5 @@ body:
       label: "📎 Contexto"
       description: "Adicione qualquer link útil (Figma, documentação, etc.) ou informação extra."
       placeholder: "Links, instruções, prints, etc."
+    validations:
       required: false
