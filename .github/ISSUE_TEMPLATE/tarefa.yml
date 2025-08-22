@@ -1,4 +1,4 @@
- name: ✍️ Tarefa Simples
+name: ✍️ Tarefa Simples
 about: Uma tarefa direta, como a criação de um componente ou a correção de algo pequeno.
 title: "[TASK]"
 labels: ['task']
