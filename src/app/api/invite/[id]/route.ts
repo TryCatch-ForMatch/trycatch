@@ -70,7 +70,9 @@ export async function PATCH(request: NextRequest) {
       },
     });
 
-    if (existing) {
+    const userExisting = await prisma.user.findFirst({ where: { email } });
+
+    if (existing || userExisting) {
       return buildResponse({
         success: false,
         message: MESSAGES.INVITE.ALREADY_EXISTS,
