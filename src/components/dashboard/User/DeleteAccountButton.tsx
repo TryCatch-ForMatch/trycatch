@@ -1,10 +1,9 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { signOut } from 'next-auth/react';
 
 export function DeleteAccountButton({ userId }: { userId: string }) {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,7 +27,7 @@ export function DeleteAccountButton({ userId }: { userId: string }) {
         throw new Error(json.error || json.message || 'Erro ao excluir conta');
 
       alert(json.message || 'Conta excluída com sucesso.');
-      router.push('/portfolio');
+      await signOut({ callbackUrl: '/login' });
     } catch (err: unknown) {
       console.error(err);
       if (err instanceof Error) {
