@@ -94,8 +94,8 @@ export function LoginForm() {
           </Button>
         </form>
 
-        <Link href="/login" className="text-center text-sm text-zinc-500">
-          Nao tem uma conta ? <span className="underline">Resgistrar</span>
+        <Link href="/register" className="text-center text-sm text-zinc-500">
+          Não tem uma conta ? <span className="underline">Registrar</span>
         </Link>
       </section>
     </section>
