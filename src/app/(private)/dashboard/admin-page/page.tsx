@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { InviteForm, InviteList } from '@/components/Dashboard/Invite';
+import { InviteForm, InviteList } from '@/components/dashboard/invite';
 import Modal from '@/components/ui/modal';
 import {
   InviteCard,
@@ -12,10 +12,10 @@ import {
   SkillCard,
   StackCard,
   UserCard,
-} from '@/components/Dashboard/PainelCards';
-import { SkillForm, SkillList } from '@/components/Dashboard/Skill';
-import { UserAdminForm, UserAdminList } from '@/components/Dashboard/UserAdmin';
-import { TechStackForm, TechStackList } from '@/components/Dashboard/TechStack';
+} from '@/components/dashboard/PainelCards';
+import { SkillForm, SkillList } from '@/components/dashboard/skill';
+import { UserAdminForm, UserAdminList } from '@/components/dashboard/UserAdmin';
+import { TechStackForm, TechStackList } from '@/components/dashboard/TechStack';
 import { useState } from 'react';
 
 export default function AdminPage() {

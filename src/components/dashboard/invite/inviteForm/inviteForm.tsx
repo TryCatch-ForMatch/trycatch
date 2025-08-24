@@ -28,7 +28,8 @@ export function InviteForm() {
       const data = await response.json();
 
       if (response.ok) {
-        setSuccessMessage(`Código de convite gerado: ${data.code}`);
+        // console.log("<<CÓDIGO>>", data.data.code)
+        setSuccessMessage(`Código de convite gerado: ${data.data.code}`);
         setEmail('');
       } else {
         setErrorMessage(data.error || 'Erro ao criar convite.');

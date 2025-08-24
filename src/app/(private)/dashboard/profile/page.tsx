@@ -1,6 +1,6 @@
 'use client';
 
-import { UserEdit, DeleteAccountButton } from '@/components/Dashboard/User';
+import { UserEdit, DeleteAccountButton } from '@/components/dashboard/User';
 import { useEffect, useState } from 'react';
 import { User } from '@/types/user';
 
