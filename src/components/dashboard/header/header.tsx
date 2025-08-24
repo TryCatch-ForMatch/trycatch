@@ -1,5 +1,5 @@
 import { User } from 'next-auth';
-import { LogoutButton } from '@/components/Dashboard/LogoutButton/LogoutButton';
+import { LogoutButton } from '@/components/dashboard/LogoutButton/LogoutButton';
 
 type DashboardHeaderProps = {
   user: User;
