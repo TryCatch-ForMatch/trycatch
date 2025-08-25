@@ -1,2 +1,2 @@
-export { InviteForm } from '../invite/inviteForm/inviteForm';
-export { InviteList } from '../invite/inviteList/inviteList';
+export { InviteForm } from '../Invite/InviteForm/InviteForm';
+export { InviteList } from '../Invite/InviteList/InviteList';
