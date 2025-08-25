@@ -51,8 +51,9 @@ export async function POST(request: NextRequest) {
 
   try {
     const existing = await prisma.invite.findFirst({ where: { email } });
+    const userExisting = await prisma.user.findFirst({ where: { email } });
 
-    if (existing) {
+    if (existing || userExisting) {
       return buildResponse({
         success: false,
         message: MESSAGES.INVITE.ALREADY_EXISTS,

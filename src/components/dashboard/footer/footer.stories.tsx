@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { DashboardFooter } from './Footer';
+import { DashboardFooter } from './footer';
 
 const meta: Meta<typeof DashboardFooter> = {
   title: 'components/Dashboard/Footer',
