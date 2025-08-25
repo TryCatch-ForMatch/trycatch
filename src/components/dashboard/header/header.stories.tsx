@@ -1,9 +1,9 @@
 // TODO melhorar storie pois não está recebendo props etc (não aparece corretamente no storybook)
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { DashboardHeader } from './Header';
+import { DashboardHeader } from './header';
 
 const meta: Meta<typeof DashboardHeader> = {
-  title: 'Components/Dashboard/header',
+  title: 'components/dashboard/header',
   component: DashboardHeader,
   parameters: {
     layout: 'centered',

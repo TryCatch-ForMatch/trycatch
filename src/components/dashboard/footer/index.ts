@@ -1,1 +1,1 @@
-export { DashboardFooter } from './Footer';
+export { DashboardFooter } from './footer';
