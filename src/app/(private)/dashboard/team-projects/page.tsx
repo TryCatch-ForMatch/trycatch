@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import Modal from '@/components/ui/modal';
-import { CardProjectSummary } from '@/components/dashboard/TeamProject';
+import { CardProjectSummary } from '@/components/Dashboard/TeamProject';
 import { ProjectSummaryType } from '@/types/team-project';
-import { ProjectDetails } from '@/components/dashboard/TeamProject';
+import { ProjectDetails } from '@/components/Dashboard/TeamProject';
 
 export default function TeamProjectPage() {
   const [projects, setProjects] = useState<ProjectSummaryType[]>([]);
