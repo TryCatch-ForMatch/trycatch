@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { DashboardHeader } from '@/components/Dashboard/Header';
 import { DashboardFooter } from '@/components/Dashboard/Footer';
-import { Navbar } from '@/components/layout/navbar/navbar';
+import { Navbar } from '@/components/layout/navbar/Navbar';
 
 type DashboardLayoutProps = {
   children: ReactNode;

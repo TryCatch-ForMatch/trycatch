@@ -1,2 +1,2 @@
-export { SkillForm } from './skillForm';
-export { SkillList } from './skillList';
+export { SkillForm } from './SkillForm';
+export { SkillList } from './SkillList';
