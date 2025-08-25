@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { DashboardFooter } from './footer';
+import { DashboardFooter } from './Footer';
 
 const meta: Meta<typeof DashboardFooter> = {
-  title: 'components/dashboard/footer',
+  title: 'components/Dashboard/Footer',
   component: DashboardFooter,
   parameters: {
     layout: 'centered',
