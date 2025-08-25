@@ -12,7 +12,7 @@ import {
   SkillCard,
   StackCard,
   UserCard,
-} from '@/components/dashboard/PainelCards';
+} from '@/components/Dashboard/PainelCards';
 import { SkillForm, SkillList } from '@/components/Dashboard/Skill';
 import { UserAdminForm, UserAdminList } from '@/components/Dashboard/UserAdmin';
 import { TechStackForm, TechStackList } from '@/components/Dashboard/TechStack';
