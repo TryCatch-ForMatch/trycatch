@@ -44,7 +44,7 @@ export const MESSAGES = {
   INVITE: {
     NOT_FOUND: 'Convite não encontrado.',
     VALID: 'Convite válido.',
-    ALREADY_EXISTS: 'Já existe um convite com este email.',
+    ALREADY_EXISTS: 'Já existe um convite ou usuário com este email.',
     INTERNAL_DELETE_ERROR: 'Erro interno ao excluir convite.',
     INTERNAL_ERROR: 'Erro interno ao processar convite.',
     FETCH_SUCCESS: 'Convites carregados com sucesso.',
