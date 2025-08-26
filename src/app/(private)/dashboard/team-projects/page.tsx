@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Modal from '@/components/ui/modal';
+import Modal from '@/components/UI/modal';
 import { CardProjectSummary } from '@/components/Dashboard/TeamProject';
 import { ProjectSummaryType } from '@/types/team-project';
 import { ProjectDetails } from '@/components/Dashboard/TeamProject';

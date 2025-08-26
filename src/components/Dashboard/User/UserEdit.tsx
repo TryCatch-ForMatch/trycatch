@@ -1,0 +1,268 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { User } from '@/types/user';
+import { z } from 'zod';
+
+import { Input } from '@/components/UI/input';
+import { Textarea } from '@/components/UI/textarea';
+import { Button } from '@/components/UI/button';
+import { Card, CardContent } from '@/components/UI/card';
+import { Label } from '@/components/UI/label';
+
+const userEditFormSchema = z.object({
+  name: z.string().min(1, 'O nome é obrigatório.'),
+  email: z.string().email('Email inválido.'),
+  password: z
+    .string()
+    .min(6, 'Senha deve ter pelo menos 6 caracteres.')
+    .optional()
+    .or(z.literal('')),
+  avatar: z.string().url('URL inválida').optional().or(z.literal('')),
+  linkedin: z.string().url('URL inválida').optional().or(z.literal('')),
+  github: z.string().url('URL inválida').optional().or(z.literal('')),
+  bio: z.string().optional(),
+});
+
+type UserEditFormValues = z.infer<typeof userEditFormSchema>;
+
+interface UserEditProps {
+  user: User;
+}
+
+export function UserEdit({ user }: UserEditProps) {
+  const router = useRouter();
+
+  const [apiError, setApiError] = useState<string | null>(null);
+  const [apiSuccess, setApiSuccess] = useState<string | null>(null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<UserEditFormValues>({
+    resolver: zodResolver(userEditFormSchema),
+    defaultValues: {
+      name: user.name,
+      email: user.email,
+      password: '',
+      avatar: user.avatar || '',
+      linkedin: user.linkedin || '',
+      github: user.github || '',
+      bio: user.bio || '',
+    },
+  });
+
+  const avatarPreview = watch('avatar');
+
+  async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingAvatar(true);
+    setApiError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await fetch('/api/upload/avatar', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error('Falha no upload do avatar');
+
+      const json = await res.json();
+      if (json.url) {
+        setValue('avatar', json.url, { shouldValidate: true });
+      } else {
+        throw new Error('Servidor não retornou a URL do avatar');
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setApiError(err.message);
+      } else {
+        setApiError('Erro no upload do avatar');
+      }
+    } finally {
+      setUploadingAvatar(false);
+    }
+  }
+
+  const onSubmit = async (values: UserEditFormValues) => {
+    setApiError(null);
+    setApiSuccess(null);
+
+    try {
+      const res = await fetch(`/api/user/${user.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erro ao atualizar usuário');
+
+      setApiSuccess('Perfil atualizado com sucesso!');
+      router.refresh();
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setApiError(err.message);
+      } else {
+        setApiError('Erro ao atualizar usuário');
+      }
+    } finally {
+      setUploadingAvatar(false);
+    }
+  };
+
+  return (
+    <Card className="rounded-2xl p-6 shadow-lg">
+      <CardContent>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* Nome */}
+          <div>
+            <Label>Nome</Label>
+            <Input {...register('name')} aria-invalid={!!errors.name} />
+            {errors.name && (
+              <p className="text-sm text-red-500">{errors.name.message}</p>
+            )}
+          </div>
+
+          {/* Email */}
+          <div>
+            <Label>Email</Label>
+            <Input type="email" {...register('email')} />
+            {errors.email && (
+              <p className="text-sm text-red-500">{errors.email.message}</p>
+            )}
+          </div>
+
+          {/* Senha */}
+          <div>
+            <Label>Senha (opcional)</Label>
+            <Input type="password" {...register('password')} />
+            {errors.password && (
+              <p className="text-sm text-red-500">{errors.password.message}</p>
+            )}
+          </div>
+
+          {/* LinkedIn & GitHub */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div>
+              <Label>LinkedIn</Label>
+              <Input {...register('linkedin')} />
+              {errors.linkedin && (
+                <p className="text-sm text-red-500">
+                  {errors.linkedin.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <Label>GitHub</Label>
+              <Input {...register('github')} />
+              {errors.github && (
+                <p className="text-sm text-red-500">{errors.github.message}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Avatar + preview */}
+          <div>
+            <Label>Avatar</Label>
+
+            {/* input file para upload */}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              disabled={uploadingAvatar}
+              className="block w-full text-sm text-gray-900 file:mr-4 file:rounded-full file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 hover:file:bg-indigo-100"
+            />
+
+            {/* preview do avatar atual */}
+            {avatarPreview && (
+              <img
+                src={avatarPreview}
+                alt="Avatar Preview"
+                className="mt-2 h-16 w-16 rounded-full border object-cover"
+              />
+            )}
+
+            {/* status de upload */}
+            {uploadingAvatar && (
+              <p className="mt-1 text-sm text-gray-500">Enviando avatar...</p>
+            )}
+
+            {errors.avatar && (
+              <p className="text-sm text-red-500">{errors.avatar.message}</p>
+            )}
+          </div>
+
+          {/* Bio */}
+          <div>
+            <Label>Bio</Label>
+            <Textarea {...register('bio')} />
+          </div>
+
+          {/* Skills */}
+          {/* <div>
+            <Label>Skills</Label>
+            {!loadingSkills && (
+              <>
+                <Select onValueChange={handleAddSkill} value="">
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Selecione uma skill" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availableSkills.map((skill) => (
+                      <SelectItem key={skill.id} value={skill.id}>
+                        {skill.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {selectedSkills.map((skillId) => {
+                    const skill = skills.find((s) => s.id === skillId);
+                    return (
+                      <span
+                        key={skillId}
+                        className="flex items-center gap-1 rounded-full bg-gray-200 px-3 py-1 text-xs"
+                      >
+                        {skill?.name || skillId}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveSkill(skillId)}
+                          className="ml-1 text-gray-500 hover:text-red-500"
+                        >
+                          <X size={12} />
+                        </button>
+                      </span>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+          </div> */}
+
+          {/* API errors/success */}
+          {apiError && <p className="text-sm text-red-500">{apiError}</p>}
+          {apiSuccess && <p className="text-sm text-green-500">{apiSuccess}</p>}
+
+          {/* Submit */}
+          <Button type="submit" disabled={isSubmitting} className="w-full">
+            {isSubmitting ? 'Salvando...' : 'Salvar Alterações'}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
