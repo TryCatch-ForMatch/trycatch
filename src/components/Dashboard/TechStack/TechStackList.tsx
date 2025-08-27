@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { Pencil, Trash, Check, X } from 'lucide-react';
-import { Card, CardContent } from '@/components/UI/card';
-import { Button } from '@/components/UI/button';
-import { Input } from '@/components/UI/input';
-import { ConfirmDialog } from '@/components/UI/confirm-dialog';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 
 type Stack = {
   id: string;

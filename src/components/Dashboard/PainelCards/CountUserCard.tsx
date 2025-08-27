@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardContent } from '@/components/UI/card';
+import { Card, CardContent } from '@/components/ui/card';
 
 export function UserCard() {
   const [userCount, setUserCount] = useState<number | null>(null);

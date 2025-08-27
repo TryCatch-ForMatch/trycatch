@@ -6,18 +6,18 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Input } from '@/components/UI/input';
-import { Button } from '@/components/UI/button';
-import { Card, CardContent } from '@/components/UI/card';
-import { Label } from '@/components/UI/label';
-import { Textarea } from '@/components/UI/textarea';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from '@/components/UI/select';
+} from '@/components/ui/select';
 import { X } from 'lucide-react';
 import { Skill } from '@prisma/client';
 

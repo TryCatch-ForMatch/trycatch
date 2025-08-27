@@ -3,9 +3,9 @@
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/UI/button';
+import { Button } from '@/components/ui/button';
 import { InviteForm, InviteList } from '@/components/Dashboard/Invite';
-import Modal from '@/components/UI/modal';
+import Modal from '@/components/ui/modal';
 import {
   InviteCard,
   ProjectCard,

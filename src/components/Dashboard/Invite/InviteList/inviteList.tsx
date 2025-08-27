@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardContent } from '@/components/UI/card';
-import { Button } from '@/components/UI/button';
-import { Input } from '@/components/UI/input';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Pencil, Trash, Check, X } from 'lucide-react';
 
 type Invite = {

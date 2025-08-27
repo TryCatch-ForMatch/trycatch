@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogClose,
-} from '@/components/UI/dialog';
+} from '@/components/ui/dialog';
 
 import { Button } from './button';
 import { X } from 'lucide-react';

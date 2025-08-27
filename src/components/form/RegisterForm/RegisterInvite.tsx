@@ -6,8 +6,8 @@ import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 
 //import components
-import { Input } from '@/components/UI/input';
-import { Button } from '@/components/UI/button';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 //import icons
 import { Loader2 } from 'lucide-react';

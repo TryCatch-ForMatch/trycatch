@@ -6,8 +6,8 @@ import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 
 //import components
-import { Button } from '@/components/UI/button';
-import { Input } from '@/components/UI/input';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 //import icons
 import { Loader2 } from 'lucide-react';

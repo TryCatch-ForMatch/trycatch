@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardContent } from '@/components/UI/card';
+import { Card, CardContent } from '@/components/ui/card';
 
 export function SkillCard() {
   const [skillCount, setSkillCount] = useState<number | null>(null);

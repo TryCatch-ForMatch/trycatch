@@ -9,10 +9,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
 //import components
-import { Input } from '@/components/UI/input';
-import { Button } from '@/components/UI/button';
-import { Label } from '@/components/UI/label';
-import { Textarea } from '@/components/UI/textarea';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 const schema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),

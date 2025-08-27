@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent } from '@/components/UI/card';
-import { Label } from '@/components/UI/label';
-import { Input } from '@/components/UI/input';
-import { Button } from '@/components/UI/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 export function SkillForm() {
   const [name, setName] = useState('');

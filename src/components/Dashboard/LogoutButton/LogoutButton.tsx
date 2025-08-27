@@ -1,7 +1,7 @@
 'use client';
 
 import { signOut } from 'next-auth/react';
-import { Button } from '@/components/UI/button'; // nosso botão padrão shadcn
+import { Button } from '@/components/ui/button'; // nosso botão padrão shadcn
 import { LogOut } from 'lucide-react'; // ícone padrão de logout
 
 export function LogoutButton() {

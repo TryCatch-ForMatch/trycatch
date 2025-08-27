@@ -3,18 +3,18 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm, useFieldArray } from 'react-hook-form';
-import { Input } from '@/components/UI/input';
-import { Button } from '@/components/UI/button';
-import { Card, CardContent } from '@/components/UI/card';
-import { Label } from '@/components/UI/label';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from '@/components/UI/select';
-import { Switch } from '@/components/UI/switch';
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import { X } from 'lucide-react';
 import { Skill } from '@prisma/client';
 import { zodResolver } from '@hookform/resolvers/zod';

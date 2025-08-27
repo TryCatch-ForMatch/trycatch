@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent } from '@/components/UI/card';
-import { Button } from '@/components/UI/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Pencil, Trash } from 'lucide-react';
 import { BasicUser, FullUser } from '@/types/user';
 import { EditUserAdminForm } from './EditUserAdminForm';
-import Modal from '@/components/UI/modal';
+import Modal from '@/components/ui/modal';
 
 export function UserAdminList() {
   const [users, setUsers] = useState<BasicUser[]>([]);
