@@ -1,3 +1,0 @@
-describe('<InviteForm/>', () => {
-  it('should', () => {});
-});
