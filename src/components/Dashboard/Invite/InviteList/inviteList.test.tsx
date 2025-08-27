@@ -1,0 +1,3 @@
+describe('<InviteList/>', () => {
+  it('should', () => {});
+});
