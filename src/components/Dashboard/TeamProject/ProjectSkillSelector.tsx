@@ -87,7 +87,8 @@ export function ProjectSkillSelector() {
                     <Image
                       src={skill.iconUrl}
                       alt={skill.name}
-                      className="h-5 w-5"
+                      width={15}
+                      height={3}
                     />
                   )}
                   {skill.name}
