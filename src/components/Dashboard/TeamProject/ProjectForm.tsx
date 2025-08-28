@@ -107,7 +107,7 @@ export function ProjectForm() {
     <FormProvider {...methods}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="grid w-full grid-cols-2 gap-6"
+        className="mb-5 grid w-full grid-cols-2 gap-6"
       >
         {/* Coluna Esquerda */}
         <div className="flex flex-col gap-4">
@@ -127,7 +127,6 @@ export function ProjectForm() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium">Stacks</label>
             <ProjectStackSelector />
             {errors.stacks && (
               <p className="text-sm text-red-500">
