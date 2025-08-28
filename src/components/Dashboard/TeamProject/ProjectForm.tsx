@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { ProjectStackSelector } from './ProjectStackSelector';
+import { ProjectSkillSelector } from './ProjectSkillSelector';
+import { useCurrentUser } from '@/lib/use-current-user';
 
 const projectSchema = z.object({
   name: z.string().min(3, 'Nome do projeto é obrigatório'),
@@ -22,31 +24,28 @@ const projectSchema = z.object({
     },
     { message: 'Data deve ser válida e futura' }
   ),
-  totalValue: z
-    .string()
-    .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
-      message: 'Valor total deve ser maior ou igual a 0',
-    }),
+  totalValue: z.number().min(0, 'Valor total deve ser maior ou igual a 0'),
   stacks: z
     .array(
       z.object({
         stackId: z.string().min(1, 'Selecione uma stack'),
-        percentage: z
-          .number()
-          .min(1, 'Percentual mínimo é 1')
-          .max(100, 'Percentual máximo é 100'),
+        percentage: z.number().min(1).max(100),
       })
     )
     .min(1, 'Selecione pelo menos uma stack')
     .refine((arr) => arr.reduce((sum, s) => sum + s.percentage, 0) === 100, {
       message: 'A soma dos percentuais deve ser 100%',
     }),
+  skills: z
+    .array(z.string().min(1, 'Selecione ao menos uma skill'))
+    .min(1, 'Selecione ao menos uma skill'),
 });
 
-type ProjectFormData = z.infer<typeof projectSchema>;
+export type ProjectFormData = z.infer<typeof projectSchema>;
 
 export function ProjectForm() {
   const router = useRouter();
+  const user = useCurrentUser();
 
   const methods = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -54,8 +53,9 @@ export function ProjectForm() {
       name: '',
       description: '',
       deadline: '',
-      totalValue: '',
+      totalValue: 0,
       stacks: [{ stackId: '', percentage: 0 }],
+      skills: [],
     },
   });
 
@@ -65,13 +65,24 @@ export function ProjectForm() {
     formState: { errors, isSubmitting },
   } = methods;
 
-  const onSubmit = async (data: ProjectFormData) => {
+  const onSubmit: (data: ProjectFormData) => Promise<void> = async (data) => {
+    if (!user) {
+      alert('Você precisa estar logado para criar um projeto.');
+      return;
+    }
+
     try {
       const payload = {
-        ...data,
-        totalValue: parseFloat(data.totalValue),
+        name: data.name,
+        description: data.description,
+        deadline: data.deadline,
+        totalValue: data.totalValue,
         status: 'BUSCANDO',
+        skills: data.skills,
+        stacks: data.stacks,
       };
+
+      console.log('Payload enviado:', payload);
 
       const res = await fetch('/api/team-project', {
         method: 'POST',
@@ -80,12 +91,14 @@ export function ProjectForm() {
       });
 
       if (!res.ok) {
+        const error = await res.json().catch(() => null);
+        console.error('Erro da API:', error);
         throw new Error('Erro ao criar projeto');
       }
 
       router.push('/dashboard/team-projects');
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       alert('Erro ao salvar projeto');
     }
   };
@@ -106,16 +119,20 @@ export function ProjectForm() {
             )}
           </div>
 
-          {/* Espaço para ProjectSkillSelector no futuro */}
-          <div className="flex h-[140px] items-center justify-center border border-dashed border-gray-300">
-            <span className="text-gray-400">ProjectSkillSelector aqui</span>
+          <div>
+            <ProjectSkillSelector />
+            {errors.skills && (
+              <p className="text-sm text-red-500">{errors.skills.message}</p>
+            )}
           </div>
 
           <div>
             <label className="mb-1 block text-sm font-medium">Stacks</label>
             <ProjectStackSelector />
             {errors.stacks && (
-              <p className="text-sm text-red-500">{errors.stacks.message}</p>
+              <p className="text-sm text-red-500">
+                {'message' in errors.stacks ? errors.stacks.message : ''}
+              </p>
             )}
           </div>
         </div>
@@ -137,7 +154,6 @@ export function ProjectForm() {
             )}
           </div>
 
-          {/* Prazo e Valor lado a lado */}
           <div className="flex gap-4">
             <div className="flex-1">
               <label className="mb-1 block text-sm font-medium">Prazo</label>
@@ -156,12 +172,13 @@ export function ProjectForm() {
               <Input
                 type="number"
                 step="0.01"
-                placeholder="0.00"
-                {...register('totalValue')}
+                {...register('totalValue', { valueAsNumber: true })}
               />
               {errors.totalValue && (
                 <p className="text-sm text-red-500">
-                  {errors.totalValue.message}
+                  {'message' in errors.totalValue
+                    ? errors.totalValue.message
+                    : ''}
                 </p>
               )}
             </div>
