@@ -1,6 +1,6 @@
 export function CardProjectSummarySkeleton() {
   return (
-    <div className="cursor-pointer rounded-xl border p-4">
+    <div className="cursor-pointer rounded-md border p-4">
       {/* Nome do projeto */}
       <div className="mb-2 h-5 w-2/3 animate-pulse rounded bg-gray-200"></div>
 
