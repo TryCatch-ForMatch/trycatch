@@ -71,7 +71,7 @@ export function ProjectStackSelector() {
         : '';
 
   return (
-    <div className="flex w-[540px] flex-col gap-3">
+    <div className="flex flex-col gap-3">
       {/* Título e botão adicionar */}
       <div className="flex h-[33px] items-center justify-between">
         <span className="text-lg font-medium text-[#312E41]">Stacks</span>
