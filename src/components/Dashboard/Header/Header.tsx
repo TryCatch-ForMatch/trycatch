@@ -1,17 +1,64 @@
-import { User } from 'next-auth';
-import { LogoutButton } from '@/components/Dashboard/LogoutButton/LogoutButton';
+'use client';
+import { signOut } from 'next-auth/react';
 
-type DashboardHeaderProps = {
-  user: User;
-};
+//import components
+import { Button } from '@/components/ui/button';
 
-export function DashboardHeader({ user }: DashboardHeaderProps) {
+//import Icons
+import { Clock, Check, Ellipsis, LogOut } from 'lucide-react';
+
+export function DashboardHeader() {
   return (
-    <header className="flex items-center justify-between p-4">
-      <div>
-        <h1>Dashboard - Bem-vindo, {user.name ?? 'Usuário'}</h1>
+    <header className="flex w-full items-center justify-between border-b border-gray-300 p-4 py-5">
+      {/* Buttons actios */}
+      <div className="flex items-center gap-10">
+        <Button
+          variant="outline"
+          size="default"
+          className="font-regular flex items-center justify-center gap-2"
+        >
+          <span className="text-[#3B38A1]">
+            <Check />
+          </span>
+          <span>1 Finalizados</span>
+        </Button>
+
+        <Button
+          variant="outline"
+          size="default"
+          className="font-regular flex items-center justify-center gap-2"
+        >
+          <span className="text-[#3B38A1]">
+            <Clock />
+          </span>
+          <span className="font-regular">2 Em produção</span>
+        </Button>
+
+        <Button
+          variant="outline"
+          size="default"
+          className="font-regular flex items-center justify-center gap-2"
+        >
+          <span className="text-[#3B38A1]">
+            <Ellipsis />
+          </span>
+          <span>1 Aberto</span>
+        </Button>
       </div>
-      <LogoutButton />
+
+      <div>
+        <Button
+          onClick={() => signOut({ callbackUrl: '/' })}
+          variant="outline"
+          size="default"
+          className="font-regular flex items-center justify-center gap-2"
+        >
+          <span className="text-[#3B38A1]">
+            <LogOut />
+          </span>
+          <span>Desconectar</span>
+        </Button>
+      </div>
     </header>
   );
 }
