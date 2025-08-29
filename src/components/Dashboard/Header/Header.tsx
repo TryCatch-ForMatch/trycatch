@@ -5,7 +5,7 @@ import { signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 
 //import Icons
-import { AlarmClock, Check, Ellipsis, LogOut } from 'lucide-react';
+import { Clock, Check, Ellipsis, LogOut } from 'lucide-react';
 
 export function DashboardHeader() {
   return (
@@ -17,7 +17,7 @@ export function DashboardHeader() {
           size="default"
           className="font-regular flex items-center justify-center gap-2"
         >
-          <span>
+          <span className="text-[#3B38A1]">
             <Check />
           </span>
           <span>1 Finalizados</span>
@@ -28,8 +28,8 @@ export function DashboardHeader() {
           size="default"
           className="font-regular flex items-center justify-center gap-2"
         >
-          <span className="font-regular">
-            <AlarmClock />
+          <span className="text-[#3B38A1]">
+            <Clock />
           </span>
           <span className="font-regular">2 Em produção</span>
         </Button>
@@ -39,7 +39,7 @@ export function DashboardHeader() {
           size="default"
           className="font-regular flex items-center justify-center gap-2"
         >
-          <span>
+          <span className="text-[#3B38A1]">
             <Ellipsis />
           </span>
           <span>1 Aberto</span>
@@ -53,7 +53,7 @@ export function DashboardHeader() {
           size="default"
           className="font-regular flex items-center justify-center gap-2"
         >
-          <span>
+          <span className="text-[#3B38A1]">
             <LogOut />
           </span>
           <span>Desconectar</span>

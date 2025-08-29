@@ -7,6 +7,7 @@ import { useState } from 'react';
 //import components
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
+
 //import icons
 import {
   Home,
@@ -16,6 +17,7 @@ import {
   ChevronRight,
   ChevronLeft,
   FolderKanban,
+  MessageCircleQuestion,
 } from 'lucide-react';
 
 export function Navbar() {
@@ -124,7 +126,7 @@ export function Navbar() {
                 href="/dashboard/user-config"
                 className={`flex items-center gap-2 ${isSidebarOpen ? 'justify-start' : 'justify-center'} ${pathname === '/dashboard/user-config' ? 'rounded-sm bg-[#3B38A0] p-2 text-gray-50' : 'bg-transparent'} `}
               >
-                <Bolt />
+                <Bolt size={20} />
                 <span className={`${isSidebarOpen ? 'block' : 'hidden'}`}>
                   Configurações
                 </span>
@@ -145,8 +147,14 @@ export function Navbar() {
       </Button>
       {/* Rodapé - Dúvidas Frequentes */}
       <div className="text-sm">
-        <Link href="/faq" className="text-gray-600">
-          Dúvidas Frequentes
+        <Link
+          href="/faq"
+          className={`flex items-center gap-2 ${isSidebarOpen ? 'justify-start' : 'justify-center'}`}
+        >
+          <MessageCircleQuestion size={20} />
+          <span className={`${isSidebarOpen ? 'block' : 'hidden'}`}>
+            Duvidas Frequentes
+          </span>
         </Link>
       </div>
     </aside>
