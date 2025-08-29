@@ -2,9 +2,9 @@ import { ReactNode } from 'react';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-import { DashboardHeader } from '@/components/Dashboard/Header';
-import { DashboardFooter } from '@/components/Dashboard/Footer';
-import { Navbar } from '@/components/layout/Navbar';
+
+//import providers
+import { SidebarProvider } from '@/Context/SidebarContextOpenClose';
 
 type DashboardLayoutProps = {
   children: ReactNode;
@@ -19,14 +19,5 @@ export default async function DashboardLayout({
     redirect('/login');
   }
 
-  return (
-    <div>
-      <Navbar></Navbar>
-      <div className="pl-[272px]">
-        <DashboardHeader user={session.user} />
-        <main>{children}</main>
-        <DashboardFooter />
-      </div>
-    </div>
-  );
+  return <main>{children}</main>;
 }

@@ -1,7 +1,9 @@
+import BasePage from '@/components/Dashboard/BasePage';
+
 export default function PortfoliosPage() {
   return (
-    <main>
+    <BasePage>
       <h1>Lista de Portfolios</h1>
-    </main>
+    </BasePage>
   );
 }
