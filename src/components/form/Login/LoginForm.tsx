@@ -4,6 +4,7 @@ import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 //import components
 import { Button } from '@/components/ui/button';
@@ -15,7 +16,6 @@ import { Loader2 } from 'lucide-react';
 export function LoginForm() {
   const router = useRouter();
   const [form, setForm] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -34,13 +34,14 @@ export function LoginForm() {
       });
 
       if (res?.ok) {
+        toast.success('Login realizado com sucesso! 🚀');
         router.push('/dashboard');
       } else {
-        setError('E-mail ou senha inválidos');
+        toast.error('E-mail ou senha inválidos ❌');
       }
-      console.log(res);
     } catch (error) {
-      console.log('Ocorreu um erro, tente novamente!', error);
+      toast.error('Ocorreu um erro, tente novamente!');
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -49,11 +50,6 @@ export function LoginForm() {
   return (
     <section className="flex min-h-screen flex-col items-center justify-center gap-3">
       <section className="flex w-full max-w-md flex-col gap-4 rounded-md border border-[#71717b67] p-8 px-4">
-        {error && (
-          <p className="absolute top-10 mx-auto rounded-md bg-red-300 p-4 px-8 text-red-600">
-            {error}
-          </p>
-        )}
         <h2 className="mx-auto text-2xl font-bold text-[#3B38A0]">TryCatch</h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
