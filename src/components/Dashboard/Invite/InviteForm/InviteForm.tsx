@@ -5,18 +5,15 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 export function InviteForm() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setSuccessMessage('');
-    setErrorMessage('');
 
     try {
       const response = await fetch('/api/invite', {
@@ -29,14 +26,14 @@ export function InviteForm() {
 
       if (response.ok) {
         // console.log("<<CÓDIGO>>", data.data.code)
-        setSuccessMessage(`Código de convite gerado: ${data.data.code}`);
+        toast.success(`Código de convite gerado: ${data.data.code}`);
         setEmail('');
       } else {
-        setErrorMessage(data.error || 'Erro ao criar convite.');
+        toast.error(data.error || 'Erro ao criar convite.');
       }
     } catch (error) {
       console.error('Erro ao enviar convite:', error);
-      setErrorMessage('Erro na requisição. Tente novamente.');
+      toast.error('Erro na requisição. Tente novamente.');
     } finally {
       setLoading(false);
     }
@@ -59,17 +56,6 @@ export function InviteForm() {
               placeholder="nome@email.com"
             />
           </div>
-
-          {/* Mensagens de erro/sucesso */}
-          {successMessage && (
-            <p className="text-sm font-medium text-green-500">
-              {successMessage}
-            </p>
-          )}
-          {errorMessage && (
-            <p className="text-sm font-medium text-red-500">{errorMessage}</p>
-          )}
-
           <Button type="submit" disabled={loading} className="w-full">
             {loading ? 'Enviando...' : 'Criar Convite'}
           </Button>
