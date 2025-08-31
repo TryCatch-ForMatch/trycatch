@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
+import { toast } from 'sonner';
 
 //import components
 import { Input } from '@/components/ui/input';
@@ -23,22 +24,18 @@ export default function RegisterForm() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [inviteCode, setInviteCode] = useState('');
-  const [formError, setFormError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<{
     email?: string;
     inviteCode?: string;
   }>({});
-
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setFormError(null);
     setFieldErrors({});
 
     const formData = { email, inviteCode };
-
     const validation = inviteSchema.safeParse(formData);
 
     if (!validation.success) {
@@ -49,31 +46,30 @@ export default function RegisterForm() {
       });
 
       setFieldErrors(errors);
+      toast.error('Preencha os campos corretamente.');
       setLoading(false);
       return;
     }
 
-    //// Verificacao pendente
     try {
       const res = await fetch('/api/invite', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
       if (res.ok) {
+        toast.success('Convite validado com sucesso! 🎉');
         router.push(
           `/signup?email=${encodeURIComponent(email)}&inviteCode=${encodeURIComponent(inviteCode)}`
         );
       } else {
         const data = await res.json();
-        setFormError(data.error || 'Erro ao validar convite.');
+        toast.error(data.error || 'Erro ao validar convite.');
       }
     } catch (error) {
-      console.log(error);
-      setFormError('Erro inesperado. Tente novamente.');
+      console.error(error);
+      toast.error('Erro inesperado. Tente novamente.');
     } finally {
       setLoading(false);
     }
@@ -81,12 +77,6 @@ export default function RegisterForm() {
 
   return (
     <section className="flex min-h-screen items-center justify-center">
-      {formError && (
-        <div className="mx-auto text-center text-sm font-medium text-red-500">
-          {formError}
-        </div>
-      )}
-
       <div className="flex w-full max-w-md flex-col gap-4 rounded-md border border-[#71717b67] p-8 px-4">
         <h2 className="mx-auto text-2xl font-bold text-[#3B38A0]">
           Registre seu Convite
@@ -138,7 +128,7 @@ export default function RegisterForm() {
         </form>
 
         <Link href="/login" className="text-center text-sm text-zinc-500">
-          Ja tem uma conta ? <span className="underline">Entrar</span>
+          Já tem uma conta ? <span className="underline">Entrar</span>
         </Link>
       </div>
     </section>

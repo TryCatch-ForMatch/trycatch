@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { Loader2 } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { toast } from 'sonner';
 
 //import components
 import { Input } from '@/components/ui/input';
@@ -30,9 +31,6 @@ type FormData = z.infer<typeof schema>;
 export default function UserSignupForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
-  const [submitError, setSubmitError] = useState('');
-  const [success, setSuccess] = useState('');
 
   const {
     register,
@@ -68,9 +66,6 @@ export default function UserSignupForm() {
   }, [searchParams, setValue, router]);
 
   const onSubmit = async (data: FormData) => {
-    setSubmitError('');
-    setSuccess('');
-
     try {
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
@@ -83,11 +78,13 @@ export default function UserSignupForm() {
         throw new Error(json.error || 'Erro ao cadastrar usuário');
       }
 
-      setSuccess('Usuário criado com sucesso!');
+      toast.success('Usuário criado com sucesso! 🎉');
       router.push('/login');
     } catch (err) {
       if (err instanceof Error) {
-        setSubmitError(err.message);
+        toast.error(err.message);
+      } else {
+        toast.error('Erro inesperado, tente novamente.');
       }
     }
   };
@@ -165,14 +162,6 @@ export default function UserSignupForm() {
           {/* Invite code (hidden) */}
           <input type="hidden" {...register('inviteCode')} />
 
-          {/* Mensagens */}
-          {submitError && (
-            <p className="text-sm font-medium text-red-500">{submitError}</p>
-          )}
-          {success && (
-            <p className="text-sm font-medium text-green-500">{success}</p>
-          )}
-
           {/* Botão */}
           <Button type="submit" disabled={isSubmitting} className="w-full">
             {isSubmitting ? (
@@ -186,7 +175,7 @@ export default function UserSignupForm() {
           </Button>
         </form>
         <Link href="/register" className="text-center text-sm text-zinc-500">
-          Ja tem uma conta ? <span className="underline">Entrar</span>
+          Já tem uma conta ? <span className="underline">Entrar</span>
         </Link>
       </section>
     </section>
