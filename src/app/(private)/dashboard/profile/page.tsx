@@ -3,10 +3,10 @@
 import { UserEdit, DeleteAccountButton } from '@/components/Dashboard/User';
 import { useEffect, useState } from 'react';
 import { User } from '@/types/user';
+import { toast } from 'sonner';
 
 export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/user/me', { credentials: 'include' })
@@ -14,11 +14,15 @@ export default function ProfilePage() {
         if (!res.ok) throw new Error('Erro ao buscar usuário');
         return res.json();
       })
-      .then(setUser)
-      .catch((err) => setError(err.message));
+      .then((data) => {
+        setUser(data);
+        toast.success('Perfil carregado com sucesso!');
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
   }, []);
 
-  if (error) return <p className="text-red-500">{error}</p>;
   if (!user) return <p>Carregando perfil...</p>;
 
   return (
