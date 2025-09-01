@@ -25,7 +25,8 @@ export function TechStackForm() {
       const data = await response.json();
 
       if (response.ok) {
-        toast.success(`Stack "${data.name}" cadastrada com sucesso!`);
+        console.log(data.data.name, ':: STACK ::');
+        toast.success(`Stack "${data.data.name}" cadastrada com sucesso!`);
         setName('');
       } else {
         toast.error(data.error || 'Erro ao cadastrar stack.');

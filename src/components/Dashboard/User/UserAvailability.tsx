@@ -19,6 +19,7 @@ import { X } from 'lucide-react';
 import { Skill } from '@prisma/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { toast } from 'sonner';
 
 const schema = z.object({
   isMentor: z.boolean(),
@@ -52,8 +53,6 @@ export function UserAvailabilityForm() {
   const router = useRouter();
 
   const [skills, setSkills] = useState<Skill[]>([]);
-  const [submitError, setSubmitError] = useState('');
-  const [success, setSuccess] = useState('');
 
   const {
     control,
@@ -112,9 +111,6 @@ export function UserAvailabilityForm() {
   }, []);
 
   const onSubmit = async (data: FormData) => {
-    setSubmitError('');
-    setSuccess('');
-
     try {
       const res = await fetch('/api/user-availability', {
         method: 'POST',
@@ -129,11 +125,11 @@ export function UserAvailabilityForm() {
         );
       }
 
-      setSuccess('Configurações do usuário criadas com sucesso!');
+      toast.success('Configurações do usuário criadas com sucesso!');
       router.push('/dashboard/team-projects');
     } catch (err) {
       if (err instanceof Error) {
-        setSubmitError(err.message);
+        toast.error(err.message);
       }
     }
   };
@@ -274,17 +270,6 @@ export function UserAvailabilityForm() {
           <Button type="submit" disabled={isSubmitting} className="w-full">
             {isSubmitting ? 'Salvando...' : 'Salvar'}
           </Button>
-
-          {submitError && (
-            <p className="text-center text-sm font-medium text-red-600">
-              {submitError}
-            </p>
-          )}
-          {success && (
-            <p className="text-center text-sm font-medium text-green-600">
-              {success}
-            </p>
-          )}
         </form>
       </CardContent>
     </Card>

@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { toast } from 'sonner';
 
 const userEditFormSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
@@ -35,11 +36,6 @@ interface UserEditProps {
 
 export function UserEdit({ user }: UserEditProps) {
   const router = useRouter();
-
-  const [apiError, setApiError] = useState<string | null>(null);
-  const [apiSuccess, setApiSuccess] = useState<string | null>(null);
-  const [uploadingAvatar, setUploadingAvatar] = useState(false);
-
   const {
     register,
     handleSubmit,
@@ -58,16 +54,15 @@ export function UserEdit({ user }: UserEditProps) {
       bio: user.bio || '',
     },
   });
-
   const avatarPreview = watch('avatar');
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setUploadingAvatar(true);
-    setApiError(null);
-
     try {
       const formData = new FormData();
       formData.append('file', file);
@@ -82,24 +77,20 @@ export function UserEdit({ user }: UserEditProps) {
       const json = await res.json();
       if (json.url) {
         setValue('avatar', json.url, { shouldValidate: true });
+        toast.success('Avatar atualizado com sucesso!');
       } else {
         throw new Error('Servidor não retornou a URL do avatar');
       }
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setApiError(err.message);
-      } else {
-        setApiError('Erro no upload do avatar');
-      }
+      if (err instanceof Error) toast.error(err.message);
+      else toast.error('Erro no upload do avatar');
     } finally {
       setUploadingAvatar(false);
     }
   }
 
   const onSubmit = async (values: UserEditFormValues) => {
-    setApiError(null);
-    setApiSuccess(null);
-
+    setIsSaving(true);
     try {
       const res = await fetch(`/api/user/${user.id}`, {
         method: 'PUT',
@@ -110,16 +101,13 @@ export function UserEdit({ user }: UserEditProps) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Erro ao atualizar usuário');
 
-      setApiSuccess('Perfil atualizado com sucesso!');
+      toast.success('Perfil atualizado com sucesso!');
       router.refresh();
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setApiError(err.message);
-      } else {
-        setApiError('Erro ao atualizar usuário');
-      }
+      if (err instanceof Error) toast.error(err.message);
+      else toast.error('Erro ao atualizar usuário');
     } finally {
-      setUploadingAvatar(false);
+      setIsSaving(false);
     }
   };
 
@@ -252,10 +240,6 @@ export function UserEdit({ user }: UserEditProps) {
               </>
             )}
           </div> */}
-
-          {/* API errors/success */}
-          {apiError && <p className="text-sm text-red-500">{apiError}</p>}
-          {apiSuccess && <p className="text-sm text-green-500">{apiSuccess}</p>}
 
           {/* Submit */}
           <Button type="submit" disabled={isSubmitting} className="w-full">
