@@ -26,7 +26,7 @@ export function SkillForm() {
       const data = await response.json();
 
       if (response.ok) {
-        toast.success(`Skill "${data.name}" cadastrada com sucesso!`);
+        toast.success(`Skill "${data.data.name}" cadastrada com sucesso!`);
         setName('');
       } else {
         toast.error(data.error || 'Erro ao cadastrar skill.');
