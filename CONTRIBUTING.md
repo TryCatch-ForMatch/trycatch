@@ -59,28 +59,30 @@ Basta clicar em **Create sub-issues**, escolher o assunto e assinar em **Assigne
 
 ## 🔧 Antes de começar qualquer tarefa:
 
-1. Atualize a branch `develop`:
+1. Faça um fork do projeto via Github, caso não saiba como, veja nesse [tutorial](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo)
+
+2. Atualize a branch `develop`:
 
 ```bash
 git checkout develop
 git pull origin develop
 ```
 
-2. Crie uma nova branch:
+3. Crie uma nova branch:
 
 ```bash
 git checkout -b feat/nome-da-sua-feature
 ```
 
-3. Trabalhe, faça commits claros e frequentes.
+4. Trabalhe, faça commits claros (use o Husky para isso)
 
-4. Ao finalizar:
+5. Ao finalizar:
 
 ```bash
 git push origin feat/nome-da-sua-feature
 ```
 
-5. Abra um Pull Request (PR) para a branch `develop`.
+6. Abra um Pull Request (PR) para a branch `develop` do repositório da organização.
 
 ---
 
@@ -165,6 +167,7 @@ git commit --no-verify
 
 ## 💛 Regras de Ouro
 
+- Pessoas > Tecnologia
 - Comprometimento > conhecimento técnico.
 - Ninguém caminha sozinho: pergunte e ajude.
 - Entregue no prazo que você mesmo escolheu.
