@@ -1,8 +1,9 @@
 'use client';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 //import hook
 import { useProjects } from '@/hooks/useProjects';
+import { ChangeEvent } from 'react';
 
 // import components
 import Modal from '@/components/ui/modal';
@@ -18,6 +19,13 @@ import { Plus, Clock, Search } from 'lucide-react';
 export default function TeamProjectPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const { allProjects, isProjectsLoading } = useProjects();
+  const [valorProject, setValorProject] = useState('');
+
+  const allProjectsFiltrados = useMemo(() => {
+    return allProjects.filter((project) =>
+      project.name.toLowerCase().includes(valorProject.toLowerCase())
+    );
+  }, [valorProject, allProjects]);
 
   return (
     <main className="space-y-4 p-6">
@@ -47,13 +55,16 @@ export default function TeamProjectPage() {
               type="search"
               placeholder="Pesquisa projetos"
               className="h-10 pr-8"
+              value={valorProject}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setValorProject(e.target.value)
+              }
             />
             <Search className="absolute top-1/2 right-2 h-4 w-4 -translate-y-1/2 text-gray-400" />
           </div>
 
           <div>
             <Button className="flex h-10 items-center" variant="default">
-              {' '}
               <span>Novo Projecto</span> <Plus />
             </Button>
           </div>
@@ -62,13 +73,13 @@ export default function TeamProjectPage() {
 
       {isProjectsLoading ? (
         <ProjectSummarySkeletonGrid />
-      ) : allProjects.length === 0 ? (
+      ) : allProjectsFiltrados.length === 0 ? (
         <div className="text-xl font-medium text-gray-500">
           Nenhum projeto encontrado.
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
-          {allProjects.map((project) => (
+          {allProjectsFiltrados.map((project) => (
             <CardProjectSummary
               key={project.id}
               project={project}
