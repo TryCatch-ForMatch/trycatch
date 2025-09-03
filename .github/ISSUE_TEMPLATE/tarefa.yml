@@ -1,5 +1,5 @@
-name: ✍️ Nova Feature
-description: Uma nova feature, como a criação de um componente.
+name: '✍️ Nova Feature'
+description: 'Uma nova feature, como a criação de um componente.'
 title: '[FUNCIONALIDADE]'
 labels: ['task']
 assignees: []
