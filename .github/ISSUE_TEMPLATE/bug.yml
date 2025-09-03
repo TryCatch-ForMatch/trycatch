@@ -13,7 +13,7 @@ body:
     validations:
       required: true
   - type: textarea
-    id: criterios
+    id: impacto
     attributes:
       label: '🚨​​ Qual o impacto no projeto?'
       description: 'O que o problema causa dentro do projeto?'
@@ -21,7 +21,7 @@ body:
     validations:
       required: true
   - type: textarea
-    id: contexto
+    id: reproducao
     attributes:
       label: '💽​ Como reproduzir?'
       description: ''
@@ -29,7 +29,7 @@ body:
     validations:
       required: false
   - type: textarea
-    id: contexto
+    id: aceite
     attributes:
       label: '🕵️​ Critério de aceite'
       description: ''

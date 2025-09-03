@@ -13,7 +13,7 @@ body:
     validations:
       required: true
   - type: textarea
-    id: criterios
+    id: problemas
     attributes:
       label: '🎯​ Quais problemas ela resolve?'
       description: 'O que esta tarefa irá resolver dentro do projeto?'
@@ -21,7 +21,7 @@ body:
     validations:
       required: true
   - type: textarea
-    id: contexto
+    id: dependencia
     attributes:
       label: '⛓️‍💥 Esta tarefa depende de outra?'
       description: 'Informe a issue correspondente.'
@@ -29,7 +29,7 @@ body:
     validations:
       required: false
   - type: textarea
-    id: contexto
+    id: aceite
     attributes:
       label: '🕵️​ Critério de aceite'
       description: ''
