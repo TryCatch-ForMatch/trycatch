@@ -1,0 +1,46 @@
+name: ✍️ Tarefa Simples
+description: Uma nova feature, como a criação de um componente.
+title: '[FUNCIONALIDADE]'
+labels: ['task']
+assignees: []
+body:
+  - type: textarea
+    id: descricao
+    attributes:
+      label: '📝 Descrição'
+      description: 'Descreva a funcionalidade em uma ou duas frases. O que precisa ser feito?'
+      placeholder: 'Ex.: Criar o componente de botão conforme Figma.'
+    validations:
+      required: true
+  - type: textarea
+    id: criterios
+    attributes:
+      label: '🎯​ Quais problemas ela resolve?'
+      description: 'O que esta tarefa irá resolver dentro do projeto?'
+      placeholder: 'Ex.: O botão logout limpará os dados de login do usuário.'
+    validations:
+      required: true
+  - type: textarea
+    id: contexto
+    attributes:
+      label: '⛓️‍💥 Esta tarefa depende de outra?'
+      description: 'Informe a issue correspondente.'
+      placeholder: 'Ex.: Issue #123, criar botão.'
+    validations:
+      required: false
+  - type: textarea
+    id: contexto
+    attributes:
+      label: '🕵️​ Critério de aceite'
+      description: ''
+      placeholder: ''
+    validations:
+      required: false
+  - type: textarea
+    id: contexto
+    attributes:
+      label: '📎 Contexto'
+      description: 'Adicione qualquer link útil (Figma, documentação, etc.) ou informação extra.'
+      placeholder: 'Links, instruções, prints, etc.'
+    validations:
+      required: false
