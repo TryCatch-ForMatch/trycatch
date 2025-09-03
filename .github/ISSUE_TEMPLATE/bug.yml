@@ -1,7 +1,7 @@
-name: ✍️ Tarefa Simples
+name: 🪲​ Resolução de Bug
 description: Reporte um problema técnico encontrado.
 title: '[BUG]'
-labels: ['task']
+labels: ['bug']
 assignees: []
 body:
   - type: textarea
