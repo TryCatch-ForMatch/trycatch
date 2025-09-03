@@ -32,8 +32,8 @@ body:
     id: aceite
     attributes:
       label: '🕵️​ Critério de aceite'
-      description: ''
-      placeholder: ''
+      description: 'Descreva os critérios de aceite.'
+      placeholder: 'Ex.: '
     validations:
       required: false
   - type: textarea
