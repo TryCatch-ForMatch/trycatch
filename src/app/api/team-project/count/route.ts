@@ -4,9 +4,26 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    const count = await prisma.project.count();
+    // Agrupa e conta projetos por status
+    const grouped = await prisma.project.groupBy({
+      by: ['status'],
+      _count: {
+        status: true,
+      },
+    });
 
-    return NextResponse.json({ count });
+    // Calcula os valores com fallback para 0
+    const counts = {
+      total: grouped.reduce((acc, cur) => acc + cur._count.status, 0),
+      buscando:
+        grouped.find((g) => g.status === 'BUSCANDO')?._count.status || 0,
+      emAndamento:
+        grouped.find((g) => g.status === 'EM_ANDAMENTO')?._count.status || 0,
+      concluido:
+        grouped.find((g) => g.status === 'CONCLUÍDO')?._count.status || 0,
+    };
+
+    return NextResponse.json({ counts });
   } catch (error) {
     console.error('Erro ao buscar número de projetos:', error);
     return buildResponse({
