@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { signOut } from 'next-auth/react';
+import { toast } from 'sonner';
 
 export function DeleteAccountButton({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(false);
@@ -26,7 +27,7 @@ export function DeleteAccountButton({ userId }: { userId: string }) {
       if (!res.ok)
         throw new Error(json.error || json.message || 'Erro ao excluir conta');
 
-      alert(json.message || 'Conta excluída com sucesso.');
+      toast.error(json.message || 'Conta excluída com sucesso.');
       await signOut({ callbackUrl: '/login' });
     } catch (err: unknown) {
       console.error(err);

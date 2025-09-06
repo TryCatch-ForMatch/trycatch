@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Calendar, DollarSign, User } from 'lucide-react';
 import { ProjectDetailsType } from '@/types/team-project';
 import { useCurrentUser } from '@/lib/use-current-user';
+import { toast } from 'sonner';
 import Image from 'next/image';
 
 interface ProjectDetailsProps {
@@ -49,15 +50,15 @@ export function ProjectDetails({ projectId }: ProjectDetailsProps) {
 
       const data = await res.json();
       if (!res.ok) {
-        alert(data.error || 'Erro ao assumir stack');
+        toast.error('Erro ao assumir stack');
         return;
       }
 
-      alert('Stack assumida com sucesso!');
+      toast.success('Stack assumida com sucesso!');
       fetchDetails();
     } catch (error) {
       console.error('Erro ao assumir stack:', error);
-      alert('Erro inesperado');
+      toast.error('Erro inesperado');
     }
   };
 
@@ -72,15 +73,15 @@ export function ProjectDetails({ projectId }: ProjectDetailsProps) {
 
       const data = await res.json();
       if (!res.ok) {
-        alert(data.error || 'Erro ao liberar stack');
+        toast.error(data.error || 'Erro ao liberar stack');
         return;
       }
 
-      alert('Stack liberada com sucesso!');
+      toast.success('Stack liberada com sucesso!');
       fetchDetails();
     } catch (error) {
       console.error('Erro ao liberar stack:', error);
-      alert('Erro inesperado');
+      toast.error('Erro inesperado');
     }
   };
 
