@@ -7,6 +7,7 @@ import { Pencil, Trash } from 'lucide-react';
 import { BasicUser, FullUser } from '@/types/user';
 import { EditUserAdminForm } from './EditUserAdminForm';
 import Modal from '@/components/ui/modal';
+import { toast } from 'sonner';
 
 export function UserAdminList() {
   const [users, setUsers] = useState<BasicUser[]>([]);
@@ -14,9 +15,14 @@ export function UserAdminList() {
   const [selectedUser, setSelectedUser] = useState<FullUser | null>(null);
 
   const fetchUsers = async () => {
-    const res = await fetch('/api/user-admin');
-    const data: BasicUser[] = await res.json();
-    setUsers(data);
+    try {
+      const res = await fetch('/api/user-admin');
+      if (!res.ok) throw new Error('Erro ao buscar usuários');
+      const data: BasicUser[] = await res.json();
+      setUsers(data);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Erro desconhecido');
+    }
   };
 
   useEffect(() => {
@@ -35,7 +41,11 @@ export function UserAdminList() {
       if (!res.ok) throw new Error('Erro ao excluir usuário.');
 
       setUsers((prev) => prev.filter((user) => user.id !== userId));
+      toast.success('Usuário excluído com sucesso!');
     } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Erro ao excluir usuário'
+      );
       console.error(error);
     }
   };
@@ -47,15 +57,19 @@ export function UserAdminList() {
   };
 
   const handleEdit = async (userId: string) => {
-    const res = await fetch(`/api/user-admin/${userId}`);
-    const userData: FullUser = await res.json();
-    setSelectedUser(userData);
-    setIsDialogOpen(true);
+    try {
+      const res = await fetch(`/api/user-admin/${userId}`);
+      if (!res.ok) throw new Error('Erro ao carregar usuário');
+      const userData: FullUser = await res.json();
+      setSelectedUser(userData);
+      setIsDialogOpen(true);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Erro desconhecido');
+    }
   };
 
   return (
     <Card className="mx-auto mt-6 max-w-4xl rounded-2xl shadow-md">
-      {/* Conteúdo com scroll, se necessário */}
       <CardContent className="space-y-4 p-6">
         {users.map((user) => (
           <Card
@@ -69,7 +83,6 @@ export function UserAdminList() {
               </p>
             </div>
 
-            {/* Botões de ação */}
             <div className="flex gap-3">
               <Button
                 size="sm"
@@ -90,7 +103,6 @@ export function UserAdminList() {
         ))}
       </CardContent>
 
-      {/* Modal fora do CardContent para não rolar junto */}
       <Modal
         open={isDialogOpen}
         onClose={handleDialogClose}

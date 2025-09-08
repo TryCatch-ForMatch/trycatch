@@ -3,6 +3,7 @@
 import { UserEdit, DeleteAccountButton } from '@/components/Dashboard/User';
 import { useEffect, useState } from 'react';
 import { User } from '@/types/user';
+import { toast } from 'sonner';
 
 export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
@@ -15,7 +16,10 @@ export default function ProfilePage() {
         return res.json();
       })
       .then(setUser)
-      .catch((err) => setError(err.message));
+      .catch((err) => {
+        setError(err.message);
+        toast.error(err.message); // dispara toast de erro
+      });
   }, []);
 
   if (error) return <p className="text-red-500">{error}</p>;

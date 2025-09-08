@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { ProjectStackSelector } from './ProjectStackSelector';
 import { ProjectSkillSelector } from './ProjectSkillSelector';
 import { useCurrentUser } from '@/lib/use-current-user';
+import { toast } from 'sonner';
 
 const projectSchema = z.object({
   name: z.string().min(3, 'Nome do projeto é obrigatório'),
@@ -67,7 +68,7 @@ export function ProjectForm() {
 
   const onSubmit: (data: ProjectFormData) => Promise<void> = async (data) => {
     if (!user) {
-      alert('Você precisa estar logado para criar um projeto.');
+      toast.error('Você precisa estar logado para criar um projeto.');
       return;
     }
 
@@ -99,7 +100,7 @@ export function ProjectForm() {
       router.push('/dashboard/team-projects');
     } catch (err) {
       console.error(err);
-      alert('Erro ao salvar projeto');
+      toast.error('Erro ao salvar projeto');
     }
   };
 

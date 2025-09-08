@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Pencil, Trash, Check, X } from 'lucide-react';
+import { toast } from 'sonner';
 
 type Invite = {
   id: string;
@@ -17,7 +18,6 @@ export function InviteList() {
   const [invites, setInvites] = useState<Invite[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editedEmail, setEditedEmail] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
 
   const fetchInvites = async () => {
     try {
@@ -26,7 +26,7 @@ export function InviteList() {
       const data = await res.json();
       setInvites(data);
     } catch (error) {
-      setErrorMessage(
+      toast.error(
         error instanceof Error ? error.message : 'Erro ao carregar convites.'
       );
     }
@@ -47,8 +47,9 @@ export function InviteList() {
         throw new Error(data.error || 'Erro ao deletar convite.');
       }
       setInvites((prev) => prev.filter((invite) => invite.id !== id));
+      toast.success('Convite deletado com sucesso!');
     } catch (error) {
-      setErrorMessage(
+      toast.error(
         error instanceof Error ? error.message : 'Erro ao deletar convite.'
       );
     }
@@ -79,8 +80,9 @@ export function InviteList() {
         )
       );
       setEditingId(null);
+      toast.success('Convite atualizado com sucesso!');
     } catch (error) {
-      setErrorMessage(
+      toast.error(
         error instanceof Error ? error.message : 'Erro ao atualizar convite.'
       );
     }
@@ -92,18 +94,12 @@ export function InviteList() {
         {/* Título */}
         <h2 className="text-xl font-semibold">Lista de Convites</h2>
 
-        {/* Mensagem de erro */}
-        {errorMessage && (
-          <p className="text-sm font-medium text-red-500">{errorMessage}</p>
-        )}
-
         {/* Lista de convites */}
         {invites.map((invite) => (
           <div
             key={invite.id}
             className="flex flex-col gap-3 p-4 shadow-sm md:flex-row md:items-center md:justify-between"
           >
-            {/* Se está editando, mostra campo editável */}
             {editingId === invite.id ? (
               <div className="flex w-full flex-col gap-2">
                 <div>
@@ -134,7 +130,6 @@ export function InviteList() {
               </div>
             )}
 
-            {/* Ações */}
             <div className="mt-3 flex gap-2 md:mt-0">
               {editingId === invite.id ? (
                 <>

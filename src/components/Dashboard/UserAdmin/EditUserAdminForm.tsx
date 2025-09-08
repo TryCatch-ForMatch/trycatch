@@ -17,6 +17,7 @@ import {
 import { FullUser } from '@/types/user';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { toast } from 'sonner';
 
 const editUserSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
@@ -60,14 +61,12 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
 
   const avatarUrl = watch('avatar');
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
-  const [error, setError] = useState('');
 
   async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setUploadingAvatar(true);
-    setError('');
 
     try {
       const formData = new FormData();
@@ -83,11 +82,12 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
       const json = await res.json();
       if (json.url) {
         setValue('avatar', json.url);
+        toast.success('Avatar atualizado com sucesso!');
       } else {
         throw new Error('URL do avatar não retornada');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro desconhecido');
+      toast.error(err instanceof Error ? err.message : 'Erro desconhecido');
     } finally {
       setUploadingAvatar(false);
     }
@@ -105,9 +105,13 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
         throw new Error('Erro ao atualizar usuário');
       }
 
+      toast.success('Usuário atualizado com sucesso!');
       onSuccess(); // atualiza a lista
       onClose(); // fecha o modal
     } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : 'Erro ao atualizar usuário'
+      );
       console.error(err);
     }
   };
@@ -164,7 +168,6 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
             {uploadingAvatar && (
               <p className="text-sm text-gray-500">Enviando avatar...</p>
             )}
-            {error && <p className="text-xs text-red-500">{error}</p>}
           </div>
 
           <div>

@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/select';
 import { X } from 'lucide-react';
 import { Skill } from '@prisma/client';
+import { toast } from 'sonner';
 
 const userAdminSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
@@ -67,8 +68,6 @@ export function UserAdminForm() {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     const fetchSkills = async () => {
@@ -78,7 +77,9 @@ export function UserAdminForm() {
         const data = await res.json();
         setSkills(data);
       } catch (error) {
-        setError(error instanceof Error ? error.message : 'Erro desconhecido.');
+        toast.error(
+          error instanceof Error ? error.message : 'Erro desconhecido.'
+        );
       }
     };
     fetchSkills();
@@ -89,7 +90,6 @@ export function UserAdminForm() {
     if (!file) return;
 
     setUploadingAvatar(true);
-    setError('');
 
     try {
       const formDataUpload = new FormData();
@@ -106,10 +106,10 @@ export function UserAdminForm() {
       if (json.url) {
         setValue('avatar', json.url); // Atualiza o campo avatar no hook form
       } else {
-        throw new Error('URL do avatar não retornada');
+        toast.error('URL do avatar não retornada');
       }
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Erro desconhecido');
+      toast.error(error instanceof Error ? error.message : 'Erro desconhecido');
     } finally {
       setUploadingAvatar(false);
     }
@@ -136,8 +136,6 @@ export function UserAdminForm() {
 
   const onSubmit = async (data: FormValues) => {
     setLoading(true);
-    setError('');
-    setSuccess('');
 
     try {
       const res = await fetch('/api/user-admin', {
@@ -151,11 +149,13 @@ export function UserAdminForm() {
         throw new Error(json.error || 'Erro ao cadastrar usuário.');
       }
 
-      setSuccess('Usuário criado com sucesso!');
+      toast.success('Usuário criado com sucesso!');
       reset(); // limpa todos os campos
       router.refresh();
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Erro desconhecido.');
+      toast.error(
+        error instanceof Error ? error.message : 'Erro desconhecido.'
+      );
     } finally {
       setLoading(false);
     }
@@ -315,12 +315,6 @@ export function UserAdminForm() {
 
           {/* Mensagens de erro/sucesso */}
           <div className="space-y-2">
-            {error && (
-              <p className="text-sm font-medium text-red-500">{error}</p>
-            )}
-            {success && (
-              <p className="text-sm font-medium text-green-500">{success}</p>
-            )}
             <Button type="submit" disabled={loading} className="w-full">
               {loading ? 'Cadastrando...' : 'Cadastrar Usuário'}
             </Button>

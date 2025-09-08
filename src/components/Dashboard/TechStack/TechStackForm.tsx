@@ -5,17 +5,14 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 export function TechStackForm() {
   const [name, setName] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSuccessMessage('');
-    setErrorMessage('');
     setLoading(true);
 
     try {
@@ -28,14 +25,15 @@ export function TechStackForm() {
       const data = await response.json();
 
       if (response.ok) {
-        setSuccessMessage(`Stack "${data.name}" cadastrada com sucesso!`);
+        //  console.log(data.data.name, ':: STACK ::');
+        toast.success(`Stack "${data.data.name}" cadastrada com sucesso!`);
         setName('');
       } else {
-        setErrorMessage(data.error || 'Erro ao cadastrar stack.');
+        toast.error(data.error || 'Erro ao cadastrar stack.');
       }
     } catch (error) {
       console.error('Erro na requisição:', error);
-      setErrorMessage('Erro na requisição. Tente novamente.');
+      toast.error('Erro na requisição. Tente novamente.');
     } finally {
       setLoading(false);
     }
@@ -60,16 +58,6 @@ export function TechStackForm() {
               placeholder="Ex: React, Node.js, PostgreSQL..."
             />
           </div>
-
-          {/* Feedback de sucesso/erro */}
-          {successMessage && (
-            <p className="text-sm font-medium text-green-500">
-              {successMessage}
-            </p>
-          )}
-          {errorMessage && (
-            <p className="text-sm font-medium text-red-500">{errorMessage}</p>
-          )}
 
           <Button type="submit" disabled={loading || !name} className="w-full">
             {loading ? 'Salvando...' : 'Cadastrar Stack'}

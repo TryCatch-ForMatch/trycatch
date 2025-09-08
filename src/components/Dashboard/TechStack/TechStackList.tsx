@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import { toast } from 'sonner';
 
 type Stack = {
   id: string;
@@ -15,11 +16,10 @@ type Stack = {
 export function TechStackList() {
   const [stacks, setStacks] = useState<Stack[]>([]);
   const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editedName, setEditedName] = useState('');
 
-  // Controle de modal para DELETE
+  // DELETE modal
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const [deleteMode, setDeleteMode] = useState<'confirm' | 'blocked'>(
@@ -28,7 +28,7 @@ export function TechStackList() {
   const [modalTitle, setModalTitle] = useState('');
   const [modalDescription, setModalDescription] = useState('');
 
-  // Controle de modal para FORCE UPDATE
+  // UPDATE modal (force)
   const [confirmUpdateOpen, setConfirmUpdateOpen] = useState(false);
   const [pendingUpdateId, setPendingUpdateId] = useState<string | null>(null);
 
@@ -40,13 +40,11 @@ export function TechStackList() {
       if (res.ok) {
         setStacks(data);
       } else {
-        setErrorMessage(
-          data.error || data.message || 'Erro ao carregar stacks.'
-        );
+        toast.error(data.error || data.message || 'Erro ao carregar stacks.');
       }
     } catch (error) {
       console.error('Erro ao buscar stacks:', error);
-      setErrorMessage('Erro na requisição. Tente novamente.');
+      toast.error('Erro na requisição. Tente novamente.');
     } finally {
       setLoading(false);
     }
@@ -79,16 +77,20 @@ export function TechStackList() {
         setStacks((prev) => prev.filter((s) => s.id !== pendingDeleteId));
         setConfirmDeleteOpen(false);
         setPendingDeleteId(null);
+        toast.success('Stack excluída com sucesso!');
       } else if (res.status === 409) {
-        // Backend informou que está vinculada → bloqueia exclusão
         setDeleteMode('blocked');
         setModalTitle('Exclusão bloqueada');
         setModalDescription(data.error);
       } else {
-        console.error('Erro inesperado ao deletar:', data.error);
+        toast.error(data.error || 'Erro inesperado ao deletar.');
       }
     } catch (error) {
-      console.error('Erro ao deletar stack:', error);
+      toast.error(
+        `Erro ao deletar stack: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
     }
   };
 
@@ -115,6 +117,7 @@ export function TechStackList() {
         );
         setEditingId(null);
         setEditedName('');
+        toast.success('Stack atualizada com sucesso!');
       } else if (
         res.status === 409 &&
         (data.error?.includes('Alterações podem impactar') ||
@@ -123,13 +126,16 @@ export function TechStackList() {
         setPendingUpdateId(id);
         setConfirmUpdateOpen(true);
       } else {
-        console.error('Erro ao atualizar stack:', data.error || data.message);
-        setErrorMessage(
+        toast.error(
           data.error || data.message || 'Erro inesperado ao atualizar.'
         );
       }
     } catch (error) {
-      console.error('Erro ao atualizar stack:', error);
+      toast.error(
+        `Erro ao atualizar stack: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
     }
   };
 
@@ -154,8 +160,6 @@ export function TechStackList() {
 
         {loading ? (
           <p className="text-gray-600">Carregando...</p>
-        ) : errorMessage ? (
-          <p className="text-red-600">{errorMessage}</p>
         ) : stacks.length === 0 ? (
           <p className="text-gray-600">Nenhuma stack cadastrada ainda.</p>
         ) : (
