@@ -1,5 +1,6 @@
 'use client';
 import { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 //import hook
 import { useProjects } from '@/hooks/useProjects';
@@ -26,6 +27,8 @@ export default function TeamProjectPage() {
       project.name.toLowerCase().includes(valorProject.toLowerCase())
     );
   }, [valorProject, allProjects]);
+
+  const router = useRouter();
 
   return (
     <main className="space-y-4 p-6">
@@ -64,8 +67,13 @@ export default function TeamProjectPage() {
           </div>
 
           <div>
-            <Button className="flex h-10 items-center" variant="default">
-              <span>Novo Projecto</span> <Plus />
+            <Button
+              className="flex h-10 items-center"
+              variant="default"
+              onClick={() => router.push('/dashboard/team-projects/new')}
+            >
+              <span>Novo Projeto</span>
+              <Plus className="ml-2" />
             </Button>
           </div>
         </div>
