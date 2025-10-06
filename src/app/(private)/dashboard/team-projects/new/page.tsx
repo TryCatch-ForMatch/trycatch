@@ -1,12 +1,10 @@
-'use client';
 import { ProjectForm } from '@/components/Dashboard/TeamProject';
+import BasePage from '@/components/Dashboard/BasePage';
 
 export default function TeamProjectNewPage() {
   return (
-    <main>
-      <h1>Cadastro de Novo Projeto</h1>
-      <br />
-      <ProjectForm></ProjectForm>
-    </main>
+    <BasePage>
+      <ProjectForm />
+    </BasePage>
   );
 }
