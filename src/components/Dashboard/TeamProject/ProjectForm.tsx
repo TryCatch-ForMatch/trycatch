@@ -108,7 +108,7 @@ export function ProjectForm() {
     <FormProvider {...methods}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="mb-5 grid w-full grid-cols-2 gap-6"
+        className="m-5 mx-auto grid max-w-5xl grid-cols-1 gap-6 p-6 md:grid-cols-2"
       >
         {/* Coluna Esquerda */}
         <div className="flex flex-col gap-4">
