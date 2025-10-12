@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { User } from '@/types/user';
+import { User } from '@/types/interface/user';
 import { z } from 'zod';
 
 import { Input } from '@/components/ui/input';

@@ -2,60 +2,48 @@
 
 import { useEffect, useState } from 'react';
 import { Calendar, DollarSign, User } from 'lucide-react';
-import { ProjectDetailsType } from '@/types/team-project';
+import { ProjectDetailsType } from '@/types/interface/team-project';
 import { useCurrentUser } from '@/lib/use-current-user';
+import { useProjects } from '@/hooks/useProjects';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { toast } from 'sonner';
 import Image from 'next/image';
 
-interface ProjectDetailsProps {
-  projectId: string;
-}
-
-export function ProjectDetails({ projectId }: ProjectDetailsProps) {
+export function ProjectDetails({ projectId }: { projectId: string }) {
   const user = useCurrentUser();
+  const { getProjectDetailsById } = useProjects();
   const [project, setProject] = useState<ProjectDetailsType | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchDetails();
-  }, [projectId]);
-
-  if (!user) return <p>Você precisa estar logado para ver detalhes</p>;
-
-  const fetchDetails = async () => {
+  async function fetchDetailsProject() {
     setLoading(true);
     try {
-      const res = await fetch(`/api/team-project/${projectId}`);
-      const data = await res.json();
-      console.log('📌 Dados do projeto:', data);
-      setProject(data);
+      const response = await getProjectDetailsById(projectId);
+      setProject(response);
     } catch (err) {
-      console.error('Erro ao buscar detalhes:', err);
+      console.log(err);
     } finally {
       setLoading(false);
     }
-  };
+  }
+
+  useEffect(() => {
+    fetchDetailsProject();
+  }, [projectId]);
+
+  if (!user) return null;
 
   const handleTakeStack = async (stack: { id: string; stackId: string }) => {
+    const data = {
+      projectId: project?.id,
+      projectStackId: stack.id,
+      stackId: stack.stackId,
+    };
     try {
-      const res = await fetch('/api/stack-taken', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          projectId: project?.id,
-          projectStackId: stack.id,
-          stackId: stack.stackId,
-        }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        toast.error('Erro ao assumir stack');
-        return;
-      }
-
-      toast.success('Stack assumida com sucesso!');
-      fetchDetails();
+      const response = await apiTryCatch.post('/stack-taken', data);
+      console.log(response);
+      fetchDetailsProject();
+      toast.success(response?.data?.message || ' Stack assumida com sucesso!');
     } catch (error) {
       console.error('Erro ao assumir stack:', error);
       toast.error('Erro inesperado');
@@ -64,21 +52,10 @@ export function ProjectDetails({ projectId }: ProjectDetailsProps) {
 
   // Liberar stack
   const handleReleaseStack = async (stackTakenId: string) => {
-    if (!confirm('Tem certeza que deseja liberar esta stack?')) return;
-
     try {
-      const res = await fetch(`/api/stack-taken/${stackTakenId}`, {
-        method: 'DELETE',
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        toast.error(data.error || 'Erro ao liberar stack');
-        return;
-      }
-
-      toast.success('Stack liberada com sucesso!');
-      fetchDetails();
+      const response = await apiTryCatch.delete(`/stack-taken/${stackTakenId}`);
+      toast.success(response?.data?.message || 'Stack liberada com sucesso!');
+      fetchDetailsProject();
     } catch (error) {
       console.error('Erro ao liberar stack:', error);
       toast.error('Erro inesperado');

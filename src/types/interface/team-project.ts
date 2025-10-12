@@ -1,11 +1,12 @@
 export interface ProjectSummaryType {
   id: string;
   name: string;
-  description: string;
-  deadline: string;
-  skills: { id: string; name: string; iconUrl: string | null }[];
-  stacksFilled: number;
-  stacksTotal: number;
+  description?: string;
+  deadline?: string;
+  skills?: { id: string; name: string; iconUrl: string | null }[];
+  stacksFilled?: number;
+  stacksTotal?: number;
+  status?: string;
 }
 
 export type ProjectStatus = 'BUSCANDO' | 'EM_ANDAMENTO' | 'CONCLUÍDO';
@@ -38,4 +39,13 @@ export interface ProjectDetailsType {
       stackTakenId: string;
     } | null;
   }[];
+}
+
+export interface ProjectCountType {
+  counts: {
+    total?: number;
+    buscando?: number;
+    emAndamento?: number;
+    concluido?: number;
+  };
 }

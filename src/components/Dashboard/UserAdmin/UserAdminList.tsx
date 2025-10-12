@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Pencil, Trash } from 'lucide-react';
-import { BasicUser, FullUser } from '@/types/user';
+import { BasicUser, FullUser } from '@/types/interface/user';
 import { EditUserAdminForm } from './EditUserAdminForm';
 import Modal from '@/components/ui/modal';
 import { toast } from 'sonner';

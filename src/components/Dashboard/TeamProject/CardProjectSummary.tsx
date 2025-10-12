@@ -1,8 +1,8 @@
 'use client';
 
-import { Clock, Users, Calendar1 } from 'lucide-react';
+import { Clock, Check, Ellipsis, Users, Calendar1 } from 'lucide-react';
 import Image from 'next/image';
-import { ProjectSummaryType } from '@/types/team-project';
+import { ProjectSummaryType } from '@/types/interface/team-project';
 
 interface CardProjectSummaryProps {
   project: ProjectSummaryType;
@@ -31,7 +31,7 @@ export function CardProjectSummary({
       <div className="flex flex-col rounded-md bg-white p-4">
         {/* Ícones das skills */}
         <div className="mb-2 flex gap-2">
-          {project.skills.map((skill) => (
+          {project?.skills?.map((skill) => (
             <Image
               key={skill.id}
               src={skill.iconUrl || '/placeholder-icon.png'}
@@ -51,11 +51,19 @@ export function CardProjectSummary({
         <div className="mt-3 flex justify-between text-sm text-gray-500">
           <span className="flex items-center gap-1">
             <Calendar1 size={15} />
-            {new Date(project.deadline).toLocaleDateString('pt-BR')}
+            {project?.deadline
+              ? new Date(project.deadline).toLocaleDateString('pt-BR')
+              : 'Sem data'}
           </span>
 
           <span className="flex items-center gap-1 rounded bg-[#3B38A0] p-1 text-white">
-            <Clock size={12} />
+            {project.status === 'EM_ANDAMENTO' ? (
+              <Clock size={12} />
+            ) : project.status === 'CONCLUIDO' ? (
+              <Check size={12} />
+            ) : (
+              <Ellipsis size={12} />
+            )}
           </span>
         </div>
       </div>
