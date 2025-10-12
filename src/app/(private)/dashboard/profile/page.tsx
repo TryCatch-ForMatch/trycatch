@@ -2,7 +2,7 @@
 
 import { UserEdit, DeleteAccountButton } from '@/components/Dashboard/User';
 import { useEffect, useState } from 'react';
-import { User } from '@/types/user';
+import { User } from '@/types/interface/user';
 import { toast } from 'sonner';
 
 export default function ProfilePage() {
