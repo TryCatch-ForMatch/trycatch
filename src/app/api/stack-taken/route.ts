@@ -3,6 +3,7 @@ import { checkAuth } from '@/lib/check-auth';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { checkProjectStatus } from '@/lib/check-project-status';
 
 const createStackTakenSchema = z.object({
   projectId: z.string().min(25, 'ID inválido').max(36, 'ID inválido'),
@@ -93,6 +94,8 @@ export async function POST(request: NextRequest) {
         stackId,
       },
     });
+
+    await checkProjectStatus(projectId);
 
     return buildResponse({
       success: true,
