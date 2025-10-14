@@ -142,7 +142,7 @@ export function ProjectForm() {
           <div>
             <label className="mb-1 block text-sm font-medium">Descrição</label>
             <Textarea
-              className="h-69"
+              className="h-69 break-all"
               placeholder="Descreva o projeto"
               rows={5}
               {...register('description')}
