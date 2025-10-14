@@ -12,18 +12,24 @@ export async function GET() {
       },
     });
 
-    // Calcula os valores com fallback para 0
+    // Cria o objeto inicial
     const counts = {
-      total: grouped.reduce((acc, cur) => acc + cur._count.status, 0),
-      buscando:
-        grouped.find((g) => g.status === 'BUSCANDO')?._count.status || 0,
-      emAndamento:
-        grouped.find((g) => g.status === 'EM_ANDAMENTO')?._count.status || 0,
-      concluido:
-        grouped.find((g) => g.status === 'CONCLUÍDO')?._count.status || 0,
+      total: 0,
+      buscando: 0,
+      emAndamento: 0,
+      concluido: 0,
     };
 
-    return NextResponse.json({ counts });
+    // Soma total e atribui conforme o status do banco
+    grouped.forEach((item) => {
+      counts.total += item._count.status;
+      if (item.status === 'BUSCANDO') counts.buscando = item._count.status;
+      if (item.status === 'EM_ANDAMENTO')
+        counts.emAndamento = item._count.status;
+      if (item.status === 'CONCLUÍDO') counts.concluido = item._count.status;
+    });
+
+    return NextResponse.json({ success: true, counts });
   } catch (error) {
     console.error('Erro ao buscar número de projetos:', error);
     return buildResponse({
