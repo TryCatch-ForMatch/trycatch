@@ -101,7 +101,7 @@ export function ProjectDetails({ projectId }: { projectId: string }) {
       </div>
 
       {/* Descrição */}
-      <p className="text-gray-700">{project.description}</p>
+      <p className="break-all text-gray-700">{project.description}</p>
 
       {/* Stacks */}
       <div className="space-y-3">
