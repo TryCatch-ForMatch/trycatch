@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { ProjectStatus } from '@prisma/client';
+import { MESSAGES, buildResponse } from '@/constants/messages';
 
 export async function checkProjectStatus(projectId: string) {
   console.log(
@@ -27,12 +28,20 @@ export async function checkProjectStatus(projectId: string) {
 
   if (!project) {
     console.log('❌ Projeto não encontrado.');
-    return;
+    return buildResponse({
+      success: false,
+      message: MESSAGES.PROJECT.NOT_FOUND,
+      status: 404,
+    });
   }
 
   if (project.status === ProjectStatus.CONCLUÍDO) {
     console.log('✅ Projeto já está concluído — sem alterações.');
-    return;
+    return buildResponse({
+      success: true,
+      message: MESSAGES.PROJECT.FETCH_SUCCESS,
+      data: { status: project.status },
+    });
   }
 
   // Conta quantos registros existem na tabela ProjectStack para esse projeto
