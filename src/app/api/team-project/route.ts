@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { checkProjectStatus } from '@/lib/check-project-status';
 
 const createProjectSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório'),
@@ -46,7 +47,29 @@ export async function GET() {
     },
   });
 
-  return NextResponse.json(projects, { status: 200 });
+  // Atualiza o status de cada projeto conforme regras
+  await Promise.all(
+    projects.map(async (project) => {
+      await checkProjectStatus(project.id);
+    })
+  );
+
+  // Busca novamente os projetos após possível atualização de status
+  const updatedProjects = await prisma.project.findMany({
+    include: {
+      owner: {
+        select: { id: true, name: true, avatar: true },
+      },
+      skills: {
+        include: { skill: true },
+      },
+      stacks: {
+        include: { stack: true },
+      },
+    },
+  });
+
+  return NextResponse.json(updatedProjects, { status: 200 });
 }
 
 export async function POST(request: NextRequest) {

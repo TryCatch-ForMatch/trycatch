@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { checkProjectStatus } from '@/lib/check-project-status';
 
 // Validação de criação
 const createProjectStackSchema = z.object({
@@ -82,6 +83,8 @@ export async function POST(request: NextRequest) {
         percentage,
       },
     });
+
+    await checkProjectStatus(projectId);
 
     return buildResponse({
       success: true,

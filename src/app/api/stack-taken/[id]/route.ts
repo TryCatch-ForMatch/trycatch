@@ -3,6 +3,7 @@ import { checkAuth } from '@/lib/check-auth';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { checkProjectStatus } from '@/lib/check-project-status';
 
 const updateStackTakenSchema = z.object({
   projectStackId: z.string().min(1, 'ID inválido.'),
@@ -110,6 +111,8 @@ export async function PUT(
       data: parsed.data,
     });
 
+    await checkProjectStatus(existing.projectId);
+
     return NextResponse.json(updated, { status: 200 });
   } catch (error) {
     console.error('Erro ao atualizar StackTaken:', error);
@@ -156,6 +159,8 @@ export async function DELETE(
     await prisma.stackTaken.delete({
       where: { id: params.id },
     });
+
+    await checkProjectStatus(existing.projectId);
 
     return buildResponse({
       success: true,

@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { checkProjectStatus } from '@/lib/check-project-status';
 
 const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 const updateProjectSchema = z.object({
@@ -82,6 +83,7 @@ export async function GET(
       description: project.description,
       deadline: project.deadline.toISOString(),
       totalValue: project.totalValue,
+      status: project.status,
       owner: project.owner,
       skills: project.skills.map((ps) => ({
         id: ps.skill.id,
@@ -201,6 +203,8 @@ export async function PUT(
         },
       },
     });
+
+    await checkProjectStatus(projectId);
 
     return NextResponse.json(updated, { status: 200 });
   } catch (error) {
