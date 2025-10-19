@@ -119,6 +119,19 @@ export function ProjectStackSelector() {
               <Input
                 type="number"
                 value={stack.percentage}
+                onFocus={(e) => {
+                  if (e.target.value === '0') {
+                    e.target.value = ''; // limpa o campo quando o valor é 0
+                  }
+                }}
+                onBlur={(e) => {
+                  if (e.target.value === '') {
+                    // se o usuário não digitar nada, volta o 0
+                    const newStacks = [...stacks];
+                    newStacks[index].percentage = 0;
+                    setValue('stacks', newStacks);
+                  }
+                }}
                 onChange={(e) => {
                   const newStacks = [...stacks];
                   newStacks[index].percentage = Number(e.target.value);
