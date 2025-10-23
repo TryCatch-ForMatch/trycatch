@@ -6,29 +6,22 @@ import { useRouter } from 'next/navigation';
 import { useProjects } from '@/hooks/useProjects';
 import { ChangeEvent } from 'react';
 
-// import components
-import Modal from '@/components/ui/modal';
 import { CardProjectSummary } from '@/components/Dashboard/TeamProject';
-import { ProjectDetails } from '@/components/Dashboard/TeamProject';
 import { ProjectSummarySkeletonGrid } from '@/components/layout/Loading/SkeletonProjetcs/SkeletonProjectGrid';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-
-//impot searh
 import { Plus, Clock, Search } from 'lucide-react';
 
 export default function TeamProjectPage() {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
   const { allProjects, isProjectsLoading } = useProjects();
   const [valorProject, setValorProject] = useState('');
+  const router = useRouter();
 
   const allProjectsFiltrados = useMemo(() => {
     return allProjects.filter((project) =>
       project.name.toLowerCase().includes(valorProject.toLowerCase())
     );
   }, [valorProject, allProjects]);
-
-  const router = useRouter();
 
   return (
     <main className="space-y-4 p-6">
@@ -91,21 +84,13 @@ export default function TeamProjectPage() {
             <CardProjectSummary
               key={project.id}
               project={project}
-              onClick={() => setSelectedId(project.id)}
+              onClick={() =>
+                router.push(`/dashboard/team-projects/${project.id}`)
+              }
             />
           ))}
         </div>
       )}
-
-      {/* Modal com detalhes */}
-      <Modal
-        open={!!selectedId}
-        onClose={() => setSelectedId(null)}
-        title="Detalhes do Projeto"
-        size="xl"
-      >
-        {selectedId && <ProjectDetails projectId={selectedId} />}
-      </Modal>
     </main>
   );
 }
