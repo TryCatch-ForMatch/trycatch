@@ -77,7 +77,7 @@ export function ProjectSkillSelector() {
                   type="button"
                   key={skill.id}
                   onClick={() => toggleSkill(skill.id)}
-                  className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-sm transition-colors ${
+                  className={`skill-icon flex items-center gap-2 rounded-xl border px-4 py-2 text-sm transition-colors ${
                     selected
                       ? 'border-[#3B38A0] bg-indigo-50 text-indigo-700'
                       : 'border-gray-300 bg-white text-gray-700 hover:border-[#3B38A0]'

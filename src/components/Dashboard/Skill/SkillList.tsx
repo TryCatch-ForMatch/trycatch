@@ -187,7 +187,7 @@ export function SkillList() {
                 className="flex items-center justify-between rounded-md border p-3 hover:bg-gray-50"
               >
                 {/* Ícone + nome ou inputs */}
-                <div className="flex items-center gap-3">
+                <div className="skill-icon flex items-center gap-3">
                   <img
                     src={
                       skill.iconUrl || 'https://via.placeholder.com/40?text=?'

@@ -30,7 +30,7 @@ export function CardProjectSummary({
       {/* Descrição resumida */}
       <div className="flex flex-col rounded-md bg-white p-4 break-all">
         {/* Ícones das skills */}
-        <div className="mb-2 flex gap-2">
+        <div className="skill-icon mb-2 flex gap-2">
           {project?.skills?.map((skill) => (
             <Image
               key={skill.id}
