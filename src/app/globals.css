@@ -118,3 +118,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+.skill-icon {
+  filter: grayscale(100%) brightness(0.6) contrast(1.5);
+}
