@@ -32,7 +32,7 @@ export function SkillForm() {
       const response = await fetch('/api/skill', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, iconUrl }),
+        body: JSON.stringify({ name }),
       });
 
       const data = await response.json();
