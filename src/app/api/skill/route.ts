@@ -44,7 +44,22 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    const { name, iconUrl } = parse.data;
+    const { name } = parse.data;
+    const normalizedName = name.trim().toLowerCase();
+
+    const iconUrl = `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${normalizedName}/${normalizedName}-original.svg`;
+
+    // Verifica se o ícone realmente existe
+    const response = await fetch(iconUrl);
+    if (!response.ok) {
+      return buildResponse({
+        success: false,
+        message: 'Ícone não encontrado no repositório Devicon.',
+        status: 400,
+      });
+    }
+
+    // Verifica se já existe uma skill com esse nome
     const existingSkill = await prisma.skill.findUnique({ where: { name } });
     if (existingSkill) {
       return buildResponse({

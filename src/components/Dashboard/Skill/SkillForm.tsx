@@ -72,12 +72,12 @@ export function SkillForm() {
 
           {/* Pré-visualização do ícone */}
           {iconUrl && (
-            <div className="flex flex-col items-center space-y-2">
+            <div className="skill-icon flex flex-col items-center space-y-2">
               <p className="text-sm text-gray-500">Pré-visualização:</p>
               <img
                 src={iconUrl}
                 alt={`Ícone da skill ${name}`}
-                className="h-12 w-12 object-contain"
+                className=" skill-icon h-12 w-12 object-contain"
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).src =
                     'https://via.placeholder.com/48?text=?';

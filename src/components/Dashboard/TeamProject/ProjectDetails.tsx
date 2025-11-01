@@ -92,7 +92,7 @@ export function ProjectDetails({ projectId }: { projectId: string }) {
       </div>
 
       {/* SKILLS ICONS */}
-      <div className="flex flex-wrap gap-3">
+      <div className="skill-icon flex flex-wrap gap-3">
         {(project.skills ?? []).map((skill) => (
           <Image
             key={skill.id}
