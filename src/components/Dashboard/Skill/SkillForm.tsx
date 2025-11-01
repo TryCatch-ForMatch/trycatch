@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -11,6 +11,18 @@ export function SkillForm() {
   const [name, setName] = useState('');
   const [iconUrl, setIconUrl] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Atualiza o ícone automaticamente conforme o nome digitado
+  useEffect(() => {
+    if (!name.trim()) {
+      setIconUrl('');
+      return;
+    }
+
+    const normalized = name.trim().toLowerCase();
+    const url = `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${normalized}/${normalized}-original.svg`;
+    setIconUrl(url);
+  }, [name]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,25 +71,13 @@ export function SkillForm() {
             />
           </div>
 
-          <div className="space-y-1">
-            <Label htmlFor="skill-icon">Icone da Skill</Label>
-            <Input
-              id="skill-icon"
-              type="url"
-              value={iconUrl}
-              onChange={(e) => setIconUrl(e.target.value)}
-              placeholder="Ex: https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
-              required
-            />
-          </div>
-
           {/* Pré-visualização do ícone */}
           {iconUrl && (
-            <div className="skill-icon flex flex-col items-center space-y-2">
+            <div className="flex flex-col items-center space-y-2">
               <p className="text-sm text-gray-500">Pré-visualização:</p>
               <img
                 src={iconUrl}
-                alt="Prévia do ícone"
+                alt={`Ícone da skill ${name}`}
                 className="skill-icon h-12 w-12 object-contain"
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).src =
@@ -86,6 +86,7 @@ export function SkillForm() {
               />
             </div>
           )}
+
           <Button type="submit" disabled={loading} className="w-full">
             {loading ? 'Enviando...' : 'Cadastrar Skill'}
           </Button>
