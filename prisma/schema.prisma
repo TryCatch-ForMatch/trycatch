@@ -23,6 +23,7 @@ enum ProjectStatus {
 enum UserRole {
   ADMIN
   USER
+  MENTOR
 }
 
 model User {
@@ -150,7 +151,8 @@ model Invite {
   id        String    @id @default(cuid())
   email     String // Email do convidado
   code      String // Código do convite (pode ser gerado aleatoriamente)
-  used      Boolean   @default(false)
+  role      UserRole // Role definida no cadastro do convite
+  used      Boolean   @default(false) // Se o convite já foi usado
   invitedBy String? // ID do usuário que enviou o convite (opcional)
   createdAt DateTime  @default(now())
   usedAt    DateTime?
