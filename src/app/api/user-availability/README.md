@@ -29,5 +29,4 @@ Permite criar, listar, atualizar, excluir e consultar a disponibilidade de horá
 - `id`: Identificador da disponibilidade
 - `userId`: ID do usuário
 - `availabilities`: Lista de horários disponíveis (ex: dia da semana, hora de início e fim)
-- `isMentor`: Booleano se é mentor
 - `createdAt`: Data de criação do registro

@@ -7,7 +7,6 @@ import { buildResponse, MESSAGES } from '@/constants/messages';
 const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 
 const userAvailabilityUpdateSchema = z.object({
-  isMentor: z.boolean().optional(),
   skills: z.array(z.string()).optional(),
   weekday: z.number().int().min(0).max(6).optional(),
   startTime: z
