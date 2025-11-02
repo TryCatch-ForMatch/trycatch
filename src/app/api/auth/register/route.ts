@@ -20,6 +20,11 @@ export async function POST(request: NextRequest) {
     return buildResponse({
       success: true,
       message: MESSAGES.INVITE.VALID,
+      data: {
+        email: invite.email,
+        role: invite.role,
+        code: invite.code,
+      },
       status: 200,
     });
   } catch (error) {
