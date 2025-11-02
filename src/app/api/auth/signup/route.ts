@@ -84,6 +84,7 @@ export async function POST(request: NextRequest) {
         linkedin,
         github,
         bio,
+        role: invite.role,
       },
     });
 
@@ -95,7 +96,12 @@ export async function POST(request: NextRequest) {
     return buildResponse({
       success: true,
       message: MESSAGES.USER.CREATED,
-      data: { id: user.id, name: user.name, email: user.email },
+      data: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
       status: 201,
     });
   } catch (error) {
