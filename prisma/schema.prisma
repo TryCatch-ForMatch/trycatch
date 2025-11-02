@@ -161,8 +161,7 @@ model Invite {
 model UserAvailability {
   id        String   @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  isMentor  Boolean   @default(false)
+  user      User     @relation(fields: [userId], references: [id])  
   weekday   Int      // 0 (Domingo) até 6 (Sábado)
   startTime String   // Ex: "18:00"
   endTime   String   // Ex: "21:00"
