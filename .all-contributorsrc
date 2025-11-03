@@ -1,0 +1,11 @@
+{
+  "projectName": "trycatch",
+  "projectOwner": "TryCatch-ForMatch",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": ["CONTRIBUTORS.md"],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "angular",
+  "contributors": []
+}
