@@ -11,6 +11,7 @@ Agradecemos a cada pessoa que dedicou tempo, código, testes e ideias para melho
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/karinaperes"><img src="https://avatars.githubusercontent.com/u/134704973?v=4?s=100" width="100px;" alt="Karina Peres"/><br /><sub><b>Karina Peres</b></sub></a><br /><a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=karinaperes" title="Documentation">📖</a> <a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=karinaperes" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/FernandaBarrosLinhares"><img src="https://avatars.githubusercontent.com/u/124844643?v=4?s=100" width="100px;" alt="FernandaBarrosLinhares"/><br /><sub><b>FernandaBarrosLinhares</b></sub></a><br /><a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=FernandaBarrosLinhares" title="Code">💻</a> <a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=FernandaBarrosLinhares" title="Documentation">📖</a></td>
     </tr>
   </tbody>
 </table>
