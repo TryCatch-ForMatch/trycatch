@@ -66,6 +66,17 @@
       "contributions": [
         "code",
         "test"
+        ]
+    },
+    {
+      "login": "concs-niemeyer",
+      "name": "Conrado Niemeyer",
+      "avatar_url": "https://avatars.githubusercontent.com/u/126495670?v=4",
+      "profile": "http://0xconcs.vercel.app",
+      "contributions": [
+        "code",
+        "bug",
+        "review"
       ]
     }
   ]
