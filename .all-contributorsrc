@@ -24,7 +24,7 @@
         "eventOrganizing",
         "ideas",
         "projectManagement",
-        "promotion"        
+        "promotion"
       ]
     },
     {
@@ -47,7 +47,7 @@
         "bug",
         "mentoring",
         "review"
-       ]
+      ]
     },
     {
       "login": "RenataGrassi",
@@ -56,6 +56,16 @@
       "profile": "https://github.com/RenataGrassi",
       "contributions": [
         "code"
+      ]
+    },
+    {
+      "login": "NathanRodriguesVieira99",
+      "name": "Nathan Rodrigues Vieira",
+      "avatar_url": "https://avatars.githubusercontent.com/u/116213876?v=4",
+      "profile": "https://github.com/NathanRodriguesVieira99",
+      "contributions": [
+        "code",
+        "test"
       ]
     }
   ]
