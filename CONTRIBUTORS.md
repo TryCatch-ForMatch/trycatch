@@ -5,6 +5,19 @@ Agradecemos a cada pessoa que dedicou tempo, código, testes e ideias para melho
 
 ## 👥 Lista de contribuidores
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/karinaperes"><img src="https://avatars.githubusercontent.com/u/134704973?v=4?s=100" width="100px;" alt="Karina Peres"/><br /><sub><b>Karina Peres</b></sub></a><br /><a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=karinaperes" title="Documentation">📖</a> <a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=karinaperes" title="Code">💻</a> <a href="#eventOrganizing-karinaperes" title="Event Organizing">📋</a> <a href="#ideas-karinaperes" title="Ideas, Planning, & Feedback">🤔</a> <a href="#projectManagement-karinaperes" title="Project Management">📆</a> <a href="#promotion-karinaperes" title="Promotion">📣</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 Quer contribuir também?  
