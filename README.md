@@ -1,4 +1,7 @@
 # TryCatch For Match - Plataforma de Organização de Projetos Colaborativos
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](./CONTRIBUTORS.md)
@@ -241,7 +244,7 @@ O projeto utiliza o Prisma para modelar o banco de dados PostgreSQL.
 
 ---
 
-## 📮 Contato
+## Contributors ✨
 
 Sinta-se à vontade para abrir uma issue ou PR. 💜
 
