@@ -1,6 +1,7 @@
 # TryCatch For Match - Plataforma de Organização de Projetos Colaborativos
+
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](./CONTRIBUTORS.md)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ## 🚀 Sobre o projeto
@@ -43,6 +44,8 @@ Nosso foco é o desenvolvimento real de habilidades: trabalho em equipe, respons
 ## 🙌 Como contribuir?
 
 Leia o [Guia de Contribuição](./CONTRIBUTING.md) para entender o fluxo de trabalho, boas práticas, padrões e combinados da equipe.
+
+Confira também nosso arquivo [CONTRIBUTORS.md](./CONTRIBUTORS.md) para conhecer todos os colaboradores incríveis que ajudaram a construir este projeto. 🚀
 
 ---
 
@@ -240,26 +243,10 @@ O projeto utiliza o Prisma para modelar o banco de dados PostgreSQL.
 
 ## 📮 Contato
 
-Sinta-se à vontade para abrir uma issue ou PR. Toda ajuda é bem-vinda! 💜
+Sinta-se à vontade para abrir uma issue ou PR. 💜
 
 ## Contributors ✨
 
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+Confira nosso arquivo [CONTRIBUTORS.md](./CONTRIBUTORS.md) para conhecer todos os colaboradores incríveis que ajudaram a construir este projeto.
 
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/karinaperes"><img src="https://avatars.githubusercontent.com/u/134704973?v=4?s=100" width="100px;" alt="Karina Peres"/><br /><sub><b>Karina Peres</b></sub></a><br /><a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=karinaperes" title="Documentation">📖</a> <a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=karinaperes" title="Code">💻</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+Este projeto segue a especificação do [all-contributors](https://github.com/all-contributors/all-contributors). Contribuições de qualquer tipo são bem-vindas!
