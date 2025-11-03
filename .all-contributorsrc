@@ -3,7 +3,9 @@
   "projectOwner": "TryCatch-ForMatch",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "files": ["CONTRIBUTORS.md"],
+  "files": [
+    "CONTRIBUTORS.md"
+  ],
   "imageSize": 100,
   "commit": true,
   "commitType": "docs",
@@ -16,7 +18,20 @@
       "name": "Karina Peres",
       "avatar_url": "https://avatars.githubusercontent.com/u/134704973?v=4",
       "profile": "https://github.com/karinaperes",
-      "contributions": ["doc", "code"]
+      "contributions": [
+        "doc",
+        "code"
+      ]
+    },
+    {
+      "login": "FernandaBarrosLinhares",
+      "name": "FernandaBarrosLinhares",
+      "avatar_url": "https://avatars.githubusercontent.com/u/124844643?v=4",
+      "profile": "https://github.com/FernandaBarrosLinhares",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ]
 }
