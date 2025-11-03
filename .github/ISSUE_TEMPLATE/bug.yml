@@ -36,3 +36,16 @@ body:
       placeholder: 'Ex.: '
     validations:
       required: false
+  - type: textarea
+    id: contribuidores
+    attributes:
+      label: '🙌 Torne-se um colaborador'
+      description: |
+        Quando você enviar essa issue ou PR, peça para ser adicionado aos contribuidores usando o All Contributors Bot.
+        Basta comentar nesta issue com o comando:
+        ```
+        @all-contributors please add @SEU_USUARIO for code, doc
+        ```
+        Substitua `@SEU_USUARIO` pelo seu usuário do GitHub e os tipos de contribuição (`code`, `doc`, etc.) de acordo com sua contribuição.
+    validations:
+      required: false
