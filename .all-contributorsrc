@@ -66,7 +66,7 @@
       "contributions": [
         "code",
         "test"
-        ]
+      ]
     },
     {
       "login": "concs-niemeyer",
@@ -77,6 +77,15 @@
         "code",
         "bug",
         "review"
+      ]
+    },
+    {
+      "login": "josuesantos7",
+      "name": "Josué Santos",
+      "avatar_url": "https://avatars.githubusercontent.com/u/110208995?v=4",
+      "profile": "https://github.com/josuesantos7",
+      "contributions": [
+        "code"
       ]
     }
   ]
