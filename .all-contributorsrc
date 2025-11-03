@@ -1,27 +1,22 @@
 {
-  "files": [
-    "README.md"
-  ],
+  "projectName": "trycatch",
+  "projectOwner": "TryCatch-ForMatch",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": ["CONTRIBUTORS.md"],
   "imageSize": 100,
-  "commit": false,
+  "commit": true,
   "commitType": "docs",
   "commitConvention": "angular",
+  "contributorsPerLine": 7,
+  "skipCi": true,
   "contributors": [
     {
       "login": "karinaperes",
       "name": "Karina Peres",
       "avatar_url": "https://avatars.githubusercontent.com/u/134704973?v=4",
       "profile": "https://github.com/karinaperes",
-      "contributions": [
-        "doc",
-        "code"
-      ]
+      "contributions": ["doc", "code"]
     }
-  ],
-  "contributorsPerLine": 7,
-  "skipCi": true,
-  "repoType": "github",
-  "repoHost": "https://github.com",
-  "projectName": "trycatch",
-  "projectOwner": "TryCatch-ForMatch"
+  ]
 }
