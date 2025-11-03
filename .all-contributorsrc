@@ -32,6 +32,18 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "dennisDev77",
+      "name": "Dennis Camela",
+      "avatar_url": "https://avatars.githubusercontent.com/u/123247070?v=4",
+      "profile": "https://github.com/dennisDev77",
+      "contributions": [
+        "code",
+        "bug",
+        "mentoring",
+        "review"
+      ]
     }
   ]
 }
