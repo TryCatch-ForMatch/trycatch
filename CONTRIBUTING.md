@@ -173,3 +173,27 @@ git commit --no-verify
 - Entregue no prazo que você mesmo escolheu.
 - Qualidade acima de quantidade.
 - Comunicação sempre.
+
+---
+
+## 🧑‍💻 Incluir novos colaboradores no projeto
+
+Para garantir que todos os colaboradores sejam reconhecidos, siga estas instruções:
+
+1. Abra uma **issue** ou **PR** que tenha a contribuição de alguém.
+2. Comente na issue ou PR com o comando do All Contributors Bot:
+
+```
+@all-contributors please add @usuario for code, doc
+```
+
+> Substitua `@usuario` pelo nome de usuário GitHub do colaborador.  
+> Você pode adicionar múltiplos tipos de contribuição, separados por vírgula (`code`, `doc`, `test`, etc.).  
+
+3. O bot vai atualizar automaticamente:
+   - O arquivo `CONTRIBUTORS.md` com o colaborador
+   - O badge de contagem de contribuidores no README
+
+Para ver todas as opções de emoji de contribuição, confira a [emoji key do All Contributors](https://allcontributors.org/docs/en/emoji-key).
+
+---
