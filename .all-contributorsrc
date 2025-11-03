@@ -6,6 +6,17 @@
   "files": ["CONTRIBUTORS.md"],
   "imageSize": 100,
   "commit": true,
+  "commitType": "docs",
   "commitConvention": "angular",
-  "contributors": []
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "contributors": [
+    {
+      "login": "karinaperes",
+      "name": "Karina Peres",
+      "avatar_url": "https://avatars.githubusercontent.com/u/134704973?v=4",
+      "profile": "https://github.com/karinaperes",
+      "contributions": ["doc", "code"]
+    }
+  ]
 }
