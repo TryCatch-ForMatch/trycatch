@@ -32,6 +32,18 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "usuario",
+      "name": "usuario",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1054136?v=4",
+      "profile": "https://github.com/usuario",
+      "contributions": [
+        "code",
+        "bug",
+        "mentoring",
+        "review"
+      ]
     }
   ]
 }
