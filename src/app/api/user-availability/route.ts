@@ -5,7 +5,6 @@ import { checkAuth } from '@/lib/check-auth';
 import { buildResponse, MESSAGES } from '@/constants/messages';
 
 const userAvailabilitySchema = z.object({
-  isMentor: z.boolean().optional().default(false),
   availabilities: z.array(
     z.object({
       weekday: z.number().int().min(0).max(6),
@@ -80,7 +79,7 @@ export async function POST(req: Request) {
       });
     }
 
-    const { skills, availabilities, isMentor } = parsed.data;
+    const { skills, availabilities } = parsed.data;
 
     await prisma.$transaction([
       // faz os dois juntos → ou salva tudo certo ou não salva nada
@@ -90,7 +89,6 @@ export async function POST(req: Request) {
       prisma.userAvailability.createMany({
         data: availabilities.map(({ weekday, startTime, endTime }) => ({
           userId: session.user.id,
-          isMentor,
           weekday,
           startTime,
           endTime,

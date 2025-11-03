@@ -3,6 +3,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { checkAuth } from '@/lib/check-auth';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { z } from 'zod';
+
+const inviteSchema = z.object({
+  email: z.string().email(),
+  role: z.enum(['USER', 'ADMIN', 'MENTOR']),
+});
 
 export async function GET() {
   const auth = await checkAuth({ requireAdmin: true });
@@ -30,8 +36,9 @@ export async function POST(request: NextRequest) {
   let body;
   try {
     body = await request.json();
+    body = inviteSchema.parse(body);
   } catch (error) {
-    console.error('Erro ao fazer parse do JSON:', error);
+    console.error('Erro ao validar dados do convite:', error);
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
@@ -39,15 +46,7 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  const { email } = body;
-
-  if (!email) {
-    return buildResponse({
-      success: false,
-      message: MESSAGES.GENERAL.INVALID_DATA,
-      status: 400,
-    });
-  }
+  const { email, role } = body;
 
   try {
     const existing = await prisma.invite.findFirst({ where: { email } });
@@ -63,13 +62,13 @@ export async function POST(request: NextRequest) {
     const code = crypto.randomBytes(8).toString('hex');
 
     const invite = await prisma.invite.create({
-      data: { email, code },
+      data: { email, code, role },
     });
 
     return buildResponse({
       success: true,
       message: MESSAGES.INVITE.VALID,
-      data: { email: invite.email, code: invite.code },
+      data: { email: invite.email, code: invite.code, role: invite.role },
       status: 201,
     });
   } catch (error) {

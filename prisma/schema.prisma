@@ -23,6 +23,7 @@ enum ProjectStatus {
 enum UserRole {
   ADMIN
   USER
+  MENTOR
 }
 
 model User {
@@ -150,7 +151,8 @@ model Invite {
   id        String    @id @default(cuid())
   email     String // Email do convidado
   code      String // Código do convite (pode ser gerado aleatoriamente)
-  used      Boolean   @default(false)
+  role      UserRole // Role definida no cadastro do convite
+  used      Boolean   @default(false) // Se o convite já foi usado
   invitedBy String? // ID do usuário que enviou o convite (opcional)
   createdAt DateTime  @default(now())
   usedAt    DateTime?
@@ -159,8 +161,7 @@ model Invite {
 model UserAvailability {
   id        String   @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  isMentor  Boolean   @default(false)
+  user      User     @relation(fields: [userId], references: [id])  
   weekday   Int      // 0 (Domingo) até 6 (Sábado)
   startTime String   // Ex: "18:00"
   endTime   String   // Ex: "21:00"

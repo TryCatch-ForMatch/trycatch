@@ -24,7 +24,6 @@ export async function GET() {
         availability: {
           select: {
             id: true,
-            isMentor: true,
             weekday: true,
             startTime: true,
             endTime: true,
