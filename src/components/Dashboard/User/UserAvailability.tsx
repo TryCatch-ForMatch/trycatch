@@ -22,7 +22,6 @@ import { z } from 'zod';
 import { toast } from 'sonner';
 
 const schema = z.object({
-  isMentor: z.boolean(),
   skills: z.array(z.string(), {
     required_error: 'Selecione ao menos uma skill',
   }),
@@ -44,7 +43,6 @@ type Availability = {
 };
 
 type FormData = {
-  isMentor: boolean;
   skills: string[];
   availabilities: Availability[];
 };
@@ -64,7 +62,6 @@ export function UserAvailabilityForm() {
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      isMentor: false,
       skills: [],
       availabilities: [],
     },
@@ -140,20 +137,6 @@ export function UserAvailabilityForm() {
     <Card className="mx-auto mt-6 max-w-4xl rounded-2xl p-6 shadow-lg">
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div className="flex items-center space-x-4">
-            <Switch
-              id="isMentor"
-              className="h-8 w-14"
-              {...register('isMentor')}
-            />
-            <Label
-              htmlFor="isMentor"
-              className="text-lg font-semibold select-none"
-            >
-              Mentor
-            </Label>
-          </div>
-
           {/* Skills */}
           <div className="space-y-2">
             <Label>Skills</Label>
