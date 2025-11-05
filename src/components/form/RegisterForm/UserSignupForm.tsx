@@ -59,8 +59,6 @@ export default function UserSignupForm() {
     const inviteCode = searchParams.get('inviteCode');
     const role = searchParams.get('role');
 
-    console.log('Search Params:', searchParams.toString());
-
     if (!email || !inviteCode) {
       router.push('/register');
       return;
