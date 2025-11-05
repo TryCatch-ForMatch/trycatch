@@ -18,6 +18,9 @@ Agradecemos a cada pessoa que dedicou tempo, código, testes e ideias para melho
       <td align="center" valign="top" width="14.28%"><a href="http://0xconcs.vercel.app"><img src="https://avatars.githubusercontent.com/u/126495670?v=4?s=100" width="100px;" alt="Conrado Niemeyer"/><br /><sub><b>Conrado Niemeyer</b></sub></a><br /><a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=concs-niemeyer" title="Code">💻</a> <a href="https://github.com/TryCatch-ForMatch/trycatch/issues?q=author%3Aconcs-niemeyer" title="Bug reports">🐛</a> <a href="https://github.com/TryCatch-ForMatch/trycatch/pulls?q=is%3Apr+reviewed-by%3Aconcs-niemeyer" title="Reviewed Pull Requests">👀</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/josuesantos7"><img src="https://avatars.githubusercontent.com/u/110208995?v=4?s=100" width="100px;" alt="Josué Santos"/><br /><sub><b>Josué Santos</b></sub></a><br /><a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=josuesantos7" title="Code">💻</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/lPoltergeist"><img src="https://avatars.githubusercontent.com/u/72321620?v=4?s=100" width="100px;" alt="Gabriel"/><br /><sub><b>Gabriel</b></sub></a><br /><a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=lPoltergeist" title="Code">💻</a></td>
+    </tr>
   </tbody>
 </table>
 
