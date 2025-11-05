@@ -1,10 +1,7 @@
 # TryCatch For Match - Plataforma de Organização de Projetos Colaborativos
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](./CONTRIBUTORS.md)
+[![All Contributors](https://img.shields.io/github/all-contributors/TryCatch-ForMatch/trycatch?color=ee8449&style=flat-square)](./CONTRIBUTORS.md)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ## 🚀 Sobre o projeto
