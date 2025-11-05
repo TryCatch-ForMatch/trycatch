@@ -30,4 +30,4 @@ Agradecemos a cada pessoa que dedicou tempo, código, testes e ideias para melho
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 Quer contribuir também?  
-Confira o arquivo [CONTRIBUTING.md](./CONTRIBUTING.md) e venha fazer parte dessa iniciativa! 🚀
+Confira o arquivo [CONTRIBUTING.md](./CONTRIBUTING.md) e boa codar! 🚀
