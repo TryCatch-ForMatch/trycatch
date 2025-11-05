@@ -52,16 +52,19 @@ export default function RegisterForm() {
     }
 
     try {
-      const res = await fetch('/api/invite', {
+      const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
       if (res.ok) {
+        const data = await res.json();
+        const role = data?.data?.role;
+
         toast.success('Convite validado com sucesso! 🎉');
         router.push(
-          `/signup?email=${encodeURIComponent(email)}&inviteCode=${encodeURIComponent(inviteCode)}`
+          `/signup?email=${encodeURIComponent(email)}&inviteCode=${encodeURIComponent(inviteCode)}&role=${encodeURIComponent(role)}`
         );
       } else {
         const data = await res.json();
