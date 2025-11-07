@@ -18,7 +18,9 @@
     "test:push": "jest --coverage --passWithNoTests",
     "prepare": "husky",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "contributors:add": "npx all-contributors add",
+    "contributors:fix": "node src/scripts/fix-contributors-style.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
