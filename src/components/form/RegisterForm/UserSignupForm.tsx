@@ -19,6 +19,7 @@ const schema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
   email: z.string().email('Email inválido'),
   password: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres'),
+  role: z.string().min(1, 'Função é obrigatória'),
   linkedin: z.string().url('LinkedIn inválido').optional().or(z.literal('')),
   github: z.string().url('GitHub inválido').optional().or(z.literal('')),
   avatar: z.string(),
@@ -43,6 +44,7 @@ export default function UserSignupForm() {
       name: '',
       email: '',
       password: '',
+      role: '',
       linkedin: '',
       github: '',
       avatar:
@@ -55,6 +57,7 @@ export default function UserSignupForm() {
   useEffect(() => {
     const email = searchParams.get('email');
     const inviteCode = searchParams.get('inviteCode');
+    const role = searchParams.get('role');
 
     if (!email || !inviteCode) {
       router.push('/register');
@@ -63,6 +66,7 @@ export default function UserSignupForm() {
 
     setValue('email', email);
     setValue('inviteCode', inviteCode);
+    setValue('role', role || 'USER');
   }, [searchParams, setValue, router]);
 
   const onSubmit = async (data: FormData) => {
@@ -120,6 +124,13 @@ export default function UserSignupForm() {
             />
             {errors.password && (
               <p className="text-sm text-red-500">{errors.password.message}</p>
+            )}
+          </div>
+
+          <div className="space-y-1">
+            <Input {...register('role')} label="Role" disabled />
+            {errors.role && (
+              <p className="text-sm text-red-500">{errors.role.message}</p>
             )}
           </div>
 
