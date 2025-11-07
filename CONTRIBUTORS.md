@@ -20,6 +20,7 @@ Agradecemos a cada pessoa que dedicou tempo, código, testes e ideias para melho
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/lPoltergeist"><img src="https://avatars.githubusercontent.com/u/72321620?v=4?s=100" width="100px;" alt="Gabriel"/><br /><sub><b>Gabriel</b></sub></a><br /><a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=lPoltergeist" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Eduardoqrn"><img src="https://avatars.githubusercontent.com/u/141378399?v=4?s=100" width="100px;" alt="Eduardo Paiva"/><br /><sub><b>Eduardo Paiva</b></sub></a><br /><a href="#design-Eduardoqrn" title="Design">🎨</a></td>
     </tr>
   </tbody>
 </table>
