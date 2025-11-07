@@ -1,13 +1,39 @@
 import fs from 'fs';
+import path from 'path';
 
-const file = 'CONTRIBUTORS.md';
-let content = fs.readFileSync(file, 'utf-8');
+const readmePath = path.resolve('README.md');
+let content = fs.readFileSync(readmePath, 'utf8');
 
-// aplica estilo padrão a todas as imagens de contribuidores
+// Corrige todas as imagens dos contribuidores
 content = content.replace(
-  /<img src="(.*?)" width="(\d+)px;" alt="(.*?)"\/>/g,
-  '<img src="$1" width="$2" height="$2" style="object-fit: cover; border-radius: 50%;" alt="$3"/>'
+  /<img\s+([^>]*src="https:\/\/avatars\.githubusercontent\.com[^>]*)>/g,
+  (match, attrs) => {
+    // Garante width fixo e adiciona estilo
+    let newAttrs = attrs;
+
+    // Força o width a 100px
+    if (/width="\d+px;?"/.test(newAttrs)) {
+      newAttrs = newAttrs.replace(/width="\d+px;?"/, 'width="100px;"');
+    } else {
+      newAttrs += ' width="100px;"';
+    }
+
+    // Adiciona ou substitui o style para border-radius
+    if (/style="/.test(newAttrs)) {
+      newAttrs = newAttrs.replace(/style="([^"]*)"/, (m, s) => {
+        // Se já tiver border-radius, não adiciona de novo
+        if (/border-radius/.test(s)) return `style="${s}"`;
+        return `style="${s} border-radius: 50%;"`;
+      });
+    } else {
+      newAttrs += ' style="border-radius: 50%;"';
+    }
+
+    return `<img ${newAttrs}>`;
+  }
 );
 
-fs.writeFileSync(file, content);
-console.log('✅ Estilo das imagens padronizado!');
+fs.writeFileSync(readmePath, content, 'utf8');
+console.log(
+  '✅ Imagens de contribuidores atualizadas com border-radius e tamanho padronizado!'
+);
