@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { checkAuth } from '@/lib/check-auth';
 import { buildResponse, MESSAGES } from '@/constants/messages';
+import { ROLE_GROUPS } from '@/lib/roles';
 
 const userAvailabilitySchema = z.object({
   availabilities: z.array(
@@ -19,7 +20,7 @@ export type UserAvailabilityInput = z.infer<typeof userAvailabilitySchema>;
 
 export async function GET() {
   const { authorized, response } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
+    allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized) return response;
 
@@ -63,7 +64,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const { authorized, response, session } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
+    allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized || !session) return response;
 

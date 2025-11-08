@@ -5,6 +5,7 @@ import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { checkProjectStatus } from '@/lib/check-project-status';
+import { ROLE_GROUPS } from '@/lib/roles';
 
 const createProjectSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório'),
@@ -29,7 +30,7 @@ const createProjectSchema = z.object({
 
 export async function GET() {
   const { authorized, response } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
+    allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized) return response;
 
@@ -74,7 +75,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   const { authorized, response, session } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
+    allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized || !session) return response;
 
