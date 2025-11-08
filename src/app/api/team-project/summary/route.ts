@@ -1,10 +1,11 @@
 import { prisma } from '@/lib/prisma';
 import { checkAuth } from '@/lib/check-auth';
 import { NextResponse } from 'next/server';
+import { ROLE_GROUPS } from '@/lib/roles';
 
 export async function GET() {
   const { authorized, response } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
+    allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized) return response;
 

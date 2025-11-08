@@ -2,10 +2,9 @@ import { PrismaClient } from '@prisma/client';
 import { compare } from 'bcrypt';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { NextAuthOptions } from 'next-auth';
+import { ROLE_GROUPS, Role } from '@/lib/roles';
 
 const prisma = new PrismaClient();
-
-type UserRole = 'ADMIN' | 'USER';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -27,11 +26,9 @@ export const authOptions: NextAuthOptions = {
 
           if (!isValid) throw new Error('Senha incorreta.');
 
-          const validRoles = ['ADMIN', 'USER'] as const;
-          const role = validRoles.includes(
-            user.role as (typeof validRoles)[number]
-          )
-            ? (user.role as UserRole)
+          const validRoles = ROLE_GROUPS.ALL;
+          const role = validRoles.includes(user.role as Role)
+            ? (user.role as Role)
             : 'USER';
 
           return {
@@ -64,7 +61,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
-        session.user.role = token.role as UserRole;
+        session.user.role = token.role as Role;
         session.user.avatar = token.avatar as string;
       }
       return session;

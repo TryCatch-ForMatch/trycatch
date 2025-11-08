@@ -2,10 +2,11 @@
 
 import { useSession } from 'next-auth/react';
 import { DefaultUser } from 'next-auth';
+import { Role } from '@/lib/roles';
 
 type AppUser = DefaultUser & {
   id: string;
-  role: 'ADMIN' | 'USER';
+  role: Role;
   name: string;
   email: string;
 };

@@ -1,3 +1,5 @@
+import { Role } from '@/lib/roles';
+
 export interface BasicUser {
   id: string;
   name: string;
@@ -18,6 +20,6 @@ export interface FullUser extends BasicUser {
   linkedin?: string;
   github?: string;
   bio?: string;
-  role: 'USER' | 'ADMIN';
+  role: Role;
   skills?: { skill: { id: string; name: string } }[];
 }
