@@ -20,7 +20,7 @@ jobs:
 
             const today = new Date().toISOString().split("T")[0];
 
-            // Busca o ID do projeto
+            // Busca o ID do projeto e os itens
             const projectQuery = await github.graphql(`
               query($owner: String!, $repo: String!, $number: Int!) {
                 repository(owner: $owner, name: $repo) {
@@ -33,11 +33,19 @@ jobs:
                         fieldValues(first: 20) {
                           nodes {
                             ... on ProjectV2ItemFieldDateValue {
-                              field { name }
+                              field {
+                                ... on ProjectV2DateField {
+                                  name
+                                }
+                              }
                               date
                             }
                             ... on ProjectV2ItemFieldSingleSelectValue {
-                              field { name }
+                              field {
+                                ... on ProjectV2SingleSelectField {
+                                  name
+                                }
+                              }
                               name
                             }
                           }
@@ -60,13 +68,15 @@ jobs:
 
             for (const item of project.items.nodes) {
               const fields = item.fieldValues.nodes;
+
+              // Extrai valores atuais
               const statusValue = fields.find(f => f.field?.name === statusField)?.name;
               const startValue = fields.find(f => f.field?.name === startField)?.date;
               const endValue = fields.find(f => f.field?.name === endField)?.date;
 
               const now = today;
 
-              // Busca IDs dos campos (precisamos deles para atualizar)
+              // Busca IDs dos campos (necessário para atualizar)
               const fieldsQuery = await github.graphql(`
                 query($projectId: ID!) {
                   node(id: $projectId) {
@@ -86,8 +96,8 @@ jobs:
               const startFieldId = fieldNodes.find(f => f.name === startField)?.id;
               const endFieldId = fieldNodes.find(f => f.name === endField)?.id;
 
-              // Se mudou para In Progress e ainda não tem Start Date
-              if (statusValue === "In Progress" && !startValue) {
+              // Atualiza Start Date se mudou para In Progress e ainda não tem
+              if (statusValue === "In Progress" && !startValue && startFieldId) {
                 console.log(`🟢 Definindo Start date: ${now}`);
                 await github.graphql(`
                   mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: String!) {
@@ -103,8 +113,8 @@ jobs:
                 `, { projectId, itemId: item.id, fieldId: startFieldId, value: now });
               }
 
-              // Se mudou para Done e ainda não tem End Date
-              if (statusValue === "Done" && !endValue) {
+              // Atualiza End Date se mudou para Done e ainda não tem
+              if (statusValue === "Done" && !endValue && endFieldId) {
                 console.log(`✅ Definindo End date: ${now}`);
                 await github.graphql(`
                   mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: String!) {
