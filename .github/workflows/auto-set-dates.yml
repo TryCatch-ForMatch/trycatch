@@ -1,0 +1,87 @@
+name: Auto set Start/End Dates on Project Status Change
+
+on:
+  workflow_dispatch:
+  projects_v2_item:
+    types: [edited]
+
+jobs:
+  update-dates:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Start and End Dates Automatically
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { payload } = context;
+            const item = payload.projects_v2_item;
+            const projectId = item.project_node_id;
+            const itemId = item.node_id;
+
+            // Campos que queremos usar
+            const statusFieldName = "Status";
+            const startFieldName = "Start date";
+            const endFieldName = "End date";
+
+            // Pega os valores dos campos atuais
+            const fields = item.field_values || [];
+            const statusField = fields.find(f => f.field?.name === statusFieldName);
+            const currentStatus = statusField?.value?.name;
+
+            if (!currentStatus) {
+              console.log("Nenhum status encontrado, encerrando.");
+              return;
+            }
+
+            const today = new Date().toISOString().split("T")[0];
+
+            // Função auxiliar pra buscar o ID do campo
+            async function getFieldIdByName(fieldName) {
+              const result = await github.graphql(`
+                query($projectId: ID!) {
+                  node(id: $projectId) {
+                    ... on ProjectV2 {
+                      fields(first: 50) {
+                        nodes {
+                          id
+                          name
+                        }
+                      }
+                    }
+                  }
+                }
+              `, { projectId });
+
+              const field = result.node.fields.nodes.find(f => f.name === fieldName);
+              if (!field) throw new Error(\`Campo não encontrado: \${fieldName}\`);
+              return field.id;
+            }
+
+            // Atualiza um campo de data
+            async function updateDateField(fieldId, value) {
+              await github.graphql(`
+                mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: String!) {
+                  updateProjectV2ItemFieldValue(input: {
+                    projectId: $projectId,
+                    itemId: $itemId,
+                    fieldId: $fieldId,
+                    value: { date: $value }
+                  }) {
+                    projectV2Item { id }
+                  }
+                }
+              `, { projectId, itemId, fieldId, value });
+            }
+
+            // Executa de acordo com o novo status
+            if (currentStatus === "In Progress") {
+              console.log("Status mudou para In Progress → definindo Start date");
+              const startFieldId = await getFieldIdByName(startFieldName);
+              await updateDateField(startFieldId, today);
+            }
+
+            if (currentStatus === "Done") {
+              console.log("Status mudou para Done → definindo End date");
+              const endFieldId = await getFieldIdByName(endFieldName);
+              await updateDateField(endFieldId, today);
+            }
