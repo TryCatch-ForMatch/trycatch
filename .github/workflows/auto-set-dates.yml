@@ -3,7 +3,7 @@ name: Auto set Start/End Dates on Project Status Change
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/10 * * * *" # roda a cada 10 minutos
+    - cron: '*/10 * * * *' # roda a cada 10 minutos
 
 jobs:
   update-dates:
@@ -12,6 +12,7 @@ jobs:
       - name: Update start/end dates for project items
         uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const projectNumber = 4; // 🔹 número do seu projeto
             const statusField = "Status";
@@ -20,7 +21,7 @@ jobs:
 
             const today = new Date().toISOString().split("T")[0];
 
-            // Busca o ID do projeto e os itens
+            // 🔍 Busca o ID do projeto e seus itens
             const projectQuery = await github.graphql(`
               query($owner: String!, $repo: String!, $number: Int!) {
                 repository(owner: $owner, name: $repo) {
@@ -63,9 +64,9 @@ jobs:
 
             const project = projectQuery.repository.projectV2;
             const projectId = project.id;
-
             console.log(`🗂️ Verificando projeto: ${project.title}`);
 
+            // 🔁 Loop pelos itens do projeto
             for (const item of project.items.nodes) {
               const fields = item.fieldValues.nodes;
 
@@ -96,9 +97,9 @@ jobs:
               const startFieldId = fieldNodes.find(f => f.name === startField)?.id;
               const endFieldId = fieldNodes.find(f => f.name === endField)?.id;
 
-              // Atualiza Start Date se mudou para In Progress e ainda não tem
+              // 🟢 Define Start Date
               if (statusValue === "In Progress" && !startValue && startFieldId) {
-                console.log(`🟢 Definindo Start date: ${now}`);
+                console.log(`🟢 Definindo Start date para ${item.id}: ${now}`);
                 await github.graphql(`
                   mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: String!) {
                     updateProjectV2ItemFieldValue(input: {
@@ -112,10 +113,9 @@ jobs:
                   }
                 `, { projectId, itemId: item.id, fieldId: startFieldId, value: now });
               }
-
-              // Atualiza End Date se mudou para Done e ainda não tem
+              // ✅ Define End Date
               if (statusValue === "Done" && !endValue && endFieldId) {
-                console.log(`✅ Definindo End date: ${now}`);
+                console.log(`✅ Definindo End date para ${item.id}: ${now}`);
                 await github.graphql(`
                   mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: String!) {
                     updateProjectV2ItemFieldValue(input: {
@@ -130,3 +130,5 @@ jobs:
                 `, { projectId, itemId: item.id, fieldId: endFieldId, value: now });
               }
             }
+
+            console.log("🎯 Atualização concluída!");
