@@ -6,9 +6,19 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import axios from 'axios';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 
 export function InviteForm() {
   const [email, setEmail] = useState('');
+  const [role, setRole] = useState('USER');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -16,16 +26,11 @@ export function InviteForm() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/invite', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
+      const response = await apiTryCatch.post('/invite', { email, role });
 
-      const data = await response.json();
+      const data = await response.data;
 
-      if (response.ok) {
-        // console.log("<<CÓDIGO>>", data.data.code)
+      if (response.status === 201) {
         toast.success(`Código de convite gerado: ${data.data.code}`);
         setEmail('');
       } else {
@@ -55,6 +60,25 @@ export function InviteForm() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="nome@email.com"
             />
+          </div>
+
+          <div className="space-y-1">
+            <Label htmlFor="role">Função</Label>
+            <Select
+              defaultValue={role}
+              onValueChange={(value: 'USER' | 'ADMIN' | 'MENTOR') =>
+                setRole(value)
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="USER">User</SelectItem>
+                <SelectItem value="MENTOR">Mentor</SelectItem>
+                <SelectItem value="ADMIN">Admin</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <Button type="submit" disabled={loading} className="w-full">
             {loading ? 'Enviando...' : 'Criar Convite'}
