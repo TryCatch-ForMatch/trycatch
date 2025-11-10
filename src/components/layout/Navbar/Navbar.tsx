@@ -77,18 +77,20 @@ export function Navbar() {
         <nav>
           <ul className="flex flex-col gap-6 text-base text-gray-800">
             <li>
+              {/* Página inicial */}
               <Link
                 href="/dashboard"
                 className={`flex items-center gap-2 ${isSidebarOpen ? 'justify-start' : 'justify-center'} ${pathname === '/dashboard' ? 'rounded-sm bg-[#3B38A0] p-2 text-gray-50' : 'bg-transparent'} `}
               >
                 <Home size={20} />
                 <span className={`${isSidebarOpen ? 'block' : 'hidden'}`}>
-                  Pagina Inicial
+                  Página Inicial
                 </span>
               </Link>
             </li>
 
             <li>
+              {/* Projetos */}
               <Link
                 href="/dashboard/team-projects"
                 className={`flex items-center gap-2 ${isSidebarOpen ? 'justify-start' : 'justify-center'} ${pathname === '/dashboard/team-projects' ? 'rounded-sm bg-[#3B38A0] p-2 text-gray-50' : 'bg-transparent'} `}
@@ -100,28 +102,31 @@ export function Navbar() {
               </Link>
             </li>
             <li>
+              {/* Portfólios */}
               <Link
                 href="/portfolios"
                 className={`flex items-center gap-2 ${isSidebarOpen ? 'justify-start' : 'justify-center'} ${pathname === '/portfolios' ? 'rounded-sm bg-[#3B38A0] p-2 text-gray-50' : 'bg-transparent'} `}
               >
                 <Users size={20} />
                 <span className={`${isSidebarOpen ? 'block' : 'hidden'}`}>
-                  Portfolios
+                  Portfólios
                 </span>
               </Link>
             </li>
             <li>
+              {/* Fórum */}
               <Link
                 href="/dashboard/forum"
                 className={`flex items-center gap-2 ${isSidebarOpen ? 'justify-start' : 'justify-center'} ${pathname === '/dashboard/forum' ? 'rounded-sm bg-[#3B38A0] p-2 text-gray-50' : 'bg-transparent'} `}
               >
                 <MessageSquare size={20} />
                 <span className={`${isSidebarOpen ? 'block' : 'hidden'}`}>
-                  Forum
+                  Fórum
                 </span>
               </Link>
             </li>
             <li>
+              {/* Configurações */}
               <Link
                 href="/dashboard/user-config"
                 className={`flex items-center gap-2 ${isSidebarOpen ? 'justify-start' : 'justify-center'} ${pathname === '/dashboard/user-config' ? 'rounded-sm bg-[#3B38A0] p-2 text-gray-50' : 'bg-transparent'} `}
@@ -148,12 +153,12 @@ export function Navbar() {
       {/* Rodapé - Dúvidas Frequentes */}
       <div className="text-sm">
         <Link
-          href="/faq"
-          className={`flex items-center gap-2 ${isSidebarOpen ? 'justify-start' : 'justify-center'}`}
+          href="/dashboard/faq"
+          className={`flex items-center gap-2 ${isSidebarOpen ? 'justify-start' : 'justify-center'} ${pathname === '/dashboard/faq' ? 'rounded-sm bg-[#3B38A0] p-2 text-gray-50' : 'bg-transparent'} `}
         >
           <MessageCircleQuestion size={20} />
           <span className={`${isSidebarOpen ? 'block' : 'hidden'}`}>
-            Duvidas Frequentes
+            Dúvidas Frequentes
           </span>
         </Link>
       </div>
