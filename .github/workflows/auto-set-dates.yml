@@ -1,11 +1,9 @@
 name: Auto Set Project Dates
 
 on:
-  push:
-    branches:
-      - main
-      - develop
-      - fix/**
+  schedule:
+    - cron: '*/10 * * * *' # A cada 10 minutos
+  workflow_dispatch:
 
 jobs:
   update-project-dates:
@@ -27,25 +25,54 @@ jobs:
           script: |
             const projectNumber = 4; // número do seu projeto no GitHub Projects
 
-            // Query GraphQL corrigida (sem tipos antigos)
-            const projectQuery = `
+            // Busca os campos do projeto para pegar os IDs dos campos
+            const fieldsQuery = `
+              query($owner: String!, $number: Int!) {
+                organization(login: $owner) {
+                  projectV2(number: $number) {
+                    fields(first: 20) {
+                      nodes {
+                        ... on ProjectV2FieldCommon { id name }
+                      }
+                    }
+                  }
+                }
+              }
+            `;
+            const fieldsData = await github.graphql(fieldsQuery, {
+              owner: context.repo.owner,
+              number: projectNumber
+            });
+
+            function getFieldId(name) {
+              return fieldsData.organization.projectV2.fields.nodes.find(f => f.name === name)?.id;
+            }
+            const statusFieldId = getFieldId('Status');
+            const startDateFieldId = getFieldId('Start Date');
+            const endDateFieldId = getFieldId('End Date');
+
+            if (!statusFieldId || !startDateFieldId || !endDateFieldId) {
+              throw new Error('Não foi possível encontrar os campos Status, Start Date ou End Date no projeto.');
+            }
+
+            // Busca os cards do projeto
+            const itemsQuery = `
               query($owner: String!, $repo: String!, $number: Int!) {
                 repository(owner: $owner, name: $repo) {
                   projectV2(number: $number) {
-                    id
-                    title
                     items(first: 100) {
                       nodes {
                         id
                         fieldValues(first: 20) {
                           nodes {
-                            ... on ProjectV2ItemFieldDateValue {
-                              field { name }
-                              date
-                            }
                             ... on ProjectV2ItemFieldSingleSelectValue {
-                              field { name }
+                              field { ... on ProjectV2FieldCommon { id name } }
                               name
+                              updatedAt
+                            }
+                            ... on ProjectV2ItemFieldDateValue {
+                              field { ... on ProjectV2FieldCommon { id name } }
+                              date
                             }
                           }
                         }
@@ -55,19 +82,69 @@ jobs:
                 }
               }
             `;
-
-            const data = await github.graphql(projectQuery, {
+            const itemsData = await github.graphql(itemsQuery, {
               owner: context.repo.owner,
               repo: context.repo.repo,
               number: projectNumber
             });
 
-            console.log("✅ Project data fetched successfully:", data.repository.projectV2.title);
+            const items = itemsData.repository.projectV2.items.nodes;
+            const now = new Date().toISOString().slice(0, 10); // yyyy-mm-dd
 
-            // Exemplo de lógica (ajuste conforme seu uso real)
-            const projectId = data.repository.projectV2.id;
-            console.log(`Project ID: ${projectId}`);
+            for (const item of items) {
+              let status = null, statusUpdatedAt = null, startDate = null, endDate = null;
+              for (const fv of item.fieldValues.nodes) {
+                if (fv.field?.id === statusFieldId) {
+                  status = fv.name;
+                  statusUpdatedAt = fv.updatedAt;
+                }
+                if (fv.field?.id === startDateFieldId) {
+                  startDate = fv.date;
+                }
+                if (fv.field?.id === endDateFieldId) {
+                  endDate = fv.date;
+                }
+              }
 
-            // Aqui você poderia atualizar campos ou datas conforme necessidade
-            // Exemplo:
-            // await github.graphql(`mutation { ... }`);
+              // Preenche Start Date se status for In Progress e ainda não tiver data
+              if (status === 'In Progress' && !startDate) {
+                await github.graphql(`
+                  mutation($itemId: ID!, $fieldId: ID!, $date: Date!) {
+                    updateProjectV2ItemFieldValue(
+                      input: {
+                        projectId: "${itemsData.repository.projectV2.id}",
+                        itemId: $itemId,
+                        fieldId: $fieldId,
+                        value: { date: $date }
+                      }
+                    ) { projectV2Item { id } }
+                  }
+                `, {
+                  itemId: item.id,
+                  fieldId: startDateFieldId,
+                  date: statusUpdatedAt ? statusUpdatedAt.slice(0, 10) : now
+                });
+                console.log(`Start Date preenchido para o card ${item.id}`);
+              }
+
+              // Preenche End Date se status for Done e ainda não tiver data
+              if (status === 'Done' && !endDate) {
+                await github.graphql(`
+                  mutation($itemId: ID!, $fieldId: ID!, $date: Date!) {
+                    updateProjectV2ItemFieldValue(
+                      input: {
+                        projectId: "${itemsData.repository.projectV2.id}",
+                        itemId: $itemId,
+                        fieldId: $fieldId,
+                        value: { date: $date }
+                      }
+                    ) { projectV2Item { id } }
+                  }
+                `, {
+                  itemId: item.id,
+                  fieldId: endDateFieldId,
+                  date: statusUpdatedAt ? statusUpdatedAt.slice(0, 10) : now
+                });
+                console.log(`End Date preenchido para o card ${item.id}`);
+              }
+            }
