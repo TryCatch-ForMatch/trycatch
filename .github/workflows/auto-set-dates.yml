@@ -14,7 +14,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const projectNumber = 4; // 🔹 número do seu projeto
+            const projectNumber = 4; // número do seu projeto
             const statusField = "Status";
             const startField = "Start date";
             const endField = "End date";
@@ -66,36 +66,36 @@ jobs:
             const projectId = project.id;
             console.log(`🗂️ Verificando projeto: ${project.title}`);
 
+            // 🔎 Busca IDs dos campos do projeto (fora do loop)
+            const fieldsQuery = await github.graphql(`
+              query($projectId: ID!) {
+                node(id: $projectId) {
+                  ... on ProjectV2 {
+                    fields(first: 50) {
+                      nodes {
+                        id
+                        name
+                      }
+                    }
+                  }
+                }
+              }
+            `, { projectId });
+
+            const fieldNodes = fieldsQuery.node.fields.nodes;
+            const startFieldId = fieldNodes.find(f => f.name === startField)?.id;
+            const endFieldId = fieldNodes.find(f => f.name === endField)?.id;
+
             // 🔁 Loop pelos itens do projeto
             for (const item of project.items.nodes) {
               const fields = item.fieldValues.nodes;
 
-              // Extrai valores atuais
+
               const statusValue = fields.find(f => f.field?.name === statusField)?.name;
               const startValue = fields.find(f => f.field?.name === startField)?.date;
               const endValue = fields.find(f => f.field?.name === endField)?.date;
 
               const now = today;
-
-              // Busca IDs dos campos (necessário para atualizar)
-              const fieldsQuery = await github.graphql(`
-                query($projectId: ID!) {
-                  node(id: $projectId) {
-                    ... on ProjectV2 {
-                      fields(first: 50) {
-                        nodes {
-                          id
-                          name
-                        }
-                      }
-                    }
-                  }
-                }
-              `, { projectId });
-
-              const fieldNodes = fieldsQuery.node.fields.nodes;
-              const startFieldId = fieldNodes.find(f => f.name === startField)?.id;
-              const endFieldId = fieldNodes.find(f => f.name === endField)?.id;
 
               // 🟢 Define Start Date
               if (statusValue === "In Progress" && !startValue && startFieldId) {
@@ -113,6 +113,7 @@ jobs:
                   }
                 `, { projectId, itemId: item.id, fieldId: startFieldId, value: now });
               }
+
               // ✅ Define End Date
               if (statusValue === "Done" && !endValue && endFieldId) {
                 console.log(`✅ Definindo End date para ${item.id}: ${now}`);
