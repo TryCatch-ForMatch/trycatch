@@ -1,0 +1,134 @@
+name: Auto set Start/End Dates on Project Status Change
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/10 * * * *' # roda a cada 10 minutos
+
+jobs:
+  update-dates:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update start/end dates for project items
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const projectNumber = 4; // 🔹 número do seu projeto
+            const statusField = "Status";
+            const startField = "Start date";
+            const endField = "End date";
+
+            const today = new Date().toISOString().split("T")[0];
+
+            // 🔍 Busca o ID do projeto e seus itens
+            const projectQuery = await github.graphql(`
+              query($owner: String!, $repo: String!, $number: Int!) {
+                repository(owner: $owner, name: $repo) {
+                  projectV2(number: $number) {
+                    id
+                    title
+                    items(first: 100) {
+                      nodes {
+                        id
+                        fieldValues(first: 20) {
+                          nodes {
+                            ... on ProjectV2ItemFieldDateValue {
+                              field {
+                                ... on ProjectV2DateField {
+                                  name
+                                }
+                              }
+                              date
+                            }
+                            ... on ProjectV2ItemFieldSingleSelectValue {
+                              field {
+                                ... on ProjectV2SingleSelectField {
+                                  name
+                                }
+                              }
+                              name
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              number: projectNumber
+            });
+
+            const project = projectQuery.repository.projectV2;
+            const projectId = project.id;
+            console.log(`🗂️ Verificando projeto: ${project.title}`);
+
+            // 🔁 Loop pelos itens do projeto
+            for (const item of project.items.nodes) {
+              const fields = item.fieldValues.nodes;
+
+              // Extrai valores atuais
+              const statusValue = fields.find(f => f.field?.name === statusField)?.name;
+              const startValue = fields.find(f => f.field?.name === startField)?.date;
+              const endValue = fields.find(f => f.field?.name === endField)?.date;
+
+              const now = today;
+
+              // Busca IDs dos campos (necessário para atualizar)
+              const fieldsQuery = await github.graphql(`
+                query($projectId: ID!) {
+                  node(id: $projectId) {
+                    ... on ProjectV2 {
+                      fields(first: 50) {
+                        nodes {
+                          id
+                          name
+                        }
+                      }
+                    }
+                  }
+                }
+              `, { projectId });
+
+              const fieldNodes = fieldsQuery.node.fields.nodes;
+              const startFieldId = fieldNodes.find(f => f.name === startField)?.id;
+              const endFieldId = fieldNodes.find(f => f.name === endField)?.id;
+
+              // 🟢 Define Start Date
+              if (statusValue === "In Progress" && !startValue && startFieldId) {
+                console.log(`🟢 Definindo Start date para ${item.id}: ${now}`);
+                await github.graphql(`
+                  mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: String!) {
+                    updateProjectV2ItemFieldValue(input: {
+                      projectId: $projectId,
+                      itemId: $itemId,
+                      fieldId: $fieldId,
+                      value: { date: $value }
+                    }) {
+                      projectV2Item { id }
+                    }
+                  }
+                `, { projectId, itemId: item.id, fieldId: startFieldId, value: now });
+              }
+              // ✅ Define End Date
+              if (statusValue === "Done" && !endValue && endFieldId) {
+                console.log(`✅ Definindo End date para ${item.id}: ${now}`);
+                await github.graphql(`
+                  mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: String!) {
+                    updateProjectV2ItemFieldValue(input: {
+                      projectId: $projectId,
+                      itemId: $itemId,
+                      fieldId: $fieldId,
+                      value: { date: $value }
+                    }) {
+                      projectV2Item { id }
+                    }
+                  }
+                `, { projectId, itemId: item.id, fieldId: endFieldId, value: now });
+              }
+            }
+
+            console.log("🎯 Atualização concluída!");
