@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 
 export function HomeNavBar() {
   return (
-    <div className="flex h-25 items-center justify-around">
+    <div className="sticky top-0 z-50 flex h-20 items-center justify-around bg-white/80 shadow-sm backdrop-blur-md">
       <div>
         <Link href="/.">TryCatch</Link>
       </div>
@@ -18,7 +18,7 @@ export function HomeNavBar() {
           </li>
 
           <li>
-            <Link href="/.">sobre</Link>
+            <Link href="#aboutUs">sobre</Link>
           </li>
 
           <li>
