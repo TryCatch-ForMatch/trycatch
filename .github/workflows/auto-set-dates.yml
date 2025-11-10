@@ -34,11 +34,19 @@ jobs:
                         fieldValues(first: 20) {
                           nodes {
                             ... on ProjectV2ItemFieldDateValue {
-                              field { name }
+                              field {
+                                ... on ProjectV2DateField {
+                                  name
+                                }
+                              }
                               date
                             }
                             ... on ProjectV2ItemFieldSingleSelectValue {
-                              field { name }
+                              field {
+                                ... on ProjectV2SingleSelectField {
+                                  name
+                                }
+                              }
                               name
                             }
                           }
@@ -81,6 +89,7 @@ jobs:
             // 🔁 Loop pelos itens do projeto
             for (const item of project.items.nodes) {
               const fields = item.fieldValues.nodes;
+
 
               const statusValue = fields.find(f => f.field?.name === statusField)?.name;
               const startValue = fields.find(f => f.field?.name === startField)?.date;
