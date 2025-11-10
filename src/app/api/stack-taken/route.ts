@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { checkProjectStatus } from '@/lib/check-project-status';
+import { ROLE_GROUPS } from '@/lib/roles';
 
 const createStackTakenSchema = z.object({
   projectId: z.string().min(25, 'ID inválido').max(36, 'ID inválido'),
@@ -13,7 +14,7 @@ const createStackTakenSchema = z.object({
 
 export async function POST(request: NextRequest) {
   const { authorized, response, session } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
+    allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized || !session) return response;
 
@@ -116,7 +117,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   const { authorized, response, session } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
+    allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized || !session) return response;
 

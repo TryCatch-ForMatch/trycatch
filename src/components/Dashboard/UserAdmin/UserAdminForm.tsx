@@ -21,6 +21,7 @@ import {
 import { X } from 'lucide-react';
 import { Skill } from '@prisma/client';
 import { toast } from 'sonner';
+import { ROLES, Role } from '@/lib/roles';
 
 const userAdminSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
@@ -30,7 +31,7 @@ const userAdminSchema = z.object({
   linkedin: z.string().url('URL inválida').optional().or(z.literal('')),
   github: z.string().url('URL inválida').optional().or(z.literal('')),
   bio: z.string().optional(),
-  role: z.enum(['USER', 'ADMIN']),
+  role: z.enum(Object.values(ROLES) as [Role, ...Role[]]),
   skills: z.array(z.string()).optional(),
 });
 
@@ -295,7 +296,7 @@ export function UserAdminForm() {
               <Label>Permissão</Label>
               <Select
                 value={selectedRole}
-                onValueChange={(value: 'USER' | 'ADMIN') =>
+                onValueChange={(value: 'USER' | 'ADMIN' | 'MENTOR') =>
                   setValue('role', value)
                 }
               >
@@ -305,6 +306,7 @@ export function UserAdminForm() {
                 <SelectContent>
                   <SelectItem value="USER">Usuário</SelectItem>
                   <SelectItem value="ADMIN">Administrador</SelectItem>
+                  <SelectItem value="MENTOR">Mentor</SelectItem>
                 </SelectContent>
               </Select>
               {errors.role && (

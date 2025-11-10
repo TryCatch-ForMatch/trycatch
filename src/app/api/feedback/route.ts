@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { ROLE_GROUPS } from '@/lib/roles';
 
 const feedbackSchema = z.object({
   projectId: z.string(),
@@ -15,7 +16,7 @@ const feedbackSchema = z.object({
 
 export async function POST(request: NextRequest) {
   const { authorized, response, session } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
+    allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized || !session) return response;
 
@@ -137,7 +138,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   const { authorized, response } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
+    allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized) return response;
 

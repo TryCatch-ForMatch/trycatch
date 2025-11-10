@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { checkProjectStatus } from '@/lib/check-project-status';
+import { ROLE_GROUPS } from '@/lib/roles';
 
 const updateStackTakenSchema = z.object({
   projectStackId: z.string().min(1, 'ID inválido.'),
@@ -17,7 +18,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const { authorized, response, session } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
+    allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized || !session) return response;
 
@@ -68,7 +69,7 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   const { authorized, response, session } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
+    allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized || !session) return response;
 
@@ -130,7 +131,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   const { authorized, response, session } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
+    allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized || !session) return response;
 

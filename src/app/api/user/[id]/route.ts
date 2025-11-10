@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { ROLE_GROUPS } from '@/lib/roles';
 
 const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 const updateUserSchema = z.object({
@@ -26,7 +27,7 @@ export async function GET(
   context: { params: { id: string } }
 ) {
   const { authorized, response, session } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
+    allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized || !session) return response;
 
@@ -75,7 +76,7 @@ export async function PUT(
   context: { params: { id: string } }
 ) {
   const { authorized, response, session } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
+    allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized || !session) return response;
 
@@ -180,7 +181,7 @@ export async function DELETE(
   context: { params: { id: string } }
 ) {
   const { authorized, response, session } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
+    allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized || !session) return response;
 

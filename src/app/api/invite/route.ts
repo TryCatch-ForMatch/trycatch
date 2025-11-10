@@ -4,10 +4,11 @@ import crypto from 'crypto';
 import { checkAuth } from '@/lib/check-auth';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { z } from 'zod';
+import { ROLES, Role } from '@/lib/roles';
 
 const inviteSchema = z.object({
   email: z.string().email(),
-  role: z.enum(['USER', 'ADMIN', 'MENTOR']),
+  role: z.enum(Object.values(ROLES) as [Role, ...Role[]]),
 });
 
 export async function GET() {
