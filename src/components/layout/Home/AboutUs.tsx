@@ -14,7 +14,7 @@ import {
 
 export default function AboutUs() {
   return (
-    <section className="mx-40 mt-20">
+    <section id="aboutUs" className="mx-40 mt-20 h-screen">
       <div className="grid grid-cols-2">
         <div className="justify-self-start text-left">
           <p>Nossa Conexão</p>
@@ -28,7 +28,7 @@ export default function AboutUs() {
           </div>
           <div className="flex">
             <Image
-              src="/assets/IconsAboutUs.svg"
+              src="/IconsAboutUs.svg"
               alt="Equipe colaborando em um projeto"
               width={100}
               height={100}
@@ -48,7 +48,7 @@ export default function AboutUs() {
 
         <Card className="relative h-72 overflow-hidden rounded-2xl">
           {/* Fundo invertido */}
-          <div className="absolute inset-0 scale-x-[-1] transform bg-[url('/assets/BgCardAboutUs.jpg')] bg-cover bg-center bg-no-repeat" />
+          <div className="absolute inset-0 scale-x-[-1] transform bg-[url('/BgCardAboutUs.jpg')] bg-cover bg-center bg-no-repeat" />
 
           {/* Conteúdo normal */}
           <div className="relative z-10 p-6">
