@@ -114,10 +114,53 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
+  /* HEADINGS DESKTOP */
+  h1 {
+    @apply font-medium text-[72px] leading-[100%];
+  }
+  h2 {
+    @apply font-medium text-[64px] leading-[100%];
+  }
+  h3 {
+    @apply font-medium text-[20px] leading-[100%];
+  }
+  h4 {
+    @apply font-medium text-[18px] leading-[100%];
+  }
+
+  /* BODY DESKTOP */
+  p {
+    @apply font-normal text-[16px] leading-[150%];
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    h1 {
+      @apply text-[40px];
+    }
+    h2 {
+      @apply text-[32px];
+    }
+    h3 {
+      @apply text-[18px];
+    }
+    h4 {
+      @apply text-[14px];
+    }
+    p {
+      @apply text-[14px];
+    }
+    small {
+      @apply text-[12px];
+    }
+  }
 }
+
 
 .skill-icon {
   filter: grayscale(100%) brightness(0.6) contrast(1.5);

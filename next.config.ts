@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   },
   images: {
     domains: ['res.cloudinary.com', 'cdn.jsdelivr.net'],
+    unoptimized: true,
   },
   /* config options here */
 };

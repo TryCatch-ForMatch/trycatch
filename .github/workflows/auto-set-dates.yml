@@ -34,11 +34,19 @@ jobs:
                         fieldValues(first: 20) {
                           nodes {
                             ... on ProjectV2ItemFieldDateValue {
-                              field { name }
+                              field {
+                                ... on ProjectV2DateField {
+                                  name
+                                }
+                              }
                               date
                             }
                             ... on ProjectV2ItemFieldSingleSelectValue {
-                              field { name }
+                              field {
+                                ... on ProjectV2SingleSelectField {
+                                  name
+                                }
+                              }
                               name
                             }
                           }
@@ -62,13 +70,14 @@ jobs:
             for (const item of project.items.nodes) {
               const fields = item.fieldValues.nodes;
 
+              // Extrai valores atuais
               const statusValue = fields.find(f => f.field?.name === statusField)?.name;
               const startValue = fields.find(f => f.field?.name === startField)?.date;
               const endValue = fields.find(f => f.field?.name === endField)?.date;
 
               const now = today;
 
-              // 🔎 Busca IDs dos campos para atualização
+              // Busca IDs dos campos (necessário para atualizar)
               const fieldsQuery = await github.graphql(`
                 query($projectId: ID!) {
                   node(id: $projectId) {
@@ -104,7 +113,6 @@ jobs:
                   }
                 `, { projectId, itemId: item.id, fieldId: startFieldId, value: now });
               }
-
               // ✅ Define End Date
               if (statusValue === "Done" && !endValue && endFieldId) {
                 console.log(`✅ Definindo End date para ${item.id}: ${now}`);
