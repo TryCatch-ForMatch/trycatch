@@ -1,8 +1,13 @@
+import AboutUs from '@/components/layout/Home/AboutUs';
+import HomeHero from '@/components/layout/Home/HomeHero';
+import { HomeNavBar } from '@/components/layout/Home/HomeNavBar';
+
 export default function HomePage() {
   return (
     <main>
-      <h1>Bem-vindo ao TryCatch For Match</h1>
-      {/* Links para sobre, login e registro */}
+      <HomeNavBar />
+      <HomeHero />
+      <AboutUs />
     </main>
   );
 }
