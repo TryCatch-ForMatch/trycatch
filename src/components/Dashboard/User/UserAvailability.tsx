@@ -1,6 +1,5 @@
 'use client';
-
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
@@ -14,12 +13,16 @@ import {
   SelectContent,
   SelectItem,
 } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
 import { X } from 'lucide-react';
-import { Skill } from '@prisma/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
+
+//import types
+import { IAvailability } from '@/types/interface/IAvailability';
+
+//import hook
+import { useSkills } from '@/hooks/useSkills';
 
 const schema = z.object({
   skills: z.array(z.string(), {
@@ -36,22 +39,16 @@ const schema = z.object({
     .min(1, 'Selecione pelo menos um dia com horário'),
 });
 
-type Availability = {
-  weekday: number;
-  startTime: string;
-  endTime: string;
-};
+
 
 type FormData = {
   skills: string[];
-  availabilities: Availability[];
+  availabilities: IAvailability[];
 };
 
 export function UserAvailabilityForm() {
   const router = useRouter();
-
-  const [skills, setSkills] = useState<Skill[]>([]);
-
+  const {allSkills, allUserSkills } =useSkills()
   const {
     control,
     register,
@@ -73,7 +70,6 @@ export function UserAvailabilityForm() {
   });
 
   const selectedSkills = watch('skills');
-
   const weekdays = [
     'Domingo',
     'Segunda',
@@ -93,19 +89,6 @@ export function UserAvailabilityForm() {
     }
   };
 
-  useEffect(() => {
-    const fetchSkills = async () => {
-      try {
-        const res = await fetch('/api/skill');
-        if (!res.ok) throw new Error('Erro ao carregar as skills.');
-        const data = await res.json();
-        setSkills(data);
-      } catch (error) {
-        console.error('Erro ao buscar skills:', error);
-      }
-    };
-    fetchSkills();
-  }, []);
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -131,7 +114,7 @@ export function UserAvailabilityForm() {
     }
   };
 
-  const availableSkills = skills.filter((s) => !selectedSkills.includes(s.id));
+  const availableSkills = allSkills.filter((s) => !selectedSkills.includes(s.id??"") && !allUserSkills.some(item=>item.skill?.id===s.id));
 
   return (
     <Card className="mx-auto mt-6 max-w-4xl rounded-2xl p-6 shadow-lg">
@@ -139,7 +122,7 @@ export function UserAvailabilityForm() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Skills */}
           <div className="space-y-2">
-            <Label>Skills</Label>
+            <Label>Selecionar Skills</Label>
             <Select
               onValueChange={(value: string) => {
                 if (!selectedSkills.includes(value)) {
@@ -153,7 +136,7 @@ export function UserAvailabilityForm() {
               </SelectTrigger>
               <SelectContent>
                 {availableSkills.map((skill) => (
-                  <SelectItem key={skill.id} value={skill.id}>
+                  <SelectItem key={skill.id} value={skill?.id??""}>
                     {skill.name}
                   </SelectItem>
                 ))}
@@ -166,7 +149,8 @@ export function UserAvailabilityForm() {
             {/* Listagem das skills selecionadas */}
             <div className="mt-3 flex flex-wrap gap-2">
               {selectedSkills.map((skillId: string) => {
-                const skill = skills.find((s) => s.id === skillId);
+                const skill = allSkills.find((s) => s.id === skillId);
+                
                 return (
                   <span
                     key={skillId}
@@ -191,6 +175,17 @@ export function UserAvailabilityForm() {
             </div>
           </div>
 
+            {/* Mostrando minha Skills */}
+            <Label className='font-medium'>Minhas Skils {allUserSkills.length ||0}</Label>
+            <div className='flex items-start gap-3 font-normal'>
+            {
+              allUserSkills.map((item)=>(
+                <div key={item.id} className='flex items-center gap-1 rounded-full bg-gray-200 px-3 py-1 text-base'>
+                  <span className=''>{item.skill?.name}</span>
+                </div>
+              ))
+            }
+          </div>
           {/* Dias da semana e horários */}
           <div>
             <Label className="mb-2 block font-semibold text-gray-700">

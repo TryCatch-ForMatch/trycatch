@@ -24,7 +24,6 @@ export function Navbar() {
   const { data: session } = useSession();
   const user = session?.user;
   const pathname = usePathname();
-
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   //Open sidebar

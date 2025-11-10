@@ -4,7 +4,7 @@ import { UserAvailabilityForm } from '@/components/Dashboard/User';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Configurações do Usuário | TryCatch',
+  title: 'Configurações | TryCatch',
   description: 'Gerencie suas configurações pessoais e preferências.',
 };
 
