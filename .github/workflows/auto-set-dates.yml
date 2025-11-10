@@ -1,3 +1,4 @@
+# ...existing code...
 name: Auto Set Project Dates
 
 on:
@@ -25,12 +26,13 @@ jobs:
           script: |
             const projectNumber = 4; // número do seu projeto no GitHub Projects
 
-            // Busca os campos do projeto para pegar os IDs dos campos
+            // Busca os campos do projeto para pegar os IDs dos campos (agora usando repository)
             const fieldsQuery = `
-              query($owner: String!, $number: Int!) {
-                organization(login: $owner) {
+              query($owner: String!, $repo: String!, $number: Int!) {
+                repository(owner: $owner, name: $repo) {
                   projectV2(number: $number) {
-                    fields(first: 20) {
+                    id
+                    fields(first: 50) {
                       nodes {
                         ... on ProjectV2FieldCommon { id name }
                       }
@@ -41,11 +43,16 @@ jobs:
             `;
             const fieldsData = await github.graphql(fieldsQuery, {
               owner: context.repo.owner,
+              repo: context.repo.repo,
               number: projectNumber
             });
 
+            if (!fieldsData.repository || !fieldsData.repository.projectV2) {
+              throw new Error(`Could not resolve to a ProjectV2 with the number ${projectNumber}. Verifique o número do projeto e se ele pertence a este repositório.`);
+            }
+
             function getFieldId(name) {
-              return fieldsData.organization.projectV2.fields.nodes.find(f => f.name === name)?.id;
+              return fieldsData.repository.projectV2.fields.nodes.find(f => f.name === name)?.id;
             }
             const statusFieldId = getFieldId('Status');
             const startDateFieldId = getFieldId('Start Date');
@@ -60,10 +67,11 @@ jobs:
               query($owner: String!, $repo: String!, $number: Int!) {
                 repository(owner: $owner, name: $repo) {
                   projectV2(number: $number) {
+                    id
                     items(first: 100) {
                       nodes {
                         id
-                        fieldValues(first: 20) {
+                        fieldValues(first: 50) {
                           nodes {
                             ... on ProjectV2ItemFieldSingleSelectValue {
                               field { ... on ProjectV2FieldCommon { id name } }
@@ -88,12 +96,14 @@ jobs:
               number: projectNumber
             });
 
-            const items = itemsData.repository.projectV2.items.nodes;
+            const items = itemsData.repository.projectV2.items.nodes || [];
+            const projectId = itemsData.repository.projectV2.id;
             const now = new Date().toISOString().slice(0, 10); // yyyy-mm-dd
 
             for (const item of items) {
               let status = null, statusUpdatedAt = null, startDate = null, endDate = null;
-              for (const fv of item.fieldValues.nodes) {
+              const fvNodes = (item.fieldValues && item.fieldValues.nodes) || [];
+              for (const fv of fvNodes) {
                 if (fv.field?.id === statusFieldId) {
                   status = fv.name;
                   statusUpdatedAt = fv.updatedAt;
@@ -109,10 +119,10 @@ jobs:
               // Preenche Start Date se status for In Progress e ainda não tiver data
               if (status === 'In Progress' && !startDate) {
                 await github.graphql(`
-                  mutation($itemId: ID!, $fieldId: ID!, $date: Date!) {
+                  mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $date: Date!) {
                     updateProjectV2ItemFieldValue(
                       input: {
-                        projectId: "${itemsData.repository.projectV2.id}",
+                        projectId: $projectId,
                         itemId: $itemId,
                         fieldId: $fieldId,
                         value: { date: $date }
@@ -120,6 +130,7 @@ jobs:
                     ) { projectV2Item { id } }
                   }
                 `, {
+                  projectId,
                   itemId: item.id,
                   fieldId: startDateFieldId,
                   date: statusUpdatedAt ? statusUpdatedAt.slice(0, 10) : now
@@ -130,10 +141,10 @@ jobs:
               // Preenche End Date se status for Done e ainda não tiver data
               if (status === 'Done' && !endDate) {
                 await github.graphql(`
-                  mutation($itemId: ID!, $fieldId: ID!, $date: Date!) {
+                  mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $date: Date!) {
                     updateProjectV2ItemFieldValue(
                       input: {
-                        projectId: "${itemsData.repository.projectV2.id}",
+                        projectId: $projectId,
                         itemId: $itemId,
                         fieldId: $fieldId,
                         value: { date: $date }
@@ -141,6 +152,7 @@ jobs:
                     ) { projectV2Item { id } }
                   }
                 `, {
+                  projectId,
                   itemId: item.id,
                   fieldId: endDateFieldId,
                   date: statusUpdatedAt ? statusUpdatedAt.slice(0, 10) : now
@@ -148,3 +160,5 @@ jobs:
                 console.log(`End Date preenchido para o card ${item.id}`);
               }
             }
+
+# ...existing code...
