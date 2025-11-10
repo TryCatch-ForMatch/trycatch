@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 import { buildResponse, MESSAGES } from '@/constants/messages';
+import { ROLES, Role } from '@/lib/roles';
 
 const idSchema = z.string().min(24, 'ID inválido').max(36, 'ID inválido');
 
@@ -13,7 +14,7 @@ const updateUserSchema = z.object({
   linkedin: z.union([z.string().url(), z.literal('')]).optional(),
   github: z.union([z.string().url(), z.literal('')]).optional(),
   bio: z.string().optional(),
-  role: z.enum(['USER', 'ADMIN']),
+  role: z.enum(Object.values(ROLES) as [Role, ...Role[]]),
   skills: z.array(z.string()).optional(),
 });
 

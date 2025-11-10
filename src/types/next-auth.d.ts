@@ -1,4 +1,5 @@
 import 'next-auth';
+import { Role } from '@/lib/roles';
 
 declare module 'next-auth' {
   interface User {
@@ -6,7 +7,7 @@ declare module 'next-auth' {
     name: string;
     email: string;
     avatar?: string;
-    role: 'ADMIN' | 'USER';
+    role: Role;
   }
 
   interface Session {
@@ -15,7 +16,7 @@ declare module 'next-auth' {
       name: string;
       email: string;
       avatar?: string;
-      role: 'ADMIN' | 'USER';
+      role: Role;
     };
   }
 
@@ -25,7 +26,7 @@ declare module 'next-auth' {
       name: string;
       email: string;
       avatar?: string;
-      role: 'ADMIN' | 'USER';
+      role: Role;
     }
   }
 }

@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { NextResponse, NextRequest } from 'next/server';
 import { hash } from 'bcrypt';
 import { buildResponse, MESSAGES } from '@/constants/messages';
+import { ROLES, Role } from '@/lib/roles';
 
 const adminCreateUserSchema = z.object({
   name: z.string(),
@@ -13,7 +14,7 @@ const adminCreateUserSchema = z.object({
   linkedin: z.union([z.string().url(), z.literal(''), z.null()]).optional(),
   github: z.union([z.string().url(), z.literal(''), z.null()]).optional(),
   bio: z.string().optional(),
-  role: z.enum(['USER', 'ADMIN']),
+  role: z.enum(Object.values(ROLES) as [Role, ...Role[]]),
   skills: z.array(z.string()).optional(),
 });
 

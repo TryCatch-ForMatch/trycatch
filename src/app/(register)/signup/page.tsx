@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 import UserSignupForm from '@/components/form/RegisterForm/UserSignupForm';
 
 export const metadata: Metadata = {
@@ -10,7 +11,9 @@ export default function SignupPage() {
   return (
     <>
       <div>
-        <UserSignupForm />
+        <Suspense fallback={<div>Carregando formulário...</div>}>
+          <UserSignupForm />
+        </Suspense>
       </div>
     </>
   );

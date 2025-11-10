@@ -29,7 +29,7 @@ Permite que administradores listem, atualizem e excluam usuários, além de gere
 - `email`: Email do usuário
 - `password`: Senha (apenas para criação)
 - `avatar`: URL do avatar do usuário
-- `role`: Papel do usuário (ex: ADMIN, USER)
+- `role`: Papel do usuário (ex: ADMIN, USER, MENTOR)
 - `linkedin`: URL linkedin do usuário
 - `github`: URL github do usuário
 - `bio`: Biografia do usuário

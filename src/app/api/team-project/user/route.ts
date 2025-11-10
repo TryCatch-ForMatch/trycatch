@@ -5,6 +5,7 @@ import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { checkProjectStatus } from '@/lib/check-project-status';
+import { ROLE_GROUPS } from '@/lib/roles';
 
 const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 
@@ -37,7 +38,7 @@ const updateProjectSchema = z.object({
 
 export async function GET(request: NextRequest) {
   const { authorized, response, session } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
+    allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized || !session) return response;
 
@@ -112,7 +113,7 @@ export async function GET(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   // PATCH -> alterar somente o status do projeto (ex: marcar como CONCLUÍDO)
   const { authorized, response, session } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
+    allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized || !session) return response;
 

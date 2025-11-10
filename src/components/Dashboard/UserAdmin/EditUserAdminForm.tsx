@@ -18,6 +18,7 @@ import { FullUser } from '@/types/interface/user';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { ROLES, Role } from '@/lib/roles';
 
 const editUserSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
@@ -26,7 +27,7 @@ const editUserSchema = z.object({
   github: z.string().url('URL inválida').optional().or(z.literal('')),
   bio: z.string().optional(),
   avatar: z.string().url('URL inválida').optional().or(z.literal('')),
-  role: z.enum(['USER', 'ADMIN'], {
+  role: z.enum(Object.values(ROLES) as [Role, ...Role[]], {
     required_error: 'Selecione uma permissão',
   }),
 });
@@ -174,7 +175,7 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
             <label className="text-sm font-medium">Permissão</label>
             <Select
               defaultValue={user.role}
-              onValueChange={(value: 'USER' | 'ADMIN') =>
+              onValueChange={(value: 'USER' | 'ADMIN' | 'MENTOR') =>
                 setValue('role', value)
               }
             >
@@ -184,6 +185,7 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
               <SelectContent>
                 <SelectItem value="USER">Usuário</SelectItem>
                 <SelectItem value="ADMIN">Admin</SelectItem>
+                <SelectItem value="MENTOR">Mentor</SelectItem>
               </SelectContent>
             </Select>
             {errors.role && (
