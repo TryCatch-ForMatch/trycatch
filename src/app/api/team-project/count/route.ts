@@ -26,7 +26,7 @@ export async function GET() {
       if (item.status === 'BUSCANDO') counts.buscando = item._count.status;
       if (item.status === 'EM_ANDAMENTO')
         counts.emAndamento = item._count.status;
-      if (item.status === 'CONCLUÍDO') counts.concluido = item._count.status;
+      if (item.status === 'CONCLUIDO') counts.concluido = item._count.status;
     });
 
     return NextResponse.json({ success: true, counts });

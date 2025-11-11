@@ -154,7 +154,7 @@ model UserAvailability {
 enum ProjectStatus {
   BUSCANDO
   EM_ANDAMENTO
-  // CONCLUÍDO
+  CONCLUIDO
 }
 
 enum UserRole {

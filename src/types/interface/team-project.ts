@@ -9,7 +9,7 @@ export interface ProjectSummaryType {
   status?: string;
 }
 
-export type ProjectStatus = 'BUSCANDO' | 'EM_ANDAMENTO' | 'CONCLUÍDO';
+export type ProjectStatus = 'BUSCANDO' | 'EM_ANDAMENTO' | 'CONCLUIDO';
 
 export interface ProjectDetailsType {
   id: string;

@@ -111,7 +111,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
-  // PATCH -> alterar somente o status do projeto (ex: marcar como CONCLUÍDO)
+  // PATCH -> alterar somente o status do projeto (ex: marcar como CONCLUIDO)
   const { authorized, response, session } = await checkAuth({
     allowedRoles: ROLE_GROUPS.ALL,
   });

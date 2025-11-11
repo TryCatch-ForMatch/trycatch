@@ -35,7 +35,7 @@ export async function checkProjectStatus(projectId: string) {
     });
   }
 
-  if (project.status === ProjectStatus.CONCLUÍDO) {
+  if (project.status === ProjectStatus.CONCLUIDO) {
     console.log('✅ Projeto já está concluído — sem alterações.');
     return buildResponse({
       success: true,
