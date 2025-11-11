@@ -16,7 +16,7 @@ export default function HomeHero() {
       {/* Conteúdo principal */}
       <div className="flex flex-col items-center justify-center rounded-3xl bg-gradient-to-r from-[#e3f0ff] via-[#f8f5ff] to-[#ffeef5] p-10 text-center">
         <Image
-          src="heroText.svg"
+          src="/heroText.svg"
           alt="Equipe colaborando em um projeto"
           width={500}
           height={500}
