@@ -7,7 +7,7 @@
 
 */
 -- CreateEnum
-CREATE TYPE "ProjectStatus" AS ENUM ('BUSCANDO', 'EM_ANDAMENTO', 'CONCLUÍDO');
+CREATE TYPE "ProjectStatus" AS ENUM ('BUSCANDO', 'EM_ANDAMENTO', 'CONCLUIDO');
 
 -- AlterTable
 ALTER TABLE "User" DROP CONSTRAINT "User_pkey",
