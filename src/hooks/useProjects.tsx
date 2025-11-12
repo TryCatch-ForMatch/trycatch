@@ -43,11 +43,16 @@ export function useProjects() {
   }, []);
 
   //Busca as estatisca dos projectos. Concluido|Buscando|Em Adnamento
-  const fetchProjectsStatics = useCallback(async () => {
-    setIsProjectsLoading(true);
+  const fetchProjectsStatics = useCallback(async (initial = false) => {
+    if (initial === true) setIsProjectsLoading(true);
     try {
       const response = await apiTryCatch.get('/team-project/count');
-      setProjectsEstatistica(response.data);
+      const newData = response.data;
+      setProjectsEstatistica((prev) => {
+        if (JSON.stringify(prev) === JSON.stringify(newData)) return prev;
+
+        return newData;
+      });
     } catch (error) {
       console.error('Erro ao buscar projetos:', error);
       throw error;
@@ -57,10 +62,16 @@ export function useProjects() {
   }, []);
 
   useEffect(() => {
+    fetchProjectsStatics(true);
+    const interval = setInterval(fetchProjectsStatics, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
     fetchProjects();
     fetchProjectsDetails();
-    fetchProjectsStatics();
-  }, [fetchProjects, fetchProjectsDetails, fetchProjectsStatics]);
+  }, [fetchProjects, fetchProjectsDetails]);
 
   const getProjectDetailsById = async (id: string) => {
     try {
