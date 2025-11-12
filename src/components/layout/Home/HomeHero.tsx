@@ -71,7 +71,7 @@ export default function HomeHero() {
 
           <div className="flex content-center items-end justify-center">
             <Mouse />
-            <p> rolar para baixo</p>
+            <p className="ml-2">rolar para baixo</p>
           </div>
         </div>
       </div>
