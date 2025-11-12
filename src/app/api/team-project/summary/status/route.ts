@@ -4,6 +4,7 @@ import { NextResponse, NextRequest } from 'next/server';
 import { ROLE_GROUPS } from '@/lib/roles';
 import { z } from 'zod';
 import { Prisma, ProjectStatus } from '@prisma/client';
+import { buildResponse, MESSAGES } from '@/constants/messages';
 
 export async function GET(req: NextRequest) {
   const { authorized, response } = await checkAuth({
@@ -20,11 +21,16 @@ export async function GET(req: NextRequest) {
   const parsed = statusSchema.safeParse(statusParam);
 
   if (!parsed.success && statusParam) {
-    return NextResponse.json({ error: 'Status inválido' }, { status: 400 });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      errors: { status: 'Status inválido' },
+      status: 400,
+    });
   }
 
-  // Aqui criamos o filtro condicional
-  const where = parsed.data ? { status: parsed.data } : {};
+  // Aqui criamos o filtro condicional e convertemos o status para o tipo correto
+  const where = parsed.data ? { status: parsed.data as ProjectStatus } : {};
 
   const projects = await prisma.project.findMany({
     where,
@@ -34,6 +40,14 @@ export async function GET(req: NextRequest) {
       stacksTaken: true,
     },
   });
+
+  if (projects.length === 0) {
+    return buildResponse({
+      success: false,
+      message: MESSAGES.PROJECT.NOT_FOUND,
+      status: 404,
+    });
+  }
 
   type ProjectWithRelations = Prisma.ProjectGetPayload<{
     include: {
