@@ -29,7 +29,7 @@ export default function FAQ() {
   ];
 
   return (
-    <section className="mt-20 h-screen w-full px-40">
+    <section className="mt-20 w-full px-40">
       <div className="mb-20 flex justify-center">
         <h3 className="text-center text-[48px] font-medium">
           Tudo o que colocamos <br /> em prática
