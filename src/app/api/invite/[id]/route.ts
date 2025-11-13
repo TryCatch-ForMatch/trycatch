@@ -52,9 +52,9 @@ export async function PATCH(request: NextRequest) {
     });
   }
 
-  const { email } = body;
+  const { email, role } = body;
 
-  if (!email) {
+  if (!email || !role) {
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
@@ -82,7 +82,7 @@ export async function PATCH(request: NextRequest) {
 
     const invite = await prisma.invite.update({
       where: { id },
-      data: { email },
+      data: { email, role },
     });
 
     return NextResponse.json(invite);
