@@ -1,3 +1,15 @@
+enum ProjectStatus {
+  BUSCANDO
+  EM_ANDAMENTO
+  CONCLUIDO
+}
+
+enum UserRole {
+  ADMIN
+  USER
+  MENTOR
+}
+
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "windows", "linux-musl", "linux-musl-openssl-3.0.x"]
@@ -27,6 +39,7 @@ model User {
   stacksTaken       StackTaken[]
   availability      UserAvailability[]
   skills            UserSkill[]
+  certificates      UserCertificate[]
 }
 
 model Skill {
@@ -151,14 +164,17 @@ model UserAvailability {
   user      User     @relation(fields: [userId], references: [id])
 }
 
-enum ProjectStatus {
-  BUSCANDO
-  EM_ANDAMENTO
-  CONCLUIDO
-}
+model UserCertificate {
+  id          String   @id @default(cuid())
+  userId      String
 
-enum UserRole {
-  ADMIN
-  USER
-  MENTOR
+  title       String    // Título do certificado
+  url         String?   // Link público opcional
+  issuer      String    // Emissor do certificado
+  date        String    // Mês/ano (ex: "10/2024")
+  description String?   // Competências, conteúdo ou resumo
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user        User      @relation(fields: [userId], references: [id])
 }
