@@ -137,6 +137,15 @@ export const MESSAGES = {
     FETCH_SUCCESS: 'Disponibilidades carregadas com sucesso.',
     INTERNAL_ERROR: 'Erro interno ao processar disponibilidade.',
   },
+  USER_CERTIFICATE: {
+    NOT_FOUND: 'Associação de certificado ao usuário não encontrada.',
+    CREATED: 'Certificado criado com sucesso.',
+    UPDATED: 'Certificado atualizado com sucesso.',
+    ALREADY_EXISTS: 'Certificado já existe para este usuário',
+    DELETED: 'Certificado excluído com sucesso.',
+    FETCH_SUCCESS: 'Certificados do usuário carregados com sucesso.',
+    INTERNAL_ERROR: 'Erro interno ao processar certificados do usuário.',
+  },
   USER_SKILL: {
     NOT_FOUND: 'Associação de habilidade ao usuário não encontrada.',
     CREATED: 'Habilidade adicionada ao usuário com sucesso.',
