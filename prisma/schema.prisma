@@ -40,6 +40,7 @@ model User {
   availability      UserAvailability[]
   skills            UserSkill[]
   certificates      UserCertificate[]
+  emailVisible      Boolean             @default(false)
 }
 
 model Skill {
