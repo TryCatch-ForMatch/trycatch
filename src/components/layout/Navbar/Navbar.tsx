@@ -18,6 +18,7 @@ import {
   ChevronLeft,
   FolderKanban,
   MessageCircleQuestion,
+  UserRoundCog,
 } from 'lucide-react';
 
 export function Navbar() {
@@ -136,6 +137,20 @@ export function Navbar() {
                 </span>
               </Link>
             </li>
+            {/* Admin Page */}
+            {user?.role === 'ADMIN' && (
+              <li>
+                <Link
+                  href="/dashboard/admin-page"
+                  className={`flex items-center gap-2 ${isSidebarOpen ? 'justify-start' : 'justify-center'} ${pathname === '/dashboard/admin-page' ? 'rounded-sm bg-[#3B38A0] p-2 text-gray-50' : 'bg-transparent'} `}
+                >
+                  <UserRoundCog size={20} />
+                  <span className={`${isSidebarOpen ? 'block' : 'hidden'}`}>
+                    Admin Page
+                  </span>
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
       </div>
