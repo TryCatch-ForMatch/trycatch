@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
+    "@next/font": "^14.2.15",
     "@prisma/client": "^6.9.0",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-dialog": "^1.1.14",

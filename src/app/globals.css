@@ -1,13 +1,17 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
+/* ===========================
+   THEME / TOKENS DO SISTEMA
+=========================== */
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -26,11 +30,13 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -39,33 +45,66 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* BREAKPOINTS */
+  --breakpoint-sm: 375px;
+  --breakpoint-md: 810px;
+  --breakpoint-lg: 1200px;
+  --breakpoint-xl: 1440px;
+  --breakpoint-xxl: 1920px;
+
+  /* Cores padrões extras */
+  --color-brand-light: var(--brand-light);
+  --color-brand-dark: var(--brand-dark);
+
+  --color-primary-default: var(--primary-default);
+  --color-primary-light: var(--primary-light);
+
+  --color-gray-500: var(--gray-500);
+  --color-gray-400: var(--gray-400);
+  --color-gray-300: var(--gray-300);
+  --color-gray-200: var(--gray-200);
+  --color-gray-100: var(--gray-100);
+  --color-gray-white: var(--gray-white);
 }
 
+/* ===========================
+   ROOT (LIGHT MODE)
+=========================== */
 :root {
   --radius: 0.625rem;
+
   --background: oklch(98.5% 0.002 247.839);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
+
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
+
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
+
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
+
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
+
   --destructive: oklch(0.577 0.245 27.325);
+
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
+
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
+
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -74,32 +113,59 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Cores padrões extras */
+  --brand-light: #ffffff;
+  --brand-dark: #0d0d14;
+
+  --primary-default: #3b3bad;
+  --primary-light: #d0dded;
+
+  --gray-500: #101014;
+  --gray-400: #35343c;
+  --gray-300: #5c5c65;
+  --gray-200: #a6a6aa;
+  --gray-100: #eaeafb;
+  --gray-white: #ffffff;
 }
 
+/* ===========================
+   DARK MODE
+=========================== */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
+
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
+
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
+
   --primary: oklch(0.922 0 0);
   --primary-foreground: oklch(0.205 0 0);
+
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
+
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
+
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
+
   --destructive: oklch(0.704 0.191 22.216);
+
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
+
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
+
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
@@ -110,6 +176,9 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* ===========================
+   BASE (SEU BLOCO MANTIDO 100%)
+=========================== */
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -119,49 +188,70 @@
     @apply bg-background text-foreground;
   }
 
-  /* HEADINGS DESKTOP */
+  /* HEADINGS */
   h1 {
-    @apply font-medium text-[72px] leading-[100%];
+    @apply text-[40px] leading-[100%] font-medium sm:text-[56px] md:text-[72px];
   }
+
   h2 {
-    @apply font-medium text-[64px] leading-[100%];
+    @apply text-[32px] leading-[100%] font-medium sm:text-[48px] md:text-[64px];
   }
+
   h3 {
-    @apply font-medium text-[20px] leading-[100%];
+    @apply text-[18px] leading-[100%] font-medium md:text-[20px];
   }
+
   h4 {
-    @apply font-medium text-[18px] leading-[100%];
+    @apply text-[14px] leading-[100%] font-medium sm:text-[16px] md:text-[18px];
   }
 
-  /* BODY DESKTOP */
+  /* BODY */
   p {
-    @apply font-normal text-[16px] leading-[150%];
+    @apply text-[12px] leading-[150%] font-normal sm:text-[14px] md:text-[16px] lg:text-[18px];
   }
 
-  /* MOBILE */
-  @media (max-width: 768px) {
-    h1 {
-      @apply text-[40px];
-    }
-    h2 {
-      @apply text-[32px];
-    }
-    h3 {
-      @apply text-[18px];
-    }
-    h4 {
-      @apply text-[14px];
-    }
-    p {
-      @apply text-[14px];
-    }
-    small {
-      @apply text-[12px];
-    }
-  }
 }
 
+/* ===========================
+   UTILITIES
+=========================== */
+@layer utilities {
+  .bg-branding-light {
+    background-color: var(--brand-light);
+  }
+  .bg-branding-dark {
+    background-color: var(--brand-dark);
+  }
+
+  .bg-primary {
+    background-color: var(--primary-default);
+  }
+  .bg-primary-light {
+    background-color: var(--primary-light);
+  }
+
+  .bg-gray-500c {
+    background-color: var(--gray-500);
+  }
+  .bg-gray-400c {
+    background-color: var(--gray-400);
+  }
+  .bg-gray-300c {
+    background-color: var(--gray-300);
+  }
+  .bg-gray-200c {
+    background-color: var(--gray-200);
+  }
+  .bg-gray-100c {
+    background-color: var(--gray-100);
+  }
+  .bg-gray-whitec {
+    background-color: var(--gray-white);
+  }
+}
 
 .skill-icon {
   filter: grayscale(100%) brightness(0.6) contrast(1.5);
 }
+
+
