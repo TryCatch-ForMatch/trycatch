@@ -13,7 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import axios from 'axios';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 
 export function InviteForm() {
