@@ -1,13 +1,11 @@
-import { Metadata } from 'next';
+import BasePage from '@/components/Dashboard/BasePage';
+import UnderDevelopment from '@/components/UnderDevelopment';
 
-export const metadata: Metadata = {
-  title: 'Portfolio | TryCatch',
-  description: 'Meu portfólio de projetos e trabalhos',
-};
-export default function PortfolioPage() {
+export default function PortfoliosPage() {
   return (
-    <main>
-      <h1>Portfolio</h1>
-    </main>
+    <BasePage>
+      <h1>Portfólio</h1>
+      <UnderDevelopment />
+    </BasePage>
   );
 }
