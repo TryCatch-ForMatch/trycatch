@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -27,6 +26,7 @@ type InviteSchema = z.infer<typeof inviteSchema>;
 
 export function InviteForm() {
   const [loading, setLoading] = useState(false);
+  const [inviteCode, setInviteCode] = useState<string | null>(null);
 
   const form = useForm<InviteSchema>({
     resolver: zodResolver(inviteSchema),
@@ -45,7 +45,6 @@ export function InviteForm() {
     formState: { errors },
   } = form;
 
-  const email = watch('email');
   const role = watch('role');
 
   const onSubmit = async (data: InviteSchema) => {
@@ -56,7 +55,10 @@ export function InviteForm() {
       const result = response.data;
 
       if (response.status === 201) {
-        toast.success(`Código de convite gerado: ${result.data.code}`);
+        const code = result.data.code;
+
+        setInviteCode(code); // salva o código ao criar
+        toast.success('Código de convite gerado!');
         reset();
       } else {
         toast.error(result.error || 'Erro ao criar convite.');
@@ -69,56 +71,76 @@ export function InviteForm() {
     }
   };
 
+  const copyToClipboard = () => {
+    if (!inviteCode) return;
+
+    navigator.clipboard.writeText(inviteCode);
+    toast.success('Código copiado!');
+  };
+
   return (
-    <Card className="mx-auto mt-4 max-w-md rounded-2xl p-6 shadow-lg">
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <h2 className="text-xl font-semibold text-gray-800">Criar Convite</h2>
+    <div className="mt-4 w-full rounded-2xl bg-white p-6 shadow-lg">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {/* Email */}
+        <div className="space-y-1">
+          <Label htmlFor="email">E-mail do convidado</Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="nome@email.com"
+            {...register('email')}
+          />
+          {errors.email && (
+            <p className="text-xs text-red-500">{errors.email.message}</p>
+          )}
+        </div>
 
-          {/* Email */}
-          <div className="space-y-1">
-            <Label htmlFor="email">E-mail do convidado</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="nome@email.com"
-              {...register('email')}
-            />
-            {errors.email && (
-              <p className="text-xs text-red-500">{errors.email.message}</p>
-            )}
+        {/* Role */}
+        <div className="space-y-1">
+          <Label htmlFor="role">Função</Label>
+          <Select
+            value={role}
+            onValueChange={(value) =>
+              setValue('role', value as 'USER' | 'ADMIN' | 'MENTOR')
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Selecione" />
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectItem value="USER">User</SelectItem>
+              <SelectItem value="MENTOR">Mentor</SelectItem>
+              <SelectItem value="ADMIN">Admin</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {errors.role && (
+            <p className="text-xs text-red-500">{errors.role.message}</p>
+          )}
+        </div>
+
+        <Button type="submit" disabled={loading} className="w-full">
+          {loading ? 'Enviando...' : 'Criar Convite'}
+        </Button>
+      </form>
+
+      {/* Exibir o código criado */}
+      {inviteCode && (
+        <div className="mt-6 rounded-xl border bg-gray-100 p-4">
+          <p className="mb-2 text-sm font-medium">Código de convite criado:</p>
+
+          <div className="flex items-center gap-2">
+            <span className="flex-1 rounded-md border bg-white px-3 py-2 font-mono text-lg tracking-wide">
+              {inviteCode}
+            </span>
+
+            <Button onClick={copyToClipboard} variant="secondary">
+              Copiar
+            </Button>
           </div>
-
-          {/* Role */}
-          <div className="space-y-1">
-            <Label htmlFor="role">Função</Label>
-            <Select
-              value={role}
-              onValueChange={(value) =>
-                setValue('role', value as 'USER' | 'ADMIN' | 'MENTOR')
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione" />
-              </SelectTrigger>
-
-              <SelectContent>
-                <SelectItem value="USER">User</SelectItem>
-                <SelectItem value="MENTOR">Mentor</SelectItem>
-                <SelectItem value="ADMIN">Admin</SelectItem>
-              </SelectContent>
-            </Select>
-
-            {errors.role && (
-              <p className="text-xs text-red-500">{errors.role.message}</p>
-            )}
-          </div>
-
-          <Button type="submit" disabled={loading} className="w-full">
-            {loading ? 'Enviando...' : 'Criar Convite'}
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+        </div>
+      )}
+    </div>
   );
 }

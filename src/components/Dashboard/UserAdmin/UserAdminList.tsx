@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Pencil, Trash } from 'lucide-react';
 import { BasicUser, FullUser } from '@/types/interface/user';
@@ -69,15 +69,15 @@ export function UserAdminList() {
   };
 
   return (
-    <Card className="mx-auto mt-6 max-w-4xl rounded-2xl shadow-md">
-      <CardContent className="space-y-4 p-6">
+    <CardContent className="mx-auto mt-6 max-w-4xl rounded-2xl shadow-md">
+      <div className="space-y-4 p-6">
         {users.map((user) => (
-          <Card
+          <div
             key={user.id}
             className="flex items-center justify-between p-4 shadow-sm"
           >
-            <div className="flex items-center gap-1">
-              <p className="w-40 truncate font-semibold">{user.name}</p>
+            <div className="items-left flex flex-col gap-1">
+              <p className="w-100 truncate font-semibold">{user.name}</p>
               <p className="w-40 truncate text-sm text-gray-600">
                 {user.email}
               </p>
@@ -99,9 +99,9 @@ export function UserAdminList() {
                 <Trash size={12} className="mr-1" /> Excluir
               </Button>
             </div>
-          </Card>
+          </div>
         ))}
-      </CardContent>
+      </div>
 
       <Modal
         open={isDialogOpen}
@@ -116,6 +116,6 @@ export function UserAdminList() {
           />
         )}
       </Modal>
-    </Card>
+    </CardContent>
   );
 }
