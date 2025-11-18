@@ -8,7 +8,9 @@ const nextConfig: NextConfig = {
     domains: ['res.cloudinary.com', 'cdn.jsdelivr.net'],
     unoptimized: true,
   },
-  /* config options here */
+  serverActions: {
+    bodySizeLimit: '5mb', // define o limite do body para 5 MB
+  },
 };
 
 export default nextConfig;
