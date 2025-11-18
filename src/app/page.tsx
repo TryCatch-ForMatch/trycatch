@@ -9,11 +9,16 @@ export default function HomePage() {
   return (
     <main>
       <HomeNavBar />
-      <HomeHero />
-      <AboutUs />
-      <Faq />
-      <JoinUs />
-      <Footer />
+
+      <div className="mx-[20px] md:mx-[28px] lg:mx-[24px] xl:mx-[40px] xxl:mx-[40px]">
+        <HomeHero />
+        {/*
+        <AboutUs />
+        <Faq />
+        <JoinUs />
+        <Footer />
+        */}
+      </div>
     </main>
   );
 }
