@@ -22,7 +22,7 @@ export function InviteCard() {
   }, []);
 
   return (
-    <Card className="rounded-2xl p-4 shadow">
+    <Card className="rounded-2xl p-2 shadow">
       <CardContent className="space-y-2">
         <p className="text-sm text-muted-foreground">Convites Pendentes</p>
         <p className="text-2xl font-bold">

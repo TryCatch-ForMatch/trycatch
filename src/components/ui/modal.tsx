@@ -6,14 +6,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogClose,
 } from '@/components/ui/dialog';
 
-import { Button } from './button';
-import { X } from 'lucide-react';
 import { ReactNode } from 'react';
 
-type ModalSize = 'sm' | 'md' | 'lg' | 'xl';
+export type ModalSize = 'sm' | 'md' | 'lg' | 'xl';
 
 interface ModalProps {
   open: boolean;
@@ -37,7 +34,7 @@ export default function Modal({
   title,
   description,
   children,
-  size = 'lg',
+  size = 'xl',
 }: ModalProps) {
   return (
     <Dialog
@@ -45,16 +42,11 @@ export default function Modal({
       onOpenChange={(isOpen: boolean) => !isOpen && onClose()}
     >
       <DialogContent
-        className={`w-auto ${sizeClasses[size]} overflow-hidden rounded-2xl p-6 shadow-lg`}
+        className={`w-full ${sizeClasses[size]} overflow-hidden rounded-2xl p-6 shadow-lg`}
       >
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             <span>{title}</span>
-            <DialogClose asChild>
-              <Button variant="ghost" size="icon">
-                <X className="h-4 w-4" />
-              </Button>
-            </DialogClose>
           </DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>

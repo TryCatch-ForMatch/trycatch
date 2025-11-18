@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Pencil, Trash, Check, X } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
@@ -152,8 +152,8 @@ export function TechStackList() {
   };
 
   return (
-    <Card className="mx-auto mt-6 max-w-3xl rounded-2xl shadow-md">
-      <CardContent className="space-y-4 p-6">
+    <CardContent className="mx-auto mt-6 max-w-3xl rounded-2xl shadow-md">
+      <div className="space-y-4 p-6">
         <h2 className="text-xl font-semibold text-gray-800">
           Stacks Cadastradas
         </h2>
@@ -244,7 +244,7 @@ export function TechStackList() {
           title="Stack vinculada a projetos"
           description="Esta stack está em uso. Alterações podem impactar projetos existentes. Deseja continuar?"
         />
-      </CardContent>
-    </Card>
+      </div>
+    </CardContent>
   );
 }

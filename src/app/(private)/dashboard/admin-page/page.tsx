@@ -1,11 +1,6 @@
-'use client';
-
-import { useSession } from 'next-auth/react';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { checkAuth } from '@/lib/check-auth';
+import { redirect } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { InviteForm, InviteList } from '@/components/Dashboard/Invite';
-import Modal from '@/components/ui/modal';
 import {
   InviteCard,
   ProjectCard,
@@ -13,138 +8,85 @@ import {
   StackCard,
   UserCard,
 } from '@/components/Dashboard/PainelCards';
-import { SkillForm, SkillList } from '@/components/Dashboard/Skill';
-import { UserAdminForm, UserAdminList } from '@/components/Dashboard/UserAdmin';
-import { TechStackForm, TechStackList } from '@/components/Dashboard/TechStack';
-import { useState } from 'react';
+import BasePage from '@/components/Dashboard/BasePage';
+import Link from 'next/link';
+import { Mail, Wrench, Layers, Users, Folders } from 'lucide-react';
 
-export default function AdminPage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+export default async function AdminPage() {
+  const auth = await checkAuth({ requireAdmin: true });
 
-  const [openInvite, setOpenInvite] = useState(false);
-  const [openSkill, setOpenSkill] = useState(false);
-  const [openStack, setOpenStack] = useState(false);
-  const [openUserAdmin, setOpenUserAdmin] = useState(false);
-
-  const [inviteList, setInviteList] = useState(false);
-  const [skillList, setSkillList] = useState(false);
-  const [stackList, setStackList] = useState(false);
-  const [userAdminList, setUserAdminList] = useState(false);
-
-  useEffect(() => {
-    if (status === 'loading') return;
-    if (!session) {
-      router.push('/dashboard');
-    } else if (session.user.role !== 'ADMIN') {
-      router.push('/dashboard');
-    }
-  }, [session, status, router]);
-
-  if (status === 'loading') {
-    return <div className="p-6">Carregando...</div>;
+  if (!auth.authorized) {
+    redirect('/dashboard');
   }
 
   return (
-    <main className="space-y-6 p-6">
-      <h1 className="text-2xl font-bold">Painel Administrativo</h1>
+    <BasePage>
+      <div className="p-10">
+        <h1 className="text-2xl font-bold">Painel Administrativo</h1>
 
-      {/* Painel com os números e status */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        <ProjectCard></ProjectCard>
-        <UserCard></UserCard>
-        <InviteCard></InviteCard>
-        <SkillCard></SkillCard>
-        <StackCard></StackCard>
+        {/* Painel com os números e status */}
+        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <ProjectCard />
+          <UserCard />
+          <InviteCard />
+          <SkillCard />
+          <StackCard />
+        </div>
+
+        <div className="mt-10">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            <Link href="/dashboard/admin-page/invites">
+              <Button
+                variant="outline"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl"
+              >
+                <Mail className="size-5" />
+                Convites
+              </Button>
+            </Link>
+
+            <Link href="/dashboard/admin-page/skills">
+              <Button
+                variant="outline"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl"
+              >
+                <Wrench className="size-5" />
+                Skills
+              </Button>
+            </Link>
+
+            <Link href="/dashboard/admin-page/tech-stacks">
+              <Button
+                variant="outline"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl"
+              >
+                <Layers className="size-5" />
+                Tech Stacks
+              </Button>
+            </Link>
+
+            <Link href="/dashboard/admin-page/users">
+              <Button
+                variant="outline"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl"
+              >
+                <Users className="size-5" />
+                Usuários
+              </Button>
+            </Link>
+
+            <Link href="/dashboard/admin-page/ui-assets">
+              <Button
+                variant="outline"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl"
+              >
+                <Folders className="size-5" />
+                UI Assets
+              </Button>
+            </Link>
+          </div>
+        </div>
       </div>
-
-      {/* Botões de Ação */}
-      <div className="mt-6 flex flex-wrap gap-4">
-        <div className="flex flex-col space-y-6 p-6">
-          <Button onClick={() => setOpenInvite(true)}>Cadastrar Convite</Button>
-          <Button onClick={() => setInviteList(true)}>Listar Convites</Button>
-        </div>
-        <div className="flex flex-col space-y-6 p-6">
-          <Button onClick={() => setOpenSkill(true)}>Cadastrar Skill</Button>
-          <Button onClick={() => setSkillList(true)}>Listar Skills</Button>
-        </div>
-        <div className="flex flex-col space-y-6 p-6">
-          <Button onClick={() => setOpenStack(true)}>Cadastrar Stack</Button>
-          <Button onClick={() => setStackList(true)}>Listar Stacks</Button>
-        </div>
-        <div className="flex flex-col space-y-6 p-6">
-          <Button onClick={() => setOpenUserAdmin(true)}>
-            Cadastrar Usuário
-          </Button>
-          <Button onClick={() => setUserAdminList(true)}>
-            Listar Usuários
-          </Button>
-        </div>
-      </div>
-
-      {/* Modal Convite */}
-      <Modal
-        open={openInvite}
-        onClose={() => setOpenInvite(false)}
-        // title="Cadastro de Convite"
-      >
-        <InviteForm />
-      </Modal>
-      <Modal
-        open={inviteList}
-        onClose={() => setInviteList(false)}
-        title="Listar Convites"
-      >
-        <InviteList />
-      </Modal>
-
-      {/* Modal Skill */}
-      <Modal
-        open={openSkill}
-        onClose={() => setOpenSkill(false)}
-        title="Cadastro de Skill"
-      >
-        <SkillForm />
-      </Modal>
-      <Modal
-        open={skillList}
-        onClose={() => setSkillList(false)}
-        title="Listar Skills"
-      >
-        <SkillList />
-      </Modal>
-
-      {/* Modal Stack */}
-      <Modal
-        open={openStack}
-        onClose={() => setOpenStack(false)}
-        title="Cadastro de Stack"
-      >
-        <TechStackForm />
-      </Modal>
-      <Modal
-        open={stackList}
-        onClose={() => setStackList(false)}
-        title="Listar Stacks"
-      >
-        <TechStackList />
-      </Modal>
-
-      {/* Modal User Admin */}
-      <Modal
-        open={openUserAdmin}
-        onClose={() => setOpenUserAdmin(false)}
-        title="Cadastro de Usuário Admin"
-      >
-        <UserAdminForm />
-      </Modal>
-      <Modal
-        open={userAdminList}
-        onClose={() => setUserAdminList(false)}
-        title="Listar Usuários"
-      >
-        <UserAdminList />
-      </Modal>
-    </main>
+    </BasePage>
   );
 }

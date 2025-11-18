@@ -199,49 +199,6 @@ export function UserEdit({ user }: UserEditProps) {
             <Label>Bio</Label>
             <Textarea {...register('bio')} />
           </div>
-
-          {/* Skills */}
-          {/* <div>
-            <Label>Skills</Label>
-            {!loadingSkills && (
-              <>
-                <Select onValueChange={handleAddSkill} value="">
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Selecione uma skill" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {availableSkills.map((skill) => (
-                      <SelectItem key={skill.id} value={skill.id}>
-                        {skill.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {selectedSkills.map((skillId) => {
-                    const skill = skills.find((s) => s.id === skillId);
-                    return (
-                      <span
-                        key={skillId}
-                        className="flex items-center gap-1 rounded-full bg-gray-200 px-3 py-1 text-xs"
-                      >
-                        {skill?.name || skillId}
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveSkill(skillId)}
-                          className="ml-1 text-gray-500 hover:text-red-500"
-                        >
-                          <X size={12} />
-                        </button>
-                      </span>
-                    );
-                  })}
-                </div>
-              </>
-            )}
-          </div> */}
-
-          {/* Submit */}
           <Button type="submit" disabled={isSubmitting} className="w-full">
             {isSubmitting ? 'Salvando...' : 'Salvar Alterações'}
           </Button>

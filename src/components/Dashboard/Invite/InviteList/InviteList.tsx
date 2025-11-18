@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Check, Pencil, Trash, X } from 'lucide-react';
@@ -12,6 +11,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { AxiosError } from 'axios';
+import { CardContent } from '@/components/ui/card';
 
 const editInviteSchema = z.object({
   email: z.string().email('Email inválido'),
@@ -118,8 +118,8 @@ export function InviteList() {
   };
 
   return (
-    <Card className="mx-auto mt-6 max-w-4xl rounded-2xl shadow-md">
-      <CardContent className="space-y-4 p-6">
+    <CardContent className="mx-auto mt-6 max-w-4xl rounded-2xl shadow-md">
+      <div className="space-y-4 p-6">
         <h2 className="text-xl font-semibold">Lista de Convites</h2>
 
         {loading && (
@@ -192,13 +192,20 @@ export function InviteList() {
               ) : (
                 <>
                   <div className="flex flex-col">
-                    <span className="truncate font-medium">{invite.email}</span>
-                    <span className="text-sm text-gray-600">{invite.role}</span>
+                    <div className="flex flex-row justify-between gap-4">
+                      <span className="truncate font-medium">
+                        {invite.email}
+                      </span>
+                      <span className="text-sm text-gray-600">
+                        {invite.role}
+                      </span>
+                      <span className="text-sm text-gray-600">
+                        Usado: {invite.used ? 'Sim' : 'Não'}
+                      </span>
+                    </div>
+
                     <span className="text-sm text-gray-600">
                       Código: {invite.code}
-                    </span>
-                    <span className="text-sm text-gray-600">
-                      Usado: {invite.used ? 'Sim' : 'Não'}
                     </span>
                   </div>
 
@@ -226,7 +233,7 @@ export function InviteList() {
             </div>
           );
         })}
-      </CardContent>
-    </Card>
+      </div>
+    </CardContent>
   );
 }

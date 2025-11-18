@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Pencil, Trash, Check, X } from 'lucide-react';
@@ -170,8 +170,8 @@ export function SkillList() {
   };
 
   return (
-    <Card className="mx-auto mt-6 max-w-4xl rounded-2xl shadow-md">
-      <CardContent className="space-y-4 p-6">
+    <CardContent className="mx-auto mt-6 max-w-4xl rounded-2xl shadow-md">
+      <div className="space-y-4 p-6">
         <h2 className="text-xl font-semibold text-gray-800">Lista de Skills</h2>
 
         {/* Feedback visual */}
@@ -282,7 +282,7 @@ export function SkillList() {
           title="Skill vinculada a projetos/usuários"
           description="Esta skill está em uso. Alterações podem impactar projetos e usuários existentes. Deseja continuar?"
         />
-      </CardContent>
-    </Card>
+      </div>
+    </CardContent>
   );
 }
