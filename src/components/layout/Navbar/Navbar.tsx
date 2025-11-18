@@ -101,14 +101,14 @@ export function Navbar() {
               </Link>
             </li>
             <li>
-              {/* Portfólios */}
+              {/* Portfólio */}
               <Link
-                href="/portfolios"
+                href="/portfolio"
                 className={`flex items-center gap-2 ${isSidebarOpen ? 'justify-start' : 'justify-center'} ${pathname === '/portfolios' ? 'rounded-sm bg-[#3B38A0] p-2 text-gray-50' : 'bg-transparent'} `}
               >
                 <Users size={20} />
                 <span className={`${isSidebarOpen ? 'block' : 'hidden'}`}>
-                  Portfólios
+                  Portfólio
                 </span>
               </Link>
             </li>
