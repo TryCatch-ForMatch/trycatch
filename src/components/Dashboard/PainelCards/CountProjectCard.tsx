@@ -11,7 +11,7 @@ export function ProjectCard() {
       try {
         const res = await fetch('/api/team-project/count');
         const data = await res.json();
-        setProjectCount(data.count);
+        setProjectCount(data.counts.total);
       } catch (error) {
         console.error('Erro ao buscar número de projetos:', error);
         setProjectCount(0);

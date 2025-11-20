@@ -11,6 +11,11 @@ import {
 import BasePage from '@/components/Dashboard/BasePage';
 import Link from 'next/link';
 import { Mail, Wrench, Layers, Users, Folders } from 'lucide-react';
+import TopUserSkillsChart from '@/components/Dashboard/Charts/TopUserSkillsChart';
+import TopProjectSkillsChart from '@/components/Dashboard/Charts/TopProjectSkillsChart';
+import ProjectsStatusChart from '@/components/Dashboard/Charts/ProjectsStatusChart';
+import UsersGrowthChart from '@/components/Dashboard/Charts/UsersGrowthChart';
+import InviteUsageChart from '@/components/Dashboard/Charts/InviteUsageChart';
 
 export default async function AdminPage() {
   const auth = await checkAuth({ requireAdmin: true });
@@ -85,6 +90,15 @@ export default async function AdminPage() {
               </Button>
             </Link>
           </div>
+        </div>
+        <div className="mt-10 flex flex-row gap-8">
+          <ProjectsStatusChart />
+          <UsersGrowthChart />
+          <InviteUsageChart />
+        </div>
+        <div className="mt-10 flex flex-row gap-8">
+          <TopUserSkillsChart />
+          <TopProjectSkillsChart />
         </div>
       </div>
     </BasePage>
