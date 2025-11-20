@@ -118,14 +118,14 @@
   --brand-light: #ffffff;
   --brand-dark: #0d0d14;
 
-  --primary-default: #3b3bad;
-  --primary-light: #d0dded;
+  --primary-default: #3b38a0;
+  --primary-light: #d9d9ed;
 
   --gray-500: #101014;
   --gray-400: #35343c;
   --gray-300: #5c5c65;
   --gray-200: #a6a6aa;
-  --gray-100: #eaeafb;
+  --gray-100: #eaeaeb;
   --gray-white: #ffffff;
 }
 
@@ -209,7 +209,6 @@
   p {
     @apply text-[12px] leading-[150%] font-normal sm:text-[14px] md:text-[16px] lg:text-[18px];
   }
-
 }
 
 /* ===========================
@@ -253,5 +252,3 @@
 .skill-icon {
   filter: grayscale(100%) brightness(0.6) contrast(1.5);
 }
-
-
