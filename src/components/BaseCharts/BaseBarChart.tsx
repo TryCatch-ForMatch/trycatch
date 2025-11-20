@@ -21,6 +21,7 @@ import {
 type BaseBarChartProps = {
   title: string;
   data: Record<string, unknown>[];
+  rawData?: Record<string, unknown>[];
   xKey?: string; // opcional e inteligente
   yKey?: string; // opcional e inteligente
   bars: { key: string; label?: string; color?: string }[];
@@ -33,6 +34,7 @@ type BaseBarChartProps = {
 export default function BaseBarChart({
   title,
   data,
+  rawData,
   xKey,
   yKey,
   bars,
@@ -58,15 +60,31 @@ export default function BaseBarChart({
   const chartColors = colors || styleGuideColors;
 
   // Extrai meses automaticamente
+  const source = rawData || data;
+
   const months = useMemo(() => {
-    const hasMonth = data.some((d) => typeof d.month === 'string');
-    return hasMonth ? [...new Set(data.map((d) => d.month as string))] : [];
-  }, [data]);
+    const hasMonth = source.some((d) => typeof d.month === 'string');
+    return hasMonth ? [...new Set(source.map((d) => d.month as string))] : [];
+  }, [source]);
 
   const filteredData = useMemo(() => {
     if (!filterByMonth || selectedMonth === 'all') return data;
-    return data.filter((d) => d.month === selectedMonth);
-  }, [data, selectedMonth, filterByMonth]);
+    const filtered = (rawData || data).filter((d) => d.month === selectedMonth);
+
+    if (rawData && Array.isArray(rawData)) {
+      const roles = Object.keys(rawData[0] ?? {}).filter((k) => k !== 'month');
+
+      return roles.map((role) => ({
+        role,
+        total: filtered.reduce(
+          (acc, item) => acc + (Number(item[role]) || 0),
+          0
+        ),
+      }));
+    }
+
+    return data;
+  }, [data, rawData, selectedMonth, filterByMonth]);
 
   return (
     <Card className="w-full" style={{ height }}>
