@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { toast } from 'sonner';
 import { ProjectDetailsType } from '@/types/interface/team-project';
 import { useCurrentUser } from '@/lib/use-current-user';
-import { useProjects } from '@/hooks/useProjects';
+import { useProjects } from '@/hooks/api/useProjects';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';

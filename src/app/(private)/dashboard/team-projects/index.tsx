@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 //import hook
-import { useProjects } from '@/hooks/useProjects';
+import { useProjects } from '@/hooks/api/useProjects';
 import { ChangeEvent } from 'react';
 
 import { CardProjectSummary } from '@/components/Dashboard/TeamProject';
