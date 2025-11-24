@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import BaseDonutChart from '@/components/BaseCharts/BaseDonutChart';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 type InviteMetrics = {
   total: number;
@@ -37,8 +38,26 @@ export default function InviteUsageChart() {
     fetchMetrics();
   }, []);
 
-  if (loading) return <div>Carregando...</div>;
-  if (error) return <div className="text-red-500">{error}</div>;
+  if (loading) {
+    return (
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle>Uso de Convites</CardTitle>
+        </CardHeader>
+        <CardContent>Carregando...</CardContent>
+      </Card>
+    );
+  }
+  if (error) {
+    return (
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle>Uso de Convites</CardTitle>
+        </CardHeader>
+        <CardContent className="text-red-500">{error}</CardContent>
+      </Card>
+    );
+  }
 
   return (
     <BaseDonutChart
