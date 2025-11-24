@@ -72,21 +72,21 @@ export const authOptions: NextAuthOptions = {
     },
   },
 
-    // PERSISTINDO EM SALVAR OS COOKIES EM PRODUCAO
-  cookies: {
-    sessionToken: { 
-      name: `__Secure-next-auth.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: 'none',
-        secure: true,
-        path: '/',
-      },
-    },
-  },
-  pages: {
-    signIn: '/login',
-    error: '/auth/error',
-  },
+  // PERSISTINDO EM SALVAR OS COOKIES EM PRODUCAO
+  // cookies: {
+  //   sessionToken: {
+  //     name: `__Secure-next-auth.session-token`,
+  //     options: {
+  //       httpOnly: true,
+  //       sameSite: 'none',
+  //       secure: true,
+  //       path: '/',
+  //     },
+  //   },
+  // },
+  // pages: {
+  //   signIn: '/login',
+  //   error: '/auth/error',
+  // },
   secret: process.env.NEXTAUTH_SECRET,
 };
