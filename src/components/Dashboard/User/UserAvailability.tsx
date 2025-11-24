@@ -22,8 +22,7 @@ import { toast } from 'sonner';
 import { IAvailability } from '@/types/interface/IAvailability';
 
 //import hook
-import { useSkills } from '@/hooks/useSkills';
-
+import { useSkills } from '@/hooks/api/useSkills';
 const schema = z.object({
   skills: z.array(z.string(), {
     required_error: 'Selecione ao menos uma skill',
