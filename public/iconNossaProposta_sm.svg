@@ -1,0 +1,37 @@
+<svg width="318" height="209" viewBox="0 0 318 209" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_85_1776)">
+<mask id="mask0_85_1776" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="195" y="83" width="194" height="194">
+<path d="M389 83H195V277H389V83Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_85_1776)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M243.5 180C270.286 180 292 158.286 292 131.5C292 158.286 313.714 180 340.5 180C313.714 180 292 201.714 292 228.5C292 201.714 270.286 180 243.5 180ZM243.5 180C216.714 180 195 201.714 195 228.5C195 255.286 216.714 277 243.5 277C270.286 277 292 255.286 292 228.5C292 255.286 313.714 277 340.5 277C367.286 277 389 255.286 389 228.5C389 201.714 367.286 180 340.5 180C367.286 180 389 158.286 389 131.5C389 104.714 367.286 83 340.5 83C313.714 83 292 104.714 292 131.5C292 104.714 270.286 83 243.5 83C216.714 83 195 104.714 195 131.5C195 158.286 216.714 180 243.5 180Z" fill="#D9D9ED"/>
+</g>
+</g>
+<g clip-path="url(#clip1_85_1776)">
+<mask id="mask1_85_1776" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="83" width="163" height="163">
+<path d="M163 83H0V246H163V83Z" fill="white"/>
+</mask>
+<g mask="url(#mask1_85_1776)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M81.5 100.93C81.5 91.0275 73.4725 83 63.57 83H17.93C8.02754 83 0 91.0275 0 100.93V147.156C0 157.059 8.02754 165.086 17.93 165.086H63.57C73.4725 165.086 81.5 173.114 81.5 183.016V228.07C81.5 237.972 89.5277 246 99.43 246H145.07C154.972 246 163 237.972 163 228.07V181.843C163 171.941 154.972 163.914 145.07 163.914H99.43C89.5277 163.914 81.5 155.886 81.5 145.984V100.93Z" fill="#D9D9ED"/>
+</g>
+</g>
+<g clip-path="url(#clip2_85_1776)">
+<mask id="mask2_85_1776" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="69" y="0" width="140" height="140">
+<path d="M208.056 0H69V139.056H208.056V0Z" fill="white"/>
+</mask>
+<g mask="url(#mask2_85_1776)">
+<path d="M138.528 0C140.889 37.3781 170.678 67.1678 208.056 69.5282C170.678 71.8886 140.889 101.678 138.528 139.056C136.168 101.678 106.378 71.8886 69 69.5282C106.378 67.1678 136.168 37.3781 138.528 0Z" fill="#D9D9ED"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_85_1776">
+<rect width="194" height="194" fill="white" transform="translate(195 83)"/>
+</clipPath>
+<clipPath id="clip1_85_1776">
+<rect width="163" height="163" fill="white" transform="translate(0 83)"/>
+</clipPath>
+<clipPath id="clip2_85_1776">
+<rect width="139.056" height="139.056" fill="white" transform="translate(69)"/>
+</clipPath>
+</defs>
+</svg>

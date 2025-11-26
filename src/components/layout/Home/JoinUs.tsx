@@ -7,8 +7,14 @@ import Image from 'next/image';
 
 export default function JoinUs() {
   return (
-    <section className="mt-20 mr-30 mb-50 ml-30">
-      <div className="flex h-64 w-full rounded-3xl bg-linear-to-r from-[#D5EEFF]/10 to-[#FFE6EC]/10">
+    <section className="mt-[65px] md:mt-[113px] lg:mt-[121px] xl:mt-[136px] xxl:mt-[201px]">
+      <div className="bg-green-700">joinUs</div>
+    </section>
+  );
+}
+
+{
+  /* <div className="flex h-64 w-full rounded-3xl bg-linear-to-r from-[#D5EEFF]/10 to-[#FFE6EC]/10">
         <div className="mr-10 p-10">
           <h2 className="mb-5 text-4xl">Participe da nossa rede agora</h2>
           <p className="mb-5">
@@ -28,7 +34,5 @@ export default function JoinUs() {
             height={300}
           />
         </div>
-      </div>
-    </section>
-  );
+      </div> */
 }

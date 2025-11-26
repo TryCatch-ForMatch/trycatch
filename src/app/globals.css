@@ -209,7 +209,6 @@
   p {
     @apply text-[12px] leading-[150%] font-normal sm:text-[14px] md:text-[16px] lg:text-[18px];
   }
-
 }
 
 /* ===========================
@@ -253,5 +252,3 @@
 .skill-icon {
   filter: grayscale(100%) brightness(0.6) contrast(1.5);
 }
-
-
