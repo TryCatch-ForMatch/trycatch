@@ -22,7 +22,7 @@ export function HomeNavBar() {
         scrolled ? 'bg-white/80 shadow-sm backdrop-blur-md' : 'bg-transparent'
       }`}
     >
-      <div className="mx-[20px] my-[20px] flex max-w-[335px] items-center justify-between sm:h-[28px] md:mx-[28px] md:h-[28px] md:max-w-[754px] lg:mx-[34px] lg:h-[41px] lg:max-w-[1084px] xl:mx-[80px] xl:h-[48px] xl:max-w-[1360px] xxl:mx-[80px] xxl:h-[58px] xxl:max-w-[1760px]">
+      <div className="mx-[20px] mt-[20px] flex h-[28px] max-w-[335px] items-center justify-between md:max-w-[754px] lg:mx-[34px] lg:h-[41px] lg:max-w-[1084px] xl:mx-[80px] xl:h-[48px] xl:max-w-[1360px] xxl:mx-[80px] xxl:h-[58px] xxl:max-w-[1760px]">
         {/* LOGO */}
         <div>
           <p className="font-bold">TryCatch</p>

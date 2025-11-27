@@ -29,7 +29,17 @@ export default function FAQ() {
   ];
 
   return (
-    <section className="mt-20 w-full px-40">
+    <section
+      id="FAQ"
+      className="mt-[65px] md:mt-[113px] lg:mt-[109px] xl:mt-36 xxl:mt-[199px]"
+    >
+      <div className="bg-green-700">FAQ</div>
+    </section>
+  );
+}
+
+{
+  /*  
       <div className="mb-20 flex justify-center">
         <h3 className="text-center text-[48px] font-medium">
           Tudo o que colocamos <br /> em prática
@@ -37,7 +47,7 @@ export default function FAQ() {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        {/* Perguntas */}
+        
         <div className="flex flex-col gap-4">
           {perguntas.map((item, index) => (
             <div
@@ -57,7 +67,6 @@ export default function FAQ() {
           ))}
         </div>
 
-        {/* Perguntas */}
         <div className="relative rounded-3xl bg-[#35343C] p-10">
           <Image
             src="/icon_faq_1.svg"
@@ -78,6 +87,5 @@ export default function FAQ() {
           />
         </div>
       </div>
-    </section>
-  );
+      */
 }
