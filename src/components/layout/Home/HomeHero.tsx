@@ -13,7 +13,7 @@ export default function HomeHero() {
   return (
     <section
       id="hero"
-      className="relative h-[calc(100dvh-68px)] overflow-x-hidden bg-linear-to-r from-[#e3f0ff] via-[#f8f5ff] to-[#ffeef5] xl:h-[calc(100dvh-88px)] xxl:h-[calc(100dvh-98px)]"
+      className="relative h-[calc(100dvh-68px)] overflow-x-hidden rounded-2xl bg-linear-to-r from-[#e3f0ff] via-[#f8f5ff] to-[#ffeef5] xl:h-[calc(100dvh-88px)] xl:rounded-4xl xxl:h-[calc(100dvh-98px)]"
     >
       <div className="grid w-full grid-cols-4 justify-items-center p-10 md:grid-cols-6">
         {/* Titulo */}
