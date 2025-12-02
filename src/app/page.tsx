@@ -1,5 +1,6 @@
 import AboutUs from '@/components/layout/Home/AboutUs';
 import Faq from '@/components/layout/Home/Faq';
+import FAQMobile from '@/components/layout/Home/FaqMobile';
 import Footer from '@/components/layout/Home/Foooter';
 import HomeHero from '@/components/layout/Home/HomeHero';
 import { HomeNavBar } from '@/components/layout/Home/HomeNavBar';
@@ -14,9 +15,9 @@ export default function HomePage() {
         <HomeHero />
 
         <AboutUs />
-        {/* 
-        <Faq />
 
+        <Faq />
+        {/*   
         <JoinUs />
 
         <Footer />

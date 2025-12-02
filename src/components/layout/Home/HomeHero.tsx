@@ -68,7 +68,7 @@ export default function HomeHero() {
             alt="Pessoas trabalhando"
             width={631}
             height={428}
-            className="absolute bottom-0 left-[20%] lg:left-[15%] lg:h-[381px] lg:w-[848px] xl:left-[21%] xxl:w-[1145px] xxl:lg:h-[515px]"
+            className="absolute bottom-0 left-[20%] lg:left-[15%] lg:h-[381px] lg:w-[848px] xl:left-[18%] xxl:w-[1145px] xxl:lg:h-[515px]"
           />
         </div>
       </div>
