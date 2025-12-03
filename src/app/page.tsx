@@ -15,7 +15,7 @@ export default function HomePage() {
         <HomeHero />
 
         <AboutUs />
-
+        {/* 
         <Faq />
         {/*   
         <JoinUs />
