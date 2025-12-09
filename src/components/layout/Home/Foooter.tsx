@@ -11,7 +11,7 @@ export default function Footer() {
           <div className="flex h-[89px] w-[214px] items-center justify-center rounded-2xl border border-[#35343C]">
             <span className="text-[16px] font-medium text-gray-800">Logo</span>
           </div>
-          <p className="text-[14px] text-[#5C5C65] md:w-[367px] md:text-[16px] lg:w-[261px] xl:w-[326px] xxl:w-[421px] xxl:text-[18px]">
+          <p className="text-[14px] text-[#5C5C65] md:w-[367px] md:text-[16px] lg:w-[261px] xxl:w-[421px] xxl:text-[18px]">
             Uma rede que conecta projetos e profissionais para criar soluções
             digitais.
           </p>
@@ -60,6 +60,7 @@ export default function Footer() {
               className="h-[54px] w-[335px] rounded-[99px] border border-[#35343C] px-5 py-6 text-[14px] focus:border-gray-500 focus:outline-none md:text-[16px] lg:w-full xl:h-14 xl:w-[309px] xxl:h-[70px] xxl:w-[400px] xxl:text-[18px]"
             />
             <button className="flex h-[54px] w-[335px] items-center justify-center rounded-[99px] bg-[#35343C] px-5 py-6 text-[14px] text-white hover:bg-gray-700 md:h-14 md:w-auto md:text-[16px] lg:w-auto xxl:h-[70px] xxl:w-[118px] xxl:text-[18px]">
+      
               Enviar
             </button>
           </div>
