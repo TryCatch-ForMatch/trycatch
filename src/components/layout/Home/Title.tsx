@@ -12,13 +12,13 @@ export default function HomeHero() {
   return (
     <div>
       {/* MOBILE */}
-      <h1 className="text-center text-[32px] leading-[120%] font-semibold md:hidden">
+      <h1 className="text-center text-[38px] leading-[120%] font-semibold md:hidden">
         {/* Linha 1 */}
         <div className="relative inline-block">
           Conectando
           <Image
             src="/shineIcon.svg"
-            alt="icone de estrela"
+            alt="icone de brilho"
             width={27}
             height={26}
             className="absolute right-[96%] bottom-[60%]"
@@ -46,7 +46,7 @@ export default function HomeHero() {
           />
           <Image
             src="/stroke.svg"
-            alt="icone de stroke"
+            alt="icone de linha"
             width={97}
             height={13}
             className="absolute left-[10%]"
@@ -54,10 +54,8 @@ export default function HomeHero() {
         </div>
       </h1>
 
-      {/* TABLET */}
-      <h1 className="hidden text-center text-[40px] leading-[120%] font-semibold md:block lg:text-[48px] xl:text-[56px] xxl:lg:text-[72px]">
-        {/* Aqui você define o layout EXATAMENTE como no Figma */}
-
+      {/* MD+ */}
+      <h1 className="hidden text-center text-[48px] leading-[120%] font-semibold md:block xl:text-[56px] xxl:lg:text-[72px]">
         {/* Linha 1 */}
         <div className="relative inline-block">
           Conectando talentos a
@@ -72,7 +70,6 @@ export default function HomeHero() {
 
         <br />
 
-        {/* Linha 2 — no tablet você disse que é diferente */}
         <div className="relative inline-block">
           projetos reais juntos
           <Image

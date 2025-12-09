@@ -30,10 +30,10 @@ export default function FAQ() {
   return (
     <section
       id="FAQ"
-      className="mt-[65px] md:mt-[113px] lg:mt-[109px] xl:mt-36 xxl:mt-[199px]"
+      className="mt-[284px] md:mt-[113px] lg:mt-[109px] xl:mt-36 xxl:mt-[199px]"
     >
-      <div className="grid grid-cols-12">
-        <h3 className="col-start-2 col-end-8 text-[26px] leading-[120%] font-medium text-[#35343C] md:text-[44px] xxl:text-[64px]">
+      <div className="grid grid-cols-4 lg:grid-cols-12">
+        <h3 className="col-span-4 text-[26px] leading-[120%] font-medium text-[#35343C] md:text-[44px] lg:col-start-2 lg:col-end-8 xxl:text-[64px]">
           Tudo o que colocamos <br /> em prática
         </h3>
       </div>
@@ -43,13 +43,13 @@ export default function FAQ() {
         {/* Bloco superior */}
         <div className="relative mt-10 flex h-[204px] flex-col justify-center rounded-2xl bg-[#35343C] p-6 md:mt-16">
           <div className="flex">
-            <p className="text-[14px] text-[#D9D9ED] md:text-[16px]">
+            <p className="text-[14px] leading-[140%] font-medium text-[#D9D9ED] md:text-[16px]">
               {perguntas[ativo].pergunta}
             </p>
             <MoveUp className="h-5! w-5! stroke-3 text-[#D9D9ED]" />
           </div>
 
-          <p className="mt-4 text-[14px] leading-[140%] font-medium text-[#D9D9ED] md:text-[16px]">
+          <p className="mt-4 text-[14px] leading-[140%] text-white md:text-[16px]">
             {perguntas[ativo].resposta}
           </p>
 
@@ -75,12 +75,12 @@ export default function FAQ() {
                 <div
                   key={i}
                   onClick={() => setAtivo(i)}
-                  className="flex cursor-pointer items-center justify-between rounded-2xl bg-[#D9D9ED] px-6 py-5 leading-[140%]"
+                  className="flex cursor-pointer items-center justify-between rounded-2xl bg-[#D9D9ED] px-6 py-5"
                 >
                   <p className="text-[14px] leading-[140%] font-medium text-[#101014] md:text-[16px]">
                     {item.pergunta}
                   </p>
-                  <MoveDown className="h-5! w-5! text-[#101014] opacity-100" />
+                  <MoveDown className="h-5! w-5! text-[#101014]" />
                 </div>
               );
             })}
@@ -97,11 +97,11 @@ export default function FAQ() {
                 <div
                   key={index}
                   onClick={() => setAtivo(index)}
-                  className={`flex h-[84px] cursor-pointer items-center justify-between rounded-[20px] px-6 py-5 transition-colors xxl:h-[104px] ${
+                  className={`flex h-auto cursor-pointer items-center justify-between rounded-[20px] px-6 py-5 transition-colors xxl:h-[104px] ${
                     ativo === index ? 'bg-[#35343C] text-white' : 'bg-[#D9D9ED]'
                   }`}
                 >
-                  <p className="h-11 w-[359px] text-[16px] leading-[140%] font-medium xl:flex xl:w-[417px] xl:items-center xxl:w-[471px] xxl:text-[18px]">
+                  <p className="flex h-auto w-[359px] items-center text-[16px] leading-[140%] font-medium xl:w-[417px] xxl:w-[471px] xxl:text-[18px]">
                     {item.pergunta}
                   </p>
                   <MoveRight
