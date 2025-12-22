@@ -179,3 +179,11 @@ model UserCertificate {
 
   user        User      @relation(fields: [userId], references: [id])
 }
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   // hashed
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
