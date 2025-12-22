@@ -11,13 +11,16 @@ export async function sendResetPasswordEmail({
   email,
   token,
 }: SendResetPasswordEmailParams) {
-  const resetUrl = `${process.env.NEXTAUTH_URL}/reset-password?token=${token}`;
+  try {
+    const resetUrl = `${process.env.NEXTAUTH_URL}reset-password?token=${token}`;
 
-  await resend.emails.send({
-    from: 'TryCatch <trycatchformatch@gmail.com>',
-    to: email,
-    subject: 'Redefinição de senha',
-    html: `
+    console.log('📧 Chamando Resend para:', email);
+
+    await resend.emails.send({
+      from: 'onboarding@resend.dev',
+      to: email,
+      subject: 'Redefinição de senha',
+      html: `
     <p>Recebemos uma solicitação para redefinir sua senha.</p>
 
     <p>
@@ -30,5 +33,9 @@ export async function sendResetPasswordEmail({
 
       <p>Se você não solicitou essa alteração, ignore este e-mail.</p>
     `,
-  });
+    });
+  } catch (error) {
+    console.error('❌ Erro ao enviar email:', error);
+    throw error;
+  }
 }
