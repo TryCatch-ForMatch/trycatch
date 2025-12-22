@@ -3,6 +3,7 @@ import { NextRequest } from 'next/server';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { z } from 'zod';
 import crypto from 'crypto';
+import { sendResetPasswordEmail } from '@/lib/mail/send-reset-password-email';
 
 const forgotPasswordSchema = z.object({
   email: z.string().email('Email inválido'),
@@ -52,6 +53,11 @@ export async function POST(request: NextRequest) {
         token: hashedToken,
         expiresAt: tokenExpiration,
       },
+    });
+
+    await sendResetPasswordEmail({
+      email: user.email,
+      token,
     });
 
     return buildResponse({
