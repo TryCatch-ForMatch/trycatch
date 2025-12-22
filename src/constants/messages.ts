@@ -24,7 +24,15 @@ export const MESSAGES = {
     INVALID_TOKEN: 'Token inválido ou expirado.',
     PASSWORD_RESET_SUCCESS: 'Senha redefinida com sucesso.',
     INVALID_PASSWORD: 'Senha incorreta.',
+    FORGOT_PASSWORD_EMAIL_SENT:
+      'Se este e-mail estiver cadastrado, você receberá instruções para redefinir sua senha.',
+    FORGOT_PASSWORD_ERROR:
+      'Erro ao processar solicitação de recuperação de senha.',
+    INVALID_RESET_TOKEN: 'Token de redefinição de senha inválido ou expirado.',
+    VALID_RESET_TOKEN: 'Token de redefinição de senha válido.',
+    PASSWORD_RESET_ERROR: 'Erro ao redefinir a senha.',
   },
+
   FEEDBACK: {
     SELF_FEEDBACK: 'Você não pode avaliar a si mesmo.',
     ALREADY_GIVEN: 'Você já enviou feedback para este usuário neste projeto.',
