@@ -46,21 +46,20 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div className="ml-auto flex flex-col md:ml-0 lg:w-[419px] xxl:lg:w-[534px]">
+        <div className="flex flex-col md:ml-0 lg:ml-auto lg:w-[419px] xxl:lg:w-[534px]">
           <h4 className="text-[16px] font-medium text-[#35343C] md:text-[18px]">
             Entre em contato
           </h4>
           <p className="mt-4 text-[14px] leading-[140%] text-[#5C5C65] md:mt-3 md:text-[16px] xxl:text-[18px]">
             Conta sua ideia ou dúvida pra gente.
           </p>
-          <div className="mt-6 flex flex-col items-center justify-between gap-3 md:flex-row xxl:gap-4">
+          <div className="mt-6 flex flex-col items-center justify-between gap-3 md:flex-row md:justify-normal xxl:gap-4">
             <input
               type="email"
               placeholder="Escrever e-mail..."
-              className="h-[54px] w-[335px] rounded-[99px] border border-[#35343C] px-5 py-6 text-[14px] focus:border-gray-500 focus:outline-none md:text-[16px] lg:w-full xl:h-14 xl:w-[309px] xxl:h-[70px] xxl:w-[400px] xxl:text-[18px]"
+              className="h-[54px] min-w-[280px] rounded-[99px] border border-[#35343C] px-5 py-6 text-[14px] focus:border-gray-500 focus:outline-none sm:w-full sm:max-w-[385px] sm:min-w-[335px] md:w-[309px] md:min-w-[309px] md:text-[16px] lg:w-full xl:h-14 xl:w-[309px] xxl:h-[70px] xxl:w-[400px] xxl:text-[18px]"
             />
-            <button className="flex h-[54px] w-[335px] items-center justify-center rounded-[99px] bg-[#35343C] px-5 py-6 text-[14px] text-white hover:bg-gray-700 md:h-14 md:w-auto md:text-[16px] lg:w-auto xxl:h-[70px] xxl:w-[118px] xxl:text-[18px]">
-      
+            <button className="flex h-[54px] min-w-[280px] items-center justify-center rounded-[99px] bg-[#35343C] px-5 py-6 text-[14px] text-white hover:bg-gray-700 sm:w-full sm:max-w-[385px] sm:min-w-[335px] md:h-14 md:w-[98px] md:min-w-[98px] md:text-[16px] lg:w-auto xxl:h-[70px] xxl:w-[118px] xxl:text-[18px]">
               Enviar
             </button>
           </div>

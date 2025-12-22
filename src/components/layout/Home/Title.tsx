@@ -12,7 +12,7 @@ export default function HomeHero() {
   return (
     <div>
       {/* MOBILE */}
-      <h1 className="text-center text-[38px] leading-[120%] font-semibold md:hidden">
+      <h1 className="text-center text-[30px] leading-[120%] font-semibold sm:text-[38px] md:hidden">
         {/* Linha 1 */}
         <div className="relative inline-block">
           Conectando
