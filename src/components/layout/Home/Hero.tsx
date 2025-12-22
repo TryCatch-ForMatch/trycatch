@@ -14,7 +14,7 @@ export default function Hero() {
     <>
       <section
         id="hero"
-        className="relative h-[calc(100dvh-68px)] overflow-x-hidden rounded-2xl bg-linear-to-r from-[#e3f0ff] via-[#f8f5ff] to-[#ffeef5] lg:hidden"
+        className="relative h-[calc(100dvh-100px)] overflow-x-hidden rounded-2xl bg-linear-to-r from-[#e3f0ff] via-[#f8f5ff] to-[#ffeef5] lg:hidden"
       >
         <div className="grid w-full grid-cols-4 justify-items-center md:grid-cols-6 lg:grid-cols-12">
           {/* Titulo */}
@@ -23,7 +23,7 @@ export default function Hero() {
           </div>
 
           {/* Paragrafo sm & md */}
-          <p className="col-span-4 mt-[27px] w-[265px] text-center text-[14px] leading-[140%] md:col-start-2 md:col-end-6 md:mt-[34px] md:text-[16px] lg:hidden">
+          <p className="col-span-4 mt-[27px] max-w-[265px] text-center text-[12px] leading-[140%] sm:text-[14px] md:col-start-2 md:col-end-6 md:mt-[34px] md:max-w-[377px] md:text-[16px] lg:hidden">
             Uma rede colaborativa onde talentos se unem a desafios para criar
             grandes projetos.
           </p>
@@ -46,7 +46,7 @@ export default function Hero() {
           {/* lembrete sm & md */}
           <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center justify-center gap-2 md:hidden">
             <ArrowDown className="md:hidden" />
-            <p className="text-[14px] leading-[140%] text-[#5C5C65]">
+            <p className="text-[12px] leading-[140%] text-[#5C5C65] sm:text-[14px]">
               rolar para baixo
             </p>
           </div>
