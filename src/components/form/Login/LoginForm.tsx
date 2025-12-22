@@ -73,6 +73,15 @@ export function LoginForm() {
             required
           />
 
+          <div className="text-right">
+            <Link
+              href="/forgot-password"
+              className="text-xs text-zinc-500 transition-colors hover:text-[#3B38A0]"
+            >
+              Esqueci minha senha
+            </Link>
+          </div>
+
           <Button
             type="submit"
             variant="default"
