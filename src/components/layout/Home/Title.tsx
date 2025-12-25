@@ -1,93 +1,50 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import Link from 'next/link';
-import { useSession } from 'next-auth/react';
-import { ArrowDown, ArrowUpRight, Mouse } from 'lucide-react';
 
-export default function HomeHero() {
-  const { status } = useSession();
-
+export default function Title() {
   return (
-    <div>
-      {/* MOBILE */}
-      <h1 className="text-center text-[30px] leading-[120%] font-semibold sm:text-[38px] md:hidden">
-        {/* Linha 1 */}
-        <div className="relative inline-block">
-          Conectando
-          <Image
-            src="/shineIcon.svg"
-            alt="icone de brilho"
-            width={27}
-            height={26}
-            className="absolute right-[96%] bottom-[60%]"
-          />
-        </div>
+    <h1 className="relative text-center text-[30px] leading-[120%] font-semibold sm:text-[38px] md:text-[48px] xl:text-[56px] xxl:text-[72px]">
+      {/* Linha 1 */}
+      <span className="relative inline-block">
+        Conectando
+        <Image
+          src="/shineIcon.svg"
+          alt=""
+          aria-hidden
+          width={27}
+          height={26}
+          className="pointer-events-none absolute right-[96%] bottom-[60%] md:right-[98%] md:bottom-[52%] md:h-[44px] md:w-[43px] xl:h-[52px] xl:w-[51px]"
+        />
+      </span>
 
-        <br />
+      <br />
 
-        {/* Linha 2 */}
-        <div className="relative inline-block">
-          talentos a <br /> projetos reais
-        </div>
+      {/* Linha 2 */}
+      <span className="inline-block">talentos a projetos reais</span>
 
-        <br />
+      <br />
 
-        {/* Linha 3 */}
-        <div className="relative inline-block">
-          juntos
-          <Image
-            src="/star.svg"
-            alt="icone de estrela"
-            width={21}
-            height={21}
-            className="absolute bottom-[60%] left-full"
-          />
-          <Image
-            src="/stroke.svg"
-            alt="icone de linha"
-            width={97}
-            height={13}
-            className="absolute left-[10%]"
-          />
-        </div>
-      </h1>
-
-      {/* MD+ */}
-      <h1 className="hidden text-center text-[48px] leading-[120%] font-semibold md:block xl:text-[56px] xxl:lg:text-[72px]">
-        {/* Linha 1 */}
-        <div className="relative inline-block">
-          Conectando talentos a
-          <Image
-            src="/shineIcon.svg"
-            alt="icone de estrela"
-            width={44}
-            height={43}
-            className="absolute right-[98%] bottom-[52%] xl:h-[52px]! xl:w-[51px]!"
-          />
-        </div>
-
-        <br />
-
-        <div className="relative inline-block">
-          projetos reais juntos
-          <Image
-            src="/star.svg"
-            alt="icone de estrela"
-            width={21}
-            height={21}
-            className="absolute bottom-[60%] left-full xxl:h-[25px]! xxl:w-[25px]!"
-          />
-          <Image
-            src="/stroke.svg"
-            alt="icone de stroke"
-            width={116}
-            height={16}
-            className="absolute left-[72%] xl:w-[135px]! xxl:h-[25px]! xxl:w-[182px]!"
-          />
-        </div>
-      </h1>
-    </div>
+      {/* Linha 3 */}
+      <span className="relative inline-block">
+        juntos
+        <Image
+          src="/star.svg"
+          alt=""
+          aria-hidden
+          width={21}
+          height={21}
+          className="pointer-events-none absolute bottom-[60%] left-full xxl:h-[25px] xxl:w-[25px]"
+        />
+        <Image
+          src="/stroke.svg"
+          alt=""
+          aria-hidden
+          width={97}
+          height={13}
+          className="pointer-events-none absolute top-full left-[10%] md:h-[16px] md:w-[116px] xl:w-[135px] xxl:h-[25px] xxl:w-[182px]"
+        />
+      </span>
+    </h1>
   );
 }
