@@ -4,13 +4,12 @@ import { useEffect, useState, FormEvent } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
-
-// components
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-
-// icons
 import { Loader2 } from 'lucide-react';
+
+// A página depende de dados de execução (token na URL), portanto, não deve ser pré-renderizada
+export const dynamic = 'force-dynamic';
 
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
