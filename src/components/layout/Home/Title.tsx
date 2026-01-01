@@ -21,7 +21,7 @@ export default function Title() {
       <br />
 
       {/* Linha 2 */}
-      <span className="inline-block">talentos a projetos reais</span>
+      <span className="inline-block">talentos a projetos reais,</span>
 
       <br />
 
