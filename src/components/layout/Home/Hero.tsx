@@ -22,8 +22,8 @@ export default function Hero() {
           <Title />
 
           <p className="mx-auto mt-6 max-w-[377px] text-[12px] leading-[140%] text-[#5C5C65] sm:text-[14px] md:text-[16px]">
-            Uma rede colaborativa onde talentos se unem a desafios para criar
-            grandes projetos.
+            Uma rede colaborativa para desenvolvimento de soluções digitais com
+            aprendizado prático, mentoria e trabalho em equipe.
           </p>
 
           {/* CTA */}
