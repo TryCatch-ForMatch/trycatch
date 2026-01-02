@@ -107,8 +107,9 @@ export default function AboutUs() {
               Uma rede simples <br /> para unir pessoas e projetos
             </h3>
             <p className="mt-[11px] text-[14px] leading-[140%] text-white md:mt-4 md:w-[400px] lg:mt-3.5 lg:w-[474px] lg:text-[16px] xl:mt-4 xl:w-[551px] xxl:mt-6 xxl:w-[750px]">
-              Criamos uma comunidade onde desenvolvedores, designers e QA se
-              conectam com empresas ou pessoas que precisam de soluções.
+              Construímos uma rede colaborativa onde diferentes áreas se
+              conectam em projetos reais para desenvolver soluções digitais
+              junto a empresas ou iniciativas independentes.
             </p>
           </div>
         </div>
