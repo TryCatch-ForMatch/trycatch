@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { MoveRight, MoveUp, MoveDown } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function FAQ() {
   const [ativo, setAtivo] = useState<number>(0);
@@ -11,19 +12,34 @@ export default function FAQ() {
     {
       pergunta: 'Como posso cadastrar meu projeto na plataforma?',
       resposta:
-        'Você precisa falar com um de nossos devs e passar infos como prazo, empresa e tecnologias do projeto.',
+        'Você pode cadastrar um projeto informando objetivos, prazos, tecnologias envolvidas e se a iniciativa é remunerada ou não. Após o envio, o projeto passa por uma análise de alinhamento com a proposta da plataforma.',
+      link: {
+        label: 'Cadastrar um projeto',
+        href: '/cadastrarprojeto',
+      },
     },
     {
-      pergunta: 'Pergunta 2',
-      resposta: 'Resposta 1.',
+      pergunta: 'Preciso pagar para participar ou cadastrar um projeto?',
+      resposta:
+        'Não. A participação na plataforma é aberta. Existem projetos educacionais e projetos profissionais, e as condições de cada iniciativa são definidas de forma transparente.',
     },
     {
-      pergunta: 'Pergunta 3',
-      resposta: 'Resposta 2.',
+      pergunta: 'Quem pode participar dos projetos?',
+      resposta:
+        'Qualquer pessoa interessada em colaborar pode participar, seja para aprender, contribuir tecnicamente ou atuar como mentor. A participação ocorre de acordo com habilidades, interesses e disponibilidade.',
+      link: {
+        label: 'Quero fazer parte da comunidade',
+        href: '/fazerparte',
+      },
     },
     {
-      pergunta: 'Pergunta 4',
-      resposta: 'Resposta 3.',
+      pergunta: 'Os projetos contam com acompanhamento ou mentoria?',
+      resposta:
+        'Sim. Os projetos podem contar com o apoio de mentores que auxiliam no planejamento, organização e desenvolvimento das soluções, promovendo uma experiência colaborativa e orientada.',
+      link: {
+        label: 'Quero fazer parte da comunidade',
+        href: '/fazerparte',
+      },
     },
   ];
 
@@ -34,7 +50,7 @@ export default function FAQ() {
     >
       <div className="grid grid-cols-4 lg:grid-cols-12">
         <h3 className="col-span-4 text-[24px] leading-[120%] font-medium text-[#35343C] sm:text-[26px] md:text-[44px] lg:col-start-2 lg:col-end-8 xxl:text-[64px]">
-          Tudo o que colocamos <br /> em prática
+          O que você precisa <br /> saber
         </h3>
       </div>
 
@@ -116,25 +132,43 @@ export default function FAQ() {
 
           {/* Coluna direita – resposta */}
           <div className="col-start-7 col-end-12">
-            <div className="relative flex h-full rounded-[28px] bg-[#35343C] px-[34px] pt-[55px] pb-[34px] xl:px-10 xl:pt-16 xl:pb-10 xxl:px-[55px] xxl:pt-[88px] xxl:pb-[55px]">
+            <div className="relative h-full rounded-[28px] bg-[#35343C]">
+              {/* Ícone superior decorativo */}
               <Image
                 src="/icon_faq_1.svg"
-                alt="ColabWork"
+                alt=""
+                aria-hidden
                 width={23}
                 height={22}
-                className="absolute top-[13%] right-[9%] xl:top-[13%] xl:right-[0%] xl:h-[34px] xl:w-20! xxl:right-[5%] xxl:h-[68px]! xxl:w-[30px]!"
+                className="absolute top-9 right-9 xl:top-8 xl:right-8 xl:h-[34px]! xl:w-20! xxl:h-[68px]! xxl:w-[30px]!"
               />
 
-              <p className="h-[136px] w-[379px] text-[24px] font-medium text-white xl:w-[442px] xxl:w-[608px] xxl:text-[34px]">
-                {perguntas[ativo].resposta}
-              </p>
+              {/* ZONA SEGURA DO TEXTO */}
+              <div className="mx-auto flex h-full max-w-[80%] items-center px-6 py-12 xl:py-14 xxl:py-16">
+                <div className="flex flex-col gap-4">
+                  <p className="text-[20px] leading-[140%] font-medium text-white xl:text-[22px] xxl:text-[26px]">
+                    {perguntas[ativo].resposta}
+                  </p>
 
+                  {perguntas[ativo].link && (
+                    <Link
+                      href={perguntas[ativo].link.href}
+                      className="absolute right-8 bottom-8 inline-flex items-center gap-2 text-[14px] font-medium text-white opacity-90 hover:opacity-100 xl:text-[16px]"
+                    >
+                      {perguntas[ativo].link.label}
+                      <MoveRight className="h-4 w-4" />
+                    </Link>
+                  )}
+                </div>
+              </div>
+              {/* Ícone inferior decorativo */}
               <Image
                 src="/icon_faq_2.svg"
-                alt="ColabWork"
+                alt=""
+                aria-hidden
                 width={68}
                 height={30}
-                className="absolute top-[80%] xl:h-[34px]! xl:w-20! xxl:h-[47px]! xxl:w-[110px]!"
+                className="absolute bottom-9 left-9 xl:h-[34px]! xl:w-20! xxl:h-[47px]! xxl:w-[110px]!"
               />
             </div>
           </div>
