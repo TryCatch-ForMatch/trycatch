@@ -1,17 +1,14 @@
 import Image from 'next/image';
 import { Users, ChartNoAxesColumnIncreasing, SquarePen } from 'lucide-react';
+import Link from 'next/link';
 
 export default function AboutUs() {
   return (
     <section
       id="aboutUs"
-      className="mt-16 md:mt-[125px] lg:mt-[132px] xl:mt-36 xxl:mt-[200px]"
+      className="mt-12 md:mt-20 lg:mt-15 xl:mt-26 xxl:mt-32"
     >
       <div className="flex flex-col lg:grid lg:grid-cols-12 lg:grid-rows-2">
-        <p className="flex items-end text-[12px] font-medium text-[#5C5C65] md:text-[14px] lg:col-start-2 lg:col-end-7 lg:row-start-1 lg:text-[16px] xxl:text-[18px]">
-          Nossa Conexão
-        </p>
-
         <h2 className="mt-4 text-[26px] leading-[120%] font-medium text-[#35343C] md:text-[44px] lg:col-start-2 lg:col-end-7 lg:row-start-2 xxl:text-[64px]">
           Sobre nossa rede
           <span className="flex items-center">
@@ -26,10 +23,10 @@ export default function AboutUs() {
             colaborativa
           </span>
         </h2>
-
         <p className="mt-[18px] text-[14px] leading-[140%] text-[#5C5C65] md:w-[496px] md:text-[16px] lg:col-start-8 lg:col-end-12 lg:row-start-2 lg:w-full xl:col-start-9 xxl:ml-20 xxl:w-[368px] xxl:text-[18px]">
-          Conexão entre talentos e projetos de forma ágil, permitindo equipes
-          flexíveis e produtivas.
+          Conectamos talentos a projetos reais em um ambiente colaborativo, com
+          aprendizado prático e troca de conhecimento entre diferentes níveis de
+          experiência.
         </p>
       </div>
 
@@ -51,7 +48,10 @@ export default function AboutUs() {
               </p>
             </div>
 
-            <div className="flex h-[82px] max-w-[289px] items-center justify-center gap-2.5 self-center rounded-[12px] bg-white/20 px-[23px] py-[17px] backdrop-blur-xl md:h-[98px] md:w-full md:max-w-[708px] md:justify-between lg:h-[105px] lg:w-[394px] lg:gap-[30px] xl:h-[120px] xl:w-[457px] xl:p-8 xxl:h-[168px] xxl:w-[633px] xxl:px-11 xxl:py-8">
+            <Link
+              href="about/#projetos"
+              className="flex h-[82px] max-w-[289px] items-center justify-center gap-2.5 self-center rounded-[12px] bg-white/20 px-[23px] py-[17px] backdrop-blur-xl md:h-[98px] md:w-full md:max-w-[708px] md:justify-between lg:h-[105px] lg:w-[394px] lg:gap-[30px] xl:h-[120px] xl:w-[457px] xl:p-8 xxl:h-[168px] xxl:w-[633px] xxl:px-11 xxl:py-8"
+            >
               <h3 className="text-[16px] font-medium text-white sm:text-[24px] md:w-[261px] md:text-[32px] lg:w-[261px] xl:w-[293px] xl:text-[36px] xxl:w-[423px] xxl:text-[52px]">
                 Projetos que ganham equipe
               </h3>
@@ -59,15 +59,18 @@ export default function AboutUs() {
               <div className="flex h-[38px] w-[38px] items-center justify-center rounded-full bg-white p-2 lg:h-[46px] lg:w-[46px] xl:h-[54px] xl:w-[54px] xxl:h-20 xxl:w-20">
                 <Users className="h-5 w-5 text-primary-default xl:h-[27px] xl:w-[27px] xxl:h-[37px] xxl:w-[37px]" />
               </div>
-            </div>
+            </Link>
           </div>
         </div>
 
         {/* Card Conecte talentos certos */}
-        <div className="col-span-4 flex h-[142px] max-w-[335px] justify-center rounded-2xl bg-[#EAEAF2] p-5 md:col-start-1 md:col-end-4 md:h-[187px] md:max-w-full md:p-[23px] lg:col-start-7 lg:col-end-12 lg:h-[181px] lg:w-auto lg:justify-center lg:rounded-[28px] lg:p-7 xl:h-[210px] xl:p-8 xxl:h-[289px] xxl:p-11">
+        <Link
+          href="about/#equipes"
+          className="col-span-4 flex h-[142px] max-w-[335px] justify-center rounded-2xl bg-[#EAEAF2] p-5 md:col-start-1 md:col-end-4 md:h-[187px] md:max-w-full md:p-[23px] lg:col-start-7 lg:col-end-12 lg:h-[181px] lg:w-auto lg:justify-center lg:rounded-[28px] lg:p-7 xl:h-[210px] xl:p-8 xxl:h-[289px] xxl:p-11"
+        >
           <div className="flex flex-col sm:justify-between">
             <h3 className="text-[18px] font-medium text-[#3B38A0] sm:text-[24px] md:text-[32px] xl:text-[36px] xxl:text-[52px]">
-              Conecte talentos certos
+              Colaboração por habilidades
             </h3>
             <div className="center mt-[27px] flex items-center justify-between rounded-[14px] bg-white px-[17px] py-[11px] lg:px-[21px] lg:py-3.5 xl:h-[72px] xl:px-6 xl:py-4 xxl:h-[100px] xxl:px-[33] xxl:py-[22px]">
               <p className="text-[14px] leading-[140%] text-[#5C5C65] sm:text-[16px] md:text-[20px] xxl:text-[32px]">
@@ -76,17 +79,20 @@ export default function AboutUs() {
               <ChartNoAxesColumnIncreasing className="ml-2 h-7 w-7 text-[#3B38A0] sm:ml-0 lg:h-[34px] lg:w-[34px] xl:h-10 xl:w-10 xxl:h-14 xxl:w-14" />
             </div>
           </div>
-        </div>
+        </Link>
 
         {/* Card da ideia até a entrega final */}
-        <div className="col-span-4 flex h-[142px] max-w-[335px] flex-col justify-end rounded-2xl bg-[#D9D9ED] p-5 md:col-start-4 md:col-end-7 md:h-[187px] md:max-w-full md:p-[23px] md:pt-0 lg:col-start-7 lg:col-end-12 lg:h-[181px] lg:w-auto lg:rounded-[28px] lg:px-7 lg:pt-0 lg:pb-7 xl:h-[210px] xl:px-8 xl:pb-8 xxl:h-[289px] xxl:px-11 xxl:pb-11">
+        <Link
+          href="about/#entrega"
+          className="col-span-4 flex h-[142px] max-w-[335px] flex-col justify-end rounded-2xl bg-[#D9D9ED] p-5 md:col-start-4 md:col-end-7 md:h-[187px] md:max-w-full md:p-[23px] md:pt-0 lg:col-start-7 lg:col-end-12 lg:h-[181px] lg:w-auto lg:rounded-[28px] lg:px-7 lg:pt-0 lg:pb-7 xl:h-[210px] xl:px-8 xl:pb-8 xxl:h-[289px] xxl:px-11 xxl:pb-11"
+        >
           <div className="flex items-end justify-between">
             <p className="h-12 w-[175px] text-[24px] leading-6 font-medium text-[#3B38A0] md:w-48 md:text-[26px] lg:h-16 lg:w-[233px] lg:text-[32px] lg:leading-8 xl:w-[262px] xl:text-[36px] xxl:h-[104px] xxl:w-[379px] xxl:text-[52px] xxl:leading-12">
               Da ideia até a entrega final
             </p>
             <SquarePen className="h-7 w-7 text-[#3B38A0] lg:h-[34px] lg:w-[34px] xl:h-10 xl:w-10 xxl:h-14 xxl:w-14" />
           </div>
-        </div>
+        </Link>
 
         {/* Card nossa proposta */}
         <div className="col-span-4 flex h-[235px] max-w-[335px] items-center rounded-2xl bg-[#A1A0D1] bg-cover bg-center p-[26px] md:col-span-6 md:h-64 md:max-w-full md:bg-[url('/BgNossaProposta.svg')] md:p-0 md:pl-10 lg:col-start-2 lg:col-end-12 lg:h-[272px] lg:rounded-[28px] lg:px-12 lg:py-0 xl:h-[316px] xl:px-[34px] xxl:h-[435px] xxl:px-[77px]">
