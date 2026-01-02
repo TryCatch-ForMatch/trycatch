@@ -1,9 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
-import { MoveRight } from 'lucide-react';
-import Image from 'next/image';
+import Link from 'next/link';
 
 export default function JoinUs() {
   return (
@@ -12,21 +10,26 @@ export default function JoinUs() {
         <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-12">
           {/* Título */}
           <h3 className="col-span-4 w-[291px] justify-self-center text-center text-[26px] leading-[120%] font-medium text-[#35343C] md:col-span-6 md:w-[424px] md:text-[44px] lg:col-span-12 lg:w-[671px] lg:justify-self-auto lg:text-left xxl:w-[975px] xxl:text-[64px]">
-            Participe da nossa rede agora
+            Faça parte da nossa rede
           </h3>
 
           {/* Texto */}
           <p className="col-span-4 mt-3 text-center text-[14px] leading-[140%] text-[#5C5C65] md:col-span-6 md:text-[16px] lg:col-span-12 lg:w-[671px] lg:text-left xxl:mt-4 xxl:w-[975px] xxl:text-[18px]">
-            Cadastre seu projeto ou junte-se à comunidade e colabore em novas
-            ideias.
+            Cadastre um projeto ou participe da comunidade e colabore em
+            projetos reais.
           </p>
 
           {/* Botão */}
-          <Button className="col-start-2 col-end-4 mt-6 h-[31px] w-[140px] justify-self-center rounded-[42px] bg-[#35343C] hover:bg-[#35343C]/90 md:col-start-3 md:col-end-5 md:h-[34px] md:w-[155px] lg:col-span-12 lg:h-[43px] lg:w-[170px] lg:justify-self-auto xl:h-12 xl:w-[177px] xxl:mt-8 xxl:h-[59px] xxl:w-[207px]">
-            <p className="px-[13px] py-[9px] text-[14px] md:text-[16px] lg:px-5 lg:py-3.5 xl:px-6 xl:py-4 xxl:px-[31px] xxl:py-[21px] xxl:text-[18px]">
-              Começar agora
-            </p>
-          </Button>
+          <Link
+            href="/how-to-join"
+            className="col-start-2 col-end-4 mt-6 justify-self-center md:col-start-3 md:col-end-5 lg:col-span-12 lg:justify-self-auto"
+          >
+            <Button className="h-[31px] w-[140px] rounded-[42px] bg-[#35343C] hover:bg-[#35343C]/90 md:h-[34px] md:w-[155px] lg:h-[43px] lg:w-[170px] xl:h-12 xl:w-[177px] xxl:mt-8 xxl:h-[59px] xxl:w-[207px]">
+              <span className="px-[13px] py-[9px] text-[14px] md:text-[16px] lg:px-5 lg:py-3.5 xl:px-6 xl:py-4 xxl:px-[31px] xxl:py-[21px] xxl:text-[18px]">
+                Começar
+              </span>
+            </Button>
+          </Link>
         </div>
       </div>
     </section>
