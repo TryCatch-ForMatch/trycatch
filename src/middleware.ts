@@ -8,6 +8,7 @@ const rotasPublicas = [
   { path: '/signup', autenticado: 'redirect' },
   { path: '/forgot-password', autenticado: 'next' },
   { path: '/reset-password', autenticado: 'next' },
+  { path: '/about', autenticado: 'next' },
   { path: '/', autenticado: 'next' },
 ];
 
