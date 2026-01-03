@@ -57,7 +57,7 @@ export default function FAQ() {
       {/* MOBILE + TABLET */}
       <div className="block lg:hidden">
         {/* Bloco superior */}
-        <div className="relative mt-10 flex h-[204px] flex-col justify-center rounded-2xl bg-[#35343C] p-6 md:mt-16">
+        <div className="relative mt-10 flex h-[204px] flex-col justify-between rounded-2xl bg-[#35343C] px-6 py-8 md:mt-16">
           <div className="flex">
             <p className="text-[14px] leading-[140%] font-medium text-[#D9D9ED] md:text-[16px]">
               {perguntas[ativo].pergunta}
@@ -74,7 +74,7 @@ export default function FAQ() {
             alt="ColabWork"
             width={57}
             height={25}
-            className="mt-4 ml-auto"
+            className="mt-4 ml-auto hidden md:block"
           />
         </div>
 
@@ -132,7 +132,7 @@ export default function FAQ() {
 
           {/* Coluna direita – resposta */}
           <div className="col-start-7 col-end-12">
-            <div className="relative h-full rounded-[28px] bg-[#35343C]">
+            <div className="relative flex min-h-[360px] flex-col justify-between rounded-[28px] bg-[#35343C] px-10 py-10 xl:min-h-[420px] xxl:min-h-[520px]">
               {/* Ícone superior decorativo */}
               <Image
                 src="/icon_faq_1.svg"
@@ -144,7 +144,7 @@ export default function FAQ() {
               />
 
               {/* ZONA SEGURA DO TEXTO */}
-              <div className="mx-auto flex h-full max-w-[80%] items-center px-6 py-12 xl:py-14 xxl:py-16">
+              <div className="-full mx-auto flex max-w-[80%] items-center px-6 py-12 xl:py-14 xxl:py-16">
                 <div className="flex flex-col gap-4">
                   <p className="text-[20px] leading-[140%] font-medium text-white xl:text-[22px] xxl:text-[26px]">
                     {perguntas[ativo].resposta}

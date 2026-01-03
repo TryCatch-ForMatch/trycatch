@@ -31,7 +31,7 @@ export default function AboutUs() {
       </div>
 
       {/* cards */}
-      <div className="mt-10 grid grid-cols-4 gap-4 md:mt-16 md:grid-cols-6 lg:mt-12 lg:grid-cols-12 lg:gap-5 xl:mt-16 xl:gap-5 xxl:mt-[88px]">
+      <div className="mt-10 flex flex-col gap-4 md:mt-16 lg:mt-12 lg:grid lg:grid-cols-12 lg:gap-5">
         {/* Card Projetos que ganham equipe */}
         <div className="col-span-4 h-56 rounded-2xl bg-[url('https://res.cloudinary.com/daxa1bpny/image/upload/v1763427408/ui_assets/BgCardAboutUs.jpg')] bg-cover bg-center bg-no-repeat p-[23px] md:col-span-6 md:p-[23px] lg:col-start-2 lg:col-end-7 lg:row-span-2 lg:h-auto lg:rounded-[28px] lg:p-7 xl:p-8 xxl:p-11">
           <div className="flex h-full flex-col justify-between">
@@ -66,7 +66,7 @@ export default function AboutUs() {
         {/* Card Conecte talentos certos */}
         <Link
           href="about/#equipes"
-          className="col-span-4 flex h-[142px] max-w-[335px] justify-center rounded-2xl bg-[#EAEAF2] p-5 md:col-start-1 md:col-end-4 md:h-[187px] md:max-w-full md:p-[23px] lg:col-start-7 lg:col-end-12 lg:h-[181px] lg:w-auto lg:justify-center lg:rounded-[28px] lg:p-7 xl:h-[210px] xl:p-8 xxl:h-[289px] xxl:p-11"
+          className="flex w-full flex-col rounded-2xl bg-[#EAEAF2] p-5 md:p-[23px] lg:col-start-7 lg:col-end-12 lg:p-7"
         >
           <div className="flex flex-col sm:justify-between">
             <h3 className="text-[18px] font-medium text-[#3B38A0] sm:text-[24px] md:text-[32px] xl:text-[36px] xxl:text-[52px]">
@@ -84,7 +84,7 @@ export default function AboutUs() {
         {/* Card da ideia até a entrega final */}
         <Link
           href="about/#entrega"
-          className="col-span-4 flex h-[142px] max-w-[335px] flex-col justify-end rounded-2xl bg-[#D9D9ED] p-5 md:col-start-4 md:col-end-7 md:h-[187px] md:max-w-full md:p-[23px] md:pt-0 lg:col-start-7 lg:col-end-12 lg:h-[181px] lg:w-auto lg:rounded-[28px] lg:px-7 lg:pt-0 lg:pb-7 xl:h-[210px] xl:px-8 xl:pb-8 xxl:h-[289px] xxl:px-11 xxl:pb-11"
+          className="flex w-full flex-col rounded-2xl bg-[#D9D9ED] p-5 md:p-[23px] lg:col-start-7 lg:col-end-12 lg:p-7"
         >
           <div className="flex items-end justify-between">
             <p className="h-12 w-[175px] text-[24px] leading-6 font-medium text-[#3B38A0] md:w-48 md:text-[26px] lg:h-16 lg:w-[233px] lg:text-[32px] lg:leading-8 xl:w-[262px] xl:text-[36px] xxl:h-[104px] xxl:w-[379px] xxl:text-[52px] xxl:leading-12">
@@ -95,23 +95,26 @@ export default function AboutUs() {
         </Link>
 
         {/* Card nossa proposta */}
-        <div className="col-span-4 flex h-[235px] max-w-[335px] items-center rounded-2xl bg-[#A1A0D1] bg-cover bg-center p-[26px] md:col-span-6 md:h-64 md:max-w-full md:bg-[url('/BgNossaProposta.svg')] md:p-0 md:pl-10 lg:col-start-2 lg:col-end-12 lg:h-[272px] lg:rounded-[28px] lg:px-12 lg:py-0 xl:h-[316px] xl:px-[34px] xxl:h-[435px] xxl:px-[77px]">
-          <div className="lg:[h-168px] flex w-[283px] flex-col justify-center lg:w-[474px] xl:w-[551px] xxl:w-[750px]">
-            <p className="text-[12px] font-medium text-white lg:text-[14px] xxl:text-[16px]">
+        <div className="w-full overflow-hidden rounded-2xl bg-[#A1A0D1] md:grid md:grid-cols-2 lg:col-start-2 lg:col-end-12 lg:rounded-[28px]">
+          {/* TEXTO */}
+          <div className="flex flex-col justify-center gap-3 p-6 md:p-8 xl:p-[34px] xxl:p-[77px]">
+            <p className="text-[12px] font-medium text-white md:text-[14px] xxl:text-[16px]">
               Nossa proposta
             </p>
-            <h3 className="mt-[9px] text-[18px] font-medium text-white sm:text-[24px] md:w-[350px] md:text-[32px] md:leading-10 lg:hidden">
-              Uma rede simples para unir pessoas e projetos
-            </h3>
-            <h3 className="mt-2.5 hidden w-[485px] text-[32px] font-medium text-white lg:block xl:mt-3 xl:w-[523px] xl:text-[36px] xxl:mt-4 xxl:w-[750px] xxl:text-[52px]">
+
+            <h3 className="text-[18px] leading-[120%] font-medium text-white sm:text-[24px] md:text-[32px] xl:text-[36px] xxl:text-[52px]">
               Uma rede simples <br /> para unir pessoas e projetos
             </h3>
-            <p className="mt-[11px] text-[14px] leading-[140%] text-white md:mt-4 md:w-[400px] lg:mt-3.5 lg:w-[474px] lg:text-[16px] xl:mt-4 xl:w-[551px] xxl:mt-6 xxl:w-[750px]">
+
+            <p className="text-[14px] leading-[140%] text-white md:text-[16px] xxl:text-[18px]">
               Construímos uma rede colaborativa onde diferentes áreas se
               conectam em projetos reais para desenvolver soluções digitais
               junto a empresas ou iniciativas independentes.
             </p>
           </div>
+
+          {/* IMAGEM */}
+          <div className="hidden md:block md:h-full md:w-full md:bg-[url('/BgNossaProposta.svg')] md:bg-cover md:bg-right md:bg-no-repeat" />
         </div>
       </div>
     </section>
