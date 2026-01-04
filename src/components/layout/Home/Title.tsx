@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export default function Title() {
   return (
-    <h1 className="relative text-center text-[30px] leading-[120%] font-semibold sm:text-[38px] md:text-[48px] xl:text-[56px] xxl:text-[72px]">
+    <h1 className="relative text-center text-[29px] leading-[140%] font-semibold sm:text-[35px] sm:leading-[120%] md:text-[45px] xl:text-[45px] xxl:text-[56px]">
       {/* Linha 1 */}
       <span className="relative inline-block">
         Conectando

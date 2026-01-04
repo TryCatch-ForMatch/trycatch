@@ -13,15 +13,15 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative overflow-hidden rounded-2xl bg-linear-to-r from-[#e3f0ff] via-[#f8f5ff] to-[#ffeef5]"
+      className="relative flex h-[calc(100vh-100px)] items-center overflow-hidden rounded-2xl bg-linear-to-r from-[#e3f0ff] via-[#f8f5ff] to-[#ffeef5] lg:h-auto xxl:h-[calc(100vh-100px)]"
     >
       {/* Container em coluna única */}
-      <div className="mx-auto flex max-w-[1360px] flex-col items-center px-5 pt-32 md:px-7 md:pt-[88px] lg:px-10">
+      <div className="max-w-auto mx-auto flex flex-col items-center p-10 md:px-7 md:pt-[88px] lg:flex-row lg:gap-10 lg:py-20 xl:gap-20 xl:px-4 xxl:py-10">
         {/* TEXTO */}
         <div className="text-center">
           <Title />
 
-          <p className="mx-auto mt-6 max-w-[377px] text-[12px] leading-[140%] text-[#5C5C65] sm:text-[14px] md:text-[16px]">
+          <p className="mx-auto mt-8 max-w-[377px] text-[12px] leading-[140%] text-[#5C5C65] sm:text-[14px] md:text-[16px] xl:mt-14">
             Uma rede colaborativa para desenvolvimento de soluções digitais com
             aprendizado prático, mentoria e trabalho em equipe.
           </p>
@@ -48,16 +48,17 @@ export default function Hero() {
           <Image
             src="https://res.cloudinary.com/daxa1bpny/image/upload/v1764190245/ui_assets/heroBackground_tablet.svg"
             alt="Pessoas colaborando em um projeto"
-            width={848}
+            width={500}
             height={382}
             priority
+            className="lg:w-[400px] xl:w-[600px] xxl:w-[700px]"
           />
         </div>
 
         {/* INDICADOR DE SCROLL */}
-        <div className="absolute right-6 bottom-6 hidden items-center gap-2 text-[#5C5C65] md:right-6 md:bottom-6 md:flex lg:right-10 lg:bottom-10">
+        <div className="absolute bottom-5 flex gap-2 text-[#5C5C65] md:hidden lg:right-10 lg:bottom-10">
           <ArrowDown className="h-4 w-4 md:hidden" />
-          <Mouse className="lg:block" />
+          <Mouse className="hidden lg:block" />
           <p className="text-[10px] md:text-[11px] lg:text-[14px]">
             rolar para baixo
           </p>
