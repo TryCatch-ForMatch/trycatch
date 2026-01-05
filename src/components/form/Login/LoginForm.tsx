@@ -11,12 +11,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 //import icons
-import { Loader2 } from 'lucide-react';
+import { Loader2, Eye, EyeClosed } from 'lucide-react';
 
 export function LoginForm() {
   const router = useRouter();
   const [form, setForm] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -62,16 +63,24 @@ export function LoginForm() {
             placeholder="Seu email"
             required
           />
-
-          <Input
-            label="Senha"
-            name="password"
-            type="password"
-            value={form.password}
-            onChange={handleChange}
-            placeholder="Sua senha"
-            required
-          />
+          <div className="relative">
+            <Input
+              label="Senha"
+              name="password"
+              type={showPassword ? 'text' : 'password'}
+              value={form.password}
+              onChange={handleChange}
+              placeholder="Sua senha"
+              required
+            />
+            <button
+              className="absolute bottom-[28%] left-[89%]"
+              type="button"
+              onClick={() => setShowPassword((show) => !show)}
+            >
+              {showPassword ? <Eye /> : <EyeClosed />}
+            </button>
+          </div>
 
           <div className="text-right">
             <Link
