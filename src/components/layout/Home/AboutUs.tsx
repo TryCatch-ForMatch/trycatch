@@ -8,8 +8,8 @@ export default function AboutUs() {
       id="aboutUs"
       className="mt-12 md:mt-20 lg:mt-15 xl:mt-26 xxl:mt-32"
     >
-      <div className="flex flex-col lg:grid lg:grid-cols-12 lg:grid-rows-2">
-        <h2 className="mt-4 text-[26px] leading-[120%] font-medium text-[#35343C] md:text-[44px] lg:col-start-2 lg:col-end-7 lg:row-start-2 xxl:text-[64px]">
+      <div className="flex flex-col lg:grid lg:grid-cols-12">
+        <h2 className="mt-4 text-[26px] leading-[120%] font-medium text-[#35343C] md:text-[44px] lg:col-start-2 lg:col-end-7 xxl:text-[64px]">
           Sobre nossa rede
           <span className="flex items-center">
             <Image
@@ -23,7 +23,7 @@ export default function AboutUs() {
             colaborativa
           </span>
         </h2>
-        <p className="mt-[18px] text-[14px] leading-[140%] text-[#5C5C65] md:w-[496px] md:text-[16px] lg:col-start-8 lg:col-end-12 lg:row-start-2 lg:w-full xl:col-start-9 xxl:ml-20 xxl:w-[368px] xxl:text-[18px]">
+        <p className="mt-[18px] text-[14px] leading-[140%] text-[#5C5C65] md:w-[496px] md:text-[16px] lg:col-start-7 lg:col-end-12 lg:ml-4 lg:w-full xxl:ml-5 xxl:w-auto xxl:text-2xl">
           Conectamos talentos a projetos reais em um ambiente colaborativo, com
           aprendizado prático e troca de conhecimento entre diferentes níveis de
           experiência.
@@ -86,8 +86,8 @@ export default function AboutUs() {
           href="about/#entrega"
           className="flex w-full flex-col rounded-2xl bg-[#D9D9ED] p-5 md:p-[23px] lg:col-start-7 lg:col-end-12 lg:p-7"
         >
-          <div className="flex items-end justify-between">
-            <p className="h-12 w-[175px] text-[24px] leading-6 font-medium text-[#3B38A0] md:w-48 md:text-[26px] lg:h-16 lg:w-[233px] lg:text-[32px] lg:leading-8 xl:w-[262px] xl:text-[36px] xxl:h-[104px] xxl:w-[379px] xxl:text-[52px] xxl:leading-12">
+          <div className="flex items-end justify-between md:items-center">
+            <p className="h-12 w-[175px] text-[24px] leading-6 font-medium text-[#3B38A0] md:w-auto md:text-[32px] md:leading-normal lg:h-16 lg:w-[233px] lg:text-[32px] lg:leading-9 xl:w-[262px] xl:text-[36px] xl:lg:leading-10 xxl:h-[104px] xxl:w-[379px] xxl:text-[52px] xxl:leading-12">
               Da ideia até a entrega final
             </p>
             <SquarePen className="h-7 w-7 text-[#3B38A0] lg:h-[34px] lg:w-[34px] xl:h-10 xl:w-10 xxl:h-14 xxl:w-14" />
@@ -95,7 +95,7 @@ export default function AboutUs() {
         </Link>
 
         {/* Card nossa proposta */}
-        <div className="w-full overflow-hidden rounded-2xl bg-[#A1A0D1] md:grid md:grid-cols-2 lg:col-start-2 lg:col-end-12 lg:rounded-[28px]">
+        <div className="w-full overflow-hidden rounded-2xl bg-[#A1A0D1] lg:col-start-2 lg:col-end-12 lg:grid lg:grid-cols-2 lg:rounded-[28px]">
           {/* TEXTO */}
           <div className="flex flex-col justify-center gap-3 p-6 md:p-8 xl:p-[34px] xxl:p-[77px]">
             <p className="text-[12px] font-medium text-white md:text-[14px] xxl:text-[16px]">
@@ -114,7 +114,7 @@ export default function AboutUs() {
           </div>
 
           {/* IMAGEM */}
-          <div className="hidden md:block md:h-full md:w-full md:bg-[url('/BgNossaProposta.svg')] md:bg-cover md:bg-right md:bg-no-repeat" />
+          <div className="hidden lg:block lg:h-full lg:w-full lg:bg-[url('/BgNossaProposta.svg')] lg:bg-cover lg:bg-right lg:bg-no-repeat" />
         </div>
       </div>
     </section>

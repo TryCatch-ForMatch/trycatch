@@ -57,7 +57,7 @@ export default function FAQ() {
       {/* MOBILE + TABLET */}
       <div className="block lg:hidden">
         {/* Bloco superior */}
-        <div className="relative mt-10 flex h-[204px] flex-col justify-between rounded-2xl bg-[#35343C] px-6 py-8 md:mt-16">
+        <div className="relative mt-10 flex h-auto flex-col justify-between rounded-2xl bg-[#35343C] px-6 py-8 md:mt-16">
           <div className="flex">
             <p className="text-[14px] leading-[140%] font-medium text-[#D9D9ED] md:text-[16px]">
               {perguntas[ativo].pergunta}
@@ -65,7 +65,7 @@ export default function FAQ() {
             <MoveUp className="h-5! w-5! stroke-3 text-[#D9D9ED]" />
           </div>
 
-          <p className="mt-4 text-[14px] leading-[140%] text-white md:text-[16px]">
+          <p className="mt-4 text-[14px] text-white md:text-[16px]">
             {perguntas[ativo].resposta}
           </p>
 
@@ -108,12 +108,12 @@ export default function FAQ() {
         <div className="mt-10 grid grid-cols-12 items-stretch gap-4">
           {/* Coluna esquerda – lista completa */}
           <div className="col-start-2 col-end-7">
-            <div className="flex h-full flex-col gap-4">
+            <div className="flex h-full flex-col justify-evenly gap-4">
               {perguntas.map((item, index) => (
                 <div
                   key={index}
                   onClick={() => setAtivo(index)}
-                  className={`flex h-auto cursor-pointer items-center justify-between rounded-[20px] px-6 py-5 transition-colors xxl:h-[104px] ${
+                  className={`flex h-full cursor-pointer items-center justify-between rounded-[20px] px-6 py-5 transition-colors xxl:h-[104px] ${
                     ativo === index ? 'bg-[#35343C] text-white' : 'bg-[#D9D9ED]'
                   }`}
                 >
@@ -144,7 +144,7 @@ export default function FAQ() {
               />
 
               {/* ZONA SEGURA DO TEXTO */}
-              <div className="-full mx-auto flex max-w-[80%] items-center px-6 py-12 xl:py-14 xxl:py-16">
+              <div className="mx-auto flex h-auto max-w-[80%] items-center px-6 py-12 xl:py-14 xxl:py-16">
                 <div className="flex flex-col gap-4">
                   <p className="text-[20px] leading-[140%] font-medium text-white xl:text-[22px] xxl:text-[26px]">
                     {perguntas[ativo].resposta}
@@ -153,7 +153,7 @@ export default function FAQ() {
                   {perguntas[ativo].link && (
                     <Link
                       href={perguntas[ativo].link.href}
-                      className="absolute right-8 bottom-8 inline-flex items-center gap-2 text-[14px] font-medium text-white opacity-90 hover:opacity-100 xl:text-[16px]"
+                      className="absolute right-8 bottom-8 inline-flex items-center gap-2 border-b border-transparent text-[14px] font-medium text-white opacity-90 transition-colors hover:border-white hover:opacity-100 xl:text-[16px]"
                     >
                       {perguntas[ativo].link.label}
                       <MoveRight className="h-4 w-4" />

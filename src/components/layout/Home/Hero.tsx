@@ -13,30 +13,30 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative overflow-hidden rounded-2xl bg-linear-to-r from-[#e3f0ff] via-[#f8f5ff] to-[#ffeef5]"
+      className="relative flex h-[calc(100vh-100px)] items-center overflow-hidden rounded-2xl bg-linear-to-r from-[#e3f0ff] via-[#f8f5ff] to-[#ffeef5] lg:h-auto"
     >
       {/* Container em coluna única */}
-      <div className="mx-auto flex max-w-[1360px] flex-col items-center px-5 pt-32 md:px-7 md:pt-[88px] lg:px-10">
+      <div className="max-w-auto mx-auto flex flex-col items-center p-10 md:px-7 md:pb-0 lg:flex-row lg:items-end lg:gap-10 lg:pt-10 lg:pb-0 xl:gap-20 xl:px-4 xxl:lg:pt-20">
         {/* TEXTO */}
-        <div className="text-center">
+        <div className="pb-8 text-center lg:text-left">
           <Title />
 
-          <p className="mx-auto mt-6 max-w-[377px] text-[12px] leading-[140%] text-[#5C5C65] sm:text-[14px] md:text-[16px]">
+          <p className="mx-auto mt-8 max-w-[377px] text-[12px] leading-[140%] text-[#5C5C65] sm:text-[14px] md:text-[16px] lg:mx-0 xl:mt-14 xxl:max-w-[600px] xxl:text-[25px]">
             Uma rede colaborativa para desenvolvimento de soluções digitais com
             aprendizado prático, mentoria e trabalho em equipe.
           </p>
 
           {/* CTA */}
-          <div className="mt-8 flex justify-center">
+          <div className="mt-8 flex justify-center lg:justify-normal">
             <Link href="/login">
-              <Button className="flex h-10 justify-between rounded-[84px] bg-[#35343C] p-[3px] pl-5 hover:bg-[#35343C]/90">
-                <span className="text-[14px] font-medium md:text-[16px]">
+              <Button className="flex h-10 justify-between rounded-[84px] bg-[#35343C] p-[3px] pl-5 hover:bg-[#35343C]/90 xxl:h-16 xxl:w-auto xxl:pr-2">
+                <span className="text-[14px] font-medium md:text-[16px] lg:pr-2 xxl:text-[20px]">
                   {status === 'unauthenticated'
                     ? 'Faça login'
                     : 'Acesse o Dashboard'}
                 </span>
-                <span className="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-white">
-                  <ArrowUpRight className="h-5 w-5 text-[#35343C]" />
+                <span className="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-white xxl:h-[50px] xxl:w-[50px]">
+                  <ArrowUpRight className="h-5 w-5 text-[#35343C] xxl:h-7! xxl:w-7!" />
                 </span>
               </Button>
             </Link>
@@ -48,16 +48,17 @@ export default function Hero() {
           <Image
             src="https://res.cloudinary.com/daxa1bpny/image/upload/v1764190245/ui_assets/heroBackground_tablet.svg"
             alt="Pessoas colaborando em um projeto"
-            width={848}
+            width={500}
             height={382}
             priority
+            className="xl:w-[600px] xxl:w-[700px]"
           />
         </div>
 
         {/* INDICADOR DE SCROLL */}
-        <div className="absolute right-6 bottom-6 hidden items-center gap-2 text-[#5C5C65] md:right-6 md:bottom-6 md:flex lg:right-10 lg:bottom-10">
+        <div className="absolute bottom-5 flex gap-2 text-[#5C5C65] md:hidden lg:right-10 lg:bottom-10">
           <ArrowDown className="h-4 w-4 md:hidden" />
-          <Mouse className="lg:block" />
+          <Mouse className="hidden lg:block" />
           <p className="text-[10px] md:text-[11px] lg:text-[14px]">
             rolar para baixo
           </p>
