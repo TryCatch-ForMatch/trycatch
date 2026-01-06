@@ -57,6 +57,14 @@ export const MESSAGES = {
     INTERNAL_ERROR: 'Erro interno ao processar convite.',
     FETCH_SUCCESS: 'Convites carregados com sucesso.',
   },
+  INVITE_REQUEST: {
+    CREATED: 'Solicitação de convite criada com sucesso.',
+    ALREADY_EXISTS: 'Já existe uma solicitação de convite com este email.',
+    GENERAL_ERROR: 'Erro interno ao processar solicitação de convite.',
+    LIST_SUCCESS: 'Solicitações de convite carregadas com sucesso.',
+    NOT_FOUND: 'Solicitação de convite não encontrada.',
+    DELETED: 'Solicitação de convite removida com sucesso.',
+  },
   LOGIN: {
     SUCCESS: 'Login realizado com sucesso.',
   },

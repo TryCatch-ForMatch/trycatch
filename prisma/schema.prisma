@@ -10,6 +10,17 @@ enum UserRole {
   MENTOR
 }
 
+enum RoleRequest {
+  USER
+  MENTOR
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "windows", "linux-musl", "linux-musl-openssl-3.0.x"]
@@ -186,4 +197,14 @@ model PasswordResetToken {
   token     String   // hashed
   expiresAt DateTime
   createdAt DateTime @default(now())
+}
+
+model InviteRequest {
+  id        String        @id @default(cuid())
+  name      String
+  email     String        @unique
+  linkedin  String
+  role      RoleRequest   @default(USER)
+  status    RequestStatus @default(PENDING)
+  createdAt DateTime      @default(now())
 }
