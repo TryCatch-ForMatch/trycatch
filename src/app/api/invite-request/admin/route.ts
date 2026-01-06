@@ -4,11 +4,8 @@ import { MESSAGES, buildResponse } from '@/constants/messages';
 import { checkAuth } from '@/lib/check-auth';
 
 export async function GET(request: NextRequest) {
-  const { authorized, session, response } = await checkAuth({
-    allowedRoles: ['ADMIN'],
-  });
-
-  if (!authorized || !session) return response;
+  const auth = await checkAuth({ requireAdmin: true });
+  if (!auth.authorized) return auth.response;
 
   try {
     const inviteRequests = await prisma.inviteRequest.findMany({

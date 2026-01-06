@@ -3,20 +3,16 @@ import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { getIdFromRequest } from '@/utils/url';
 
 const idSchema = z.string().min(1, 'ID inválido');
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const { authorized, session, response } = await checkAuth({
-    allowedRoles: ['ADMIN'],
-  });
+export async function DELETE(request: NextRequest) {
+  const auth = await checkAuth({ requireAdmin: true });
+  if (!auth.authorized) return auth.response;
 
-  if (!authorized || !session) return response;
-
-  const idParse = idSchema.safeParse(params.id);
+  const id = getIdFromRequest(request);
+  const idParse = idSchema.safeParse(id);
 
   if (!idParse.success) {
     return buildResponse({
@@ -26,22 +22,12 @@ export async function DELETE(
     });
   }
 
-  const inviteRequestId = idParse.data;
-
   try {
-    const existingRequest = await prisma.inviteRequest.findUnique({
-      where: {
-        id: inviteRequestId,
-      },
+    const existing = await prisma.inviteRequest.findUnique({
+      where: { id: idParse.data },
     });
 
-    await prisma.inviteRequest.delete({
-      where: {
-        id: inviteRequestId,
-      },
-    });
-
-    if (!existingRequest) {
+    if (!existing) {
       return buildResponse({
         success: false,
         message: MESSAGES.INVITE_REQUEST.NOT_FOUND,
