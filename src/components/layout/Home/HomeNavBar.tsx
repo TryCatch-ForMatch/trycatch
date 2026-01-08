@@ -76,7 +76,7 @@ export function HomeNavBar() {
               </Link>
             </li>
             <li>
-              <Link href="/" onClick={() => setOpen(false)}>
+              <Link href="#FAQ" onClick={() => setOpen(false)}>
                 Dúvidas
               </Link>
             </li>
