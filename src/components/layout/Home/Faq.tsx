@@ -15,7 +15,7 @@ export default function FAQ() {
         'Você pode cadastrar um projeto informando objetivos, prazos, tecnologias envolvidas e se a iniciativa é remunerada ou não. Após o envio, o projeto passa por uma análise de alinhamento com a proposta da plataforma.',
       link: {
         label: 'Cadastrar um projeto',
-        href: '/cadastrarprojeto',
+        href: '/register-project',
       },
     },
     {
@@ -29,7 +29,7 @@ export default function FAQ() {
         'Qualquer pessoa interessada em colaborar pode participar, seja para aprender, contribuir tecnicamente ou atuar como mentor. A participação ocorre de acordo com habilidades, interesses e disponibilidade.',
       link: {
         label: 'Quero fazer parte da comunidade',
-        href: '/fazerparte',
+        href: '/invite-request',
       },
     },
     {
@@ -38,7 +38,7 @@ export default function FAQ() {
         'Sim. Os projetos podem contar com o apoio de mentores que auxiliam no planejamento, organização e desenvolvimento das soluções, promovendo uma experiência colaborativa e orientada.',
       link: {
         label: 'Quero fazer parte da comunidade',
-        href: '/fazerparte',
+        href: '/invite-request',
       },
     },
   ];

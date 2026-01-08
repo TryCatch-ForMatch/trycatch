@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { NextRequest } from 'next/server';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { z } from 'zod';
+import { sendInviteRequestEmail } from '@/lib/mail/send-invite-request-email';
 
 const inviteRequestSchema = z.object({
   name: z.string().min(3, 'Nome inválido'),
@@ -55,6 +56,13 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    await sendInviteRequestEmail({
+      name,
+      email,
+      linkedin,
+      role,
+    });
+
     return buildResponse({
       success: true,
       message: MESSAGES.INVITE_REQUEST.CREATED,
@@ -64,7 +72,8 @@ export async function POST(request: NextRequest) {
       },
       status: 201,
     });
-  } catch {
+  } catch (error) {
+    console.error('Erro invite-request:', error);
     return buildResponse({
       success: false,
       message: MESSAGES.INVITE_REQUEST.GENERAL_ERROR,

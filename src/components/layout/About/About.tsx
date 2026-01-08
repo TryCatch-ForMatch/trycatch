@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function About() {
   return (
     <section className="mx-auto max-w-[1280px] px-5 md:px-8 lg:px-10">
@@ -52,9 +54,19 @@ export default function About() {
           <br />
 
           <ul className="mt-4 list-disc pl-5 text-[#5C5C65]">
-            <li>Cadastrar um projeto</li>
-            <li>Quero mais informações</li>
-            <li>Conhecer projetos desenvolvidos</li>
+            <li>
+              <Link
+                href="/register-project"
+                className="cursor-pointer hover:underline"
+              >
+                Cadastrar um projeto
+              </Link>
+            </li>
+            <li>
+              <Link href="/contact" className="cursor-pointer hover:underline">
+                Quero mais informações
+              </Link>
+            </li>
           </ul>
         </div>
       </section>
@@ -89,8 +101,19 @@ export default function About() {
           <br />
 
           <ul className="mt-4 list-disc pl-5 text-[#5C5C65]">
-            <li>Quero fazer parte da comunidade</li>
-            <li>Portfólios</li>
+            <li>
+              <Link
+                href="/invite-request"
+                className="cursor-pointer hover:underline"
+              >
+                Quero fazer parte da comunidade
+              </Link>
+            </li>
+            <li>
+              <Link href="portfolio" className="cursor-pointer hover:underline">
+                Portfólios
+              </Link>
+            </li>
           </ul>
         </div>
       </section>
@@ -123,9 +146,19 @@ export default function About() {
           <br />
 
           <ul className="mt-4 list-disc pl-5 text-[#5C5C65]">
-            <li>Cadastrar um projeto</li>
-            <li>Quero mais informações</li>
-            <li>Conhecer projetos desenvolvidos</li>
+            <li>
+              <Link
+                href="/register-project"
+                className="cursor-pointer hover:underline"
+              >
+                Cadastrar um projeto
+              </Link>
+            </li>
+            <li>
+              <Link href="/contact" className="cursor-pointer hover:underline">
+                Quero mais informações
+              </Link>
+            </li>
           </ul>
         </div>
       </section>
