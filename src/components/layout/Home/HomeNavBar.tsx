@@ -56,7 +56,18 @@ export function HomeNavBar() {
     >
       <nav className="relative flex h-full items-center justify-center">
         <div className="mx-[20px] flex w-full max-w-[335px] items-center justify-between md:mx-[28px] md:max-w-[968px] lg:mx-[34px] lg:max-w-[1152px] xl:mx-[80px] xl:max-w-[1360px] xxl:mx-[80px] xxl:max-w-[1842px]">
-          <p className="font-bold">TryCatch</p>
+          <div
+            className={`relative flex items-center justify-center transition-all duration-300 ${
+              scrolled ? 'h-8 w-24' : 'h-18 w-36'
+            }`}
+          >
+            <Image
+              src="/logo-trycatch.png"
+              alt="TryCatch"
+              fill
+              className="object-contain"
+            />
+          </div>
 
           {/* DESKTOP */}
           <ul className="hidden items-center gap-6 lg:flex">

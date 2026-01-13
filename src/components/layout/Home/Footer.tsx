@@ -1,16 +1,21 @@
 'use client';
 import Link from 'next/link';
-import { useState } from 'react';
 import Image from 'next/image';
 
 export default function Footer() {
   return (
     <footer className="mt-16 md:mt-28 lg:mt-[121px] xl:mt-[145px] xxl:mt-[202px]">
       <div className="flex flex-col justify-between gap-12 lg:flex-row xxl:gap-0">
-        <div className="flex flex-col gap-4 md:gap-6">
-          <div className="flex h-[89px] w-[214px] items-center justify-center rounded-2xl border border-[#35343C]">
-            <span className="text-[16px] font-medium text-gray-800">Logo</span>
+        <div className="flex flex-col gap-4 md:gap-5">
+          <div className="relative h-10 w-32">
+            <Image
+              src="/logo-trycatch-colmeia.png"
+              alt="TryCatch"
+              fill
+              className="object-contain"
+            />
           </div>
+
           <p className="text-[14px] text-[#5C5C65] md:w-[367px] md:text-[16px] lg:w-[261px] xxl:w-[421px] xxl:text-[18px]">
             Uma rede que conecta projetos e profissionais para criar soluções
             digitais.
@@ -38,7 +43,7 @@ export default function Footer() {
                 <p className="hover:text-gray-800">Portfólios</p>
               </li>
             </Link>
-            <Link href="/">
+            <Link href="#FAQ">
               <li>
                 <p className="hover:text-gray-800">Dúvidas</p>
               </li>
@@ -67,7 +72,7 @@ export default function Footer() {
       </div>
 
       <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#EAEAEB] pt-12 text-[14px] text-[#5C5C65] md:mt-22 md:flex-row md:pt-10 md:text-[16px] lg:flex-row xxl:text-[18px]">
-        <p>© 2025 Try Catch For Match. All rights reserved</p>
+        <p>© 2025 TryCatch® 4Match. All rights reserved</p>
         <Link href="https://eduardopaiva.framer.ai/">
           <p>Design by Eduardo Paiva</p>
         </Link>
