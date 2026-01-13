@@ -6,7 +6,7 @@ export default function AboutUs() {
   return (
     <section
       id="aboutUs"
-      className="mt-12 md:mt-20 lg:mt-15 xl:mt-26 xxl:mt-32"
+      className="mt-12 scroll-mt-24 md:mt-20 lg:mt-15 xl:mt-26 xxl:mt-32"
     >
       <div className="flex flex-col lg:grid lg:grid-cols-12">
         <h2 className="mt-4 text-[26px] leading-[120%] font-medium text-[#35343C] md:text-[44px] lg:col-start-2 lg:col-end-7 xxl:text-[64px]">

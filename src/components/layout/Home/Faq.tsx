@@ -46,7 +46,7 @@ export default function FAQ() {
   return (
     <section
       id="FAQ"
-      className="mt-[150px] sm:mt-[284px] md:mt-[113px] lg:mt-[109px] xl:mt-36 xxl:mt-[199px]"
+      className="mt-[150px] scroll-mt-16 sm:mt-[284px] md:mt-[113px] lg:mt-[109px] xl:mt-36 xxl:mt-[199px]"
     >
       <div className="grid grid-cols-4 lg:grid-cols-12">
         <h3 className="col-span-4 text-[24px] leading-[120%] font-medium text-[#35343C] sm:text-[26px] md:text-[44px] lg:col-start-2 lg:col-end-8 xxl:text-[64px]">
