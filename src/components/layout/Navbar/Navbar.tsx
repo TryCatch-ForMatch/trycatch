@@ -3,12 +3,8 @@
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
-//import components
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-
-//import icons
 import {
   Home,
   Users,
@@ -26,26 +22,33 @@ export function Navbar() {
   const user = session?.user;
   const pathname = usePathname();
 
-  const { isOpen, toggleSidebar }= useSidebar()
+  const { isOpen, toggleSidebar } = useSidebar();
 
   return (
     <aside
-      className={`flex h-screen flex-col justify-between shadow-sm px-4 py-6 ${isOpen ? 'w-20' : ' w-60'} transition-width duration-300 sticky top-0 bg-background`}
+      className={`flex h-screen flex-col justify-between px-4 py-6 shadow-sm ${isOpen ? 'w-20' : 'w-60'} transition-width sticky top-0 bg-background duration-300`}
     >
       <div>
         {/* Logo */}
-        <Link href="/home">
-          <div
-            className={`mb-8 text-center text-2xl font-bold text-[#3B38A0] ${!isOpen ? 'block' : 'hidden'}`}
-          >
-            TryCatch
+        <Link
+          href="/dashboard"
+          aria-label="Ir para a página dashboard"
+          className={`${!isOpen ? 'block' : 'hidden'}`}
+        >
+          <div className="relative mx-auto mt-4 h-14 w-32">
+            <Image
+              src="/logo-trycatch-colmeia-azul.png"
+              alt="TryCatch"
+              fill
+              className="object-contain"
+            />
           </div>
         </Link>
 
         {/* Avatar + Nome do usuário */}
         <Link href={'/dashboard/profile'}>
-          {user&& (
-            <div className="mb-8 flex items-center gap-3">
+          {user && (
+            <div className="mt-8 mb-8 flex items-center gap-3">
               {user.avatar && (
                 <Image
                   src={user.avatar || '/default-avatar.png'}
@@ -55,9 +58,7 @@ export function Navbar() {
                   className="rounded-full"
                 />
               )}
-              <div
-                className={`flex flex-col ${!isOpen ? 'block' : 'hidden'}`}
-              >
+              <div className={`flex flex-col ${!isOpen ? 'block' : 'hidden'}`}>
                 <span className="text-sm font-medium text-gray-800">
                   {user.name}
                 </span>
@@ -116,9 +117,7 @@ export function Navbar() {
                 className={`flex items-center gap-2 ${!isOpen ? 'justify-start' : 'justify-center'} ${pathname === '/dashboard/forum' ? 'rounded-sm bg-[#3B38A0] p-2 text-gray-50' : 'bg-transparent'} `}
               >
                 <MessageSquare size={20} />
-                <span className={`${!isOpen ? 'block' : 'hidden'}`}>
-                  Fórum
-                </span>
+                <span className={`${!isOpen ? 'block' : 'hidden'}`}>Fórum</span>
               </Link>
             </li>
             <li>
