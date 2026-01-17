@@ -7,24 +7,41 @@ Aqui estão as regras, padrões e combinados pra garantir que todo mundo consiga
 
 ## ✔️ Distribuição de tarefas
 
-Com intuito de distribuir de forma igualitária, os cards podem ser divididos em sub-issues.  
-Basta clicar em **Create sub-issues**, escolher o assunto e assinar em **Assignees** como responsável.
+As tarefas são organizadas em cards/issues, que podem ser divididas em sub-issues, quando necessário, para melhor distribuição do trabalho.
+
+⚠️ Importante:
+O interessado em contribuir não cria nem assume a issue/card por conta própria.
+
+### 📌 Fluxo correto de atribuição
+
+1. O colaborador comenta na issue/card existente, informando que tem interesse em assumir a tarefa.
+
+2. Um responsável pelo projeto irá:
+
+  - Avaliar o pedido
+  - Atribuir oficialmente o colaborador à issue/card
+  - Definir ou validar o prazo de entrega
+
+3. Caso necessário, o colaborador pode solicitar prorrogação de prazo, exclusivamente via comentário na própria issue/card.
+
+Esse fluxo garante controle, equidade na distribuição e rastreabilidade das responsabilidades.
 
 ---
 
 ## 🗂️ Regras e Organização
 
-### ✔️ Ao escolher uma tarefa (card):
+### ✔️ Ao demonstrar interesse em uma tarefa (card):
 
-- Informe no card o **prazo que você se compromete a entregar**.
-- Avalie sua agenda e treine sua organização pessoal — isso vale pra vida real.
-- Caso tenha dificuldades, **peça ajuda**. O foco é **concluir em conjunto**.
+- Comente claramente que deseja assumir a tarefa.
+- Aguarde a atribuição formal por um responsável.
+- Após atribuído, respeite o prazo acordado.
+- Avalie sua disponibilidade antes de se comprometer.
 
 ### ✔️ Disciplina:
 
-- **Pegar tarefa = responsabilidade.**
+- Tarefa atribuída = responsabilidade assumida.
 - Não deixe tarefas paradas sem atualização.
-- Se não conseguir concluir, **avise o quanto antes.**
+- Se perceber que não conseguirá cumprir o prazo, avise o quanto antes via comentário.
 
 ### ✔️ Feedback constante:
 
@@ -161,7 +178,7 @@ git commit --no-verify
 ## 💬 Onde pedir ajuda?
 
 - No grupo da comunidade
-- Abrindo uma issue no GitHub
+- Issue no GitHub
 
 ---
 
@@ -170,18 +187,17 @@ git commit --no-verify
 - Pessoas > Tecnologia
 - Comprometimento > conhecimento técnico.
 - Ninguém caminha sozinho: pergunte e ajude.
-- Entregue no prazo que você mesmo escolheu.
 - Qualidade acima de quantidade.
 - Comunicação sempre.
+- Responsabilidade com prazos assumidos.
 
 ---
 
-## 🧑‍💻 Incluir novos colaboradores no projeto
+## 🧑‍💻 Reconhecimento de colaboradores no projeto
 
 Para garantir que todos os colaboradores sejam reconhecidos, siga estas instruções:
 
-1. Abra uma **issue** ou **PR** que tenha a contribuição de alguém.
-2. Comente na issue ou PR com o comando do All Contributors Bot:
+1. AComente na issue ou PR:
 
 ```
 @all-contributors please add @usuario for code, doc
