@@ -87,10 +87,7 @@ export function ProjectStackSelector() {
       {/* Linhas de stacks */}
       <div className="flex flex-col gap-3">
         {stacks.map((stack, index) => (
-          <div
-            key={index}
-            className="flex h-[40px] w-[540px] items-center gap-2"
-          >
+          <div key={index} className="flex h-[40px] items-center gap-1">
             {/* Select para stack */}
             <Controller
               control={control}
@@ -115,7 +112,7 @@ export function ProjectStackSelector() {
             />
 
             {/* Input percentual */}
-            <div className="mt-[1rem] flex h-[40px] w-[70px] items-center">
+            <div className="mt-[1rem] flex h-[40px] w-[72px] items-center">
               <Input
                 type="number"
                 value={stack.percentage}
@@ -140,6 +137,7 @@ export function ProjectStackSelector() {
                 className="h-[40px] w-full rounded-xl border border-[#3B38A0] text-center"
               />
             </div>
+            <p>%</p>
 
             {/* Botão remover */}
             <button
