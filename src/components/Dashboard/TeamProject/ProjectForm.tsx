@@ -11,6 +11,7 @@ import { ProjectStackSelector } from './ProjectStackSelector';
 import { ProjectSkillSelector } from './ProjectSkillSelector';
 import { useCurrentUser } from '@/lib/use-current-user';
 import { toast } from 'sonner';
+import { MoneyInput } from '@/components/form/MoneyInput/MoneyInput';
 
 const projectSchema = z.object({
   name: z.string().min(3, 'Nome do projeto é obrigatório'),
@@ -169,11 +170,8 @@ export function ProjectForm() {
               <label className="mb-1 block text-sm font-medium">
                 Valor (R$)
               </label>
-              <Input
-                type="number"
-                step="0.01"
-                {...register('totalValue', { valueAsNumber: true })}
-              />
+              <MoneyInput name="totalValue" control={methods.control} />
+
               {errors.totalValue && (
                 <p className="text-sm text-red-500">
                   {'message' in errors.totalValue
