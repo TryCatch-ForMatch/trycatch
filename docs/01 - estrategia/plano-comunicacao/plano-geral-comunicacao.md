@@ -8,7 +8,7 @@ Este documento define e governa toda a comunicação textual da plataforma TryCa
 Seu objetivo é garantir que toda a comunicação:
 -	Seja clara, consistente e profissional;
 -	Reflita processos reais do projeto;
--	Transmita confiança para iniciantes, empresas e clientes;
+-	Transmita confiança para colaboradores, empresas e parceiros;
 -	Seja rastreável e passível de melhoria contínua.
 Este é um documento guarda-chuva, que orienta documentos mais específicos de comunicação e UX Writing.
 ________________________________________
@@ -82,6 +82,23 @@ Inclui textos exibidos durante o uso do sistema:
 -	Avisos de permissão ou restrição.
 Esses textos impactam diretamente a usabilidade e são tratados como parte da qualidade do produto e devem ser acessíveis, claros e não depender exclusivamente de cor, tom implícito ou conhecimento prévio do sistema.
 ________________________________________
+#### 5.5 Comunicação Externa — Mídia e Redes Sociais
+Abrange os textos e mensagens públicas divulgadas fora da plataforma, com foco em posicionamento institucional, visibilidade do projeto e relacionamento com a comunidade.
+
+Inclui:
+- Perfil institucional no LinkedIn;
+- Publicações em redes sociais;
+- Textos de apresentação em canais externos;
+- Comunicados institucionais públicos.
+
+Esses textos devem:
+- Estar alinhados ao posicionamento institucional do TryCatch;
+- Manter coerência com a comunicação da plataforma;
+- Evitar promessas comerciais ou de vínculo empregatício;
+- Explicitar, quando relevante, o caráter open source e colaborativo do projeto.
+
+A definição de tom, frequência, tipos de conteúdo e governança desses canais é detalhada no documento específico de Mídia e Redes Sociais.
+________________________________________
 ### 6. Diretrizes para Criação e Revisão de Textos
 Para qualquer novo texto ou ajuste, deve-se:
 1.	Definir onde o texto será utilizado;
@@ -89,7 +106,7 @@ Para qualquer novo texto ou ajuste, deve-se:
 3.	Definir o objetivo do texto;
 4.	Redigir o conteúdo;
 5.	Validar o texto contra processos reais do sistema;
-6.	Registrar decisões relevantes quando aplicável.
+6.	Registrar decisões relevantes quando aplicável, conforme o modelo de governança documental do projeto.
 Esse processo garante coerência, rastreabilidade e qualidade contínua.
 ________________________________________
 ### 7. Antipadrões Estratégicos de Comunicação
@@ -128,6 +145,7 @@ ________________________________________
 -	Adoção de abordagem híbrida (mercado + acadêmica);
 -	Separação entre comunicação institucional, transacional e interna;
 -	Tratamento de textos como parte da qualidade do produto.
+-   Inclusão de comunicação externa (mídia e redes sociais) como eixo estratégico independente.
 ________________________________________
 ### 12. Status do Documento
 -	Documento estratégico consolidado;
