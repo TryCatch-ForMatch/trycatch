@@ -63,7 +63,7 @@ export function HomeNavBar() {
               }`}
             >
               <Image
-                src="/logo-trycatch-h-azul.png"
+                src="/logo-trycatch-poppins-transparente.png"
                 alt="TryCatch"
                 fill
                 className="object-contain"
