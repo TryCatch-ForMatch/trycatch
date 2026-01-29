@@ -18,12 +18,12 @@ export default function About() {
 
           <p className="mt-6 max-w-[720px] text-[14px] leading-[140%] text-[#5C5C65] md:text-[16px] xxl:text-[18px]">
             O TryCatch 4Match é uma rede colaborativa criada para conectar
-            talentos a projetos reais, promovendo aprendizado prático, troca de
-            conhecimento e desenvolvimento de soluções digitais em equipe. A
-            plataforma reúne projetos de diferentes naturezas, talentos em
-            diversos níveis de experiência e profissionais que atuam como
-            mentores, criando um ambiente estruturado para colaboração, evolução
-            técnica e participação em iniciativas reais.
+            desenvolvedores a projetos reais, promovendo aprendizado prático,
+            troca de conhecimento e desenvolvimento de soluções digitais em
+            equipe. A plataforma reúne projetos de diferentes naturezas,
+            desenvolvedores em diversos níveis de experiência e profissionais
+            que atuam como mentores, criando um ambiente estruturado para
+            colaboração, evolução técnica e participação em iniciativas reais.
           </p>
         </div>
       </section>
@@ -86,17 +86,17 @@ export default function About() {
           </h2>
 
           <p className="mt-6 max-w-[860px] text-[14px] leading-[140%] text-[#5C5C65] md:text-[16px] xxl:text-[18px]">
-            Os talentos podem se candidatar a projetos de acordo com suas
+            Os desenvolvedores podem se candidatar a projetos de acordo com suas
             habilidades, interesses e disponibilidade. As equipes se formam
             considerando as necessidades do projeto e as skills declaradas pelos
-            participantes. A plataforma incentiva a colaboração entre talentos
-            em diferentes níveis de experiência, com o apoio de mentores que
-            acompanham o desenvolvimento técnico e organizacional dos projetos.
-            Tecnologias, habilidades e papéis são definidos de forma clara para
-            facilitar a colaboração e o aprendizado prático. A comunidade é
-            aberta tanto para talentos em desenvolvimento quanto para
-            profissionais experientes que desejam atuar como mentores e
-            compartilhar conhecimento.
+            participantes. A plataforma incentiva a colaboração entre
+            desenvolvedores em diferentes níveis de experiência, com o apoio de
+            mentores que acompanham o desenvolvimento técnico e organizacional
+            dos projetos. Tecnologias, habilidades e papéis são definidos de
+            forma clara para facilitar a colaboração e o aprendizado prático. A
+            comunidade é aberta tanto para pessoas em desenvolvimento e
+            aprendizado quanto para profissionais experientes que desejam atuar
+            como mentores e compartilhar conhecimento.
           </p>
           <br />
 
