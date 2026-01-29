@@ -6,10 +6,11 @@
 ________________________________________
 ### 1. Objetivo do Documento
 Este documento define a estrutura, os objetivos e as mensagens-chave das páginas institucionais relacionadas a qualidade, avaliação e feedback no projeto TryCatch 4Match.
-Seu objetivo é comunicar, de forma clara e responsável, como a plataforma:
+#### Seu objetivo é comunicar, de forma clara e responsável, como a plataforma:
 -	Trata qualidade de software;
 -	Realiza avaliações entre participantes;
 -	Constrói reputação de forma justa e progressiva.
+
 Este documento não descreve regras técnicas ou algoritmos, mas aplica princípios estratégicos de comunicação e qualidade.
 ________________________________________
 ### 2. Princípios Aplicáveis

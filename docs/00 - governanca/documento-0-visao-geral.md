@@ -17,9 +17,10 @@ O TryCatch é uma plataforma colaborativa voltada ao desenvolvimento de projetos
 -	Pessoas em início de carreira ou em transição para a área de tecnologia;
 -	Profissionais experientes atuando como mentores (orientação técnica e de processo);
 -	Empresas e clientes interessados em acompanhar projetos e identificar talentos em formação.
-O projeto é open source e será tratado explicitamente como:
+#### O projeto é open source e será tratado explicitamente como:
 -	Um produto digital real (utilizável e evolutivo);
 -	Um modelo replicável para futuros projetos, tanto acadêmicos quanto profissionais.
+
 Todas as decisões são tomadas com base em processos documentados, evitando improvisação, soluções isoladas ou dependentes apenas de conhecimento tácito.
 ________________________________________
 ### 3. Princípios Norteadores do Projeto
@@ -65,28 +66,29 @@ O TryCatch é organizado em etapas conceituais, que orientam tanto o desenvolvim
 -	Feedback (retorno estruturado entre participantes);
 -	Métricas qualitativas (sinais não numéricos de evolução e confiabilidade);
 -	Aprendizado contínuo (uso do projeto como instrumento de desenvolvimento).
+
 Cada etapa macro pode gerar um ou mais documentos derivados, conforme o nível de complexidade envolvido.
 ________________________________________
 ### 5. Arquitetura Oficial da Documentação
 A documentação do TryCatch é organizada em camadas, com responsabilidades claras.
 #### 5.1 Camada 0 — Documento Mestre
-Documento que compõe esta camada:
+#### Documento que compõe esta camada:
 -	Documento 0 — Visão Geral, Governança e Arquitetura da Documentação
-Função:
+#### Função:
 -	Definir as regras do projeto;
 -	Organizar todos os demais documentos;
 -	Servir como referência central de coerência.
 #### 5.2 Camada 1 — Documentos Estratégicos
-Documentos que compõem esta camada:
+#### Documentos que compõem esta camada:
 1.	Planejamento de Qualidade de Software;
 2.	Plano Geral de Comunicação;
 3.	Decisão de Marca;
 4.	Acessibilidade e Inclusão Digital.
-Função:
+#### Função:
 -	Definir estratégias por domínio;
 -	Estabelecer princípios específicos que orientam decisões futuras.
 #### 5.3 Camada 2 — Documentos de Produto e Funcionalidades
-Documentos que compõem esta camada:
+#### Documentos que compõem esta camada:
 1.	Sistema de Feedback e Reputação;
 2.	Convites de Acesso (Invite);
 3.	Gestão de Projetos;
@@ -96,18 +98,20 @@ Documentos que compõem esta camada:
 7.	Participação em Projetos e Papéis (roles, stacks assumidas);
 8.	Permissões e Papéis de Usuário (controle de acesso);
 9.	Painel Administrativo (cadastros, gestão e moderação).
+
 Observação: esta lista representa as funcionalidades de produto atualmente identificadas. Novas funcionalidades devem gerar novos documentos nesta camada, seguindo as regras definidas neste Documento Mestre.
-Função:
+
+#### Função:
 -	Formalizar decisões de produto;
 -	Registrar regras de negócio e decisões de UX;
 -	Consolidar limites, restrições e responsabilidades de cada funcionalidade;
 -	Servir de base conceitual para a implementação técnica.
 #### 5.4 Camada 3 — Documentos Técnicos
-Documentos que compõem esta camada:
+#### Documentos que compõem esta camada:
 -	Modelagem de dados;
 -	Arquitetura de APIs;
 -	Decisões técnicas.
-Função:
+#### Função:
 -	Especificar como o sistema é implementado;
 -	Garantir consistência técnica ao longo da evolução do projeto.
 ________________________________________
@@ -118,17 +122,18 @@ Todo documento do projeto deve ser classificado explicitamente como:
 -	Documento de Produto / Funcionalidade;
 -	Documento Técnico;
 -	Documento de Decisão.
+
 Essa classificação deve constar no início de cada documento, para facilitar entendimento e auditoria.
 ________________________________________
 ### 7. Governança da Documentação
 #### 7.1 Criação de Novos Documentos
-Um novo documento deve ser criado quando:
+#### Um novo documento deve ser criado quando:
 -	Uma nova funcionalidade relevante é definida;
 -	Uma decisão estrutural é tomada;
 -	Um processo passa a ser recorrente;
 -	Existe risco de perda de contexto no futuro.
 #### 7.2 Relação entre Funcionalidades e Documentação
-Cada funcionalidade relevante do TryCatch deve possuir ao menos um documento de produto, que consolide:
+#### Cada funcionalidade relevante do TryCatch deve possuir ao menos um documento de produto, que consolide:
 -	Contexto e objetivo (por que a funcionalidade existe e qual problema resolve);
 -	Decisões de UX (fluxos, estados, visibilidade pública vs. privada);
 -	Regras de negócio (o que pode, o que não pode, restrições);
@@ -148,6 +153,7 @@ ________________________________________
 O TryCatch é explicitamente projetado para:
 -	Ser apresentado a empresas e recrutadores;
 -	Ser reutilizado como base metodológica em outros projetos.
+
 Por isso, a documentação não é acessória. Ela é parte central do produto.
 ________________________________________
 ### 10. Evolução Contínua da Documentação
@@ -156,4 +162,5 @@ A documentação do TryCatch evolui de forma incremental e controlada, seguindo 
 -	Alinhamento periódico dos documentos derivados;
 -	Criação de templates oficiais por tipo de documento;
 -	Expansão gradual da documentação de produto conforme novas funcionalidades são definidas.
+
 Este documento é a base de governança do TryCatch. Toda decisão futura deve ser coerente com ele.

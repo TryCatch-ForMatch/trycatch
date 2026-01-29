@@ -5,7 +5,7 @@
 ________________________________________
 ### 1. Objetivo do Documento
 Este documento define as diretrizes operacionais para uso de mídia e redes sociais no projeto TryCatch, estabelecendo regras claras de posicionamento, tom de voz, tipos de conteúdo, governança e limites de atuação.
-Seu objetivo é garantir que toda comunicação externa:
+#### Seu objetivo é garantir que toda comunicação externa:
 -	Seja coerente com a estratégia institucional do projeto;
 -	Preserve a credibilidade técnica e profissional do TryCatch;
 -	Evite interpretações equivocadas sobre natureza comercial ou vínculo empregatício;
@@ -17,14 +17,14 @@ Este documento cobre:
 -	Textos públicos em canais externos;
 -	Apresentação do projeto em plataformas de terceiros;
 -	Diretrizes de governança e responsabilidade editorial.
-Ficam fora de escopo:
+#### Ficam fora de escopo:
 -	Textos internos da plataforma;
 -	Comunicação transacional do sistema;
 -	Conteúdo técnico detalhado de funcionalidades.
 ________________________________________
 ### 3. Posicionamento Estratégico
 O TryCatch se posiciona como um projeto open source colaborativo, voltado ao desenvolvimento de projetos reais em equipe, com foco em aprendizado prático, colaboração e aplicação de práticas profissionais.
-A comunicação em mídia e redes sociais deve:
+#### A comunicação em mídia e redes sociais deve:
 -	Refletir o caráter open source do projeto;
 -	Deixar claro que a colaboração é aberta;
 -	Evitar linguagem de marketing comercial;
@@ -33,7 +33,7 @@ ________________________________________
 ### 4. Canais Oficiais
 Os canais oficiais de comunicação externa do TryCatch são:
 -	LinkedIn (canal institucional principal);
-Outros canais poderão ser adotados futuramente, desde que:
+#### Outros canais poderão ser adotados futuramente, desde que:
 -	Haja justificativa estratégica;
 -	Sejam documentados;
 -	Sigam integralmente as diretrizes deste documento.
@@ -44,7 +44,7 @@ O LinkedIn é utilizado como canal institucional para:
 -	Comunicação com a comunidade tech;
 -	Divulgação de atualizações institucionais;
 -	Compartilhamento de aprendizados e decisões em alto nível.
-Não é objetivo do LinkedIn:
+#### Não é objetivo do LinkedIn:
 -	Divulgação de vagas formais;
 -	Comunicação comercial agressiva;
 -	Promessas de carreira ou retorno financeiro.
@@ -55,7 +55,7 @@ A comunicação deve adotar:
 -	Linguagem clara, objetiva e acessível;
 -	Postura respeitosa e construtiva;
 -	Precisão técnica, sem excesso de formalismo.
-Deve-se evitar:
+#### Deve-se evitar:
 -	Linguagem promocional ou sensacionalista;
 -	Exageros, promessas ou comparações;
 -	Jargões técnicos sem contextualização;
@@ -81,10 +81,11 @@ São proibidos:
 ________________________________________
 ### 9. Frequência e Critério de Publicação
 Não há obrigatoriedade de frequência fixa.
-Publicações devem ocorrer quando:
+#### Publicações devem ocorrer quando:
 -	Houver informação relevante;
 -	O conteúdo agregar valor;
 -	Estiver alinhado ao posicionamento institucional.
+
 Evita-se publicar apenas para manter atividade.
 ________________________________________
 ### 10. Governança e Responsabilidade
@@ -92,6 +93,7 @@ A publicação de conteúdos externos deve:
 -	Ser realizada por responsáveis definidos;
 -	Passar por validação quando envolver posicionamento institucional;
 -	Ter decisões relevantes registradas quando aplicável.
+
 Mudanças significativas de posicionamento devem ser documentadas.
 ________________________________________
 ### 11. Relação com Outros Documentos
@@ -106,9 +108,5 @@ Este documento é vivo e poderá evoluir conforme:
 -	Novos canais sejam adotados;
 -	O projeto amadureça;
 -	Novas necessidades de comunicação surjam.
+
 Toda alteração deve manter alinhamento com os princípios estratégicos do projeto.
-________________________________________
-### 13. Status do Documento
--	Documento operacional inicial;
--	Aplicável ao LinkedIn institucional;
--	Referência oficial para comunicação externa do TryCatch.

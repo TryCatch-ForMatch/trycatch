@@ -6,7 +6,9 @@
 ________________________________________
 ### 1. Objetivo do Documento
 Este documento define os princípios, objetivos e diretrizes para a criação e uso das Chamadas para Ação (CTAs) na plataforma TryCatch 4Match.
+
 As CTAs têm como função orientar o usuário para o próximo passo adequado, de forma clara, acessível e alinhada aos processos reais da plataforma.
+
 Este documento não define textos finais específicos, mas governa como as CTAs devem ser pensadas, posicionadas e validadas.
 ________________________________________
 ### 2. Princípios Aplicáveis às CTAs
@@ -21,11 +23,11 @@ ________________________________________
 As CTAs da plataforma podem ser classificadas em:
 #### 3.1 CTAs de Participação
 Direcionam usuários interessados em ingressar na comunidade TryCatch, respeitando o modelo de acesso controlado da plataforma.
-Exemplos de objetivo (não textos finais):
+#### Exemplos de objetivo (não textos finais):
 - Solicitar código de convite para fazer parte da comunidade;
 - Conhecer os perfis de participação (membro e mentor) antes de solicitar convite.
 
-Atributos de qualidade a comunicar:
+#### Atributos de qualidade a comunicar:
 - Clareza de processo;
 - Transparência;
 - Segurança.
@@ -33,12 +35,12 @@ ________________________________________
 #### 3.2 CTAs de Projeto
 
 Direcionam visitantes externos ou usuários autenticados para ações relacionadas à proposição ou gestão de projetos.
-Exemplos de objetivo:
+#### Exemplos de objetivo:
 - Cadastrar um projeto como visitante externo;
 - Submeter uma demanda para análise da comunidade TryCatch;
 - Acompanhar projetos (apenas para usuários autenticados).
 
-Atributos de qualidade a comunicar:
+#### Atributos de qualidade a comunicar:
 - Profissionalismo;
 - Critério;
 - Organização;
@@ -53,7 +55,7 @@ Exemplos de objetivo:
 - Conhecer o modelo de avaliação e feedback;
 - Acessar conteúdos institucionais.
 
-Atributos de qualidade a comunicar:
+#### Atributos de qualidade a comunicar:
 - Transparência;
 - Didatismo;
 - Acessibilidade;
@@ -72,6 +74,7 @@ As CTAs devem estar alinhadas aos fluxos reais da plataforma:
 -	Cadastro e gestão de projetos;
 -	Navegação institucional;
 -	Acesso a informações e suporte.
+
 CTAs não devem criar atalhos que quebrem regras de negócio ou expectativas do usuário.
 ________________________________________
 ### 6. Antipadrões Estratégicos

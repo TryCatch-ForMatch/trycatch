@@ -5,11 +5,12 @@
 ________________________________________
 ### 1. Objetivo do Documento
 Este documento define e governa toda a comunicação textual da plataforma TryCatch, estabelecendo princípios, diretrizes e estrutura para criação, revisão e evolução dos textos.
-Seu objetivo é garantir que toda a comunicação:
+#### Seu objetivo é garantir que toda a comunicação:
 -	Seja clara, consistente e profissional;
 -	Reflita processos reais do projeto;
 -	Transmita confiança para colaboradores, empresas e parceiros;
 -	Seja rastreável e passível de melhoria contínua.
+
 Este é um documento guarda-chuva, que orienta documentos mais específicos de comunicação e UX Writing.
 ________________________________________
 ### 2. Escopo Estratégico
@@ -18,7 +19,7 @@ Este documento cobre:
 -	Estrutura geral dos textos da plataforma;
 -	Classificação dos tipos de comunicação;
 -	Processo de criação, revisão e evolução dos textos.
-Ficam fora de escopo:
+#### Ficam fora de escopo:
 -	Textos finais específicos;
 -	Conteúdo técnico de funcionalidades;
 -	Implementações de interface.
@@ -31,13 +32,14 @@ Todos os textos do TryCatch devem obedecer aos seguintes princípios estratégic
 -	Consistência: o mesmo conceito deve ser explicado sempre da mesma forma;
 -	Neutralidade profissional: evitar tom emocional, exagerado ou promocional.
 -	Acessibilidade textual: textos devem ser compreensíveis por diferentes perfis de usuário, incluindo pessoas com limitações cognitivas, sensoriais ou contextuais.
+
 Esses princípios se baseiam em boas práticas de UX Writing e documentação técnica adotadas.
 ________________________________________
 ### 4. Abordagem Estratégica de Comunicação
 A comunicação do TryCatch adota uma abordagem híbrida consciente, equilibrando mercado e academia.
 -	Textos principais: linguagem acessível, objetiva e orientada ao mercado;
 -	Documentos de apoio: detalhamento de conceitos, decisões e processos.
-Essa separação permite:
+#### Essa separação permite:
 -	Acesso facilitado para iniciantes;
 -	Avaliação técnica por empresas e recrutadores;
 ________________________________________
@@ -48,7 +50,7 @@ Abrange os textos públicos de apresentação do projeto:
 2.	Qualidade, avaliação e feedback;
 3.	Apresentação do Projeto (sobre, como funciona e para quem é);
 4.	Chamadas para ação (CTAs).
-Cada seção deve possuir:
+#### Cada seção deve possuir:
 -	Objetivo claro;
 -	Público principal e secundário;
 -	Atributos de qualidade que deve comunicar.
@@ -59,6 +61,7 @@ Incluem:
 -	Explicações sobre processos internos;
 -	Regras da plataforma;
 -	Glossário, quando necessário.
+
 Esses conteúdos têm papel educativo e de suporte ao usuário.
 ________________________________________
 #### 5.3 Comunicação Transacional (Sistema)
@@ -67,11 +70,13 @@ Refere-se a textos utilizados em fluxos automáticos do sistema, como:
 -	E-mails de cadastro;
 -	E-mails de redefinição de senha;
 -	E-mails de notificações de projeto.
-Esses textos devem priorizar:
+
+#### Esses textos devem priorizar:
 -	Clareza;
 -	Segurança;
 -	Objetividade;
 -	Linguagem neutra.
+
 Esses textos também devem considerar princípios de acessibilidade, evitando ambiguidades, excesso de informação e dependência de interpretação visual.
 ________________________________________
 #### 5.4 Comunicação Interna da Plataforma
@@ -80,18 +85,19 @@ Inclui textos exibidos durante o uso do sistema:
 -	Mensagens de sucesso;
 -	Textos de validação;
 -	Avisos de permissão ou restrição.
+
 Esses textos impactam diretamente a usabilidade e são tratados como parte da qualidade do produto e devem ser acessíveis, claros e não depender exclusivamente de cor, tom implícito ou conhecimento prévio do sistema.
 ________________________________________
 #### 5.5 Comunicação Externa — Mídia e Redes Sociais
 Abrange os textos e mensagens públicas divulgadas fora da plataforma, com foco em posicionamento institucional, visibilidade do projeto e relacionamento com a comunidade.
 
-Inclui:
+#### Inclui:
 - Perfil institucional no LinkedIn;
 - Publicações em redes sociais;
 - Textos de apresentação em canais externos;
 - Comunicados institucionais públicos.
 
-Esses textos devem:
+#### Esses textos devem:
 - Estar alinhados ao posicionamento institucional do TryCatch;
 - Manter coerência com a comunicação da plataforma;
 - Evitar promessas comerciais ou de vínculo empregatício;
@@ -107,6 +113,7 @@ Para qualquer novo texto ou ajuste, deve-se:
 4.	Redigir o conteúdo;
 5.	Validar o texto contra processos reais do sistema;
 6.	Registrar decisões relevantes quando aplicável, conforme o modelo de governança documental do projeto.
+
 Esse processo garante coerência, rastreabilidade e qualidade contínua.
 ________________________________________
 ### 7. Antipadrões Estratégicos de Comunicação
@@ -129,7 +136,7 @@ Este documento orienta diretamente:
 -	Documentos de Produto (no que se refere à comunicação);
 -	Diretrizes de UX Writing;
 -	Comunicação transacional do sistema.
-Ele deve ser utilizado em conjunto com:
+#### Ele deve ser utilizado em conjunto com:
 -	Documento Estratégico de Marca;
 -	Documento Estratégico — Acessibilidade e Inclusão Digital;
 -	Documento 0 — Visão Geral, Governança e Arquitetura da Documentação.
@@ -146,10 +153,5 @@ ________________________________________
 -	Separação entre comunicação institucional, transacional e interna;
 -	Tratamento de textos como parte da qualidade do produto.
 -   Inclusão de comunicação externa (mídia e redes sociais) como eixo estratégico independente.
-________________________________________
-### 12. Status do Documento
--	Documento estratégico consolidado;
--	Diretrizes de comunicação validadas;
--	Referência oficial para criação e revisão de textos da plataforma.
 ________________________________________
 Observação: Este documento está alinhado ao Documento 0 — Visão Geral, Governança e Arquitetura da Documentação.

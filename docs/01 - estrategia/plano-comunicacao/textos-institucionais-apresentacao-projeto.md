@@ -9,6 +9,7 @@ Este documento define a estrutura, os objetivos e as mensagens-chave das página
 -	Página Sobre;
 -	Página Como funciona;
 -	Página Para quem é.
+
 Essas páginas têm como papel aprofundar a compreensão da plataforma, explicando seu funcionamento, propósito e público-alvo, sem entrar em detalhes técnicos ou operacionais.
 Este documento aplica, neste contexto específico, os princípios definidos no Documento Estratégico — Plano Geral de Comunicação.
 ________________________________________
