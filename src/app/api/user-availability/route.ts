@@ -82,35 +82,46 @@ export async function POST(req: Request) {
 
     const { skills, availabilities } = parsed.data;
 
-    await prisma.$transaction([
-      // faz os dois juntos → ou salva tudo certo ou não salva nada
-      prisma.userAvailability.deleteMany({
-        where: { userId: session.user.id },
-      }),
-      prisma.userAvailability.createMany({
-        data: availabilities.map(({ weekday, startTime, endTime }) => ({
-          userId: session.user.id,
-          weekday,
-          startTime,
-          endTime,
-        })),
-      }),
-    ]);
+    await prisma.$transaction(
+      availabilities.map(({ weekday, startTime, endTime }) =>
+        prisma.userAvailability.upsert({
+          where: {
+            userId_weekday: {
+              userId: session.user.id,
+              weekday,
+            },
+          },
+          update: {
+            startTime,
+            endTime,
+          },
+          create: {
+            userId: session.user.id,
+            weekday,
+            startTime,
+            endTime,
+          },
+        })
+      )
+    );
 
-    // salva skills
-    if (skills) {
-      await prisma.userSkill.deleteMany({
+    if (skills && skills.length > 0) {
+      const existing = await prisma.userSkill.findMany({
         where: { userId: session.user.id },
+        select: { skillId: true },
       });
 
-      if (skills.length > 0) {
-        await prisma.userSkill.createMany({
-          data: skills.map((skillId) => ({
+      const existingIds = existing.map((s) => s.skillId);
+
+      await prisma.userSkill.createMany({
+        data: skills
+          .filter((skillId) => !existingIds.includes(skillId))
+          .map((skillId) => ({
             userId: session.user.id,
             skillId,
           })),
-        });
-      }
+        skipDuplicates: true,
+      });
     }
 
     return buildResponse({
