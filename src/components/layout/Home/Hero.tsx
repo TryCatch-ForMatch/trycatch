@@ -13,10 +13,10 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative flex h-[calc(100vh-100px)] items-center overflow-hidden rounded-2xl bg-linear-to-r from-[#e3f0ff] via-[#f8f5ff] to-[#ffeef5] lg:h-auto"
+      className="relative flex h-[calc(100vh-100px)] items-center overflow-hidden rounded-2xl bg-linear-to-r from-[#e3f0ff] via-[#f8f5ff] to-[#ffeef5] md:h-auto"
     >
       {/* Container em coluna única */}
-      <div className="max-w-auto mx-auto flex flex-col items-center p-10 md:px-7 md:pb-0 lg:flex-row lg:items-end lg:gap-10 lg:pt-10 lg:pb-0 xl:gap-20 xl:px-4 xxl:lg:pt-20">
+      <div className="max-w-auto mx-auto flex flex-col items-center p-10 md:my-4 md:px-7 lg:flex-row lg:items-end lg:gap-10 lg:pt-10 lg:pb-0 xl:gap-20 xl:px-4 xxl:lg:pt-20">
         {/* TEXTO */}
         <div className="pb-8 text-center lg:text-left">
           <Title />
@@ -43,8 +43,8 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* IMAGEM — SOMENTE TABLET+ */}
-        <div className="mt-12 hidden md:block">
+        {/* IMAGEM — SOMENTE lg+ */}
+        <div className="mt-12 hidden lg:block">
           <Image
             src="https://res.cloudinary.com/daxa1bpny/image/upload/v1764190245/ui_assets/heroBackground_tablet.svg"
             alt="Pessoas colaborando em um projeto"

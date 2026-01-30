@@ -12,7 +12,7 @@ export default function Footer() {
               src="/logo-trycatch-colmeia.png"
               alt="TryCatch"
               fill
-              className="object-contain"
+              className="w-auto! object-contain"
             />
           </div>
 
