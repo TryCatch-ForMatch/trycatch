@@ -1,12 +1,8 @@
-import { HomeNavBar } from '@/components/layout/Home/HomeNavBar';
-import Footer from '@/components/layout/Home/Footer';
 import { InviteRequestForm } from '@/components/form/InviteRequest/InviteRequestForm';
 
 export default function InviteRequestPage() {
   return (
     <main className="flex min-h-screen flex-col">
-      <HomeNavBar />
-
       <section className="flex flex-1 items-center justify-center px-5 py-10 md:px-7 lg:px-6 xl:px-10">
         <div className="flex w-full max-w-6xl flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
           <header className="flex w-full flex-col gap-3 text-center lg:max-w-xl lg:text-left">
@@ -31,10 +27,6 @@ export default function InviteRequestPage() {
           <InviteRequestForm />
         </div>
       </section>
-
-      <div className="px-5 md:px-7 lg:px-6 xl:px-10">
-        <Footer />
-      </div>
     </main>
   );
 }
