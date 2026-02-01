@@ -1,10 +1,48 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState } from 'react';
 
 export default function Footer() {
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSend() {
+    if (!email) return;
+
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'Contato via Footer',
+          email,
+          subject: 'Mensagem enviada pelo footer',
+          message: `Contato iniciado pelo footer.\nE-mail informado: ${email}`,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error();
+      }
+
+      setSuccess(true);
+      setEmail('');
+    } catch {
+      setError('Não foi possível enviar. Tente novamente.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
-    <footer className="mt-16 md:mt-28 lg:mt-[121px] xl:mt-[145px] xxl:mt-[202px]">
+    <footer className="mt-16 px-5 pb-6 md:mt-28 md:px-7 lg:mt-[121px] lg:px-6 xl:mt-[145px] xl:px-10 xxl:mt-[202px] xxl:px-[39px]">
       <div className="flex flex-col justify-between gap-12 lg:flex-row xxl:gap-0">
         <div className="flex flex-col gap-4 md:gap-5">
           <div className="relative h-10 w-32">
@@ -58,14 +96,35 @@ export default function Footer() {
           <p className="mt-4 text-[14px] leading-[140%] text-[#5C5C65] md:mt-3 md:text-[16px] xxl:text-[18px]">
             Conta sua ideia ou dúvida pra gente.
           </p>
-          <div className="mt-6 flex flex-col items-center justify-between gap-3 md:flex-row md:justify-normal xxl:gap-4">
-            <input
-              type="email"
-              placeholder="Escrever e-mail..."
-              className="h-[54px] min-w-[280px] rounded-[99px] border border-[#35343C] px-5 py-6 text-[14px] focus:border-gray-500 focus:outline-none sm:w-full sm:max-w-[385px] sm:min-w-[335px] md:w-[309px] md:min-w-[309px] md:text-[16px] lg:w-full xl:h-14 xl:w-[309px] xxl:h-[70px] xxl:w-[400px] xxl:text-[18px]"
-            />
-            <button className="flex h-[54px] min-w-[280px] items-center justify-center rounded-[99px] bg-[#35343C] px-5 py-6 text-[14px] text-white hover:bg-gray-700 sm:w-full sm:max-w-[385px] sm:min-w-[335px] md:h-14 md:w-[98px] md:min-w-[98px] md:text-[16px] lg:w-auto xxl:h-[70px] xxl:w-[118px] xxl:text-[18px]">
-              Enviar
+          <div className="mt-6 flex flex-col gap-3 md:flex-row md:items-start xxl:gap-4">
+            {/* Input + feedback */}
+            <div className="flex w-full flex-col gap-2">
+              <input
+                type="email"
+                placeholder="Escrever e-mail..."
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="h-[54px] w-full rounded-[99px] border border-[#35343C] px-5 py-6 text-[14px] focus:border-gray-500 focus:outline-none md:w-[309px] xxl:h-[70px] xxl:w-[400px] xxl:text-[18px]"
+              />
+
+              {success && (
+                <p className="text-sm text-green-600">
+                  Mensagem enviada com sucesso.
+                </p>
+              )}
+
+              {error && <p className="text-sm text-red-600">{error}</p>}
+            </div>
+
+            {/* Botão */}
+            <button
+              type="submit"
+              onClick={handleSend}
+              disabled={loading}
+              className="flex h-[54px] w-full cursor-pointer items-center justify-center rounded-[99px] bg-[#35343C] px-5 py-6 text-[14px] text-white hover:bg-gray-700 disabled:opacity-50 md:h-14 md:w-[98px] md:text-[16px] xxl:h-[70px] xxl:w-[118px] xxl:text-[18px]"
+            >
+              {loading ? 'Enviando...' : 'Enviar'}
             </button>
           </div>
         </div>

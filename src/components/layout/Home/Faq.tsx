@@ -22,13 +22,17 @@ export default function FAQ() {
       pergunta: 'Preciso pagar para participar ou cadastrar um projeto?',
       resposta:
         'Não. A participação na plataforma é aberta. Existem projetos educacionais e projetos profissionais, e as condições de cada iniciativa são definidas de forma transparente.',
+      link: {
+        label: 'Cadastrar um projeto',
+        href: '/register-project',
+      },
     },
     {
-      pergunta: 'Quem pode participar dos projetos?',
+      pergunta: 'Quem pode participar?',
       resposta:
         'Qualquer pessoa interessada em colaborar pode participar, seja para aprender, contribuir tecnicamente ou atuar como mentor. A participação ocorre de acordo com habilidades, interesses e disponibilidade.',
       link: {
-        label: 'Quero fazer parte da comunidade',
+        label: 'Fazer parte da comunidade',
         href: '/invite-request',
       },
     },
@@ -37,7 +41,7 @@ export default function FAQ() {
       resposta:
         'Sim. Os projetos podem contar com o apoio de mentores que auxiliam no planejamento, organização e desenvolvimento das soluções, promovendo uma experiência colaborativa e orientada.',
       link: {
-        label: 'Quero fazer parte da comunidade',
+        label: 'Fazer parte da comunidade',
         href: '/invite-request',
       },
     },

@@ -79,7 +79,7 @@ export function HomeNavBar() {
               </Link>
             </li>
             <li>
-              <Link href="#aboutUs" onClick={() => setOpen(false)}>
+              <Link href="/#aboutUs" onClick={() => setOpen(false)}>
                 Sobre
               </Link>
             </li>
@@ -89,7 +89,7 @@ export function HomeNavBar() {
               </Link>
             </li>
             <li>
-              <Link href="#FAQ" onClick={() => setOpen(false)}>
+              <Link href="/#FAQ" onClick={() => setOpen(false)}>
                 Dúvidas
               </Link>
             </li>
@@ -98,7 +98,7 @@ export function HomeNavBar() {
                 asChild
                 className="rounded-full bg-[#35343C] hover:bg-[#35343C]/90"
               >
-                <Link href="/">Fale com um Dev</Link>
+                <Link href="/contact">Entre em contato</Link>
               </Button>
             </li>
           </ul>
@@ -129,20 +129,20 @@ export function HomeNavBar() {
                 <Link href="/">Início</Link>
               </li>
               <li onClick={() => setOpen(false)}>
-                <Link href="#aboutUs">Sobre</Link>
+                <Link href="/#aboutUs">Sobre</Link>
               </li>
               <li onClick={() => setOpen(false)}>
                 <Link href="/portfolios">Portfolios</Link>
               </li>
               <li onClick={() => setOpen(false)}>
-                <Link href="/">Dúvidas</Link>
+                <Link href="/#FAQ">Dúvidas</Link>
               </li>
               <li onClick={() => setOpen(false)}>
                 <Button
                   asChild
                   className="mt-2 rounded-full bg-[#35343C] hover:bg-[#35343C]/90"
                 >
-                  <Link href="/">Fale com um Dev</Link>
+                  <Link href="/contact">Entre em contato</Link>
                 </Button>
               </li>
             </ul>
