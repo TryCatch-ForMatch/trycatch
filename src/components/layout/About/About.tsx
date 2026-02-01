@@ -64,7 +64,7 @@ export default function About() {
             </li>
             <li>
               <Link href="/contact" className="cursor-pointer hover:underline">
-                Quero mais informações
+                Mais informações
               </Link>
             </li>
           </ul>
@@ -106,7 +106,7 @@ export default function About() {
                 href="/invite-request"
                 className="cursor-pointer hover:underline"
               >
-                Quero fazer parte da comunidade
+                Fazer parte da comunidade
               </Link>
             </li>
             <li>
@@ -156,7 +156,7 @@ export default function About() {
             </li>
             <li>
               <Link href="/contact" className="cursor-pointer hover:underline">
-                Quero mais informações
+                Mais informações
               </Link>
             </li>
           </ul>

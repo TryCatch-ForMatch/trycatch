@@ -1,0 +1,51 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { Resend } from 'resend';
+import type { CreateEmailOptions } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+function isValidEmail(email: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const { name, email, subject, message } = await request.json();
+
+    if (!name || !subject || !message) {
+      return NextResponse.json({ error: 'Dados inválidos' }, { status: 400 });
+    }
+
+    const emailOptions: CreateEmailOptions = {
+      from: 'TryCatch <no-reply@trycatch.app.br>',
+      to: [process.env.CONTACT_EMAIL as string],
+      subject: `[Contato] ${subject}`,
+      html: `
+        <strong>Nome:</strong> ${name}<br/>
+        ${email ? `<strong>E-mail:</strong> ${email}<br/><br/>` : ''}
+        <strong>Mensagem:</strong><br/>
+        ${message}
+      `,
+    };
+
+    // ✅ replyTo só quando for válido
+    if (email && isValidEmail(email)) {
+      emailOptions.replyTo = email;
+    }
+
+    const result = await resend.emails.send(emailOptions);
+
+    if (result.error) {
+      console.error('Resend error:', result.error);
+      return NextResponse.json(
+        { error: 'Erro ao enviar e-mail' },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Contact API error:', error);
+    return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
+  }
+}
