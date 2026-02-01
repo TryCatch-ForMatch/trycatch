@@ -1,11 +1,10 @@
-import BasePage from '@/components/Dashboard/BasePage';
 import UnderDevelopment from '@/components/UnderDevelopment';
 
 export default function PortfoliosPage() {
   return (
-    <BasePage>
-      <h1>Portfólio</h1>
+    <main>
+      <h3>Detalhes Portfólio</h3>
       <UnderDevelopment />
-    </BasePage>
+    </main>
   );
 }
