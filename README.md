@@ -6,7 +6,7 @@
 
 ## 🚀 Sobre o projeto
 
-**TryCatch For Match** é uma plataforma colaborativa desenvolvida para organizar projetos, conectar pessoas, gerar portfólios reais e criar um ambiente que simula o mercado de trabalho. Aqui praticamos **comprometimento, disciplina e colaboração.**
+**TryCatch** é uma plataforma colaborativa desenvolvida para organizar projetos, conectar pessoas, gerar portfólios reais e criar um ambiente que simula o mercado de trabalho. Aqui praticamos **comprometimento, disciplina e colaboração.**
 
 Mais do que apenas código, este projeto é um laboratório de aprendizado coletivo, onde evoluímos juntos tanto em habilidades técnicas quanto comportamentais.
 
