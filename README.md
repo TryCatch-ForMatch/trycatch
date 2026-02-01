@@ -1,4 +1,4 @@
-# TryCatch For Match - Plataforma de Organização de Projetos Colaborativos
+# TryCatch 4Match - Plataforma de Organização de Projetos Colaborativos
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/github/all-contributors/TryCatch-ForMatch/trycatch?color=ee8449&style=flat-square)](./CONTRIBUTORS.md)
