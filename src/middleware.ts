@@ -1,43 +1,39 @@
 import { NextRequest, NextResponse, MiddlewareConfig } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-export { default } from 'next-auth/middleware';
-
-const rotasPublicas = [
-  { path: '/login', autenticado: 'redirect' },
-  { path: '/register', autenticado: 'redirect' },
-  { path: '/signup', autenticado: 'redirect' },
-  { path: '/forgot-password', autenticado: 'next' },
-  { path: '/reset-password', autenticado: 'next' },
-  { path: '/about', autenticado: 'next' },
-  { path: '/portfolios', autenticado: 'next' },
-  { path: '/invite-request', autenticado: 'next' },
-  { path: '/', autenticado: 'next' },
-];
 
 export async function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname; //pega o path da requisição
+  const { pathname } = request.nextUrl;
 
-  //pega o token do usuário logado
+  // Ignora arquivos estáticos
+  if (
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/api') ||
+    pathname.includes('.')
+  ) {
+    return NextResponse.next();
+  }
+
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  //encontra a rota pública
-  const rotaPublica = rotasPublicas.find((rota) => path == rota.path);
+  const isPrivateRoute = pathname.startsWith('/dashboard');
 
-  //se não tiver token e for rota publica, deixa passar
-  if (!token && rotaPublica) return NextResponse.next();
-
-  //se não tiver token e não for rota pblica, redireciona para login
-  if (!token && !rotaPublica) {
+  // 🔒 Rota privada sem autenticação
+  if (isPrivateRoute && !token) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);
   }
 
-  //se tiver token e for rota pblica login/register, redireciona para dashboard
-  if (token && rotaPublica && rotaPublica.autenticado === 'redirect') {
+  // 🔁 Usuário autenticado tentando acessar auth
+  if (
+    token &&
+    (pathname.startsWith('/login') ||
+      pathname.startsWith('/register') ||
+      pathname.startsWith('/signup'))
+  ) {
     const url = request.nextUrl.clone();
     url.pathname = '/dashboard';
     return NextResponse.redirect(url);
