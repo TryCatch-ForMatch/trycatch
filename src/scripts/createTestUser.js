@@ -17,8 +17,8 @@ async function main() {
       password: hashedPassword,
       avatar: '',
       bio: 'Usuário admin para testes da API',
-      linkedin: '',
-      github: '',
+      linkedin: 'https://www.linkedin.com/in/trycatch-app',
+      github: 'https://github.com/TryCatch-ForMatch/trycatch',
       role: 'ADMIN',
     },
   });

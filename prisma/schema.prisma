@@ -1,3 +1,13 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "windows", "linux-musl", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
 enum ProjectStatus {
   BUSCANDO
   EM_ANDAMENTO
@@ -21,16 +31,6 @@ enum RequestStatus {
   REJECTED
 }
 
-generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "windows", "linux-musl", "linux-musl-openssl-3.0.x"]
-}
-
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
 model User {
   id                String             @id @default(cuid())
   name              String
@@ -44,14 +44,14 @@ model User {
   bio               String?
   isActive          Boolean            @default(true)
   role              UserRole           @default(USER)
+  emailVisible      Boolean            @default(false)
   feedbacksGiven    Feedback[]         @relation("FeedbackGiver")
   feedbacksReceived Feedback[]         @relation("FeedbackReceiver")
   projects          Project[]          @relation("ProjectOwner")
   stacksTaken       StackTaken[]
   availability      UserAvailability[]
-  skills            UserSkill[]
   certificates      UserCertificate[]
-  emailVisible      Boolean             @default(false)
+  skills            UserSkill[]
 }
 
 model Skill {
@@ -174,28 +174,27 @@ model UserAvailability {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id])
+
   @@unique([userId, weekday])
 }
 
 model UserCertificate {
   id          String   @id @default(cuid())
   userId      String
-
-  title       String    // Título do certificado
-  url         String?   // Link público opcional
-  issuer      String    // Emissor do certificado
-  date        String    // Mês/ano (ex: "10/2024")
-  description String?   // Competências, conteúdo ou resumo
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  user        User      @relation(fields: [userId], references: [id])
+  title       String
+  url         String?
+  issuer      String
+  date        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
 }
 
 model PasswordResetToken {
   id        String   @id @default(cuid())
   email     String
-  token     String   // hashed
+  token     String
   expiresAt DateTime
   createdAt DateTime @default(now())
 }

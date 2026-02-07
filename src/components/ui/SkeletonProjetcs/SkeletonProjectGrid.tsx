@@ -1,4 +1,4 @@
-import { CardProjectSummarySkeleton } from './CardProjectSumary';
+import { CardProjectSummarySkeleton } from './CardProjectSummary';
 export function ProjectSummarySkeletonGrid() {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
