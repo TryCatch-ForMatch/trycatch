@@ -4,7 +4,6 @@ import { MESSAGES, buildResponse } from '@/constants/messages';
 
 export async function GET() {
   try {
-    // Busca todos os usuários ativos com suas skills e feedbacks recebidos
     const users = await prisma.user.findMany({
       where: { isActive: true },
       select: {
@@ -12,6 +11,7 @@ export async function GET() {
         name: true,
         email: true,
         avatar: true,
+        role: true,
         github: true,
         linkedin: true,
         bio: true,
@@ -19,7 +19,9 @@ export async function GET() {
           select: {
             skill: {
               select: {
+                id: true,
                 name: true,
+                iconUrl: true,
               },
             },
           },
@@ -44,14 +46,19 @@ export async function GET() {
           : null;
 
       return {
+        id: user.id,
         avatar: user.avatar,
         name: user.name,
-        email: user.email,
+        role: user.role,
+        bio: user.bio,
         github: user.github,
         linkedin: user.linkedin,
-        bio: user.bio,
-        feedback: averageFeedback, // média (ou null se não tiver)
-        skills: user.skills.map((us) => us.skill.name),
+        feedback: averageFeedback,
+        skills: user.skills.map((us) => ({
+          id: us.skill.id,
+          name: us.skill.name,
+          iconUrl: us.skill.iconUrl,
+        })),
       };
     });
 
