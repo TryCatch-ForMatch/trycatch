@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
-import BaseBarChart from '@/components/BaseCharts/BaseBarChart';
+import BaseBarChart from '@/components/ui/BaseCharts/BaseBarChart';
 
 type TopProjectSkill = {
   skill: string;
