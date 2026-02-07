@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
-import BaseDonutChart from '@/components/BaseCharts/BaseDonutChart';
+import BaseDonutChart from '@/components/ui/BaseCharts/BaseDonutChart';
 
 type ProjectStatusData = {
   status: string;

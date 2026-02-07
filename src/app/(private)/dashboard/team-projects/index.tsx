@@ -7,7 +7,7 @@ import { useProjects } from '@/hooks/api/useProjects';
 import { ChangeEvent } from 'react';
 
 import { CardProjectSummary } from '@/components/Dashboard/TeamProject';
-import { ProjectSummarySkeletonGrid } from '@/components/layout/Loading/SkeletonProjetcs/SkeletonProjectGrid';
+import { ProjectSummarySkeletonGrid } from '@/components/ui/SkeletonProjetcs/SkeletonProjectGrid';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Plus, Clock, Search } from 'lucide-react';

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import BaseDonutChart from '@/components/BaseCharts/BaseDonutChart';
+import BaseDonutChart from '@/components/ui/BaseCharts/BaseDonutChart';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
