@@ -1,6 +1,5 @@
 import AboutUs from '@/components/layout/Home/AboutUs';
 import Faq from '@/components/layout/Home/Faq';
-import Footer from '@/components/layout/Home/Footer';
 import Hero from '@/components/layout/Home/Hero';
 import JoinUs from '@/components/layout/Home/JoinUs';
 
