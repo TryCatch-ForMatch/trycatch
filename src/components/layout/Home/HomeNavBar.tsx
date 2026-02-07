@@ -84,7 +84,7 @@ export function HomeNavBar() {
               </Link>
             </li>
             <li>
-              <Link href="/portfolios" onClick={() => setOpen(false)}>
+              <Link href="/portfolio" onClick={() => setOpen(false)}>
                 Portfolios
               </Link>
             </li>
