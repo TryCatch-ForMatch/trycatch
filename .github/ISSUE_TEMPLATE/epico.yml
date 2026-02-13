@@ -1,0 +1,38 @@
+name: '📦 Épico'
+description: 'Iniciativa ampla que agrupa múltiplas issues relacionadas.'
+title: '[ÉPICO] '
+labels: ['epic']
+assignees: []
+body:
+  - type: textarea
+    id: objetivo
+    attributes:
+      label: '🎯 Objetivo Estratégico'
+      description: 'Qual problema amplo este Épico resolve?'
+      placeholder: 'Ex.: Reformular o Sistema de Feedback.'
+    validations:
+      required: true
+
+  - type: textarea
+    id: contexto
+    attributes:
+      label: '📌 Contexto'
+      description: 'Por que essa iniciativa é necessária agora?'
+    validations:
+      required: true
+
+  - type: textarea
+    id: escopo
+    attributes:
+      label: '📦 Escopo Geral'
+      description: 'Quais áreas do sistema serão impactadas?'
+    validations:
+      required: true
+
+  - type: textarea
+    id: metricas
+    attributes:
+      label: '📊 Métricas de Sucesso'
+      description: 'Como saberemos que o Épico foi bem-sucedido?'
+    validations:
+      required: false

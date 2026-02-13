@@ -1,0 +1,48 @@
+name: '✨ Feature'
+description: 'Nova funcionalidade ou melhoria de produto.'
+title: '[FEATURE] '
+labels: ['feature']
+assignees: []
+body:
+  - type: textarea
+    id: descricao
+    attributes:
+      label: '📝 Descrição'
+      description: 'O que precisa ser implementado?'
+    validations:
+      required: true
+
+  - type: textarea
+    id: problema
+    attributes:
+      label: '🎯 Problema que resolve'
+      description: 'Qual problema real esta feature resolve?'
+    validations:
+      required: true
+
+  - type: textarea
+    id: documento
+    attributes:
+      label: '📎 Documento Relacionado'
+      description: 'Indique o documento de produto ou técnico relacionado.'
+    validations:
+      required: true
+
+  - type: textarea
+    id: aceite
+    attributes:
+      label: '🕵️ Critério de Aceite'
+      description: 'Liste critérios verificáveis.'
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: dod
+    attributes:
+      label: '📌 Definition of Done (DoD)'
+      options:
+        - label: Código implementado
+        - label: Regras de negócio respeitadas
+        - label: Testes passando
+        - label: Documentação atualizada (se necessário)
+        - label: PR revisado e aprovado

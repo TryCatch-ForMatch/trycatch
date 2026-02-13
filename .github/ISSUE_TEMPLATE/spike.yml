@@ -1,0 +1,33 @@
+name: '🧠 Spike (Pesquisa Técnica)'
+description: 'Investigação ou validação técnica.'
+title: '[SPIKE] '
+labels: ['spike']
+assignees: []
+body:
+  - type: textarea
+    id: objetivo
+    attributes:
+      label: '🎯 Objetivo da Pesquisa'
+    validations:
+      required: true
+
+  - type: textarea
+    id: perguntas
+    attributes:
+      label: '❓ Perguntas a Responder'
+    validations:
+      required: true
+
+  - type: textarea
+    id: contexto
+    attributes:
+      label: '🧠 Contexto Técnico'
+    validations:
+      required: true
+
+  - type: textarea
+    id: resultado
+    attributes:
+      label: '📄 Resultado Esperado'
+    validations:
+      required: true

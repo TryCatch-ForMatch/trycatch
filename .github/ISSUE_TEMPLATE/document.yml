@@ -1,0 +1,36 @@
+name: '📚 Documentação'
+description: 'Criação ou atualização de documentação.'
+title: '[DOC] '
+labels: ['documentation']
+assignees: []
+body:
+  - type: textarea
+    id: descricao
+    attributes:
+      label: '📝 Descrição'
+    validations:
+      required: true
+
+  - type: textarea
+    id: documento
+    attributes:
+      label: '📎 Documento Impactado'
+    validations:
+      required: true
+
+  - type: textarea
+    id: objetivo
+    attributes:
+      label: '🎯 Objetivo da Atualização'
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: dod
+    attributes:
+      label: '📌 Definition of Done (DoD)'
+      options:
+        - label: Documento criado/atualizado
+        - label: Coerente com Documento 0
+        - label: Revisado
+        - label: PR aprovado
