@@ -8,6 +8,8 @@ body:
     id: objetivo
     attributes:
       label: '🎯 Objetivo da Pesquisa'
+      description: 'Explique o que precisa ser investigado.'
+      placeholder: 'Ex.: Avaliar se Prisma suporta soft delete nativo.'
     validations:
       required: true
 
@@ -15,6 +17,10 @@ body:
     id: perguntas
     attributes:
       label: '❓ Perguntas a Responder'
+      placeholder: |
+        - Existe suporte nativo?
+        - Qual impacto em performance?
+        - Existem alternativas melhores?
     validations:
       required: true
 
@@ -22,6 +28,7 @@ body:
     id: contexto
     attributes:
       label: '🧠 Contexto Técnico'
+      placeholder: 'Ex.: Precisamos evitar exclusão física de registros por questão de auditoria.'
     validations:
       required: true
 
@@ -29,5 +36,12 @@ body:
     id: resultado
     attributes:
       label: '📄 Resultado Esperado'
+      placeholder: 'Documento com conclusão técnica e recomendação final.'
     validations:
       required: true
+
+  - type: textarea
+    id: contribuidores
+    attributes:
+      label: '🙌 Torne-se um colaborador'
+      placeholder: '@all-contributors please add @SEU_USUARIO for research'

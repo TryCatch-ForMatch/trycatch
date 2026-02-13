@@ -1,41 +1,60 @@
-name: '✅🪲​​ Correções e Resolução de Bugs'
-description: Reporte um problema técnico encontrado.
-title: '[BUG]'
+name: '🐞 Bug'
+description: 'Reporte um problema técnico encontrado.'
+title: '[BUG] '
 labels: ['bug']
 assignees: []
 body:
   - type: textarea
     id: descricao
     attributes:
-      label: '📝 Descrição do problema'
-      description: 'Descreva o problema em uma ou duas frases. O que precisa ser feito?'
-      placeholder: 'Ex.: Botão criar projetos não funciona.'
+      label: '📝 Descrição do Problema'
+      description: 'Explique claramente qual é o erro.'
+      placeholder: 'Ex.: Ao clicar em "Criar Projeto", nada acontece e nenhum erro é exibido na interface.'
     validations:
       required: true
+
   - type: textarea
     id: impacto
     attributes:
-      label: '🚨​​ Qual o impacto no projeto?'
-      description: 'O que o problema causa dentro do projeto?'
-      placeholder: 'Ex.: O usuário fica impossibilitado de criar novos projetos.'
+      label: '🚨 Impacto'
+      description: 'Qual o impacto real no sistema ou no usuário?'
+      placeholder: 'Ex.: Usuários não conseguem criar novos projetos, bloqueando o fluxo principal da aplicação.'
     validations:
       required: true
+
   - type: textarea
     id: reproducao
     attributes:
-      label: '💽​ Como reproduzir?'
-      description: 'Descreva como reproduzir.'
-      placeholder: 'Ex.: '
+      label: '🔁 Passos para Reproduzir'
+      description: 'Descreva o passo a passo para reproduzir o problema.'
+      placeholder: |
+        1. Acessar /dashboard
+        2. Clicar em "Novo Projeto"
+        3. Preencher os campos obrigatórios
+        4. Clicar em "Salvar"
+        5. Nenhuma ação ocorre
     validations:
-      required: false
+      required: true
+
   - type: textarea
-    id: aceite
+    id: esperado
     attributes:
-      label: '🕵️​ Critério de aceite'
-      description: 'Descreva os critérios de aceite.'
-      placeholder: 'Ex.: '
+      label: '✅ Comportamento Esperado'
+      description: 'Descreva como o sistema deveria se comportar.'
+      placeholder: 'Ex.: Após clicar em "Salvar", o projeto deve ser criado e redirecionar para a página de detalhes.'
     validations:
-      required: false
+      required: true
+
+  - type: checkboxes
+    id: dod
+    attributes:
+      label: '📌 Definition of Done (DoD)'
+      options:
+        - label: Correção implementada
+        - label: Testes atualizados/criados
+        - label: Testes passando
+        - label: PR revisado e aprovado
+
   - type: textarea
     id: contribuidores
     attributes:
@@ -43,9 +62,10 @@ body:
       description: |
         Quando você enviar essa issue ou PR, peça para ser adicionado aos contribuidores usando o All Contributors Bot.
         Basta comentar nesta issue com o comando:
-        ```
+
         @all-contributors please add @SEU_USUARIO for code, doc
-        ```
-        Substitua `@SEU_USUARIO` pelo seu usuário do GitHub e os tipos de contribuição (`code`, `doc`, etc.) de acordo com sua contribuição.
+
+        Substitua @SEU_USUARIO pelo seu usuário do GitHub e os tipos de contribuição (code, doc, etc.) de acordo com sua contribuição.
+      placeholder: 'Ex.: @all-contributors please add @karina-dev for code'
     validations:
       required: false
