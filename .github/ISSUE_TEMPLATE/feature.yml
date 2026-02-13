@@ -8,7 +8,8 @@ body:
     id: descricao
     attributes:
       label: '📝 Descrição'
-      description: 'O que precisa ser implementado?'
+      description: 'Explique claramente o que deve ser implementado.'
+      placeholder: 'Ex.: Impedir criação de feedback quando o projeto não estiver CONCLUIDO.'
     validations:
       required: true
 
@@ -17,6 +18,7 @@ body:
     attributes:
       label: '🎯 Problema que resolve'
       description: 'Qual problema real esta feature resolve?'
+      placeholder: 'Ex.: Usuários conseguem enviar feedback antes da conclusão do projeto.'
     validations:
       required: true
 
@@ -24,7 +26,8 @@ body:
     id: documento
     attributes:
       label: '📎 Documento Relacionado'
-      description: 'Indique o documento de produto ou técnico relacionado.'
+      description: 'Indique o documento afetado.'
+      placeholder: 'Ex.: docs/02-produto/produto-feedback-reputacao.md'
     validations:
       required: true
 
@@ -32,7 +35,11 @@ body:
     id: aceite
     attributes:
       label: '🕵️ Critério de Aceite'
-      description: 'Liste critérios verificáveis.'
+      description: 'Liste critérios objetivos e testáveis.'
+      placeholder: |
+        - Não permitir criação se status != CONCLUIDO
+        - Retornar erro 400
+        - Exibir mensagem clara no frontend
     validations:
       required: true
 
@@ -46,3 +53,9 @@ body:
         - label: Testes passando
         - label: Documentação atualizada (se necessário)
         - label: PR revisado e aprovado
+
+  - type: textarea
+    id: contribuidores
+    attributes:
+      label: '🙌 Torne-se um colaborador'
+      placeholder: '@all-contributors please add @SEU_USUARIO for code'

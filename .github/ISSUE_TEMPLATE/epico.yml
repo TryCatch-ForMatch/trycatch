@@ -9,7 +9,7 @@ body:
     attributes:
       label: '🎯 Objetivo Estratégico'
       description: 'Qual problema amplo este Épico resolve?'
-      placeholder: 'Ex.: Reformular o Sistema de Feedback.'
+      placeholder: 'Ex.: Reformular a Gestão de Projetos para suportar validação de percentual de stacks.'
     validations:
       required: true
 
@@ -18,6 +18,7 @@ body:
     attributes:
       label: '📌 Contexto'
       description: 'Por que essa iniciativa é necessária agora?'
+      placeholder: 'Ex.: O modelo atual permite percentuais acima de 100%, causando inconsistência.'
     validations:
       required: true
 
@@ -25,7 +26,8 @@ body:
     id: escopo
     attributes:
       label: '📦 Escopo Geral'
-      description: 'Quais áreas do sistema serão impactadas?'
+      description: 'Quais áreas serão impactadas?'
+      placeholder: 'Ex.: Backend (validação), Frontend (mensagem de erro), Documentação.'
     validations:
       required: true
 
@@ -34,5 +36,12 @@ body:
     attributes:
       label: '📊 Métricas de Sucesso'
       description: 'Como saberemos que o Épico foi bem-sucedido?'
+      placeholder: 'Ex.: Nenhum projeto poderá ser salvo com percentual diferente de 100%.'
     validations:
       required: false
+
+  - type: textarea
+    id: contribuidores
+    attributes:
+      label: '🙌 Torne-se um colaborador'
+      placeholder: '@all-contributors please add @SEU_USUARIO for code, doc'
