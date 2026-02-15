@@ -68,6 +68,11 @@ export const MESSAGES = {
   LOGIN: {
     SUCCESS: 'Login realizado com sucesso.',
   },
+  PORTFOLIO: {
+    NOT_FOUND: 'Portfólio não encontrado.',
+    PORTFOLIO_PRIVATE: 'Este portfólio é privado.',
+    INTERNAL_ERROR: 'Erro interno ao processar portfólio.',
+  },
   PROJECT: {
     NOT_FOUND: 'Projeto não encontrado.',
     CREATED: 'Projeto criado com sucesso.',

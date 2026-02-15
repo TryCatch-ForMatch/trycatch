@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { buildPublicPortfolio } from '@/lib/user/portfolio-visibility';
 
 interface Params {
   params: {
@@ -12,10 +13,9 @@ export async function GET(_request: NextRequest, { params }: Params) {
   const { id } = params;
 
   try {
-    const portfolio = await prisma.user.findFirst({
+    const portfolio = await prisma.user.findUnique({
       where: {
         id,
-        isActive: true,
       },
       select: {
         id: true,
@@ -26,7 +26,14 @@ export async function GET(_request: NextRequest, { params }: Params) {
         github: true,
         linkedin: true,
         email: true,
-        emailVisible: true,
+        isActive: true,
+        showEmail: true,
+        showGithub: true,
+        showLinkedin: true,
+        showCertificates: true,
+        showProjects: true,
+        showFeedback: true,
+        portfolioPublic: true,
 
         skills: {
           include: {
@@ -70,10 +77,23 @@ export async function GET(_request: NextRequest, { params }: Params) {
       });
     }
 
-    const publicPortfolio = {
-      ...portfolio,
-      email: portfolio.emailVisible ? portfolio.email : null,
-    };
+    if (!portfolio.isActive) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.USER.NOT_FOUND,
+        status: 404,
+      });
+    }
+
+    if (!portfolio.portfolioPublic) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.PORTFOLIO.PORTFOLIO_PRIVATE,
+        status: 403,
+      });
+    }
+
+    const publicPortfolio = buildPublicPortfolio(portfolio);
 
     return NextResponse.json(publicPortfolio, { status: 200 });
   } catch (error) {
