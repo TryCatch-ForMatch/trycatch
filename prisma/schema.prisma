@@ -34,6 +34,7 @@ enum RequestStatus {
 model User {
   id                String             @id @default(cuid())
   name              String
+  userName          String?            @unique
   email             String             @unique
   createdAt         DateTime           @default(now())
   avatar            String?
@@ -43,8 +44,7 @@ model User {
   updatedAt         DateTime           @updatedAt
   bio               String?
   isActive          Boolean            @default(true)
-  role              UserRole           @default(USER)
-  emailVisible      Boolean            @default(false)
+  role              UserRole           @default(USER)  
   feedbacksGiven    Feedback[]         @relation("FeedbackGiver")
   feedbacksReceived Feedback[]         @relation("FeedbackReceiver")
   projects          Project[]          @relation("ProjectOwner")
@@ -52,6 +52,14 @@ model User {
   availability      UserAvailability[]
   certificates      UserCertificate[]
   skills            UserSkill[]
+
+  showEmail         Boolean             @default(false)
+  showGithub        Boolean             @default(true)
+  showLinkedin      Boolean             @default(true)
+  showCertificates  Boolean             @default(true)
+  showProjects      Boolean             @default(true)
+  showFeedback      Boolean             @default(false)
+  portfolioPublic   Boolean             @default(true)
 }
 
 model Skill {
