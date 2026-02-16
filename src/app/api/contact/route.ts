@@ -2,14 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import type { CreateEmailOptions } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 export async function POST(request: NextRequest) {
   try {
+    if (!process.env.RESEND_API_KEY) {
+      console.warn('RESEND_API_KEY is not defined');
+      return;
+    }
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
     const { name, email, subject, message } = await request.json();
 
     if (!name || !subject || !message) {
