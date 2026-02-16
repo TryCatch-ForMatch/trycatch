@@ -58,4 +58,12 @@ body:
     id: contribuidores
     attributes:
       label: '🙌 Torne-se um colaborador'
-      placeholder: '@all-contributors please add @SEU_USUARIO for code'
+      description: |
+        Após a aprovação e merge desta issue/PR, adicione o seguinte comentário nesta issue para registrar sua contribuição:
+
+        @all-contributors please add @SEU_USUARIO for code
+
+        Substitua @SEU_USUARIO pelo seu usuário do GitHub e inclua a categoria.
+
+        Caso sua contribuição não seja apenas código, consulte as categorias disponíveis:
+        https://allcontributors.org/docs/en/emoji-key
