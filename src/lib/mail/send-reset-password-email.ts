@@ -1,7 +1,5 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 type SendResetPasswordEmailParams = {
   email: string;
   token: string;
@@ -12,6 +10,11 @@ export async function sendResetPasswordEmail({
   token,
 }: SendResetPasswordEmailParams) {
   try {
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error('RESEND_API_KEY is not defined');
+    }
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const resetUrl = `${process.env.NEXTAUTH_URL}reset-password?token=${token}`;
 
     console.log('📧 Chamando Resend para:', email);
