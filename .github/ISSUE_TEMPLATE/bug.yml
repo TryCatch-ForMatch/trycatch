@@ -60,12 +60,11 @@ body:
     attributes:
       label: '🙌 Torne-se um colaborador'
       description: |
-        Quando você enviar essa issue ou PR, peça para ser adicionado aos contribuidores usando o All Contributors Bot.
-        Basta comentar nesta issue com o comando:
+        Após a aprovação e merge desta issue/PR, adicione o seguinte comentário nesta issue para registrar sua contribuição:
 
-        @all-contributors please add @SEU_USUARIO for code, doc
+        @all-contributors please add @SEU_USUARIO for code
 
-        Substitua @SEU_USUARIO pelo seu usuário do GitHub e os tipos de contribuição (code, doc, etc.) de acordo com sua contribuição.
-      placeholder: 'Ex.: @all-contributors please add @karina-dev for code'
-    validations:
-      required: false
+        Substitua @SEU_USUARIO pelo seu usuário do GitHub e inclua a categoria.
+
+        Caso sua contribuição não seja apenas código, consulte as categorias disponíveis:
+        https://allcontributors.org/docs/en/emoji-key
