@@ -9,7 +9,8 @@ function isValidEmail(email: string) {
 export async function POST(request: NextRequest) {
   try {
     if (!process.env.RESEND_API_KEY) {
-      throw new Error('RESEND_API_KEY is not defined');
+      console.warn('RESEND_API_KEY is not defined');
+      return;
     }
 
     const resend = new Resend(process.env.RESEND_API_KEY);
