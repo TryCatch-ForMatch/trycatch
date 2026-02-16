@@ -20,7 +20,7 @@ export async function sendInviteRequestEmail({
     throw new Error('Configuração de email ausente');
   }
 
-  await resend.emails.send({
+  await resend().emails.send({
     from: sender,
     to: receiver,
     subject: 'Nova solicitação de acesso – TryCatch',
