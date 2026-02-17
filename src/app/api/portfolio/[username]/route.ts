@@ -1,21 +1,27 @@
 import { prisma } from '@/lib/prisma';
+import { ProjectStatus } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { MESSAGES, buildResponse } from '@/constants/messages';
-import { buildPublicPortfolio } from '@/lib/user/portfolio-visibility';
+import { buildPublicPortfolio } from '@/lib/portfolio/portfolio-visibility';
+import { logger } from '@/lib/logger';
 
-interface Params {
-  params: {
-    id: string;
-  };
-}
+type RouteContext = {
+  params: Promise<{ username: string }>;
+};
 
-export async function GET(_request: NextRequest, { params }: Params) {
-  const { id } = params;
+export async function GET(request: NextRequest, context: RouteContext) {
+  const { username } = await context.params;
+
+  logger.info(
+    'Public portfolio request received',
+    'GET /api/portfolio/[username]',
+    { username }
+  );
 
   try {
     const portfolio = await prisma.user.findUnique({
       where: {
-        id,
+        userName: username,
       },
       select: {
         id: true,
@@ -55,6 +61,11 @@ export async function GET(_request: NextRequest, { params }: Params) {
         },
 
         stacksTaken: {
+          where: {
+            project: {
+              status: ProjectStatus.CONCLUIDO,
+            },
+          },
           include: {
             stack: true,
             project: {
@@ -70,6 +81,10 @@ export async function GET(_request: NextRequest, { params }: Params) {
     });
 
     if (!portfolio) {
+      logger.warn('Portfolio not found', 'GET /api/portfolio/[username]', {
+        username,
+      });
+
       return buildResponse({
         success: false,
         message: MESSAGES.USER.NOT_FOUND,
@@ -86,10 +101,16 @@ export async function GET(_request: NextRequest, { params }: Params) {
     }
 
     if (!portfolio.portfolioPublic) {
+      logger.warn(
+        'Attempt to access private portfolio',
+        'GET /api/portfolio/[username]',
+        { username }
+      );
+
       return buildResponse({
         success: false,
-        message: MESSAGES.PORTFOLIO.PORTFOLIO_PRIVATE,
-        status: 403,
+        message: MESSAGES.PORTFOLIO.NOT_FOUND,
+        status: 404,
       });
     }
 
@@ -97,7 +118,14 @@ export async function GET(_request: NextRequest, { params }: Params) {
 
     return NextResponse.json(publicPortfolio, { status: 200 });
   } catch (error) {
-    console.error('❌ Erro ao buscar portfólio público:', error);
+    logger.error(
+      'Unexpected error while fetching public portfolio',
+      'GET /api/portfolio/[username]',
+      error instanceof Error
+        ? { message: error.message, stack: error.stack }
+        : error
+    );
+
     return buildResponse({
       success: false,
       message: MESSAGES.USER.INTERNAL_ERROR,
