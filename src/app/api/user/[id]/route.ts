@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { hash } from 'bcrypt';
+import { hash } from 'bcryptjs';
 import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
