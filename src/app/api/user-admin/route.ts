@@ -2,7 +2,7 @@ import { checkAuth } from '@/lib/check-auth';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { NextResponse, NextRequest } from 'next/server';
-import { hash } from 'bcrypt';
+import { hash } from 'bcryptjs';
 import { buildResponse, MESSAGES } from '@/constants/messages';
 import { ROLES, Role } from '@/lib/roles';
 
