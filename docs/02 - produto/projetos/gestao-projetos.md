@@ -2,7 +2,8 @@
 
 Classificação: Documento de Produto / Funcionalidade\
 Camada: 2 --- Produto\
-Status: Versão consolidada baseada no schema.prisma
+Status: Versão atualizada com regra de edição controlada e encerramento
+manual
 
 ------------------------------------------------------------------------
 
@@ -56,8 +57,8 @@ Projeto com equipe definida e execução ativa.
 
 ### CONCLUIDO
 
-Projeto finalizado formalmente. Apenas neste estado o feedback pode ser
-gerado.
+Projeto finalizado formalmente pelo **owner**.\
+Apenas neste estado o feedback pode ser gerado.
 
 ------------------------------------------------------------------------
 
@@ -79,11 +80,67 @@ Representa qual usuário assumiu qual parte da stack.
 
 ## 6. Regras de Negócio
 
+### 6.1 Regras Gerais
+
 -   Todo projeto deve possuir descrição clara.
 -   Deve possuir deadline definido.
--   Apenas o owner pode alterar status.
--   Feedback só é permitido após status CONCLUIDO.
 -   Percentual total de ProjectStack deve somar 100%.
+-   Apenas o owner pode alterar o status.
+-   Feedback só é permitido após status CONCLUIDO.
+
+------------------------------------------------------------------------
+
+### 6.2 Regra de Encerramento do Projeto
+
+-   O projeto só pode ser marcado como CONCLUIDO pelo owner.
+-   Só pode ser concluído se estiver em status EM_ANDAMENTO.
+-   Todas as stacks devem estar assumidas para permitir encerramento.
+-   Após concluído, o projeto não pode retornar para EM_ANDAMENTO (salvo
+    regra futura específica).
+
+------------------------------------------------------------------------
+
+### 6.3 Regra de Edição do Projeto
+
+#### Antes de existir qualquer StackTaken
+
+O owner pode editar livremente:
+
+-   name
+-   description
+-   deadline
+-   totalValue
+-   skills
+-   stacks
+
+#### Após existir pelo menos um StackTaken
+
+O owner NÃO pode mais alterar:
+
+-   name
+-   deadline
+-   totalValue
+-   skills
+-   stacks
+-   descrição original
+
+O owner pode apenas:
+
+-   Adicionar uma observação à descrição.
+
+A observação deve:
+
+-   Ser adicionada automaticamente com date stamp (data e hora).
+-   Não substituir o texto original.
+-   Ser concatenada ao final da descrição existente.
+
+Exemplo de formato:
+
+\[Atualização - YYYY-MM-DD HH:mm\]\
+Texto da observação adicionada pelo owner.
+
+Essa regra garante transparência e preserva a confiança entre
+participantes.
 
 ------------------------------------------------------------------------
 
@@ -92,6 +149,7 @@ Representa qual usuário assumiu qual parte da stack.
 -   Criação de registros em Project
 -   Criação de registros relacionados em ProjectSkill e ProjectStack
 -   Associação posterior via StackTaken
+-   Concatenação controlada de descrição em caso de observação
 
 ------------------------------------------------------------------------
 
@@ -100,6 +158,7 @@ Representa qual usuário assumiu qual parte da stack.
 -   Má distribuição percentual de stack
 -   Projetos criados sem equipe mínima
 -   Encerramento prematuro para gerar feedback
+-   Alterações indevidas após formação de equipe
 
 ------------------------------------------------------------------------
 
@@ -114,4 +173,6 @@ Representa qual usuário assumiu qual parte da stack.
 
 ## 10. Histórico
 
-Versão consolidada após revisão completa do schema.
+Versão consolidada após revisão completa do schema.\
+Atualização incluída: Regra de edição controlada e encerramento manual
+do projeto.
