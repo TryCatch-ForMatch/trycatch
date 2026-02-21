@@ -14,6 +14,14 @@ jest.mock('@/lib/prisma', () => ({
   },
 }));
 
+jest.mock('@/lib/logger', () => ({
+  logger: {
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  },
+}));
+
 describe('GET /api/portfolio/[username]', () => {
   it('should return 404 when user does not exist', async () => {
     (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);
@@ -167,7 +175,20 @@ describe('GET /api/portfolio/[username]', () => {
       stacksTaken: [
         {
           stack: { id: '1', name: 'Backend' },
-          project: { id: 'p1', name: 'Projeto 1', status: 'CONCLUIDO' },
+          project: {
+            id: 'p1',
+            name: 'Projeto 1',
+            description: 'Descrição do projeto',
+            status: 'CONCLUIDO',
+            skills: [
+              {
+                skill: {
+                  id: 's1',
+                  name: 'Node.js',
+                },
+              },
+            ],
+          },
         },
       ],
     });
@@ -181,7 +202,89 @@ describe('GET /api/portfolio/[username]', () => {
     const body = await response.json();
 
     expect(response.status).toBe(200);
+    expect(response.status).toBe(200);
     expect(body.projects.length).toBe(1);
-    expect(body.projects[0].project.status).toBe('CONCLUIDO');
+    expect(body.projects[0].id).toBe('p1');
+    expect(body.projects[0].stacks.length).toBe(1);
+    expect(body.projects[0].stacks[0].name).toBe('Backend');
+  });
+
+  it('should group multiple stacks under the same project', async () => {
+    (prisma.user.findUnique as jest.Mock).mockResolvedValue({
+      id: 'user-1',
+      name: 'Test User',
+      role: 'USER',
+      avatar: null,
+      bio: null,
+      github: null,
+      linkedin: null,
+      email: 'test@test.com',
+      isActive: true,
+      showEmail: true,
+      showGithub: true,
+      showLinkedin: true,
+      showCertificates: true,
+      showProjects: true,
+      showFeedback: true,
+      portfolioPublic: true,
+      skills: [],
+      certificates: [],
+      feedbacksReceived: [],
+      stacksTaken: [
+        {
+          stack: { id: '1', name: 'Backend' },
+          project: {
+            id: 'p1',
+            name: 'Projeto 1',
+            description: 'Descrição',
+            status: 'CONCLUIDO',
+            skills: [],
+          },
+        },
+        {
+          stack: { id: '2', name: 'Frontend' },
+          project: {
+            id: 'p1',
+            name: 'Projeto 1',
+            description: 'Descrição',
+            status: 'CONCLUIDO',
+            skills: [],
+          },
+        },
+      ],
+    });
+
+    const response = await GET({} as NextRequest, {
+      params: Promise.resolve({ username: 'user-1' }),
+    });
+
+    const body = await response.json();
+
+    expect(body.projects.length).toBe(1);
+    expect(body.projects[0].stacks.length).toBe(2);
+  });
+
+  it('should return 500 on unexpected error', async () => {
+    (prisma.user.findUnique as jest.Mock).mockRejectedValue(
+      new Error('Database error')
+    );
+
+    const response = await GET({} as NextRequest, {
+      params: Promise.resolve({ username: 'user-1' }),
+    });
+
+    expect(response.status).toBe(500);
+  });
+
+  it('should return 404 when user is inactive', async () => {
+    (prisma.user.findUnique as jest.Mock).mockResolvedValue({
+      isActive: false,
+    });
+
+    const response = await GET({} as NextRequest, {
+      params: Promise.resolve({ username: 'user-1' }),
+    });
+
+    expect(response.status).toBe(404);
   });
 });
