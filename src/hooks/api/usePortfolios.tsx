@@ -1,6 +1,6 @@
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
-import { useEffect, useState, useMemo } from 'react';
-import { UserPortfolioCardData } from '@/types/interface/user-portfolio';
+import { useEffect, useState } from 'react';
+import { UserPortfolioCardData } from '@/types/portfolio/portfolio-card';
 
 interface PortfolioSummaryApi {
   id: string;
