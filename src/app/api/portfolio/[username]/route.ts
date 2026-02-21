@@ -72,7 +72,18 @@ export async function GET(request: NextRequest, context: RouteContext) {
               select: {
                 id: true,
                 name: true,
+                description: true,
                 status: true,
+                skills: {
+                  select: {
+                    skill: {
+                      select: {
+                        id: true,
+                        name: true,
+                      },
+                    },
+                  },
+                },
               },
             },
           },
