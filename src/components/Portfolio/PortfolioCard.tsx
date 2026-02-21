@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Github, Linkedin, Code2 } from 'lucide-react';
-import { UserPortfolioCardData } from '@/types/interface/user-portfolio';
+import { UserPortfolioCardData } from '@/types/portfolio/portfolio-card';
 
 interface Props {
   data: UserPortfolioCardData;

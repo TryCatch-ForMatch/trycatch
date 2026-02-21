@@ -2,7 +2,7 @@
 
 **Classificação:** Documento de Produto / Funcionalidade\
 **Camada:** 2 --- Documentos de Produto e Funcionalidades\
-**Status:** Implementado (primeira versão)
+**Status:** Implementado (primeira versão consolidada)
 
 ------------------------------------------------------------------------
 
@@ -18,19 +18,18 @@
 
 ## 2. Contexto e Objetivo
 
-O Portfólio Público existe para permitir que usuários exponham suas
-informações profissionais dentro da plataforma TryCatch.
+O Portfólio Público permite que usuários exponham suas informações
+profissionais dentro da plataforma TryCatch.
 
-Ele resolve os seguintes problemas:
+Resolve os seguintes problemas:
 
--   Permitir que usuários apresentem suas habilidades e experiências;
--   Facilitar formação de equipes por meio de transparência
-    profissional;
--   Possibilitar compartilhamento externo do perfil via link público.
+-   Permite apresentação estruturada de habilidades e experiências;
+-   Facilita formação de equipes por meio de transparência profissional;
+-   Possibilita compartilhamento externo do perfil via link público.
 
-O portfólio é acessado por meio da rota pública:
+A funcionalidade é acessada por meio da rota pública:
 
-    /portfolio/{username}
+/portfolio/{username}
 
 Não exige autenticação.
 
@@ -43,6 +42,8 @@ Não exige autenticação.
 -   Exibe dados públicos configurados pelo usuário;
 -   Permite controle granular de visibilidade por meio de toggles;
 -   Exibe apenas projetos com status **CONCLUIDO**;
+-   Agrupa múltiplas stacks assumidas pelo usuário dentro de um mesmo
+    projeto;
 -   Permite listagem pública resumida em `/portfolios`;
 -   Permite compartilhamento externo via URL baseada em username;
 -   Retorna 404 quando o portfólio não deve ser exibido.
@@ -87,6 +88,16 @@ Não exige autenticação.
 4.  É direcionado para `/portfolio/{username}`;
 5.  Visualiza apenas dados permitidos pelos toggles.
 
+### Estrutura da página pública
+
+A página pública é composta pelas seguintes seções:
+
+1.  Identidade (avatar, nome, bio, links)
+2.  Tecnologias
+3.  Projetos Concluídos
+4.  Certificados
+5.  Feedback
+
 ### Estados
 
 -   404 se usuário inexistente;
@@ -113,10 +124,12 @@ Não exige autenticação.
 
 11. Resumo (`/portfolios`) nunca exibe email.
 12. Resumo não exibe certificados ou projetos.
-13. Feedback no frontend é anônimo (sem identificação pública do
-    avaliador).
+13. Feedback exibe identificação do avaliador no frontend, mantendo
+    rastreabilidade completa no backend.
 14. O sistema utiliza logging estruturado para registrar acessos e
     eventos relevantes.
+15. Quando um usuário assume múltiplas stacks em um mesmo projeto, o
+    sistema deve agrupá-las em um único card de projeto.
 
 Todas as regras são testáveis.
 
@@ -141,8 +154,8 @@ Todas as regras são testáveis.
 
 O sistema evita exposição indevida via:
 
--   Toggles granulares
--   Política de 404 para portfólio privado
+-   Toggles granulares;
+-   Política de 404 para portfólio privado.
 
 ------------------------------------------------------------------------
 
@@ -158,9 +171,9 @@ O portfólio público impacta diretamente:
 Riscos mitigados:
 
 -   Controle granular de visibilidade;
--   Feedback anônimo no frontend;
 -   Exibição apenas de projetos concluídos;
--   Impossibilidade de detectar existência de usuário privado.
+-   Impossibilidade de detectar existência de usuário privado;
+-   Logging estruturado para rastreabilidade.
 
 ------------------------------------------------------------------------
 
@@ -182,7 +195,9 @@ Não há comunicação transacional associada nesta versão.
 -   Exposição de projetos em andamento;
 -   Uso de `console.log` (substituído por logger estruturado);
 -   Retorno 403 para portfólio privado (substituído por 404 por
-    segurança).
+    segurança);
+-   Lógica de agrupamento de projetos no frontend (realizada no
+    backend).
 
 ------------------------------------------------------------------------
 
@@ -197,19 +212,21 @@ Não há comunicação transacional associada nesta versão.
 
 -   `username` é identificador público;
 -   Filtro `ProjectStatus.CONCLUIDO` aplicado na query;
--   Uso de logger estruturado;
--   Uso de toggles no modelo `User`.
+-   Uso de logger estruturado (timestamp, nível, contexto e metadados);
+-   Uso de toggles no modelo `User`;
+-   A resposta pública da API retorna projetos já agrupados, evitando
+    lógica de agregação no frontend.
 
 ------------------------------------------------------------------------
 
 ## 12. Histórico de Decisões
 
--   Substituição de busca por ID para username.
--   Retorno 404 para portfólio privado.
--   Implementação de toggles de visibilidade.
--   Restrição a projetos concluídos.
--   Adoção de logging estruturado.
--   Feedback anônimo no frontend.
+-   Substituição de busca por ID para username;
+-   Retorno 404 para portfólio privado;
+-   Implementação de toggles de visibilidade;
+-   Restrição a projetos concluídos;
+-   Adoção de logging estruturado;
+-   Agrupamento de stacks por projeto no backend.
 
 ------------------------------------------------------------------------
 
@@ -217,7 +234,7 @@ Não há comunicação transacional associada nesta versão.
 
 ### Status atual:
 
-Implementado (versão inicial funcional)
+Implementado (versão consolidada)
 
 ### Próximos passos:
 
