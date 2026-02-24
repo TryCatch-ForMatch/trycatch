@@ -114,6 +114,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "SuYaSh-PaThAk04",
+      "name": "Suyash Pathak",
+      "avatar_url": "https://avatars.githubusercontent.com/u/130646936?v=4",
+      "profile": "https://suyashpathak-portfolio.netlify.app/",
+      "contributions": [
+        "code",
+        "infra"
+      ]
     }
   ]
 }

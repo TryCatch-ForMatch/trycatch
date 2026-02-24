@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { usePortfolios } from '@/hooks/api/usePortfolios';
-import { UserPortfolioCard } from '@/components/layout/UserPortfolioCard/UserPortfolioCard';
+import { UserPortfolioCard } from '@/components/Portfolio/PortfolioCard';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 

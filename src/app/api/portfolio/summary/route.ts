@@ -5,16 +5,18 @@ import { MESSAGES, buildResponse } from '@/constants/messages';
 export async function GET() {
   try {
     const users = await prisma.user.findMany({
-      where: { isActive: true },
+      where: { isActive: true, portfolioPublic: true },
       select: {
         id: true,
         name: true,
-        email: true,
         avatar: true,
         role: true,
         github: true,
         linkedin: true,
         bio: true,
+        showGithub: true,
+        showLinkedin: true,
+        showFeedback: true,
         skills: {
           select: {
             skill: {
@@ -51,9 +53,9 @@ export async function GET() {
         name: user.name,
         role: user.role,
         bio: user.bio,
-        github: user.github,
-        linkedin: user.linkedin,
-        feedback: averageFeedback,
+        github: user.showGithub ? user.github : null,
+        linkedin: user.showLinkedin ? user.linkedin : null,
+        feedback: user.showFeedback ? averageFeedback : null,
         skills: user.skills.map((us) => ({
           id: us.skill.id,
           name: us.skill.name,
