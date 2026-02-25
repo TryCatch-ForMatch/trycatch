@@ -1,7 +1,7 @@
 import { Text, Section, Link } from '@react-email/components';
 import { EmailLayout } from './layout/layout';
 
-type ResetPasswordEmailProps = {
+export type ResetPasswordEmailProps = {
   name: string;
   requestDate: string;
   resetLink: string;

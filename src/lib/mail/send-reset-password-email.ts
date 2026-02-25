@@ -1,45 +1,47 @@
-import { Resend } from 'resend';
+import { resend } from '@/lib/mail/resend';
+import { ResetPasswordEmail } from './templates/reset-password';
 
 type SendResetPasswordEmailParams = {
   email: string;
+  name: string;
   token: string;
+  expiresInMinutes: number;
 };
 
 export async function sendResetPasswordEmail({
   email,
+  name,
   token,
+  expiresInMinutes,
 }: SendResetPasswordEmailParams) {
-  try {
-    if (!process.env.RESEND_API_KEY) {
-      console.warn('RESEND_API_KEY is not defined');
-      return;
-    }
+  const sender = process.env.RESET_PASSWORD_EMAIL;
+  const appUrl = process.env.NEXTAUTH_URL;
 
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    const resetUrl = `${process.env.NEXTAUTH_URL}reset-password?token=${token}`;
-
-    console.log('📧 Chamando Resend para:', email);
-
-    await resend.emails.send({
-      from: 'onboarding@resend.dev',
-      to: email,
-      subject: 'Redefinição de senha',
-      html: `
-    <p>Recebemos uma solicitação para redefinir sua senha.</p>
-
-    <p>
-        <a href="${resetUrl}">
-          Clique aqui para redefinir sua senha
-        </a>
-      </p>
-
-      <p>Este link é válido por tempo limitado.</p>
-
-      <p>Se você não solicitou essa alteração, ignore este e-mail.</p>
-    `,
-    });
-  } catch (error) {
-    console.error('❌ Erro ao enviar email:', error);
-    throw error;
+  if (!sender) {
+    throw new Error('RESET_PASSWORD_EMAIL is not defined');
   }
+
+  if (!appUrl) {
+    throw new Error('NEXTAUTH_URL is not defined');
+  }
+
+  const requestDate = new Date().toLocaleString('pt-BR');
+
+  const resetLink = new URL(
+    `/reset-password?token=${token}`,
+    appUrl
+  ).toString();
+
+  await resend.emails.send({
+    from: sender,
+    to: email,
+    subject: 'Redefinição de senha',
+    react: ResetPasswordEmail({
+      name,
+      requestDate,
+      resetLink,
+      expirationTime: `${expiresInMinutes} minutos`,
+      appUrl,
+    }),
+  });
 }

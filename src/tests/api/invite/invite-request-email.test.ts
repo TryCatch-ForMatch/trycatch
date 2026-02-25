@@ -58,6 +58,6 @@ describe('sendInviteRequestEmail', () => {
         linkedin: 'https://www.linkedin.com/in/teste',
         role: 'USER',
       })
-    ).rejects.toThrow('Configuração de email ausente');
+    ).rejects.toThrow(/is not defined/);
   });
 });

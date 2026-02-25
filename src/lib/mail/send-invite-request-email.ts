@@ -18,13 +18,21 @@ export async function sendInviteRequestEmail({
   const sender = process.env.INVITE_REQUEST_SENDER_EMAIL;
   const appUrl = process.env.NEXT_PUBLIC_APP_URL;
 
-  if (!receiver || !sender || !appUrl) {
-    throw new Error('Configuração de email ausente');
+  if (!receiver) {
+    throw new Error('INVITE_REQUEST_RECEIVER_EMAIL is not defined');
+  }
+
+  if (!sender) {
+    throw new Error('INVITE_REQUEST_SENDER_EMAIL is not defined');
+  }
+
+  if (!appUrl) {
+    throw new Error('NEXT_PUBLIC_APP_URL is not defined');
   }
 
   const requestDate = new Date().toLocaleString('pt-BR');
 
-  const adminPanelLink = `${appUrl}/dashboard/admin`;
+  const adminPanelLink = new URL('/dashboard/admin', appUrl).toString();
 
   await resend.emails.send({
     from: sender,
