@@ -3,6 +3,7 @@ import { NextRequest } from 'next/server';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { z } from 'zod';
 import { sendInviteRequestEmail } from '@/lib/mail/send-invite-request-email';
+import { sendInviteRequestConfirmationEmail } from '@/lib/mail/send-invite-request-confirmation-email';
 
 const inviteRequestSchema = z.object({
   name: z.string().min(3, 'Nome inválido'),
@@ -56,11 +57,23 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // formatação simples (ideal: usar util de data)
+    const requestDate = new Date().toLocaleString('pt-BR');
+
+    // Email para administrador
     await sendInviteRequestEmail({
       name,
       email,
       linkedin,
       role,
+    });
+
+    // Email de confirmação para o solicitante
+    await sendInviteRequestConfirmationEmail({
+      name,
+      email,
+      requestDate,
+      requestId: inviteRequest.id,
     });
 
     return buildResponse({
