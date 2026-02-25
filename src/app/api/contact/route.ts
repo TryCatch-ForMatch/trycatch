@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
 
     const emailOptions: CreateEmailOptions = {
       from: 'TryCatch <no-reply@trycatch.app.br>',
-      to: [process.env.CONTACT_EMAIL as string],
+      to: [process.env.CONTACT_SENDER_EMAIL as string],
       subject: `[Contato] ${subject}`,
       html: `
         <strong>Nome:</strong> ${name}<br/>
