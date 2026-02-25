@@ -57,7 +57,9 @@ export async function POST(request: NextRequest) {
 
     await sendResetPasswordEmail({
       email: user.email,
+      name: user.name,
       token,
+      expiresInMinutes: 30,
     });
 
     return buildResponse({
