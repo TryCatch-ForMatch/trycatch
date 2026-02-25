@@ -32,6 +32,7 @@
     "@radix-ui/react-select": "^2.2.5",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-switch": "^1.2.5",
+    "@react-email/components": "^1.0.8",
     "@tailwindcss/postcss": "^4.1.11",
     "axios": "^1.11.0",
     "bcryptjs": "^3.0.3",
