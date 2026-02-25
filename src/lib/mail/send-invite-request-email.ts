@@ -1,4 +1,5 @@
 import { resend } from '@/lib/mail/resend';
+import { InviteRequestReceiverEmail } from '@/lib/mail/templates/invite-request-receiver';
 
 type SendInviteRequestEmailProps = {
   name: string;
@@ -15,23 +16,27 @@ export async function sendInviteRequestEmail({
 }: SendInviteRequestEmailProps) {
   const receiver = process.env.INVITE_REQUEST_RECEIVER_EMAIL;
   const sender = process.env.INVITE_REQUEST_SENDER_EMAIL;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
 
-  if (!receiver || !sender) {
+  if (!receiver || !sender || !appUrl) {
     throw new Error('Configuração de email ausente');
   }
 
-  await resend().emails.send({
+  const requestDate = new Date().toLocaleString('pt-BR');
+
+  const adminPanelLink = `${appUrl}/dashboard/admin`;
+
+  await resend.emails.send({
     from: sender,
     to: receiver,
     subject: 'Nova solicitação de acesso – TryCatch',
-    html: `
-      <h2>Nova solicitação de acesso</h2>
-      <p><strong>Nome:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>LinkedIn:</strong> <a href="${linkedin}">${linkedin}</a></p>
-      <p><strong>Perfil solicitado:</strong> ${
-        role === 'MENTOR' ? 'Mentor' : 'Membro'
-      }</p>
-    `,
+    react: InviteRequestReceiverEmail({
+      requestDate,
+      name,
+      email,
+      linkedin,
+      adminPanelLink,
+      appUrl,
+    }),
   });
 }

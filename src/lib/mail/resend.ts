@@ -1,10 +1,9 @@
 import { Resend } from 'resend';
 
-export const resend = () => {
-  if (!process.env.RESEND_API_KEY) {
-    console.warn('RESEND_API_KEY is not defined');
-    return;
-  }
+const apiKey = process.env.RESEND_API_KEY;
 
-  return new Resend(process.env.RESEND_API_KEY);
-};
+if (!apiKey) {
+  throw new Error('RESEND_API_KEY is not defined');
+}
+
+export const resend = new Resend(apiKey);
