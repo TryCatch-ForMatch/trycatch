@@ -124,6 +124,15 @@
         "code",
         "infra"
       ]
+    },
+    {
+      "login": "Rubenscode",
+      "name": "Rubens Almeida de Andrade",
+      "avatar_url": "https://avatars.githubusercontent.com/u/40808539?v=4",
+      "profile": "https://www.linkedin.com/in/rubens-almeida-andrade/",
+      "contributions": [
+        "test"
+      ]
     }
   ]
 }
