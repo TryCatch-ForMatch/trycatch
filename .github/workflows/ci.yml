@@ -5,6 +5,9 @@ on:
     branches:
       - main
       - develop
+  push:
+    branches:
+      - test/test-ci-coverage
 
 jobs:
   build-test:
@@ -12,6 +15,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 
       - name: Use Node.js
         uses: actions/setup-node@v6
@@ -46,10 +51,17 @@ jobs:
         run: npm run test
 
       - name: Run Tests with Coverage
-        run: npx jest --coverage
+        run: |
+          npx jest --coverage \
+          --coverageThreshold='{"global":{"branches":40,"functions":40,"lines":40,"statements":40}}'
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: coverage/
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
