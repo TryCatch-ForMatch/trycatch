@@ -5,6 +5,9 @@ on:
     branches:
       - main
       - develop
+  push:
+    branches:
+      - test/test-ci-coverage      
 
 jobs:
   build-test:
