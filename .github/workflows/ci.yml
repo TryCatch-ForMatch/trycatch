@@ -51,9 +51,6 @@ jobs:
         run: npm run test
 
       - name: Run Tests with Coverage
-        run: npx jest --coverage
-
-      - name: Run Tests with Coverage
         run: |
           npx jest --coverage \
           --coverageThreshold='{"global":{"branches":40,"functions":40,"lines":40,"statements":40}}'
@@ -62,8 +59,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: coverage/  
-        
+          path: coverage/
+
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
         env:
