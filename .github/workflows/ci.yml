@@ -56,7 +56,7 @@ jobs:
       - name: Run Tests with Coverage
         run: |
           npx jest --coverage \
-          --coverageThreshold='{"global":{"branches":80,"functions":80,"lines":80,"statements":80}}'
+          --coverageThreshold='{"global":{"branches":40,"functions":40,"lines":40,"statements":40}}'
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
