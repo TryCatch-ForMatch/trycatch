@@ -11,9 +11,9 @@ const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 const updateProjectSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
   description: z.string().min(1, 'A descrição é obrigatória.'),
-  deadline: z
-    .string()
-    .refine((val) => !isNaN(Date.parse(val)), { message: 'Data inválida.' }),
+  deadline: z.string().refine((val) => !Number.isNaN(Date.parse(val)), {
+    message: 'Data inválida.',
+  }),
   totalValue: z.number({
     invalid_type_error: 'Valor total deve ser um número.',
   }),
