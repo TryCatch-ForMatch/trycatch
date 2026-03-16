@@ -7,7 +7,7 @@ on:
       - develop
   push:
     branches:
-      - test/test-ci-coverage      
+      - test/test-ci-coverage
 
 jobs:
   build-test:
@@ -52,6 +52,11 @@ jobs:
 
       - name: Run Tests with Coverage
         run: npx jest --coverage
+
+      - name: Run Tests with Coverage
+        run: |
+          npx jest --coverage \
+          --coverageThreshold='{"global":{"branches":80,"functions":80,"lines":80,"statements":80}}'
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
