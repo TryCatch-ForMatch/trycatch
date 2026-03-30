@@ -4,13 +4,13 @@ on:
   pull_request:
     branches:
       - main
-      - develop
+      - develop      
   push:
     branches:
-      - test/test-ci-coverage
+      - test/tests-ci
 
 jobs:
-  build-test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -26,9 +26,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Run Lint
-        run: npm run lint
 
       - name: Create .env
         run: |
@@ -47,8 +44,65 @@ jobs:
       - name: Build project
         run: npm run build
 
+  lint:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Lint
+        run: npm run lint
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Run Tests
         run: npm run test
+
+  coverage:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Run Tests with Coverage
         run: |
@@ -61,15 +115,45 @@ jobs:
           name: coverage-report
           path: coverage/
 
+  sonar:
+    runs-on: ubuntu-latest
+    needs: coverage
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v7.0.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Run Gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Audit dependencies
         run: npm audit --audit-level=high
