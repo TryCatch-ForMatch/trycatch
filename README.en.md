@@ -1,5 +1,9 @@
 # TryCatch 4Match - Collaborative Project Organization Platform
 
+---
+#### 🌐 **Idiomas / Languages:** [Português](./README.md) | [English](./README.en.md)
+---
+
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/github/all-contributors/TryCatch-ForMatch/trycatch?color=ee8449&style=flat-square)](./CONTRIBUTORS.md)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
