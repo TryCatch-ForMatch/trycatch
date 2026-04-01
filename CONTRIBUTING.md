@@ -1,5 +1,9 @@
 # 🤝 Guia de Contribuição - TryCatch For Match
 
+---
+#### 🌐 **Languages / Idiomas:** [English](./README.en.md) | [Português](./README.md)
+---
+
 Seja muito bem-vindo(a)! 🚀  
 Aqui estão as regras, padrões e combinados pra garantir que todo mundo consiga colaborar de forma organizada, leve e produtiva.
 
