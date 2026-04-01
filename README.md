@@ -53,7 +53,7 @@ Confira também nosso arquivo [CONTRIBUTORS.md](./CONTRIBUTORS.md) para conhecer
 
 ### 🧾 1. Pré-requisitos
 
-- Node.js (versão recomendada: LTS)
+- Node.js (v20 ou superior - LTS)
 - Docker + Docker Compose (caso queira rodar o banco via container)
 
 ---
@@ -78,7 +78,7 @@ npm install
 
 ### 🔐 4. Configure o arquivo `.env`
 
-Crie um arquivo `.env` na raiz do projeto com base no exemplo abaixo:
+Crie um arquivo .env.local na raiz do projeto com base no exemplo abaixo (o Next.js lê esse arquivo automaticamente e ele já está configurado para não subir pro seu GitHub):
 
 ```env
 # 👉 Opção 1: Banco compartilhado (Neon - recomendado para o time)
@@ -164,7 +164,7 @@ O upload é feito automaticamente para o Cloudinary, e a URL da imagem é salva 
 
 ### ⚙️ Passo 2: Configurar variáveis de ambiente
 
-No ambiente **local**, adicione essas variáveis no arquivo `.env` (que já está no `.gitignore`):
+No ambiente **local**, adicione essas variáveis no arquivo `.env.local` (que já está no `.gitignore`):
 
 ```env
 CLOUDINARY_CLOUD_NAME=seu_cloud_name
@@ -181,6 +181,16 @@ npm run dev
 ```
 
 Abra o navegador em: [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 🤖 Está desenvolvendo? Use nosso Code Reviewer!
+
+Para te ajudar a aprender e garantir que seu código está seguindo boas práticas antes de enviar um Pull Request, nós temos um **Agente de Code Review** integrado com a IA do Gemini.
+
+Ele roda direto no seu terminal e gera relatórios automáticos de melhorias!
+
+👉 [Clique aqui no nosso Guia de Contribuição](./CONTRIBUTING.md#️-como-usar-o-agente-de-code-review-inteligente) para ver como criar sua chave gratuita do Gemini e rodar o comando `npm run review`.
 
 ---
 
@@ -243,10 +253,6 @@ O projeto utiliza o Prisma para modelar o banco de dados PostgreSQL.
 
 ## Contributors ✨
 
-Sinta-se à vontade para abrir uma issue ou PR. 💜
-
-## Contributors ✨
-
-Confira nosso arquivo [CONTRIBUTORS.md](./CONTRIBUTORS.md) para conhecer todos os colaboradores incríveis que ajudaram a construir este projeto.
+Confira nosso arquivo [CONTRIBUTORS.md](./CONTRIBUTORS.md) para conhecer todos os colaboradores incríveis que ajudaram a construir este projeto. Sinta-se à vontade para abrir uma issue ou PR! 💜
 
 Este projeto segue a especificação do [all-contributors](https://github.com/all-contributors/all-contributors). Contribuições de qualquer tipo são bem-vindas!
