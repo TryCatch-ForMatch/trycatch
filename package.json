@@ -9,7 +9,7 @@
     "commit": "cz",
     "lint": "next lint",
     "format": "prettier --write .",
-    "seed": "node src/scripts/createTestUser.js",
+    "seed": "node scripts/createTestUser.js",
     "test": "jest  --passWithNoTests --maxWorkers=50%",
     "test:watchAll": "jest --watchAll",
     "test:watch": "jest --watch --maxWorkers=25%",
@@ -20,9 +20,11 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "contributors:add": "npx all-contributors add",
-    "contributors:fix": "node src/scripts/fix-contributors-style.js"
+    "contributors:fix": "node scripts/fix-contributors-style.js",
+    "review": "tsx scripts/code-reviewer.ts"
   },
   "dependencies": {
+    "@google/genai": "^1.48.0",
     "@hookform/resolvers": "^5.1.1",
     "@next/font": "^14.2.15",
     "@prisma/client": "^6.9.0",
