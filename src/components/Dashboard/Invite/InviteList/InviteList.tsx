@@ -12,6 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { AxiosError } from 'axios';
 import { CardContent } from '@/components/ui/card';
+import { getRoleLabel, ROLE_OPTIONS } from '@/lib/role-labels';
 
 const editInviteSchema = z.object({
   email: z.string().email('Email inválido'),
@@ -68,6 +69,7 @@ export function InviteList() {
     try {
       const res = await apiTryCatch.patch(`/invite/${editingId}`, {
         email: data.email,
+        role: data.role,
       });
 
       // substitui o invite atualizado na lista
@@ -158,14 +160,16 @@ export function InviteList() {
                   </div>
 
                   <div className="flex flex-col md:w-1/3">
-                    <label className="text-sm text-gray-600">Função</label>
+                    <label className="text-sm text-gray-600">Perfil</label>
                     <select
                       {...register('role')}
                       className="mt-1 w-full rounded-md border p-2 text-sm"
                     >
-                      <option value="USER">User</option>
-                      <option value="MENTOR">Mentor</option>
-                      <option value="ADMIN">Admin</option>
+                      {ROLE_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
                     </select>
                   </div>
 
@@ -197,7 +201,7 @@ export function InviteList() {
                         {invite.email}
                       </span>
                       <span className="text-sm text-gray-600">
-                        {invite.role}
+                        Perfil: {getRoleLabel(invite.role)}
                       </span>
                       <span className="text-sm text-gray-600">
                         Usado: {invite.used ? 'Sim' : 'Não'}

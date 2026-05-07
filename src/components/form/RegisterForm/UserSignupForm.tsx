@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -14,12 +14,13 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { getRoleLabel } from '@/lib/role-labels';
 
 const schema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
   email: z.string().email('Email inválido'),
   password: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres'),
-  role: z.string().min(1, 'Função é obrigatória'),
+  role: z.string().min(1, 'Perfil é obrigatório'),
   linkedin: z.string().url('LinkedIn inválido').optional().or(z.literal('')),
   github: z.string().url('GitHub inválido').optional().or(z.literal('')),
   avatar: z.string(),
@@ -37,6 +38,7 @@ export default function UserSignupForm() {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -53,6 +55,8 @@ export default function UserSignupForm() {
       inviteCode: '',
     },
   });
+
+  const selectedRole = watch('role');
 
   useEffect(() => {
     const email = searchParams.get('email');
@@ -128,7 +132,8 @@ export default function UserSignupForm() {
           </div>
 
           <div className="space-y-1">
-            <Input {...register('role')} label="Role" disabled />
+            <input type="hidden" {...register('role')} />
+            <Input label="Perfil" value={getRoleLabel(selectedRole)} disabled />
             {errors.role && (
               <p className="text-sm text-red-500">{errors.role.message}</p>
             )}

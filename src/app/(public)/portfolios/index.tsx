@@ -5,6 +5,7 @@ import { usePortfolios } from '@/hooks/api/usePortfolios';
 import { UserPortfolioCard } from '@/components/Portfolio/PortfolioCard';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
+import { getRoleLabel } from '@/lib/role-labels';
 
 export default function PortfolioPage() {
   const { portfolios, isLoading } = usePortfolios();
@@ -15,13 +16,18 @@ export default function PortfolioPage() {
 
     const searchLower = search.toLowerCase();
 
-    return portfolios.filter(
-      (user) =>
-        user.role.toLowerCase().includes(searchLower) ||
+    return portfolios.filter((user) => {
+      const roleLabel = getRoleLabel(user.role).toLowerCase();
+      const roleValue = user.role.toLowerCase();
+
+      return (
+        roleLabel.includes(searchLower) ||
+        roleValue.includes(searchLower) ||
         user.skills.some((skill) =>
           skill.name.toLowerCase().includes(searchLower)
         )
-    );
+      );
+    });
   }, [portfolios, search]);
 
   return (
@@ -35,7 +41,7 @@ export default function PortfolioPage() {
 
           <Input
             className="h-10 pl-10"
-            placeholder="Buscar por skill ou role"
+            placeholder="Buscar por skill ou perfil"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
