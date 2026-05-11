@@ -66,6 +66,7 @@ Podem evoluir conforme o produto amadurece.
 
 -   Sistema de Feedback e Reputação;
 -   Convites de Acesso;
+-   Jornada de Entrada;
 -   Gestão de Projetos;
 -   Perfis de Usuário;
 -   Permissões e Papéis;
