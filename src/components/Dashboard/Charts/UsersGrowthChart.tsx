@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import BaseBarChart from '@/components/ui/BaseCharts/BaseBarChart';
+import { getRoleLabel } from '@/lib/role-labels';
 
 type UsersGrowthData = {
   month: string;
@@ -40,7 +41,7 @@ export default function UsersGrowthChart() {
           );
           setRoles(detectedRoles);
         }
-      } catch (err) {
+      } catch {
         setError('Erro ao carregar crescimento de usuários.');
       } finally {
         setLoading(false);
@@ -79,6 +80,7 @@ export default function UsersGrowthChart() {
       rawData={data}
       xKey="role"
       filterByMonth={true}
+      formatCategoryLabel={getRoleLabel}
       bars={[
         {
           key: 'total',

@@ -29,6 +29,7 @@ type BaseBarChartProps = {
   layout?: 'vertical' | 'horizontal';
   height?: number;
   colors?: string[]; // NOVO: sobrescrever paleta do style guide
+  formatCategoryLabel?: (value: string) => string;
 };
 
 export default function BaseBarChart({
@@ -42,6 +43,7 @@ export default function BaseBarChart({
   height = 320,
   layout = 'horizontal',
   colors,
+  formatCategoryLabel,
 }: BaseBarChartProps) {
   const [selectedMonth, setSelectedMonth] = useState('all');
 
@@ -75,7 +77,7 @@ export default function BaseBarChart({
       const roles = Object.keys(rawData[0] ?? {}).filter((k) => k !== 'month');
 
       return roles.map((role) => ({
-        role,
+        role: formatCategoryLabel ? formatCategoryLabel(role) : role,
         total: filtered.reduce(
           (acc, item) => acc + (Number(item[role]) || 0),
           0
@@ -84,7 +86,7 @@ export default function BaseBarChart({
     }
 
     return data;
-  }, [data, rawData, selectedMonth, filterByMonth]);
+  }, [data, rawData, selectedMonth, filterByMonth, formatCategoryLabel]);
 
   return (
     <Card className="w-full" style={{ height }}>
@@ -118,7 +120,16 @@ export default function BaseBarChart({
             {/* EIXOS */}
             {layout === 'horizontal' && (
               <>
-                <XAxis dataKey={xKey} type="category" tick={{ fontSize: 12 }} />
+                <XAxis
+                  dataKey={xKey}
+                  type="category"
+                  tick={{ fontSize: 12 }}
+                  tickFormatter={(value) =>
+                    formatCategoryLabel
+                      ? formatCategoryLabel(String(value))
+                      : String(value)
+                  }
+                />
                 <YAxis type="number" tick={{ fontSize: 12 }} />
               </>
             )}
@@ -131,6 +142,11 @@ export default function BaseBarChart({
                   type="category"
                   width={100}
                   tick={{ fontSize: 12 }}
+                  tickFormatter={(value) =>
+                    formatCategoryLabel
+                      ? formatCategoryLabel(String(value))
+                      : String(value)
+                  }
                 />
               </>
             )}

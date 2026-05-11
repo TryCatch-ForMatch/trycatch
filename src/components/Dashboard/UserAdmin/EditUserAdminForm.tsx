@@ -19,6 +19,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { ROLES, Role } from '@/lib/roles';
+import { ROLE_OPTIONS } from '@/lib/role-labels';
 
 const editUserSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
@@ -172,7 +173,7 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
           </div>
 
           <div>
-            <label className="text-sm font-medium">Permissão</label>
+            <label className="text-sm font-medium">Perfil</label>
             <Select
               defaultValue={user.role}
               onValueChange={(value: 'USER' | 'ADMIN' | 'MENTOR') =>
@@ -183,9 +184,11 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
                 <SelectValue placeholder="Selecione" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="USER">Usuário</SelectItem>
-                <SelectItem value="ADMIN">Admin</SelectItem>
-                <SelectItem value="MENTOR">Mentor</SelectItem>
+                {ROLE_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             {errors.role && (

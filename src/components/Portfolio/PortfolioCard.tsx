@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Github, Linkedin, Code2 } from 'lucide-react';
 import { UserPortfolioCardData } from '@/types/portfolio/portfolio-card';
+import { getRoleLabel } from '@/lib/role-labels';
 
 interface Props {
   data: UserPortfolioCardData;
@@ -70,7 +71,7 @@ export function UserPortfolioCard({ data }: Props) {
           </div>
 
           <span className="text-[11px] text-[#5C5C65] sm:text-xs">
-            {data.role}
+            {getRoleLabel(data.role)}
           </span>
         </div>
 

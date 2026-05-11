@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { ROLE_OPTIONS } from '@/lib/role-labels';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -95,9 +96,9 @@ export function InviteForm() {
           )}
         </div>
 
-        {/* Role */}
+        {/* Perfil */}
         <div className="space-y-1">
-          <Label htmlFor="role">Função</Label>
+          <Label htmlFor="role">Perfil</Label>
           <Select
             value={role}
             onValueChange={(value) =>
@@ -109,9 +110,11 @@ export function InviteForm() {
             </SelectTrigger>
 
             <SelectContent>
-              <SelectItem value="USER">User</SelectItem>
-              <SelectItem value="MENTOR">Mentor</SelectItem>
-              <SelectItem value="ADMIN">Admin</SelectItem>
+              {ROLE_OPTIONS.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
 

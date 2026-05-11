@@ -22,6 +22,7 @@ import { X } from 'lucide-react';
 import { Skill } from '@prisma/client';
 import { toast } from 'sonner';
 import { ROLES, Role } from '@/lib/roles';
+import { ROLE_OPTIONS } from '@/lib/role-labels';
 
 const userAdminSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
@@ -293,7 +294,7 @@ export function UserAdminForm() {
             </div>
 
             <div className="space-y-1">
-              <Label>Permissão</Label>
+              <Label>Perfil</Label>
               <Select
                 value={selectedRole}
                 onValueChange={(value: 'USER' | 'ADMIN' | 'MENTOR') =>
@@ -304,9 +305,11 @@ export function UserAdminForm() {
                   <SelectValue placeholder="Selecione a permissão" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="USER">Usuário</SelectItem>
-                  <SelectItem value="ADMIN">Administrador</SelectItem>
-                  <SelectItem value="MENTOR">Mentor</SelectItem>
+                  {ROLE_OPTIONS.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               {errors.role && (
