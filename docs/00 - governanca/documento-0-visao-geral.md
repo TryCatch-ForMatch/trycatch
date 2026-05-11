@@ -77,6 +77,13 @@ Podem evoluir conforme o produto amadurece.
 -   Arquitetura de APIs;
 -   ADRs (Decisões Técnicas).
 
+### Camada 4 --- Documentos de Processo (Evolutivos)
+
+-   Fluxos de contribuição;
+-   Validação de Pull Requests;
+-   Integração Contínua;
+-   Procedimentos operacionais de desenvolvimento.
+
 ------------------------------------------------------------------------
 
 ## 4. Governança da Documentação
