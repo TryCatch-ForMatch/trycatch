@@ -31,6 +31,8 @@ type ParticipationPath = {
   detail: string;
   expectation: string;
   cta: string;
+  href: string;
+  isExternal?: boolean;
   icon: ComponentType<SVGProps<SVGSVGElement>>;
 };
 
@@ -45,6 +47,8 @@ const participationPaths: ParticipationPath[] = [
     expectation:
       'Escolha um escopo claro, siga as diretrizes de contribuição e mantenha as mudanças alinhadas aos padrões do projeto.',
     cta: 'Quero contribuir com o código',
+    href: 'https://github.com/TryCatch-ForMatch/trycatch/blob/develop/CONTRIBUTING.md',
+    isExternal: true,
     icon: Code2,
   },
   {
@@ -57,6 +61,7 @@ const participationPaths: ParticipationPath[] = [
     expectation:
       'Descreva objetivo, contexto, necessidades técnicas e responsabilidades para que a equipe possa ser formada com clareza.',
     cta: 'Quero cadastrar meu projeto',
+    href: '/dashboard/team-projects/new',
     icon: FolderKanban,
   },
   {
@@ -69,6 +74,7 @@ const participationPaths: ParticipationPath[] = [
     expectation:
       'Mantenha seu perfil atualizado, comunique disponibilidade e contribua com entregas compatíveis com sua experiência.',
     cta: 'Quero participar de uma equipe',
+    href: '/invite-request?role=USER',
     icon: Handshake,
   },
   {
@@ -81,6 +87,7 @@ const participationPaths: ParticipationPath[] = [
     expectation:
       'Atue com clareza, responsabilidade e respeito à autonomia das equipes, oferecendo apoio compatível com cada contexto.',
     cta: 'Quero orientar equipes',
+    href: '/invite-request?role=MENTOR',
     icon: GraduationCap,
   },
 ];
@@ -172,8 +179,10 @@ export default function HowToJoinPage() {
                     className="h-auto min-h-11 w-full rounded-full bg-[#35343C] px-4 py-3 text-[13px] leading-[120%] text-white hover:bg-[#35343C]/90 xxl:text-[15px]"
                   >
                     <Link
-                      href={`#${path.id}`}
-                      aria-label={`${path.cta}: ver detalhes sobre ${path.title}`}
+                      href={path.href}
+                      aria-label={`${path.cta}: acessar o fluxo de ${path.title}`}
+                      target={path.isExternal ? '_blank' : undefined}
+                      rel={path.isExternal ? 'noreferrer' : undefined}
                     >
                       <span>{path.cta}</span>
                       <ArrowRight className="h-4 w-4" />
