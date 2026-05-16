@@ -49,7 +49,8 @@ Abrange os textos públicos de apresentação do projeto:
 1.	Página inicial (Home);
 2.	Qualidade, avaliação e feedback;
 3.	Apresentação do Projeto (sobre, como funciona e para quem é);
-4.	Chamadas para ação (CTAs).
+4.	Jornada de Entrada / How-to-Join;
+5.	Chamadas para ação (CTAs).
 #### Cada seção deve possuir:
 -	Objetivo claro;
 -	Público principal e secundário;
