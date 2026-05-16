@@ -84,3 +84,5 @@ Critérios para futura separação de serviços:
     -   Tentativas bloqueadas de edição estrutural.
     -   Encerramento manual.
 -   Proibição de console.log em ambiente produtivo.
+-   Auditoria inicial de logging backend registrada em
+    `docs/03 - tecnico/arquitetura/auditoria-logging-backend.md`.
