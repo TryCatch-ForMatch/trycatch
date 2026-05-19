@@ -99,6 +99,8 @@ Direcionar o usuário para o próximo passo adequado, de forma clara e acessíve
 -	Empresas com projetos.
 #### Mensagem central:
 Cadastre um projeto ou faça parte da comunidade e participe de iniciativas reais.
+
+Quando a Home utilizar uma CTA ampla como "Começar", o destino recomendado é a página /how-to-join, onde o usuário pode escolher entre contribuir com a plataforma, cadastrar um projeto, participar como membro ou atuar como mentor.
 #### Atributos de qualidade a comunicar:
 -	Acessibilidade;
 -	Clareza de próximo passo.
