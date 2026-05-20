@@ -1,6 +1,23 @@
 import { InviteRequestForm } from '@/components/form/InviteRequest/InviteRequestForm';
 
-export default function InviteRequestPage() {
+type InviteRequestPageProps = {
+  searchParams?: Promise<{
+    role?: string | string[];
+  }>;
+};
+
+function getDefaultRole(role?: string | string[]) {
+  const value = Array.isArray(role) ? role[0] : role;
+
+  return value === 'MENTOR' ? 'MENTOR' : 'USER';
+}
+
+export default async function InviteRequestPage({
+  searchParams,
+}: InviteRequestPageProps) {
+  const params = await searchParams;
+  const defaultRole = getDefaultRole(params?.role);
+
   return (
     <main className="flex min-h-screen flex-col">
       <section className="flex flex-1 items-center justify-center px-5 py-10 md:px-7 lg:px-6 xl:px-10">
@@ -24,7 +41,7 @@ export default function InviteRequestPage() {
             </p>
           </header>
 
-          <InviteRequestForm />
+          <InviteRequestForm defaultRole={defaultRole} />
         </div>
       </section>
     </main>
