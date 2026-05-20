@@ -133,6 +133,15 @@
       "contributions": [
         "test"
       ]
+    },
+    {
+      "login": "usmanliaqat0",
+      "name": "Usman Liaqat",
+      "avatar_url": "https://avatars.githubusercontent.com/u/178957449?v=4",
+      "profile": "https://usmanliaqat.com",
+      "contributions": [
+        "code"
+      ]
     }
   ]
 }
