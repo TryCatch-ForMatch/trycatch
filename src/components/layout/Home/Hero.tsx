@@ -9,6 +9,9 @@ import { ArrowDown, Mouse, ArrowUpRight } from 'lucide-react';
 
 export default function Hero() {
   const { status } = useSession();
+  const isAuthenticated = status === 'authenticated';
+  const ctaHref = isAuthenticated ? '/dashboard' : '/how-to-join';
+  const ctaLabel = isAuthenticated ? 'Acesse o Dashboard' : 'Começar';
 
   return (
     <section
@@ -28,12 +31,10 @@ export default function Hero() {
 
           {/* CTA */}
           <div className="mt-8 flex justify-center lg:justify-normal">
-            <Link href="/login">
+            <Link href={ctaHref}>
               <Button className="flex h-10 justify-between rounded-[84px] bg-[#35343C] p-[3px] pl-5 hover:bg-[#35343C]/90 xxl:h-16 xxl:w-auto xxl:pr-2">
                 <span className="text-[14px] font-medium md:text-[16px] lg:pr-2 xxl:text-[20px]">
-                  {status === 'unauthenticated'
-                    ? 'Faça login'
-                    : 'Acesse o Dashboard'}
+                  {ctaLabel}
                 </span>
                 <span className="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-white xxl:h-[50px] xxl:w-[50px]">
                   <ArrowUpRight className="h-5 w-5 text-[#35343C] xxl:h-7! xxl:w-7!" />
