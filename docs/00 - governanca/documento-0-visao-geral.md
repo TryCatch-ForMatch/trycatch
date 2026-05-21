@@ -83,6 +83,7 @@ Podem evoluir conforme o produto amadurece.
 -   Fluxos de contribuição;
 -   Validação de Pull Requests;
 -   Integração Contínua;
+-   Padrão de testes backend;
 -   Procedimentos operacionais de desenvolvimento.
 
 ------------------------------------------------------------------------
