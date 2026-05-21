@@ -64,6 +64,10 @@ Incluem:
 -	Glossário, quando necessário.
 
 Esses conteúdos têm papel educativo e de suporte ao usuário.
+
+O documento de produto `docs/02 - produto/conteudos/conteudos-informativos-e-educacionais.md`
+detalha a estrutura inicial, critérios de qualidade e regras de revisão
+desses conteúdos.
 ________________________________________
 #### 5.3 Comunicação Transacional (Sistema)
 Refere-se a textos utilizados em fluxos automáticos do sistema, como:
@@ -140,6 +144,7 @@ Este documento orienta diretamente:
 #### Ele deve ser utilizado em conjunto com:
 -	Documento Estratégico de Marca;
 -	Documento Estratégico — Acessibilidade e Inclusão Digital;
+-	Documento de Produto — Conteúdos Informativos e Educacionais;
 -	Documento 0 — Visão Geral, Governança e Arquitetura da Documentação.
 ________________________________________
 ### 10. Evolução do Documento
@@ -154,5 +159,6 @@ ________________________________________
 -	Separação entre comunicação institucional, transacional e interna;
 -	Tratamento de textos como parte da qualidade do produto.
 -   Inclusão de comunicação externa (mídia e redes sociais) como eixo estratégico independente.
+-   Formalização de conteúdos informativos e educacionais como documento de produto.
 ________________________________________
 Observação: Este documento está alinhado ao Documento 0 — Visão Geral, Governança e Arquitetura da Documentação.
