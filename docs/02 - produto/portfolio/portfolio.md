@@ -208,6 +208,10 @@ Não há comunicação transacional associada nesta versão.
 -   docs/03-tecnico/modelagem-dados.md
 -   docs/03-tecnico/arquitetura-geral.md
 
+### Templates relacionados
+
+-   docs/templates/02 - template-dados-portfolio.md
+
 ### Pontos técnicos relevantes
 
 -   `username` é identificador público;

@@ -28,7 +28,13 @@ const inviteRequestSchema = z.object({
 
 type InviteRequestFormData = z.infer<typeof inviteRequestSchema>;
 
-export function InviteRequestForm() {
+type InviteRequestFormProps = {
+  defaultRole?: InviteRequestFormData['role'];
+};
+
+export function InviteRequestForm({
+  defaultRole = 'USER',
+}: InviteRequestFormProps) {
   const [loading, setLoading] = useState(false);
 
   const {
@@ -38,6 +44,9 @@ export function InviteRequestForm() {
     formState: { errors },
   } = useForm<InviteRequestFormData>({
     resolver: zodResolver(inviteRequestSchema),
+    defaultValues: {
+      role: defaultRole,
+    },
   });
 
   async function onSubmit(data: InviteRequestFormData) {
