@@ -171,7 +171,17 @@ participantes.
 
 ------------------------------------------------------------------------
 
-## 10. Histórico
+## 10. Templates Relacionados
+
+-   `docs/templates/02 - template-cadastro-projeto-externo.md`
+
+O template de cadastro de projeto externo padroniza as informações
+necessárias para avaliar propostas enviadas por pessoas ou organizações
+que ainda não são membros da plataforma.
+
+------------------------------------------------------------------------
+
+## 11. Histórico
 
 Versão consolidada após revisão completa do schema.\
 Atualização incluída: Regra de edição controlada e encerramento manual
