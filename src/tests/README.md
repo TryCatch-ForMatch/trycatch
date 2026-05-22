@@ -12,9 +12,18 @@ Esta pasta centraliza as ferramentas e utilitários necessários para testes no 
 - **React Testing Library** → Testes de componentes React
 - **ESLint Testing Library** → Plugin ESLint para melhores práticas em testes
 
+## 📌 Padrão oficial
+
+O padrão oficial para testes backend está documentado em:
+
+`docs/04 - processo/testes-backend.md`
+
+Esse documento define cobertura mínima, estrutura de arquivos, convenção
+de nomes, ambiente de teste para rotas API e padrão de mock do Prisma.
+
 ## 📜 Estrutura
 
-### **`text-utils.tsx`** → Utilitários de teste (em desenvolvimento)
+### **`test-utils.tsx`** → Utilitários de teste (em desenvolvimento)
 
 - 🎯 **Objetivo:** Criar `test-utils.tsx` com render customizado
 - Configurar providers de contexto automaticamente
@@ -35,6 +44,9 @@ npm test:watchAll
 
 # Executar testes com coverage
 npm test:coverage
+
+# Executar validação usada antes de push
+npm run test:push
 ```
 
 ## 🧪 Configuração dos Testes
@@ -46,7 +58,7 @@ O projeto está configurado com o plugin `eslint-plugin-testing-library` que for
 **Benefícios:**
 
 - 🎯 Enforça uso correto de queries (`getBy`, `findBy`, `queryBy`)
-- 🚫 Previne anti-patterns comuns em testes
+- 🚫 Previne antipadrões comuns em testes
 - ♿ Promove práticas de teste focadas em acessibilidade
 - 📝 Sugere melhores alternativas para código de teste
 
@@ -63,7 +75,7 @@ O plugin aplica regras apenas para arquivos de teste (`.test.*`, `.spec.*` ou de
 
 ### Jest Config (`jest.config.ts`)
 
-- **Ambiente:** `jest-fixed-jsdom` (para componentes React)
+- **Ambiente:** `jsdom` (para componentes React)
 - **Setup:** `jest.setup.ts` (configurações globais)
 - **Aliases:** `@/` para `src/` e `@tests/` para `src/tests/`
 - **Transform:** SWC para performance otimizada
@@ -73,6 +85,13 @@ O plugin aplica regras apenas para arquivos de teste (`.test.*`, `.spec.*` ou de
 - Importa `@testing-library/jest-dom` automaticamente
 - Limpa mocks após cada teste
 - Configurações globais para todos os testes
+
+## Backend
+
+- Testes de API devem ficar em `src/tests/api/{dominio}`.
+- Testes de rotas API devem declarar `@jest-environment node`.
+- Prisma deve ser mockado em testes unitários.
+- A cobertura mínima global oficial é 60%.
 
 ## 🔗 Referências
 
