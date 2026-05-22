@@ -141,7 +141,8 @@
       "profile": "https://usmanliaqat.com",
       "contributions": [
         "code",
-        "doc"
+        "doc",
+        "test"
       ]
     }
   ]
