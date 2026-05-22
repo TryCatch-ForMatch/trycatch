@@ -70,6 +70,7 @@ Podem evoluir conforme o produto amadurece.
 -   Gestão de Projetos;
 -   Perfis de Usuário;
 -   Permissões e Papéis;
+-   Conteúdos Informativos e Educacionais;
 -   Painel Administrativo.
 
 ### Camada 3 --- Documentos Técnicos (Evolutivos)
