@@ -1,0 +1,1820 @@
+{
+	"info": {
+		"_postman_id": "42ab01f1-b337-485f-8442-046845efcb81",
+		"name": "TryCatch",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33911827"
+	},
+	"item": [
+		{
+			"name": "CSRF token",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "next-auth.csrf-token=8ff0bff950df5d7ceab1cdbd8283e891b0f1ba1fac264777192d60c768f8c913%7C4ba149105e0a8b4fb61df02b20e0244c8f681cf7c3a8b298482d234acc5c9f10; next-auth.callback-url=http%3A%2F%2Flocalhost%3A3000; next-auth.session-token=eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..UOwFFF3GixgxwBPX.3x_M7WeVbtOQ1nAdBrOBJp7cLDHVKbHHm28crGnhEzmYTXQUehow4QNJr99on-14YVhCjOUQp84RgXSS_X_2u0_0FtyCvoeGDsix8OrHd_o3t-KRSBuQc7Y3qGkWjv4jvixtDzbDSDK21HmVpVe1DoTypEtRy6OfQZFsgSqNz1aQExqgZ1O7WPvhIP2jurCkZjdvgJbYaeka-OfiQq89UNEKME8jmLROcdv3aPckemWnRgHWMMabs0K6rPHBh03PRo-aam4MWPr93e2bWpYqdbHgeg.o3WcOYUwc0n4qYI1f5cgQA",
+						"name": "cookie",
+						"type": "text"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache",
+						"name": "cache-control",
+						"type": "text"
+					},
+					{
+						"key": "Postman-Token",
+						"value": "<calculated when request is sent>",
+						"name": "postman-token",
+						"type": "text"
+					},
+					{
+						"key": "Host",
+						"value": "<calculated when request is sent>",
+						"name": "host",
+						"type": "text"
+					},
+					{
+						"key": "User-Agent",
+						"value": "PostmanRuntime/7.39.1",
+						"name": "user-agent",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*",
+						"name": "accept",
+						"type": "text"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br",
+						"name": "accept-encoding",
+						"type": "text"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive",
+						"name": "connection",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/auth/csrf",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"auth",
+						"csrf"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login Auth - User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "next-auth.csrf-token=0c27f851b636c43a300b785b1a2358c419d1f54eaa89b8550671a620a7a58549%7Cdb842dbe5b9cc5ee84a87fc9ded615d11ebbe1294dc39037fbc96228f58d6662; next-auth.callback-url=%2Fapi%2Finvite",
+						"name": "cookie",
+						"type": "text"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache",
+						"name": "cache-control",
+						"type": "text"
+					},
+					{
+						"key": "Postman-Token",
+						"value": "<calculated when request is sent>",
+						"name": "postman-token",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "text/plain",
+						"name": "content-type",
+						"type": "text"
+					},
+					{
+						"key": "Content-Length",
+						"value": "<calculated when request is sent>",
+						"name": "content-length",
+						"type": "text"
+					},
+					{
+						"key": "Host",
+						"value": "<calculated when request is sent>",
+						"name": "host",
+						"type": "text"
+					},
+					{
+						"key": "User-Agent",
+						"value": "PostmanRuntime/7.39.1",
+						"name": "user-agent",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*",
+						"name": "accept",
+						"type": "text"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br",
+						"name": "accept-encoding",
+						"type": "text"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive",
+						"name": "connection",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"user@email.com\",\r\n  \"password\": \"teste123\",\r\n  \"redirect\": \"\",\r\n  \"csrfToken\": \"dfaea29d0f12ffc23622a4cb9cb9e49353d6be8abe269eda17883ea434f95102\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/auth/callback/credentials",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"auth",
+						"callback",
+						"credentials"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login Auth - Admin",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "next-auth.csrf-token=0c27f851b636c43a300b785b1a2358c419d1f54eaa89b8550671a620a7a58549%7Cdb842dbe5b9cc5ee84a87fc9ded615d11ebbe1294dc39037fbc96228f58d6662; next-auth.callback-url=%2Fapi%2Finvite",
+						"name": "cookie",
+						"type": "text"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache",
+						"name": "cache-control",
+						"type": "text"
+					},
+					{
+						"key": "Postman-Token",
+						"value": "<calculated when request is sent>",
+						"name": "postman-token",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "text/plain",
+						"name": "content-type",
+						"type": "text"
+					},
+					{
+						"key": "Content-Length",
+						"value": "<calculated when request is sent>",
+						"name": "content-length",
+						"type": "text"
+					},
+					{
+						"key": "Host",
+						"value": "<calculated when request is sent>",
+						"name": "host",
+						"type": "text"
+					},
+					{
+						"key": "User-Agent",
+						"value": "PostmanRuntime/7.39.1",
+						"name": "user-agent",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*",
+						"name": "accept",
+						"type": "text"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br",
+						"name": "accept-encoding",
+						"type": "text"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive",
+						"name": "connection",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"admin@admin.com\",\r\n  \"password\": \"teste123\",\r\n  \"redirect\": false,\r\n  \"csrfToken\": \"e8cda09741a04a113d0f44c5b50ca95c01e0d9ad101292102f07df3fbb7b0009\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/auth/callback/credentials",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"auth",
+						"callback",
+						"credentials"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Admin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Admin 2\",\r\n  \"email\": \"admin@email.com\",\r\n  \"password\": \"senha123\",\r\n  \"avatar\": null,\r\n  \"linkedin\": \"https://linkedin.com/in/ciclano\",\r\n  \"github\": \"https://github.com/ciclano\",\r\n  \"bio\": \"Desenvolvedor fullstack\",\r\n  \"role\":\"ADMIN\",\r\n  \"skills\": [\"cmcdxdnjs0001tvtwa4o3yumz\", \"cmcdxdrwe0002tvtw7i55o0qa\"],\r\n  \"inviteCode\": \"f51a44658ec1675a\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/user-admin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user-admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Admin",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/user-admin/cmcw7oe7h0000tv1s4yfo41hz",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user-admin",
+						"cmcw7oe7h0000tv1s4yfo41hz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invite",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtYmlidHBpeDAwMDB0dm9va2tnZTkzZHUiLCJuYW1lIjoiVXN1w6FyaW8gQWRtaW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsImlhdCI6MTc1MDI3OTQzMSwiZXhwIjoxNzUwODg0MjMxfQ.inOeYn5qZ_Z4_SPs2TaBKV9TkG60fnu6l7LiQJ4NPgQ",
+						"name": "authorization",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "next-auth.csrf-token=0c27f851b636c43a300b785b1a2358c419d1f54eaa89b8550671a620a7a58549%7Cdb842dbe5b9cc5ee84a87fc9ded615d11ebbe1294dc39037fbc96228f58d6662; next-auth.callback-url=%2Fapi%2Finvite",
+						"name": "cookie",
+						"type": "text"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache",
+						"name": "cache-control",
+						"type": "text"
+					},
+					{
+						"key": "Postman-Token",
+						"value": "<calculated when request is sent>",
+						"name": "postman-token",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"name": "content-type",
+						"type": "text"
+					},
+					{
+						"key": "Content-Length",
+						"value": "<calculated when request is sent>",
+						"name": "content-length",
+						"type": "text"
+					},
+					{
+						"key": "Host",
+						"value": "<calculated when request is sent>",
+						"name": "host",
+						"type": "text"
+					},
+					{
+						"key": "User-Agent",
+						"value": "PostmanRuntime/7.39.1",
+						"name": "user-agent",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*",
+						"name": "accept",
+						"type": "text"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br",
+						"name": "accept-encoding",
+						"type": "text"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive",
+						"name": "connection",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"mentor1@email.com\",\r\n    \"role\": \"MENTOR\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/invite",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"invite"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invite",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/invite",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"invite"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invite",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"mentor@email.com\",\r\n    \"role\":\"MENTOR\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/invite/cmhxycj9o0005tvo0wakso2d2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"invite",
+						"cmhxycj9o0005tvo0wakso2d2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invite",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/invite/cmbie0qvi0000tvxg3naq4zgs",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"invite",
+						"cmbie0qvi0000tvxg3naq4zgs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"mentor@email.com\",\r\n    \"code\": \"2d9728db05d98b56\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"teste@email.com\",\r\n    \"password\": \"senha123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Signup",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "next-auth.csrf-token=8ff0bff950df5d7ceab1cdbd8283e891b0f1ba1fac264777192d60c768f8c913%7C4ba149105e0a8b4fb61df02b20e0244c8f681cf7c3a8b298482d234acc5c9f10; next-auth.callback-url=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fuser",
+						"name": "cookie",
+						"type": "text"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache",
+						"name": "cache-control",
+						"type": "text"
+					},
+					{
+						"key": "Postman-Token",
+						"value": "<calculated when request is sent>",
+						"name": "postman-token",
+						"type": "text"
+					},
+					{
+						"key": "Host",
+						"value": "<calculated when request is sent>",
+						"name": "host",
+						"type": "text"
+					},
+					{
+						"key": "User-Agent",
+						"value": "PostmanRuntime/7.39.1",
+						"name": "user-agent",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*",
+						"name": "accept",
+						"type": "text"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br",
+						"name": "accept-encoding",
+						"type": "text"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive",
+						"name": "connection",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Novo Mentor\",\r\n  \"email\": \"mentor@email.com\",\r\n  \"password\": \"senha123\",\r\n  \"avatar\": \"null\",\r\n  \"linkedin\": \"https://linkedin.com/in/mentor\",\r\n  \"github\": \"https://github.com/mentor\",\r\n  \"bio\": \"Desenvolvedor fullstack Mentor tralala\",\r\n  \"skills\": [],\r\n  \"inviteCode\": \"2d9728db05d98b56\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/auth/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "next-auth.csrf-token=8ff0bff950df5d7ceab1cdbd8283e891b0f1ba1fac264777192d60c768f8c913%7C4ba149105e0a8b4fb61df02b20e0244c8f681cf7c3a8b298482d234acc5c9f10; next-auth.callback-url=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fuser",
+						"name": "cookie",
+						"type": "text"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache",
+						"name": "cache-control",
+						"type": "text"
+					},
+					{
+						"key": "Postman-Token",
+						"value": "<calculated when request is sent>",
+						"name": "postman-token",
+						"type": "text"
+					},
+					{
+						"key": "Host",
+						"value": "<calculated when request is sent>",
+						"name": "host",
+						"type": "text"
+					},
+					{
+						"key": "User-Agent",
+						"value": "PostmanRuntime/7.39.1",
+						"name": "user-agent",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*",
+						"name": "accept",
+						"type": "text"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br",
+						"name": "accept-encoding",
+						"type": "text"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive",
+						"name": "connection",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/api/user/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtYmlneWF5ZjAwMDZ0dnhneGJsaDJmMGMiLCJuYW1lIjoiVGVzdGUiLCJlbWFpbCI6InRlc3RlQGVtYWlsLmNvbSIsImlhdCI6MTc0OTA3MzE1NSwiZXhwIjoxNzQ5Njc3OTU1fQ.V1UJaABCM9NLhsv31Q7srPtYqBXTHE60J-QZ92bd6Dc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "next-auth.csrf-token=8ff0bff950df5d7ceab1cdbd8283e891b0f1ba1fac264777192d60c768f8c913%7C4ba149105e0a8b4fb61df02b20e0244c8f681cf7c3a8b298482d234acc5c9f10; next-auth.callback-url=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fuser",
+						"name": "cookie",
+						"type": "text"
+					},
+					{
+						"key": "Cache-Control",
+						"value": "no-cache",
+						"name": "cache-control",
+						"type": "text"
+					},
+					{
+						"key": "Postman-Token",
+						"value": "<calculated when request is sent>",
+						"name": "postman-token",
+						"type": "text"
+					},
+					{
+						"key": "Host",
+						"value": "<calculated when request is sent>",
+						"name": "host",
+						"type": "text"
+					},
+					{
+						"key": "User-Agent",
+						"value": "PostmanRuntime/7.39.1",
+						"name": "user-agent",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "*/*",
+						"name": "accept",
+						"type": "text"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate, br",
+						"name": "accept-encoding",
+						"type": "text"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive",
+						"name": "connection",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Usuário Admin teste PUT\",\r\n  \"email\": \"admin@admin.com\",\r\n  \"password\": \"\",\r\n  \"avatar\": \"https://res.cloudinary.com/daxa1bpny/image/upload/v1753398374/avatars/iegnvawuxsixwsih3bbj.webp\",\r\n  \"linkedin\": \"https://linkedin.com/in/ciclano\",\r\n  \"github\": \"https://github.com/ciclano\",\r\n  \"bio\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\",\r\n  \"skills\": [\"cme3avpbw0005tvwogmp3ihph\", \"cme3awdde0007tvwoxr7yu268\"]  \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/user/cmdj6hdg40000tvqw21c7c9p3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"cmdj6hdg40000tvqw21c7c9p3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Team Project",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtYmlneWF5ZjAwMDZ0dnhneGJsaDJmMGMiLCJuYW1lIjoiVGVzdGUgUFVUIiwiZW1haWwiOiJ0ZXN0ZUBlbWFpbC5jb20iLCJpYXQiOjE3NTAyNzk2MjksImV4cCI6MTc1MDg4NDQyOX0.lsAxgqCKGbrSqHWYkbdp6QHVtp9jQU4U1Bf0ck3EJNY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"ownerId\": \"cmdj6hdg40000tvqw21c7c9p3\",\r\n  \"name\": \"Projeto Teste 2\",\r\n  \"description\": \"The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).\",\r\n  \"deadline\": \"2025-10-10T23:59:59.000Z\",\r\n  \"totalValue\": 20000,\r\n  \"status\": \"BUSCANDO\",\r\n  \"skills\": [\"cme3av7hz0004tvwoecmuhv29\", \"cme3awdde0007tvwoxr7yu268\", \"cme3awpxv0008tvwo76rs293b\"],\r\n  \"stacks\": [\r\n    { \"stackId\": \"cme3axfuo000ctvwoffengqh4\", \"percentage\": 60 },\r\n    { \"stackId\": \"cme3ax2r60009tvwox7l2htts\", \"percentage\": 20 },\r\n    { \"stackId\": \"cme3ax77n000atvwohdq4jz9s\", \"percentage\": 20 }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/team-project",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"team-project"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Team Project",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/team-project/summary/status?status=CONCLUIDO",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"team-project",
+						"summary",
+						"status"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "CONCLUIDO"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Team Project User",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/team-project/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"team-project",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Team Project",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"ownerId\": \"cmcf12h0v0000tv34zjc5dfli\",\r\n  \"name\": \"Projeto Teste PUT\",\r\n  \"description\": \"Descrição detalhada do projeto\",\r\n  \"deadline\": \"2025-12-31T23:59:59.000Z\",\r\n  \"totalValue\": 10000,\r\n  \"status\": \"BUSCANDO\",\r\n  \"skills\": [\"cmcdxdnjs0001tvtwa4o3yumz\", \"cmcdxdrwe0002tvtw7i55o0qa\"],\r\n  \"stacks\": [\r\n    { \"stackId\": \"cmci11veu0000tvhcsuk30auj\", \"percentage\": 60 },\r\n    { \"stackId\": \"cmci124jp0001tvhcbkukph14\", \"percentage\": 20 },\r\n    { \"stackId\": \"cmci124jp0001tvhcbkukph14\", \"percentage\": 20 }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/team-project/cmcj9e9ly0001tv90fekducj1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"team-project",
+						"cmcj9e9ly0001tv90fekducj1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Team Project User",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"ownerId\": \"cmgy648os0001tvbg2msmeeva\",\r\n  \"name\": \"Projeto Teste Projetos do Usuário \",\r\n  \"description\": \"Descrição detalhada do projeto\",\r\n  \"deadline\": \"2025-12-31T23:59:59.000Z\",\r\n  \"totalValue\": 10000,\r\n  \"status\": \"BUSCANDO\",\r\n  \"skills\": [\"cmcdxdnjs0001tvtwa4o3yumz\", \"cmcdxdrwe0002tvtw7i55o0qa\"],\r\n  \"stacks\": [\r\n    { \"stackId\": \"cmci11veu0000tvhcsuk30auj\", \"percentage\": 60 },\r\n    { \"stackId\": \"cmci124jp0001tvhcbkukph14\", \"percentage\": 20 },\r\n    { \"stackId\": \"cmci124jp0001tvhcbkukph14\", \"percentage\": 20 }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/team-project/cmgqxezg20007tvq0xh7h78y5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"team-project",
+						"cmgqxezg20007tvq0xh7h78y5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Skill",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/skill",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"skill"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Skill",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"C\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/skill",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"skill"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Skill",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"JAVA\",\r\n  \"iconUrl\": \"https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/skill/cme3av7hz0004tvwoecmuhv29",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"skill",
+						"cme3av7hz0004tvwoecmuhv29"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Skill",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Python\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/skill/cme3awpxv0008tvwo76rs293b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"skill",
+						"cme3awpxv0008tvwo76rs293b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Tech Stack",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Mentor Design\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/tech-stack",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"tech-stack"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Tech Stack",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/tech-stack",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"tech-stack"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Feedback",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"projectId\": \"cmci14tz80003tvhcncq1xh8o\",\r\n  \"toUserId\": \"cmcdxf0yg0005tvtwl8rvbz53\",\r\n  \"rating\": 4,\r\n  \"comment\": \"Mandou bem demais no backend!\",\r\n  \"anonymous\": true,\r\n  \"stackTakenId\": \"cmci1tcyp0009tvhcgzbhwby1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/feedback",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"feedback"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Stack Taken",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"projectId\": \"cmcuueapy0007tvzcrzjb9kuh\",\r\n  \"projectStackId\": \"cmcuueapz000atvzchvzdn8dz\",\r\n  \"stackId\": \"cmcuu6p9o0004tvzcc0zbbtlg\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/stack-taken",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"stack-taken"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Stack Taken",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/stack-taken",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"stack-taken"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Project Skill",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/project-skill?projectId=cmci14tz80003tvhcncq1xh8o",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"project-skill"
+					],
+					"query": [
+						{
+							"key": "projectId",
+							"value": "cmci14tz80003tvhcncq1xh8o"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Project Skill",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/project-skill/cmci14tz80005tvhcj5b8c991",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"project-skill",
+						"cmci14tz80005tvhcj5b8c991"
+					],
+					"query": [
+						{
+							"key": "projectId",
+							"value": "cmci14tz80003tvhcncq1xh8o",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Project Stack",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/project-stack?projectId=cme3b95y60008tv40u9vnhd9a",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"project-stack"
+					],
+					"query": [
+						{
+							"key": "projectId",
+							"value": "cme3b95y60008tv40u9vnhd9a"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Portfolio",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/portfolio/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"portfolio",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Skill",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/user-skill/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user-skill",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Skill",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": \"cmdj6hdg40000tvqw21c7c9p3\",\r\n    \"skillId\": \"cme3av7hz0004tvwoecmuhv29\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/user-skill/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user-skill",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Skill Me",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/user-skill/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user-skill",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UserAvailability",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/user-availability",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user-availability"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UserAvailability Me",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/user-availability/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user-availability",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UserAvailability",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": \"cmdj6hdg40000tvqw21c7c9p3\",\r\n    \"weekday\": 3,\r\n    \"startTime\": \"08:00\",\r\n    \"endTime\": \"12:00\",\r\n    \"isMentor\": true,\r\n    \"skills\": [\"cme3av7hz0004tvwoecmuhv29\", \"cme3avpbw0005tvwogmp3ihph\",\"cme3avyya0006tvwoy04di9jd\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/user-availability",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user-availability"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UserAvailability",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": \"cmdi04ftr0008tvbss21qwnvw\",\r\n    \"weekday\": 3,\r\n    \"startTime\": \"16:00\",\r\n    \"endTime\": \"20:00\",\r\n    \"isMentor\": true,\r\n    \"skills\": [\"cmcuu6cay0003tvzcpu6re3v6\", \"cmcuu63f60002tvzcvvqx2teb\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/user-availability/cme386j3d0001tvdwrlx5fdbu",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user-availability",
+						"cme386j3d0001tvdwrlx5fdbu"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UserAvailability",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/user-availability/cme35qzt90001tv4got2q00lm",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user-availability",
+						"cme35qzt90001tv4got2q00lm"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UserCertificate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userId\": \"cmhxzdw5q000ntvo0g1bjcz0r\",\r\n  \"title\": \"Certificação AWS Cloud Practitioner\",\r\n  \"issuer\": \"Amazon Web Services\",\r\n  \"date\": \"01/2024\",  \r\n  \"url\": \"https://www.certificates.aws.training/cert/abc123xyz\",\r\n  \"description\": \"Certificação obtida após completar o exame AWS Cloud Practitioner Foundational.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/user-certificate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user-certificate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UserCertificate",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userId\": \"cmhxzfi4n000otvo0yeghu1gi\",\r\n  \"title\": \"Certificação AWS Cloud Practitioner\",\r\n  \"issuer\": \"Amazon Web Services\",\r\n  \"date\": \"01/2025\",  \r\n  \"url\": \"https://www.certificates.aws.training/cert/abc123xyz\",\r\n  \"description\": \"Certificação obtida após completar o exame AWS Cloud Practitioner Foundational.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/user-certificate/cmhy369sm0001tvj8iuuow1ms",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user-certificate",
+						"cmhy369sm0001tvj8iuuow1ms"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UserCertificate",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/user-certificate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user-certificate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Portfolio",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/portfolio/summary",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"portfolio",
+						"summary"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Metrics",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/metrics/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"metrics",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invite Request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Karina Teste 2\",\r\n    \"email\": \"email@email.com\",\r\n    \"linkedin\": \"https://www.linkedin.com/karina\",\r\n    \"role\": \"MENTOR\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/invite-request",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"invite-request"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invite Request",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Karina Teste\",\r\n    \"email\": \"karina@email.com\",\r\n    \"linkedin\": \"https://www.linkedin.com/karina\",\r\n    \"role\": \"MENTOR\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/invite-request/admin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"invite-request",
+						"admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invite Request",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Karina Teste\",\r\n    \"email\": \"karina@email.com\",\r\n    \"linkedin\": \"https://www.linkedin.com/karina\",\r\n    \"role\": \"MENTOR\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/invite-request/admin/cmk36hjqo0001tvxwa5eo1cau",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"invite-request",
+						"admin",
+						"cmk36hjqo0001tvxwa5eo1cau"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
