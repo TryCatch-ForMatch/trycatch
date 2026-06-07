@@ -1,5 +1,4 @@
 import TeamProjectPage from '.';
-import BasePage from '@/components/Dashboard/BasePage';
 
 import { Metadata } from 'next';
 
@@ -9,9 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return (
-    <BasePage>
-      <TeamProjectPage />
-    </BasePage>
-  );
+  return <TeamProjectPage />;
 }

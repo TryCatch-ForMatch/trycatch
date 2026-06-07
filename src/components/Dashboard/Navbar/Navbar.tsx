@@ -101,8 +101,8 @@ export function Navbar() {
             <li>
               {/* Portfólio */}
               <Link
-                href="/portfolio"
-                className={`flex items-center gap-2 ${!isOpen ? 'justify-start' : 'justify-center'} ${pathname === '/portfolios' ? 'rounded-sm bg-[#3B38A0] p-2 text-gray-50' : 'bg-transparent'} `}
+                href="/dashboard/portfolio"
+                className={`flex items-center gap-2 ${!isOpen ? 'justify-start' : 'justify-center'} ${pathname === '/dashboard/portfolio' ? 'rounded-sm bg-[#3B38A0] p-2 text-gray-50' : 'bg-transparent'} `}
               >
                 <Users size={20} />
                 <span className={`${!isOpen ? 'block' : 'hidden'}`}>
