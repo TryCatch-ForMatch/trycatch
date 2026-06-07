@@ -1,71 +1,55 @@
-'use client';
-
-import { Card, CardContent } from '@/components/ui/card';
-import { PublicPortfolio } from '@/types/portfolio/public-portfolio';
+import { Briefcase } from 'lucide-react';
+import type { PortfolioPublicResponse } from '@/types/portfolio.types';
+import { Section } from '@/components/ui/section';
 
 interface PortfolioProjectsSectionProps {
-  data: PublicPortfolio;
+  data: PortfolioPublicResponse;
 }
 
-export function PortfolioProjectsSection({
-  data,
-}: PortfolioProjectsSectionProps) {
+export function PortfolioProjectsSection({ data }: PortfolioProjectsSectionProps) {
   if (!data.projects || data.projects.length === 0) return null;
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-      <h2 className="mb-6 text-2xl font-semibold text-[#101014]">
-        Projetos Concluídos
-      </h2>
-
-      <div className="grid gap-6 md:grid-cols-2">
+    <Section icon={<Briefcase className="w-4 h-4" />} title="Projetos concluídos">
+      <div className="grid gap-4 sm:grid-cols-2">
         {data.projects.map((project) => (
-          <Card
-            key={project.id}
-            className="rounded-2xl border border-[#EAEAEB] shadow-sm transition hover:shadow-md"
+          <div
+            key={project.projectId}
+            className="rounded-lg border border-border bg-card p-4 space-y-3"
           >
-            <CardContent className="space-y-4 p-5">
-              <h3 className="text-base font-semibold text-[#101014]">
-                {project.name}
+            <div>
+              <h3 className="text-sm font-medium text-foreground">
+                {project.projectName}
               </h3>
+              <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                {project.description}
+              </p>
+            </div>
 
-              {project.description && (
-                <p className="line-clamp-3 text-sm text-[#5C5C65]">
-                  {project.description}
-                </p>
-              )}
+            {project.stacks.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {project.stacks.map((stack) => (
+                  <span
+                    key={stack.stackId}
+                    className="px-2 py-0.5 rounded-md text-xs
+                               bg-primary/10 text-primary border border-primary/20"
+                  >
+                    {stack.stackName}
+                  </span>
+                ))}
+              </div>
+            )}
 
-              {/* Stacks assumidas */}
-              {project.stacks.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {project.stacks.map((stack) => (
-                    <span
-                      key={stack.id}
-                      className="rounded-full bg-[#D9D9ED] px-3 py-1 text-xs font-medium text-[#3B38A0]"
-                    >
-                      {stack.name}
-                    </span>
-                  ))}
-                </div>
-              )}
-
-              {/* Skills do projeto */}
-              {project.skills.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {project.skills.map((skill) => (
-                    <span
-                      key={skill.id}
-                      className="rounded-full border border-[#EAEAEB] px-3 py-1 text-xs text-[#35343C]"
-                    >
-                      {skill.name}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+            <p className="text-[11px] text-muted-foreground">
+              Concluído em{' '}
+              {new Date(project.deadline).toLocaleDateString('pt-BR', {
+                month: 'short',
+                year: 'numeric',
+              })}
+            </p>
+          </div>
         ))}
       </div>
-    </section>
+    </Section>
   );
 }

@@ -1,31 +1,24 @@
-'use client';
-
+import type { PortfolioPublicResponse } from '@/types/portfolio.types';
 import { PortfolioIdentitySection } from './sections/PortfolioIdentitySection';
 import { PortfolioSkillsSection } from './sections/PortfolioSkillsSection';
-import { PortfolioCertificatesSection } from './sections/PortfolioCertificatesSection';
 import { PortfolioProjectsSection } from './sections/PortfolioProjectsSection';
+import { PortfolioCertificatesSection } from './sections/PortfolioCertificatesSection';
 import { PortfolioFeedbackSection } from './sections/PortfolioFeedbackSection';
-import { usePortfolioByUsername } from '@/hooks/api/usePortfolioByUsername';
-import { notFound } from 'next/navigation';
 
 interface PublicPortfolioPageProps {
-  userName: string;
+  data: PortfolioPublicResponse;
 }
 
-export function PublicPortfolioPage({ userName }: PublicPortfolioPageProps) {
-  const { portfolio, isLoading } = usePortfolioByUsername(userName);
-
-  if (isLoading) return null;
-
-  if (!portfolio) return notFound();
-
+export function PublicPortfolioPage({ data }: PublicPortfolioPageProps) {
   return (
-    <>
-      <PortfolioIdentitySection data={portfolio} />
-      <PortfolioSkillsSection data={portfolio} />
-      <PortfolioCertificatesSection data={portfolio} />
-      <PortfolioProjectsSection data={portfolio} />
-      <PortfolioFeedbackSection data={portfolio} />
-    </>
+    <main className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-12 max-w-4xl space-y-10">
+        <PortfolioIdentitySection data={data} />
+        <PortfolioSkillsSection data={data} />
+        <PortfolioProjectsSection data={data} />
+        <PortfolioCertificatesSection data={data} />
+        {/* <PortfolioFeedbackSection data={data} /> */}
+      </div>
+    </main>
   );
 }
