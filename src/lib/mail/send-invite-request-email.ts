@@ -12,7 +12,7 @@ export async function sendInviteRequestEmail({
   name,
   email,
   linkedin,
-  role,
+  // role,
 }: SendInviteRequestEmailProps) {
   const receiver = process.env.INVITE_REQUEST_RECEIVER_EMAIL;
   const sender = process.env.INVITE_REQUEST_SENDER_EMAIL;
@@ -47,4 +47,3 @@ export async function sendInviteRequestEmail({
       appUrl,
     }),
   });
-}

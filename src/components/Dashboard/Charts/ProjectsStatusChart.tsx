@@ -21,6 +21,7 @@ export default function ProjectsStatusChart() {
         const res = await apiTryCatch.get('/metrics');
         setData(res.data.projectsByStatus || []);
       } catch (err) {
+        console.error(err)
         setError('Erro ao carregar dados de projetos por status.');
       } finally {
         setLoading(false);
@@ -70,7 +71,4 @@ export default function ProjectsStatusChart() {
       title="Projetos por Status"
       data={formattedData}
       dataKey="count"
-      nameKey="statusLabel"
-    />
-  );
-}
+      nameKey="sta
