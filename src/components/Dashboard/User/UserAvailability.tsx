@@ -160,9 +160,7 @@ export function UserAvailabilityForm() {
   };
 
   const availableSkills = allSkills.filter(
-    (s) =>
-      !selectedSkills.includes(s.id ?? '') &&
-      !allUserSkills.some((item) => item.skill?.id === s.id)
+    (s) => !selectedSkills.includes(s.id ?? '')
   );
 
   return (
@@ -290,3 +288,4 @@ export function UserAvailabilityForm() {
     </Card>
   );
 }
+                                                                        

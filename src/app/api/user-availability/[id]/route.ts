@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { NextResponse, NextRequest } from 'next/server';
 import { buildResponse, MESSAGES } from '@/constants/messages';
 import { ROLE_GROUPS } from '@/lib/roles';
+import { logger } from '@/lib/logger';
 
 const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 
@@ -83,7 +84,10 @@ export async function GET(
 
     return NextResponse.json(availability, { status: 200 });
   } catch (error) {
-    console.error('[USER_AVAILABILITY_GET_ID]', error);
+    logger.error('GET /api/user-availability/[id]', 'Unexpected error fetching availability', {
+      availabilityId: id,
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.USER_AVAILABILITY.INTERNAL_ERROR,
@@ -178,7 +182,11 @@ export async function PUT(
 
     return NextResponse.json(updated, { status: 200 });
   } catch (error) {
-    console.error('[USER_AVAILABILITY_PUT_ID]', error);
+    logger.error('PUT /api/user-availability/[id]', 'Unexpected error updating availability', {
+      availabilityId,
+      userId: session.user.id,
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.USER_AVAILABILITY.INTERNAL_ERROR,
@@ -237,16 +245,4 @@ export async function DELETE(
 
     return buildResponse({
       success: true,
-      message: MESSAGES.USER_AVAILABILITY.DELETED,
-      status: 200,
-    });
-  } catch (error) {
-    console.error('[USER_AVAILABILITY_DELETE_ID]', error);
-    return buildResponse({
-      success: false,
-      message: MESSAGES.USER_AVAILABILITY.INTERNAL_ERROR,
-      status: 500,
-      errors: ['Erro ao excluir disponibilidade'],
-    });
-  }
-}
+ 
