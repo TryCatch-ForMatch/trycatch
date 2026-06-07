@@ -5,10 +5,16 @@ import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { ROLE_GROUPS } from '@/lib/roles';
+import { logger } from '@/lib/logger';
+
+const CONTEXT_GET = 'GET /api/portfolio/me';
+const CONTEXT_PATCH = 'PATCH /api/portfolio/me';
 
 const updatePortfolioSchema = z.object({
   bio: z.string().optional(),
   avatar: z.string().url().optional(),
+  github: z.string().url('URL inválida').optional().or(z.literal('')),
+  linkedin: z.string().url('URL inválida').optional().or(z.literal('')),
   skills: z
     .array(
       z.object({
@@ -46,66 +52,68 @@ export async function GET() {
 
   const userId = session.user.id;
 
-  const portfolio = await prisma.user.findUnique({
-    where: { id: userId },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      github: true,
-      linkedin: true,
-      bio: true,
-      avatar: true,
-      showEmail: true,
-      showGithub: true,
-      showLinkedin: true,
-      showCertificates: true,
-      showProjects: true,
-      showFeedback: true,
-      portfolioPublic: true,
-
-      // Skills vinculadas ao usuário
-      skills: {
-        include: { skill: true },
-      },
-
-      // Certificados
-      certificates: true,
-
-      // Feedbacks recebidos
-      feedbacksReceived: {
-        include: {
-          fromUser: {
-            select: { name: true, avatar: true },
+  try {
+    const portfolio = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        userName: true,
+        name: true,
+        email: true,
+        github: true,
+        linkedin: true,
+        bio: true,
+        avatar: true,
+        showEmail: true,
+        showGithub: true,
+        showLinkedin: true,
+        showCertificates: true,
+        showProjects: true,
+        showFeedback: true,
+        portfolioPublic: true,
+        skills: {
+          include: { skill: true },
+        },
+        certificates: true,
+        feedbacksReceived: {
+          include: {
+            fromUser: {
+              select: { name: true, avatar: true },
+            },
           },
         },
-      },
-
-      // Projetos (via stacksTaken)
-      stacksTaken: {
-        include: {
-          stack: true,
-          project: {
-            select: {
-              id: true,
-              name: true,
-              status: true,
+        stacksTaken: {
+          include: {
+            stack: true,
+            project: {
+              select: { id: true, name: true, status: true },
             },
           },
         },
       },
-    },
-  });
+    });
 
-  if (!portfolio) {
+    if (!portfolio) {
+      logger.warn(CONTEXT_GET, 'Authenticated user not found in DB', { userId });
+      return buildResponse({
+        success: false,
+        message: MESSAGES.USER.NOT_FOUND,
+        status: 404,
+      });
+    }
+
+    logger.info(CONTEXT_GET, 'Portfolio settings fetched', { userId });
+    return NextResponse.json(portfolio, { status: 200 });
+  } catch (error) {
+    logger.error(CONTEXT_GET, 'Unexpected error fetching portfolio settings', {
+      userId,
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
-      message: MESSAGES.USER.NOT_FOUND,
-      status: 404,
+      message: MESSAGES.USER.INTERNAL_ERROR,
+      status: 500,
     });
   }
-
-  return NextResponse.json(portfolio, { status: 200 });
 }
 
 export async function PATCH(request: NextRequest) {
@@ -115,10 +123,25 @@ export async function PATCH(request: NextRequest) {
   if (!authorized || !session) return response;
 
   const userId = session.user.id;
-  const body = await request.json();
+
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+    });
+  }
+
   const parsed = updatePortfolioSchema.safeParse(body);
 
   if (!parsed.success) {
+    logger.warn(CONTEXT_PATCH, 'Validation failed', {
+      userId,
+      errors: parsed.error.format(),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
@@ -130,6 +153,8 @@ export async function PATCH(request: NextRequest) {
   const {
     bio,
     avatar,
+    github,
+    linkedin,
     skills,
     certificates,
     showEmail,
@@ -141,111 +166,59 @@ export async function PATCH(request: NextRequest) {
     portfolioPublic,
   } = parsed.data;
 
-  // `Prisma.UserUpdateInput` é o tipo que o Prisma aceita no campo `data` do update.
-  // Usamos `Partial<>` porque no PATCH os campos são opcionais.
-  // Isso permite montar dinamicamente um objeto apenas com os campos enviados,
-  // mantendo segurança de tipos (evita usar `any`) e impedindo atualizar campos inválidos.
+  try {
+    const updateData: Partial<Prisma.UserUpdateInput> = {};
 
-  const updateData: Partial<Prisma.UserUpdateInput> = {};
+    if (bio !== undefined) updateData.bio = bio;
+    if (avatar !== undefined) updateData.avatar = avatar;
+    if (github !== undefined) updateData.github = github || null;
+    if (linkedin !== undefined) updateData.linkedin = linkedin || null;
+    if (showEmail !== undefined) updateData.showEmail = showEmail;
+    if (showGithub !== undefined) updateData.showGithub = showGithub;
+    if (showLinkedin !== undefined) updateData.showLinkedin = showLinkedin;
+    if (showCertificates !== undefined) updateData.showCertificates = showCertificates;
+    if (showProjects !== undefined) updateData.showProjects = showProjects;
+    if (showFeedback !== undefined) updateData.showFeedback = showFeedback;
+    if (portfolioPublic !== undefined) updateData.portfolioPublic = portfolioPublic;
 
-  if (bio !== undefined) updateData.bio = bio;
-  if (avatar !== undefined) updateData.avatar = avatar;
-  if (showEmail !== undefined) updateData.showEmail = showEmail;
-  if (showGithub !== undefined) updateData.showGithub = showGithub;
-  if (showLinkedin !== undefined) updateData.showLinkedin = showLinkedin;
-  if (showCertificates !== undefined)
-    updateData.showCertificates = showCertificates;
-  if (showProjects !== undefined) updateData.showProjects = showProjects;
-  if (showFeedback !== undefined) updateData.showFeedback = showFeedback;
-  if (portfolioPublic !== undefined)
-    updateData.portfolioPublic = portfolioPublic;
+    if (Object.keys(updateData).length > 0) {
+      await prisma.user.update({ where: { id: userId }, data: updateData });
+    }
 
-  const updatedUser = await prisma.user.update({
-    where: { id: userId },
-    data: updateData,
-  });
+    if (skills) {
+      await prisma.userSkill.deleteMany({ where: { userId } });
+      await prisma.userSkill.createMany({
+        data: skills.map((s) => ({ userId, skillId: s.skillId })),
+      });
+    }
 
-  const refreshedPortfolio = await prisma.user.findUnique({
-    where: { id: userId },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      github: true,
-      linkedin: true,
-      bio: true,
-      avatar: true,
-      showEmail: true,
-      showGithub: true,
-      showLinkedin: true,
-      showCertificates: true,
-      showProjects: true,
-      showFeedback: true,
-      portfolioPublic: true,
+    if (certificates) {
+      await prisma.userCertificate.deleteMany({ where: { userId } });
+      await prisma.userCertificate.createMany({
+        data: certificates.map((c) => ({
+          userId,
+          title: c.title,
+          issuer: c.issuer,
+          url: c.url,
+          date: c.date,
+          description: c.description ?? '',
+        })),
+      });
+    }
 
-      // Skills vinculadas ao usuário
-      skills: {
-        include: { skill: true },
-      },
-
-      // Certificados
-      certificates: true,
-
-      // Feedbacks recebidos
-      feedbacksReceived: {
-        include: {
-          fromUser: {
-            select: { name: true, avatar: true },
-          },
-        },
-      },
-
-      // Projetos (via stacksTaken)
-      stacksTaken: {
-        include: {
-          stack: true,
-          project: {
-            select: {
-              id: true,
-              name: true,
-              status: true,
-            },
-          },
-        },
-      },
-    },
-  });
-
-  if (skills) {
-    await prisma.userSkill.deleteMany({ where: { userId } });
-
-    await prisma.userSkill.createMany({
-      data: skills.map((s) => ({
-        userId,
-        skillId: s.skillId,
-      })),
+    logger.info(CONTEXT_PATCH, 'Portfolio settings updated', {
+      userId,
+      fields: Object.keys(updateData),
+      updatedSkills: !!skills,
+      updatedCertificates: !!certificates,
     });
-  }
 
-  if (certificates) {
-    await prisma.userCertificate.deleteMany({ where: { userId } });
-
-    await prisma.userCertificate.createMany({
-      data: certificates.map((c) => ({
-        userId,
-        title: c.title,
-        issuer: c.issuer,
-        url: c.url,
-        date: c.date,
-        description: c.description ?? '',
-      })),
+    return buildResponse({
+      success: true,
+      message: MESSAGES.USER.UPDATED,
+      status: 200,
     });
-  }
-
-  return buildResponse({
-    success: true,
-    message: MESSAGES.USER.UPDATED,
-    data: refreshedPortfolio,
-    status: 200,
-  });
-}
+  } catch (error) {
+    logger.error(CONTEXT_PATCH, 'Unexpected error updating portfolio settings', {
+      userId,
+      error: error instanceof Error ?

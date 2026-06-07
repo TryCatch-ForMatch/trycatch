@@ -48,6 +48,7 @@ export const MESSAGES = {
     INVALID_DATA:
       'Campos obrigatórios estão faltando ou com formato incorreto.',
     INTERNAL_ERROR: 'Erro interno no servidor.',
+    SUCCESS: 'Request realizada com sucesso' // TODO
   },
   INVITE: {
     NOT_FOUND: 'Convite não encontrado.',

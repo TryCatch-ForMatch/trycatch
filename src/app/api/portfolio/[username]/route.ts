@@ -1,147 +1,53 @@
-import { prisma } from '@/lib/prisma';
-import { ProjectStatus } from '@prisma/client';
+// src/app/api/portfolio/[username]/route.ts
+//
+// Rota pública — NÃO requer autenticação.
+// Qualquer visitante pode acessar /api/portfolio/[username].
+
 import { NextRequest, NextResponse } from 'next/server';
-import { MESSAGES, buildResponse } from '@/constants/messages';
-import { buildPublicPortfolio } from '@/lib/portfolio/portfolio-visibility';
 import { logger } from '@/lib/logger';
+import {
+  getPublicPortfolio,
+  PortfolioNotFoundError,
+} from '@/lib/portfolio.service';
 
-type RouteContext = {
-  params: Promise<{ username: string }>;
-};
+const CONTEXT = 'GET /api/portfolio/[username]';
 
-export async function GET(request: NextRequest, context: RouteContext) {
-  const { username } = await context.params;
-
-  logger.info(
-    'Public portfolio request received',
-    'GET /api/portfolio/[username]',
-    { username }
-  );
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ username: string }> },
+) {
+  const { username } = await params;
 
   try {
-    const portfolio = await prisma.user.findUnique({
-      where: {
-        userName: username,
-      },
-      select: {
-        id: true,
-        name: true,
-        role: true,
-        avatar: true,
-        bio: true,
-        github: true,
-        linkedin: true,
-        email: true,
-        isActive: true,
-        showEmail: true,
-        showGithub: true,
-        showLinkedin: true,
-        showCertificates: true,
-        showProjects: true,
-        showFeedback: true,
-        portfolioPublic: true,
+    const portfolio = await getPublicPortfolio(username);
 
-        skills: {
-          include: {
-            skill: true,
-          },
-        },
+    logger.info(CONTEXT, 'Portfolio accessed', { username });
 
-        certificates: true,
-
-        feedbacksReceived: {
-          include: {
-            fromUser: {
-              select: {
-                name: true,
-                avatar: true,
-              },
-            },
-          },
-        },
-
-        stacksTaken: {
-          where: {
-            project: {
-              status: ProjectStatus.CONCLUIDO,
-            },
-          },
-          include: {
-            stack: true,
-            project: {
-              select: {
-                id: true,
-                name: true,
-                description: true,
-                status: true,
-                skills: {
-                  select: {
-                    skill: {
-                      select: {
-                        id: true,
-                        name: true,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    });
-
-    if (!portfolio) {
-      logger.warn('Portfolio not found', 'GET /api/portfolio/[username]', {
-        username,
-      });
-
-      return buildResponse({
-        success: false,
-        message: MESSAGES.USER.NOT_FOUND,
-        status: 404,
-      });
-    }
-
-    if (!portfolio.isActive) {
-      return buildResponse({
-        success: false,
-        message: MESSAGES.USER.NOT_FOUND,
-        status: 404,
-      });
-    }
-
-    if (!portfolio.portfolioPublic) {
-      logger.warn(
-        'Attempt to access private portfolio',
-        'GET /api/portfolio/[username]',
-        { username }
-      );
-
-      return buildResponse({
-        success: false,
-        message: MESSAGES.PORTFOLIO.NOT_FOUND,
-        status: 404,
-      });
-    }
-
-    const publicPortfolio = buildPublicPortfolio(portfolio);
-
-    return NextResponse.json(publicPortfolio, { status: 200 });
-  } catch (error) {
-    logger.error(
-      'Unexpected error while fetching public portfolio',
-      'GET /api/portfolio/[username]',
-      error instanceof Error
-        ? { message: error.message, stack: error.stack }
-        : error
+    return NextResponse.json(
+      { success: true, message: 'Portfolio found', data: portfolio, errors: null },
+      { status: 200 },
     );
+  } catch (error) {
+    // 404 esperado — portfólio inexistente, privado ou usuário inativo.
+    // Retornamos 404 em todos os casos para não revelar se o usuário existe.
+    if (error instanceof PortfolioNotFoundError) {
+      logger.warn(CONTEXT, 'Portfolio not found or private', { username });
 
-    return buildResponse({
-      success: false,
-      message: MESSAGES.USER.INTERNAL_ERROR,
-      errors: error instanceof Error ? error.message : 'Erro desconhecido',
-      status: 500,
+      return NextResponse.json(
+        { success: false, message: 'Portfolio not found', data: null, errors: null },
+        { status: 404 },
+      );
+    }
+
+    // Erro inesperado — logar com detalhes, responder sem expor internos
+    logger.error(CONTEXT, 'Unexpected error fetching portfolio', {
+      username,
+      error: error instanceof Error ? error.message : String(error),
     });
+
+    return NextResponse.json(
+      { success: false, message: 'Internal server error', data: null, errors: null },
+      { status: 500 },
+    );
   }
 }
