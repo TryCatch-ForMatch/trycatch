@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import { NextRequest } from 'next/server';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import crypto from 'crypto';
+import { logger } from '@/lib/logger';
 
 export async function GET(request: NextRequest) {
   try {
@@ -50,10 +51,6 @@ export async function GET(request: NextRequest) {
       status: 200,
     });
   } catch (error) {
+    logger.error('Validate reset token error', '', error)
     return buildResponse({
-      success: false,
-      message: MESSAGES.AUTH.INVALID_RESET_TOKEN,
-      status: 500,
-    });
-  }
-}
+      succes

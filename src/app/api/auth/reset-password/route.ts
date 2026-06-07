@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { buildResponse, MESSAGES } from '@/constants/messages';
+import { logger } from '@/lib/logger';
 
 const resetPasswordSchema = z.object({
   token: z.string().min(1, 'Token é obrigatório'),
@@ -79,10 +80,6 @@ export async function POST(request: NextRequest) {
       status: 200,
     });
   } catch (error) {
+    logger.error('Reset password error', '', error)
     return buildResponse({
-      success: false,
-      message: MESSAGES.AUTH.PASSWORD_RESET_ERROR,
-      status: 500,
-    });
-  }
-}
+      success: fals
