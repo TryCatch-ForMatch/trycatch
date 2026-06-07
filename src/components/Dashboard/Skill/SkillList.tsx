@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Pencil, Trash, Check, X } from 'lucide-react';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { toast } from 'sonner';
+import Image from 'next/image';
 
 type Skill = {
   id: string;
@@ -188,7 +189,7 @@ export function SkillList() {
               >
                 {/* Ícone + nome ou inputs */}
                 <div className="skill-icon flex items-center gap-3">
-                  <img
+                  <Image
                     src={
                       skill.iconUrl || 'https://via.placeholder.com/40?text=?'
                     }
@@ -282,7 +283,4 @@ export function SkillList() {
           title="Skill vinculada a projetos/usuários"
           description="Esta skill está em uso. Alterações podem impactar projetos e usuários existentes. Deseja continuar?"
         />
-      </div>
-    </CardContent>
-  );
-}
+      </

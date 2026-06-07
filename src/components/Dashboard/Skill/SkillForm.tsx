@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import Image from 'next/image';
 
 export function SkillForm() {
   const [name, setName] = useState('');
@@ -75,7 +76,7 @@ export function SkillForm() {
           {iconUrl && (
             <div className="flex flex-col items-center space-y-2">
               <p className="text-sm text-gray-500">Pré-visualização:</p>
-              <img
+              <Image
                 src={iconUrl}
                 alt={`Ícone da skill ${name}`}
                 className="skill-icon h-12 w-12 object-contain"
@@ -91,7 +92,4 @@ export function SkillForm() {
             {loading ? 'Enviando...' : 'Cadastrar Skill'}
           </Button>
         </form>
-      </CardContent>
-    </Card>
-  );
-}
+      </C
