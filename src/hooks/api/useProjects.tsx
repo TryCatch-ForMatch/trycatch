@@ -66,7 +66,7 @@ export function useProjects() {
     const interval = setInterval(fetchProjectsStatics, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchProjectsStatics]);
 
   useEffect(() => {
     fetchProjects();
@@ -89,6 +89,4 @@ export function useProjects() {
     fetchProjects,
     projectsEstatistica,
     fetchProjectsStatics,
-    getProjectDetailsById,
-  };
-}
+    getProjectDet

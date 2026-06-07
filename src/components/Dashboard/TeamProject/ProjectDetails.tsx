@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Calendar, DollarSign, User } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
@@ -17,7 +17,7 @@ export function ProjectDetails({ projectId }: { projectId: string }) {
   const [project, setProject] = useState<ProjectDetailsType | null>(null);
   const [loading, setLoading] = useState(true);
 
-  async function fetchDetailsProject() {
+  const fetchDetailsProject = useCallback(async () => {
     setLoading(true);
     try {
       const response = await getProjectDetailsById(projectId);
@@ -28,11 +28,11 @@ export function ProjectDetails({ projectId }: { projectId: string }) {
     } finally {
       setLoading(false);
     }
-  }
+  }, [getProjectDetailsById, projectId])
 
   useEffect(() => {
     fetchDetailsProject();
-  }, [projectId]);
+  }, [projectId,fetchDetailsProject]);
 
   if (!user) return null;
   if (loading)
@@ -155,10 +155,3 @@ export function ProjectDetails({ projectId }: { projectId: string }) {
                   </Button>
                 )}
               </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
