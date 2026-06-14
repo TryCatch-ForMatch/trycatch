@@ -6,19 +6,21 @@ interface PortfolioCertificatesSectionProps {
   data: PortfolioPublicResponse;
 }
 
-export function PortfolioCertificatesSection({ data }: PortfolioCertificatesSectionProps) {
+export function PortfolioCertificatesSection({
+  data,
+}: PortfolioCertificatesSectionProps) {
   if (!data.certificates || data.certificates.length === 0) return null;
 
   return (
-    <Section icon={<Award className="w-4 h-4" />} title="Certificados">
+    <Section icon={<Award className="h-4 w-4" />} title="Certificados">
       <div className="grid gap-3 sm:grid-cols-2">
         {data.certificates.map((cert) => (
           <div
             key={cert.id}
-            className="rounded-lg border border-border bg-card p-4 space-y-1"
+            className="space-y-1 rounded-lg border border-border bg-card p-4"
           >
             <div className="flex items-start justify-between gap-2">
-              <h3 className="text-sm font-medium text-foreground leading-snug">
+              <h3 className="text-sm leading-snug font-medium text-foreground">
                 {cert.title}
               </h3>
               {cert.url && (
@@ -26,7 +28,7 @@ export function PortfolioCertificatesSection({ data }: PortfolioCertificatesSect
                   href={cert.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-primary hover:underline flex-shrink-0"
+                  className="flex-shrink-0 text-xs text-primary hover:underline"
                 >
                   Ver
                 </a>
@@ -37,7 +39,7 @@ export function PortfolioCertificatesSection({ data }: PortfolioCertificatesSect
               <p className="text-[11px] text-muted-foreground">{cert.date}</p>
             )}
             {cert.description && (
-              <p className="text-xs text-muted-foreground pt-1 line-clamp-2">
+              <p className="line-clamp-2 pt-1 text-xs text-muted-foreground">
                 {cert.description}
               </p>
             )}

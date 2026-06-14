@@ -11,25 +11,31 @@ interface ToggleFieldProps {
   onChange: (value: boolean) => void;
 }
 
-export function ToggleField({ icon, label, description, checked, onChange }: ToggleFieldProps) {
+export function ToggleField({
+  icon,
+  label,
+  description,
+  checked,
+  onChange,
+}: ToggleFieldProps) {
   return (
     <div className="flex items-center justify-between gap-4 p-4">
-      <div className="flex items-start gap-3 min-w-0">
+      <div className="flex min-w-0 items-start gap-3">
         {icon && (
-          <span className="mt-0.5 text-muted-foreground flex-shrink-0">{icon}</span>
+          <span className="mt-0.5 flex-shrink-0 text-muted-foreground">
+            {icon}
+          </span>
         )}
         <div className="min-w-0">
           <p className="text-sm text-foreground">{label}</p>
           {description && (
-            <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              {description}
+            </p>
           )}
         </div>
       </div>
-      <Switch
-        checked={checked}
-        onCheckedChange={onChange}
-        aria-label={label}
-      />
+      <Switch checked={checked} onCheckedChange={onChange} aria-label={label} />
     </div>
   );
 }

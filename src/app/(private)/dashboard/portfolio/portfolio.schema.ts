@@ -1,7 +1,11 @@
 import { z } from 'zod';
 
 export const portfolioSchema = z.object({
-  bio: z.string().max(500, 'Máximo 500 caracteres').optional().or(z.literal('')),
+  bio: z
+    .string()
+    .max(500, 'Máximo 500 caracteres')
+    .optional()
+    .or(z.literal('')),
   github: z.string().url('URL inválida').optional().or(z.literal('')),
   linkedin: z.string().url('URL inválida').optional().or(z.literal('')),
   portfolioPublic: z.boolean(),

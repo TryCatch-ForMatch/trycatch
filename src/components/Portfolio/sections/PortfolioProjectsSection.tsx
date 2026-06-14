@@ -6,22 +6,27 @@ interface PortfolioProjectsSectionProps {
   data: PortfolioPublicResponse;
 }
 
-export function PortfolioProjectsSection({ data }: PortfolioProjectsSectionProps) {
+export function PortfolioProjectsSection({
+  data,
+}: PortfolioProjectsSectionProps) {
   if (!data.projects || data.projects.length === 0) return null;
 
   return (
-    <Section icon={<Briefcase className="w-4 h-4" />} title="Projetos concluídos">
+    <Section
+      icon={<Briefcase className="h-4 w-4" />}
+      title="Projetos concluídos"
+    >
       <div className="grid gap-4 sm:grid-cols-2">
         {data.projects.map((project) => (
           <div
             key={project.projectId}
-            className="rounded-lg border border-border bg-card p-4 space-y-3"
+            className="space-y-3 rounded-lg border border-border bg-card p-4"
           >
             <div>
               <h3 className="text-sm font-medium text-foreground">
                 {project.projectName}
               </h3>
-              <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+              <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
                 {project.description}
               </p>
             </div>
@@ -31,8 +36,7 @@ export function PortfolioProjectsSection({ data }: PortfolioProjectsSectionProps
                 {project.stacks.map((stack) => (
                   <span
                     key={stack.stackId}
-                    className="px-2 py-0.5 rounded-md text-xs
-                               bg-primary/10 text-primary border border-primary/20"
+                    className="rounded-md border border-primary/20 bg-primary/10 px-2 py-0.5 text-xs text-primary"
                   >
                     {stack.stackName}
                   </span>

@@ -22,7 +22,7 @@ const MAX_TAKE = 50;
 function normalizeTake(takeParam: number): number {
   return Math.min(
     Number.isFinite(takeParam) && takeParam > 0 ? takeParam : DEFAULT_TAKE,
-    MAX_TAKE,
+    MAX_TAKE
   );
 }
 
@@ -36,7 +36,7 @@ function baseWhere(): Prisma.UserWhereInput {
 // Lança erros específicos para que o handler possa retornar os status corretos
 // ---------------------------------------------------------------------------
 export async function getPublicPortfolio(
-  username: string,
+  username: string
 ): Promise<PortfolioPublicResponse> {
   const user = await prisma.user.findUnique({
     where: { userName: username },
@@ -72,7 +72,14 @@ export async function getPublicPortfolio(
         },
       },
       certificates: {
-        select: { id: true, title: true, issuer: true, date: true, url: true, description: true },
+        select: {
+          id: true,
+          title: true,
+          issuer: true,
+          date: true,
+          url: true,
+          description: true,
+        },
       },
       feedbacksReceived: {
         select: {
@@ -152,7 +159,7 @@ export async function getPublicPortfolio(
 export async function listPublicPortfolios(
   filters: PortfolioListFilters = {},
   cursor?: string,
-  takeParam: number = DEFAULT_TAKE,
+  takeParam: number = DEFAULT_TAKE
 ): Promise<PaginatedResponse<PortfolioSummaryItem>> {
   const take = normalizeTake(takeParam);
 
@@ -175,7 +182,9 @@ export async function listPublicPortfolios(
     // Busca parcial no nome da skill — case-insensitive
     ...(filters.skillName && {
       skills: {
-        some: { skill: { name: { contains: filters.skillName, mode: 'insensitive' } } },
+        some: {
+          skill: { name: { contains: filters.skillName, mode: 'insensitive' } },
+        },
       },
     }),
 
@@ -224,7 +233,9 @@ export async function listPublicPortfolios(
 
   const hasNextPage = users.length > take;
   const page = hasNextPage ? users.slice(0, take) : users;
-  const nextCursor = hasNextPage ? page[page.length - 1].userName ?? null : null;
+  const nextCursor = hasNextPage
+    ? (page[page.length - 1].userName ?? null)
+    : null;
 
   return {
     items: page.map((u) => ({
@@ -250,7 +261,7 @@ export async function listPublicPortfolios(
 export async function listPortfolioSummary(
   filters: PortfolioSummaryFilters = {},
   cursor?: string,
-  takeParam: number = DEFAULT_TAKE,
+  takeParam: number = DEFAULT_TAKE
 ): Promise<PaginatedResponse<PortfolioSummaryItem>> {
   const take = normalizeTake(takeParam);
 
@@ -296,7 +307,9 @@ export async function listPortfolioSummary(
 
   const hasNextPage = users.length > take;
   const page = hasNextPage ? users.slice(0, take) : users;
-  const nextCursor = hasNextPage ? page[page.length - 1].userName ?? null : null;
+  const nextCursor = hasNextPage
+    ? (page[page.length - 1].userName ?? null)
+    : null;
 
   return {
     items: page.map((u) => {

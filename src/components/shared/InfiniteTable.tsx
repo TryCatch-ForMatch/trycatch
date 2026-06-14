@@ -103,8 +103,7 @@ export function InfiniteTable<T>({
     // Mede altura real de cada linha para scrollbar precisa
     // Exceto no Firefox onde a medição de border é bugada
     measureElement:
-      typeof window !== 'undefined' &&
-      !navigator.userAgent.includes('Firefox')
+      typeof window !== 'undefined' && !navigator.userAgent.includes('Firefox')
         ? (el) => el?.getBoundingClientRect().height
         : undefined,
     overscan: 8,
@@ -138,26 +137,32 @@ export function InfiniteTable<T>({
               top: 0,
               zIndex: 10,
             }}
-            className="bg-background border-b border-border"
+            className="border-b border-border bg-background"
           >
             {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} style={{ display: 'flex', width: '100%' }}>
+              <tr
+                key={headerGroup.id}
+                style={{ display: 'flex', width: '100%' }}
+              >
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
                     style={{ display: 'flex', width: header.getSize() }}
-                    className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider select-none"
+                    className="px-4 py-3 text-left text-xs font-medium tracking-wider text-muted-foreground uppercase select-none"
                   >
                     {header.isPlaceholder ? null : (
                       <div
                         className={
                           header.column.getCanSort()
-                            ? 'flex items-center gap-1 cursor-pointer hover:text-foreground transition-colors'
+                            ? 'flex cursor-pointer items-center gap-1 transition-colors hover:text-foreground'
                             : ''
                         }
                         onClick={header.column.getToggleSortingHandler()}
                       >
-                        {flexRender(header.column.columnDef.header, header.getContext())}
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                         {header.column.getCanSort() && (
                           <SortIcon direction={header.column.getIsSorted()} />
                         )}
@@ -179,7 +184,7 @@ export function InfiniteTable<T>({
           >
             {rows.length === 0 && !isFetchingNextPage ? (
               <tr style={{ display: 'flex' }}>
-                <td className="px-4 py-12 text-sm text-muted-foreground text-center w-full">
+                <td className="w-full px-4 py-12 text-center text-sm text-muted-foreground">
                   {emptyState ?? 'Nenhum resultado encontrado.'}
                 </td>
               </tr>
@@ -198,15 +203,21 @@ export function InfiniteTable<T>({
                       transform: `translateY(${virtualRow.start}px)`,
                       width: '100%',
                     }}
-                    className="border-b border-border hover:bg-muted/50 transition-colors"
+                    className="border-b border-border transition-colors hover:bg-muted/50"
                   >
                     {row.getVisibleCells().map((cell) => (
                       <td
                         key={cell.id}
-                        style={{ display: 'flex', width: cell.column.getSize() }}
-                        className="px-4 py-3 text-sm text-foreground items-center"
+                        style={{
+                          display: 'flex',
+                          width: cell.column.getSize(),
+                        }}
+                        className="items-center px-4 py-3 text-sm text-foreground"
                       >
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
                       </td>
                     ))}
                   </tr>

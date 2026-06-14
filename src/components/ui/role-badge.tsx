@@ -1,11 +1,13 @@
 const roleConfig: Record<string, { label: string; className: string }> = {
   MENTOR: {
     label: 'Mentor',
-    className: 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400',
+    className:
+      'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400',
   },
   ADMIN: {
     label: 'Admin',
-    className: 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400',
+    className:
+      'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400',
   },
   USER: {
     label: 'Dev',
@@ -20,7 +22,7 @@ export function RoleBadge({ role }: { role: string }) {
   };
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${config.className}`}
+      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${config.className}`}
     >
       {config.label}
     </span>

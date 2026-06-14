@@ -7,17 +7,17 @@ import { UserRole } from '@prisma/client';
 // ---------------------------------------------------------------------------
 
 export interface PortfolioListFilters {
-  name?: string;         // busca parcial no name
-  username?: string;     // busca parcial no userName
-  role?: UserRole;       // USER | MENTOR | ADMIN
-  skillName?: string;    // busca parcial no nome da skill (some/OR)
-  stackIds?: string[];   // pelo menos uma em projetos concluídos (some/OR)
-  projectName?: string;  // busca parcial no nome de projeto concluído
+  name?: string; // busca parcial no name
+  username?: string; // busca parcial no userName
+  role?: UserRole; // USER | MENTOR | ADMIN
+  skillName?: string; // busca parcial no nome da skill (some/OR)
+  stackIds?: string[]; // pelo menos uma em projetos concluídos (some/OR)
+  projectName?: string; // busca parcial no nome de projeto concluído
 }
 
 export interface PortfolioSummaryFilters {
-  role?: UserRole;       // USER | MENTOR | ADMIN
-  skillIds?: string[];   // pelo menos uma (some/OR)
+  role?: UserRole; // USER | MENTOR | ADMIN
+  skillIds?: string[]; // pelo menos uma (some/OR)
 }
 
 // ---------------------------------------------------------------------------

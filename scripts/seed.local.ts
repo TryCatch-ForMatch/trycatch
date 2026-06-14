@@ -65,12 +65,12 @@ async function main() {
       linkedin: 'https://linkedin.com/in/maria_parcial',
       isActive: true,
       portfolioPublic: true,
-      showEmail: false,       // oculto
+      showEmail: false, // oculto
       showGithub: true,
       showLinkedin: true,
       showCertificates: false, // oculto
       showProjects: true,
-      showFeedback: false,    // oculto
+      showFeedback: false, // oculto
     },
   });
   console.log(`✅ [Cenário 2] Usuário parcial criado: ${userParcial.userName}`);
@@ -123,7 +123,9 @@ async function main() {
       showFeedback: true,
     },
   });
-  console.log(`✅ [Cenário 4] Usuário inativo criado: ${userInactive.userName}`);
+  console.log(
+    `✅ [Cenário 4] Usuário inativo criado: ${userInactive.userName}`
+  );
 
   // --------------------------------------------------
   // Skills e Stacks base
@@ -288,7 +290,9 @@ async function main() {
 
   console.log('\n📋 Resumo dos cenários criados:');
   console.log('  ✅ /portfolio/joao_public    → 200, todos os campos visíveis');
-  console.log('  ✅ /portfolio/maria_parcial  → 200, email/feedback/certs ocultos');
+  console.log(
+    '  ✅ /portfolio/maria_parcial  → 200, email/feedback/certs ocultos'
+  );
   console.log('  ✅ /portfolio/carlos_private → 404 (portfolioPublic = false)');
   console.log('  ✅ /portfolio/ana_inactive   → 404 (isActive = false)');
   console.log('\n  🔑 Senha de todos os usuários de teste: teste123');

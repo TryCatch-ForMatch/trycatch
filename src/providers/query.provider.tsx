@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
 import {
   environmentManager,
   QueryClient,
   QueryClientProvider,
-} from '@tanstack/react-query'
+} from '@tanstack/react-query';
 
 function makeQueryClient() {
   return new QueryClient({
@@ -14,28 +14,30 @@ function makeQueryClient() {
         staleTime: 60 * 1000, // 1 minuto
       },
     },
-  })
+  });
 }
 
-let browserQueryClient: QueryClient | undefined = undefined
+let browserQueryClient: QueryClient | undefined = undefined;
 
 function getQueryClient() {
   if (environmentManager.isServer()) {
     // Servidor: cria um novo QueryClient a cada request
-    return makeQueryClient()
+    return makeQueryClient();
   } else {
     // Cliente: reutiliza o mesmo QueryClient
-    if (!browserQueryClient) browserQueryClient = makeQueryClient()
-    return browserQueryClient
+    if (!browserQueryClient) browserQueryClient = makeQueryClient();
+    return browserQueryClient;
   }
 }
 
-export default function QueryProvider({ children }: { children: React.ReactNode }) {
-  const queryClient = getQueryClient()
-  
+export default function QueryProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const queryClient = getQueryClient();
+
   return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
-  )
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
 }

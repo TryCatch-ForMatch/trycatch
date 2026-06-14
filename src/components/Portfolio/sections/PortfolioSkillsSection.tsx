@@ -11,7 +11,7 @@ export function PortfolioSkillsSection({ data }: PortfolioSkillsSectionProps) {
   if (!data.skills || data.skills.length === 0) return null;
 
   return (
-    <Section icon={<Code2 className="w-4 h-4" />} title="Tecnologias">
+    <Section icon={<Code2 className="h-4 w-4" />} title="Tecnologias">
       <div className="flex flex-wrap gap-2">
         {data.skills.map((skill) => (
           <SkillChip key={skill.id} name={skill.name} iconUrl={skill.iconUrl} />

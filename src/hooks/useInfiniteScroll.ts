@@ -1,4 +1,3 @@
-
 import { useCallback, useEffect, useRef } from 'react';
 import {
   useInfiniteQuery,
@@ -69,24 +68,32 @@ export function useInfiniteScroll<T>({
 }: UseInfiniteScrollOptions<T>): UseInfiniteScrollResult<T> {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { data, fetchNextPage, isFetchingNextPage, isLoading, hasNextPage, error } =
-    useInfiniteQuery({
-      queryKey,
-      queryFn: ({ pageParam }) => fetcher(pageParam as string | undefined),
-      initialPageParam: undefined as string | undefined,
-      // O backend retorna nextCursor — passamos direto como próximo pageParam
-      getNextPageParam: (lastPage) =>
-        lastPage.data.hasNextPage ? lastPage.data.nextCursor ?? undefined : undefined,
-      // Mantém dados anteriores enquanto carrega a próxima página
-      // evita flash de "vazio" ao mudar filtros
-      placeholderData: keepPreviousData,
-      enabled,
-      // Sem retries automáticos — erros devem surfaçar imediatamente
-      // para que o consumer possa exibir o errorState sem esperar tentativas
-      retry: false,
-      // Não refaz fetch ao voltar para a aba — dados de listagem raramente mudam
-      refetchOnWindowFocus: false,
-    });
+  const {
+    data,
+    fetchNextPage,
+    isFetchingNextPage,
+    isLoading,
+    hasNextPage,
+    error,
+  } = useInfiniteQuery({
+    queryKey,
+    queryFn: ({ pageParam }) => fetcher(pageParam as string | undefined),
+    initialPageParam: undefined as string | undefined,
+    // O backend retorna nextCursor — passamos direto como próximo pageParam
+    getNextPageParam: (lastPage) =>
+      lastPage.data.hasNextPage
+        ? (lastPage.data.nextCursor ?? undefined)
+        : undefined,
+    // Mantém dados anteriores enquanto carrega a próxima página
+    // evita flash de "vazio" ao mudar filtros
+    placeholderData: keepPreviousData,
+    enabled,
+    // Sem retries automáticos — erros devem surfaçar imediatamente
+    // para que o consumer possa exibir o errorState sem esperar tentativas
+    retry: false,
+    // Não refaz fetch ao voltar para a aba — dados de listagem raramente mudam
+    refetchOnWindowFocus: false,
+  });
 
   // Achata todas as páginas em um único array
   const flatData: T[] = data?.pages.flatMap((page) => page.data.items) ?? [];
@@ -98,11 +105,15 @@ export function useInfiniteScroll<T>({
       const { scrollHeight, scrollTop, clientHeight } = el;
       const distanceToBottom = scrollHeight - scrollTop - clientHeight;
 
-      if (distanceToBottom < scrollThreshold && !isFetchingNextPage && hasNextPage) {
+      if (
+        distanceToBottom < scrollThreshold &&
+        !isFetchingNextPage &&
+        hasNextPage
+      ) {
         fetchNextPage();
       }
     },
-    [fetchNextPage, isFetchingNextPage, hasNextPage, scrollThreshold],
+    [fetchNextPage, isFetchingNextPage, hasNextPage, scrollThreshold]
   );
 
   // Verifica na montagem — necessário quando o container já tem menos
