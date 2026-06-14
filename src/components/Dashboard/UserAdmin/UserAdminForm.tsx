@@ -324,4 +324,11 @@ export function UserAdminForm() {
           {/* Mensagens de erro/sucesso */}
           <div className="space-y-2">
             <Button type="submit" disabled={loading} className="w-full">
-              {loading ? 'Cadastrando...' : 'Cadastrar 
+              {loading ? 'Cadastrando...' : 'Cadastrar Usuário'}
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}

@@ -3,7 +3,7 @@ import { PortfolioIdentitySection } from './sections/PortfolioIdentitySection';
 import { PortfolioSkillsSection } from './sections/PortfolioSkillsSection';
 import { PortfolioProjectsSection } from './sections/PortfolioProjectsSection';
 import { PortfolioCertificatesSection } from './sections/PortfolioCertificatesSection';
-import { PortfolioFeedbackSection } from './sections/PortfolioFeedbackSection';
+// import { PortfolioFeedbackSection } from './sections/PortfolioFeedbackSection';
 
 interface PublicPortfolioPageProps {
   data: PortfolioPublicResponse;
@@ -12,7 +12,7 @@ interface PublicPortfolioPageProps {
 export function PublicPortfolioPage({ data }: PublicPortfolioPageProps) {
   return (
     <main className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-12 max-w-4xl space-y-10">
+      <div className="container mx-auto max-w-4xl space-y-10 px-4 py-12">
         <PortfolioIdentitySection data={data} />
         <PortfolioSkillsSection data={data} />
         <PortfolioProjectsSection data={data} />

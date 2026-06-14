@@ -92,4 +92,7 @@ export function SkillForm() {
             {loading ? 'Enviando...' : 'Cadastrar Skill'}
           </Button>
         </form>
-      </C
+      </CardContent>
+    </Card>
+  );
+}

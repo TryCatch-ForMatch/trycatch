@@ -28,11 +28,11 @@ export function ProjectDetails({ projectId }: { projectId: string }) {
     } finally {
       setLoading(false);
     }
-  }, [getProjectDetailsById, projectId])
+  }, [getProjectDetailsById, projectId]);
 
   useEffect(() => {
     fetchDetailsProject();
-  }, [projectId,fetchDetailsProject]);
+  }, [projectId, fetchDetailsProject]);
 
   if (!user) return null;
   if (loading)
@@ -155,3 +155,10 @@ export function ProjectDetails({ projectId }: { projectId: string }) {
                   </Button>
                 )}
               </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+    </div>
+  );
+}

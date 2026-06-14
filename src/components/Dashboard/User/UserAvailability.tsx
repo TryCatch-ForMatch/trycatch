@@ -51,7 +51,7 @@ type UserAvailabilityResponse = {
 
 export function UserAvailabilityForm() {
   const router = useRouter();
-  const { allSkills, allUserSkills } = useSkills();
+  const { allSkills } = useSkills();
 
   const [userAvailability, setUserAvailability] =
     useState<UserAvailabilityResponse | null>(null);
@@ -206,6 +206,7 @@ export function UserAvailabilityForm() {
                   >
                     {skill?.name}
                     <button
+                      title="skills button"
                       type="button"
                       onClick={() =>
                         setValue(
@@ -288,4 +289,3 @@ export function UserAvailabilityForm() {
     </Card>
   );
 }
-                                                                        

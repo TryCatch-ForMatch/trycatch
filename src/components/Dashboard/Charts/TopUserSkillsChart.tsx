@@ -22,7 +22,7 @@ export default function TopUserSkillsChart() {
         setData(res.data.topUserSkills || []);
       } catch (err) {
         setError('Erro ao carregar dados das skills.');
-        console.error(err)
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -60,4 +60,7 @@ export default function TopUserSkillsChart() {
       yKey="skill" // eixo categórico (vertical)
       layout="vertical"
       height={260}
-      bars={[{ key: 'count', label: 'Quanti
+      bars={[{ key: 'count', label: 'Quantidade' }]}
+    />
+  );
+}

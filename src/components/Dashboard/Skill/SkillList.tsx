@@ -283,4 +283,7 @@ export function SkillList() {
           title="Skill vinculada a projetos/usuários"
           description="Esta skill está em uso. Alterações podem impactar projetos e usuários existentes. Deseja continuar?"
         />
-      </
+      </div>
+    </CardContent>
+  );
+}

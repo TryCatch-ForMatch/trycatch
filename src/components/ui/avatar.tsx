@@ -13,7 +13,12 @@ const avatarSizes = {
   lg: { container: 'w-20 h-20 text-xl', image: 80 },
 };
 
-export function Avatar({ name, src, size = 'md', className = '' }: AvatarProps) {
+export function Avatar({
+  name,
+  src,
+  size = 'md',
+  className = '',
+}: AvatarProps) {
   const { container, image } = avatarSizes[size];
   const initials = name
     .split(' ')
@@ -22,13 +27,23 @@ export function Avatar({ name, src, size = 'md', className = '' }: AvatarProps) 
     .join('')
     .toUpperCase();
 
+  if (src) {
+    return (
+      <Image
+        src={src}
+        alt={name}
+        width={image}
+        height={image}
+        className={`${container} shrink-0 rounded-full object-cover ring-2 ring-background ${className}`}
+      />
+    );
+  }
+
   return (
-    <Image
-      src={src ?? '/default-avatar.png'}
-      alt={name}
-      width={image}
-      height={image}
-      className={`${container} rounded-full object-cover ring-2 ring-background shrink-0 ${className}`}
-    />
+    <div
+      className={`${container} flex shrink-0 items-center justify-center rounded-full bg-muted font-medium text-muted-foreground ring-2 ring-background ${className}`}
+    >
+      {initials}
+    </div>
   );
 }

@@ -12,7 +12,7 @@ export default async function ProtectedLayout({
   children,
   roles,
 }: ProtectedLayoutProps) {
-  const { authorized, session } = await checkAuth({
+  const { authorized } = await checkAuth({
     allowedRoles: roles,
   });
 

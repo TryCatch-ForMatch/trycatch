@@ -21,7 +21,7 @@ export default function TopProjectSkillsChart() {
         const res = await apiTryCatch.get('/metrics');
         setData(res.data.topProjectSkills || []);
       } catch (err) {
-        console.error(err)
+        console.error(err);
         setError('Erro ao carregar dados das skills dos projetos.');
       } finally {
         setLoading(false);
@@ -60,4 +60,7 @@ export default function TopProjectSkillsChart() {
       yKey="skill" // eixo categórico correto para layout vertical
       layout="vertical"
       height={260}
-      bars={[{ key: 'count', label: 'Quanti
+      bars={[{ key: 'count', label: 'Quantidade' }]}
+    />
+  );
+}

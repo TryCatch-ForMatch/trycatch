@@ -24,7 +24,7 @@ interface StackItem {
 
 export function ProjectStackSelector() {
   const { control, setValue, watch } = useFormContext();
-  const stacks: StackItem[] = useMemo(() => watch('stacks'),[watch]);
+  const stacks: StackItem[] = useMemo(() => watch('stacks'), [watch]);
 
   const [availableStacks, setAvailableStacks] = useState<Stack[]>([]);
 
@@ -152,4 +152,7 @@ export function ProjectStackSelector() {
       </div>
 
       {/* Mensagem de erro */}
-      {errorMessage && <p className="text-sm text-red-500">{errorMessage}</
+      {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
+    </div>
+  );
+}

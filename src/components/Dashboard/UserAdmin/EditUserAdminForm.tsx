@@ -200,4 +200,9 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
 
           <Button type="submit" className="mt-4" disabled={isSubmitting}>
             Salvar Alterações
-          </B
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}

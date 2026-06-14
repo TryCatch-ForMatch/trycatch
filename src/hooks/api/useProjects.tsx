@@ -89,4 +89,6 @@ export function useProjects() {
     fetchProjects,
     projectsEstatistica,
     fetchProjectsStatics,
-    getProjectDet
+    getProjectDetailsById,
+  };
+}
