@@ -69,6 +69,13 @@ export async function POST(request: NextRequest) {
       status: 200,
     });
   } catch (error) {
-    logger.error('Forgot password error', '', error);
+    logger.error('Forgot password error', 'POST /api/auth/forgot-password', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
-      success: fal
+      success: false,
+      message: MESSAGES.AUTH.FORGOT_PASSWORD_ERROR,
+      status: 500,
+    });
+  }
+}

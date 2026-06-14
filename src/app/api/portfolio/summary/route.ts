@@ -14,8 +14,8 @@ const CONTEXT = 'GET /api/portfolio/summary';
 //   ?skills=id1,id2      → IDs de skills separados por vírgula (some/OR)
 const querySchema = z.object({
   cursor: z.string().optional(),
-  take:   z.coerce.number().int().positive().max(50).default(20),
-  role:   z.nativeEnum(UserRole).optional(),
+  take: z.coerce.number().int().positive().max(50).default(20),
+  role: z.nativeEnum(UserRole).optional(),
   skills: z.string().optional(), // "id1,id2,id3"
 });
 
@@ -41,10 +41,10 @@ export async function GET(request: NextRequest) {
         skillIds: skills ? skills.split(',').filter(Boolean) : undefined,
       },
       cursor,
-      take,
+      take
     );
 
-    logger.info(CONTEXT, 'Portfolio summary fetched', {
+    logger.info('Portfolio summary fetched', CONTEXT, {
       count: result.items.length,
       cursor: cursor ?? 'start',
       hasNextPage: result.hasNextPage,
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
       status: 200,
     });
   } catch (error) {
-    logger.error(CONTEXT, 'Unexpected error fetching portfolio summary', {
+    logger.error('Unexpected error fetching portfolio summary', CONTEXT, {
       error: error instanceof Error ? error.message : String(error),
     });
 

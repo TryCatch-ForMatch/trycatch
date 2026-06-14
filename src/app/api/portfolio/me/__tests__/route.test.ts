@@ -1,3 +1,6 @@
+/**
+ * @jest-environment node
+ */
 // src/app/api/portfolio/me/__tests__/route.test.ts
 //
 // Testes do endpoint privado GET e PATCH /api/portfolio/me
@@ -30,6 +33,9 @@ jest.mock('next-auth/next', () => ({
 import { getServerSession } from 'next-auth/next';
 
 const mockGetServerSession = getServerSession as jest.Mock;
+
+const integration =
+  process.env.INTEGRATION_TEST === 'true' ? describe : describe.skip;
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -65,7 +71,7 @@ function mockUnauthenticated() {
 // ---------------------------------------------------------------------------
 // GET /api/portfolio/me
 // ---------------------------------------------------------------------------
-describe('GET /api/portfolio/me', () => {
+integration('GET /api/portfolio/me', () => {
   beforeEach(() => jest.clearAllMocks());
 
   it('retorna 401 quando não há sessão', async () => {
@@ -111,7 +117,7 @@ describe('GET /api/portfolio/me', () => {
 // ---------------------------------------------------------------------------
 // PATCH /api/portfolio/me — toggles de visibilidade
 // ---------------------------------------------------------------------------
-describe('PATCH /api/portfolio/me — toggles de visibilidade', () => {
+integration('PATCH /api/portfolio/me — toggles de visibilidade', () => {
   beforeEach(() => jest.clearAllMocks());
 
   it('retorna 401 quando não há sessão', async () => {
@@ -155,7 +161,7 @@ describe('PATCH /api/portfolio/me — toggles de visibilidade', () => {
         showProjects: true,
         showFeedback: false,
         portfolioPublic: true,
-      }),
+      })
     );
     const body = await res?.json();
 

@@ -14,29 +14,7 @@ const updateStatusSchema = z.object({
   status: z.nativeEnum(ProjectStatus),
 });
 
-const updateProjectSchema = z.object({
-  id: idSchema,
-  name: z.string().min(1, 'O nome é obrigatório.'),
-  description: z.string().min(1, 'A descrição é obrigatória.'),
-  deadline: z
-    .string()
-    .refine((val) => !isNaN(Date.parse(val)), { message: 'Data inválida.' }),
-  totalValue: z.number({
-    invalid_type_error: 'Valor total deve ser um número.',
-  }),
-  status: z.nativeEnum(ProjectStatus),
-  skills: z.array(z.string().min(1, 'ID inválido.')),
-  stacks: z
-    .array(
-      z.object({
-        stackId: z.string().min(1, 'ID inválido.'),
-        percentage: z.number().min(0).max(100),
-      })
-    )
-    .optional(),
-});
-
-export async function GET(request: NextRequest) {
+export async function GET() {
   const { authorized, response, session } = await checkAuth({
     allowedRoles: ROLE_GROUPS.ALL,
   });

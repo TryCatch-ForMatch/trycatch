@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { ROLE_GROUPS } from '@/lib/roles';
+import { logger } from '@/lib/logger';
 
 const feedbackSchema = z.object({
   projectId: z.string(),
@@ -24,7 +25,9 @@ export async function POST(request: NextRequest) {
   try {
     body = await request.json();
   } catch (error) {
-    console.error('Erro ao fazer parse do body:', error);
+    logger.error('Erro ao fazer parse do body:', 'POST /api/feedback', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
@@ -127,7 +130,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(feedback, { status: 201 });
   } catch (error) {
-    console.error('Erro ao criar feedback:', error);
+    logger.error('Erro ao criar feedback:', 'POST /api/feedback', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.FEEDBACK.INTERNAL_ERROR,
@@ -147,7 +152,9 @@ export async function GET(request: NextRequest) {
     const url = new URL(request.url);
     searchParams = url.searchParams;
   } catch (error) {
-    console.error('Erro ao ler os parâmetros da URL:', error);
+    logger.error('Erro ao ler os parâmetros da URL:', 'GET /api/feedback', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_ID,
@@ -183,7 +190,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(feedbacks, { status: 200 });
   } catch (error) {
-    console.error('Erro ao buscar feedbacks:', error);
+    logger.error('Erro ao buscar feedbacks:', 'GET /api/feedback', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.FEEDBACK.INTERNAL_ERROR,

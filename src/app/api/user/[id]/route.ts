@@ -5,6 +5,7 @@ import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { ROLE_GROUPS } from '@/lib/roles';
+import { logger } from '@/lib/logger';
 
 const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 const updateUserSchema = z.object({
@@ -61,7 +62,9 @@ export async function GET(
 
     return NextResponse.json(user, { status: 200 });
   } catch (error) {
-    console.error(error);
+    logger.error('Unexpected error', 'GET /api/user/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.USER.INTERNAL_ERROR,
@@ -105,7 +108,9 @@ export async function PUT(
   try {
     body = await request.json();
   } catch (error) {
-    console.error(error);
+    logger.error('Unexpected error', 'PUT /api/user/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
@@ -166,7 +171,9 @@ export async function PUT(
 
     return NextResponse.json(user, { status: 200 });
   } catch (error) {
-    console.error(error);
+    logger.error('Unexpected error', 'PUT /api/user/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.USER.INTERNAL_ERROR,
@@ -250,7 +257,9 @@ export async function DELETE(
       });
     }
   } catch (error) {
-    console.error(error);
+    logger.error('Unexpected error', 'DELETE /api/user/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.USER.INTERNAL_ERROR,

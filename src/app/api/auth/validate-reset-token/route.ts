@@ -51,6 +51,15 @@ export async function GET(request: NextRequest) {
       status: 200,
     });
   } catch (error) {
-    logger.error('Validate reset token error', '', error)
+    logger.error(
+      'Validate reset token error',
+      'GET /api/auth/validate-reset-token',
+      { error: error instanceof Error ? error.message : String(error) }
+    );
     return buildResponse({
-      succes
+      success: false,
+      message: MESSAGES.AUTH.INVALID_RESET_TOKEN,
+      status: 500,
+    });
+  }
+}

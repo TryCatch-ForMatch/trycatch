@@ -84,10 +84,14 @@ export async function GET(
 
     return NextResponse.json(availability, { status: 200 });
   } catch (error) {
-    logger.error('GET /api/user-availability/[id]', 'Unexpected error fetching availability', {
-      availabilityId: id,
-      error: error instanceof Error ? error.message : String(error),
-    });
+    logger.error(
+      'Unexpected error fetching availability',
+      'GET /api/user-availability/[id]',
+      {
+        availabilityId: id,
+        error: error instanceof Error ? error.message : String(error),
+      }
+    );
     return buildResponse({
       success: false,
       message: MESSAGES.USER_AVAILABILITY.INTERNAL_ERROR,
@@ -182,11 +186,15 @@ export async function PUT(
 
     return NextResponse.json(updated, { status: 200 });
   } catch (error) {
-    logger.error('PUT /api/user-availability/[id]', 'Unexpected error updating availability', {
-      availabilityId,
-      userId: session.user.id,
-      error: error instanceof Error ? error.message : String(error),
-    });
+    logger.error(
+      'Unexpected error updating availability',
+      'PUT /api/user-availability/[id]',
+      {
+        availabilityId,
+        userId: session.user.id,
+        error: error instanceof Error ? error.message : String(error),
+      }
+    );
     return buildResponse({
       success: false,
       message: MESSAGES.USER_AVAILABILITY.INTERNAL_ERROR,
@@ -197,7 +205,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-  request: NextRequest,
+  // request: NextRequest,
   context: { params: { id: string } }
 ) {
   const { authorized, response, session } = await checkAuth({
@@ -245,4 +253,24 @@ export async function DELETE(
 
     return buildResponse({
       success: true,
- 
+      message: MESSAGES.USER_AVAILABILITY.DELETED,
+      status: 200,
+    });
+  } catch (error) {
+    logger.error(
+      'Unexpected error deleting availability',
+      'DELETE /api/user-availability/[id]',
+      {
+        availabilityId,
+        userId: session.user.id,
+        error: error instanceof Error ? error.message : String(error),
+      }
+    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER_AVAILABILITY.INTERNAL_ERROR,
+      status: 500,
+      errors: ['Erro ao excluir disponibilidade'],
+    });
+  }
+}

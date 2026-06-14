@@ -4,6 +4,7 @@ import { MESSAGES, buildResponse } from '@/constants/messages';
 import { z } from 'zod';
 import { sendInviteRequestEmail } from '@/lib/mail/send-invite-request-email';
 import { sendInviteRequestConfirmationEmail } from '@/lib/mail/send-invite-request-confirmation-email';
+import { logger } from '@/lib/logger';
 
 const inviteRequestSchema = z.object({
   name: z.string().min(3, 'Nome inválido'),
@@ -86,7 +87,9 @@ export async function POST(request: NextRequest) {
       status: 201,
     });
   } catch (error) {
-    console.error('Erro invite-request:', error);
+    logger.error('Erro invite-request:', 'POST /api/invite-request', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.INVITE_REQUEST.GENERAL_ERROR,

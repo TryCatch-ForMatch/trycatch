@@ -62,6 +62,15 @@ export async function GET() {
       skills: user.skills.map((s) => s.skill),
     });
   } catch (error) {
-    logger.error(CONTEXT, 'Unexpected error fetching user availability', {
+    logger.error('Unexpected error fetching user availability', CONTEXT, {
       userId: session.user.id,
-      error: error instanceof Error ? error.message : String(error)
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER_AVAILABILITY.INTERNAL_ERROR,
+      status: 500,
+      errors: ['Erro ao buscar disponibilidade do usuário'],
+    });
+  }
+}

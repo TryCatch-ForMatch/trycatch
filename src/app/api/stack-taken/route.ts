@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { checkProjectStatus } from '@/lib/check-project-status';
 import { ROLE_GROUPS } from '@/lib/roles';
+import { logger } from '@/lib/logger';
 
 const createStackTakenSchema = z.object({
   projectId: z.string().min(25, 'ID inválido').max(36, 'ID inválido'),
@@ -33,7 +34,7 @@ export async function POST(request: NextRequest) {
   const { projectId, projectStackId, stackId } = parsed.data;
 
   try {
-    console.log('➡ Dados recebidos:', {
+    logger.info('Dados recebidos:', 'POST /api/stack-taken', {
       projectId,
       projectStackId,
       stackId,
@@ -105,7 +106,9 @@ export async function POST(request: NextRequest) {
       status: 201,
     });
   } catch (error) {
-    console.error('Erro ao criar StackTaken:', error);
+    logger.error('Erro ao criar StackTaken:', 'POST /api/stack-taken', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.STACK_TAKEN.INTERNAL_ERROR,
@@ -136,7 +139,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(stackTakens, { status: 200 });
   } catch (error) {
-    console.error('Erro ao buscar StackTakens:', error);
+    logger.error('Erro ao buscar StackTakens:', 'GET /api/stack-taken', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.STACK_TAKEN.INTERNAL_ERROR,

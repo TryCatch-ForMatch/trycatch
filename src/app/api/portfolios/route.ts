@@ -17,13 +17,13 @@ const CONTEXT = 'GET /api/portfolios';
 //   ?stacks=id1,id2         → IDs de stacks separados por vírgula (some/OR)
 //   ?projectName=plataforma → busca parcial no nome de projeto concluído
 const querySchema = z.object({
-  cursor:      z.string().optional(),
-  take:        z.coerce.number().int().positive().max(50).default(20),
-  name:        z.string().min(1).optional(),
-  username:    z.string().min(1).optional(),
-  role:        z.nativeEnum(UserRole).optional(),
-  skills:      z.string().min(1).optional(), // busca parcial no nome da skill
-  stacks:      z.string().optional(), // "id1,id2,id3"
+  cursor: z.string().optional(),
+  take: z.coerce.number().int().positive().max(50).default(20),
+  name: z.string().min(1).optional(),
+  username: z.string().min(1).optional(),
+  role: z.nativeEnum(UserRole).optional(),
+  skills: z.string().min(1).optional(), // busca parcial no nome da skill
+  stacks: z.string().optional(), // "id1,id2,id3"
   projectName: z.string().min(1).optional(),
 });
 
@@ -54,10 +54,10 @@ export async function GET(request: NextRequest) {
         projectName,
       },
       cursor,
-      take,
+      take
     );
 
-    logger.info(CONTEXT, 'Portfolio list fetched', {
+    logger.info('Portfolio list fetched', CONTEXT, {
       count: result.items.length,
       cursor: cursor ?? 'start',
       hasNextPage: result.hasNextPage,
@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
       status: 200,
     });
   } catch (error) {
-    logger.error(CONTEXT, 'Unexpected error listing portfolios', {
+    logger.error('Unexpected error listing portfolios', CONTEXT, {
       error: error instanceof Error ? error.message : String(error),
     });
 

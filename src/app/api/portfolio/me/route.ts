@@ -93,7 +93,9 @@ export async function GET() {
     });
 
     if (!portfolio) {
-      logger.warn(CONTEXT_GET, 'Authenticated user not found in DB', { userId });
+      logger.warn('Authenticated user not found in DB', CONTEXT_GET, {
+        userId,
+      });
       return buildResponse({
         success: false,
         message: MESSAGES.USER.NOT_FOUND,
@@ -101,10 +103,10 @@ export async function GET() {
       });
     }
 
-    logger.info(CONTEXT_GET, 'Portfolio settings fetched', { userId });
+    logger.info('Portfolio settings fetched', CONTEXT_GET, { userId });
     return NextResponse.json(portfolio, { status: 200 });
   } catch (error) {
-    logger.error(CONTEXT_GET, 'Unexpected error fetching portfolio settings', {
+    logger.error('Unexpected error fetching portfolio settings', CONTEXT_GET, {
       userId,
       error: error instanceof Error ? error.message : String(error),
     });
@@ -138,7 +140,7 @@ export async function PATCH(request: NextRequest) {
   const parsed = updatePortfolioSchema.safeParse(body);
 
   if (!parsed.success) {
-    logger.warn(CONTEXT_PATCH, 'Validation failed', {
+    logger.warn('Validation failed', CONTEXT_PATCH, {
       userId,
       errors: parsed.error.format(),
     });
@@ -176,10 +178,12 @@ export async function PATCH(request: NextRequest) {
     if (showEmail !== undefined) updateData.showEmail = showEmail;
     if (showGithub !== undefined) updateData.showGithub = showGithub;
     if (showLinkedin !== undefined) updateData.showLinkedin = showLinkedin;
-    if (showCertificates !== undefined) updateData.showCertificates = showCertificates;
+    if (showCertificates !== undefined)
+      updateData.showCertificates = showCertificates;
     if (showProjects !== undefined) updateData.showProjects = showProjects;
     if (showFeedback !== undefined) updateData.showFeedback = showFeedback;
-    if (portfolioPublic !== undefined) updateData.portfolioPublic = portfolioPublic;
+    if (portfolioPublic !== undefined)
+      updateData.portfolioPublic = portfolioPublic;
 
     if (Object.keys(updateData).length > 0) {
       await prisma.user.update({ where: { id: userId }, data: updateData });
@@ -206,7 +210,7 @@ export async function PATCH(request: NextRequest) {
       });
     }
 
-    logger.info(CONTEXT_PATCH, 'Portfolio settings updated', {
+    logger.info('Portfolio settings updated', CONTEXT_PATCH, {
       userId,
       fields: Object.keys(updateData),
       updatedSkills: !!skills,
@@ -219,6 +223,18 @@ export async function PATCH(request: NextRequest) {
       status: 200,
     });
   } catch (error) {
-    logger.error(CONTEXT_PATCH, 'Unexpected error updating portfolio settings', {
-      userId,
-      error: error instanceof Error ?
+    logger.error(
+      'Unexpected error updating portfolio settings',
+      CONTEXT_PATCH,
+      {
+        userId,
+        error: error instanceof Error ? error.message : String(error),
+      }
+    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER.INTERNAL_ERROR,
+      status: 500,
+    });
+  }
+}

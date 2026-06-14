@@ -80,6 +80,13 @@ export async function POST(request: NextRequest) {
       status: 200,
     });
   } catch (error) {
-    logger.error('Reset password error', '', error)
+    logger.error('Reset password error', 'POST /api/auth/reset-password', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
-      success: fals
+      success: false,
+      message: MESSAGES.AUTH.PASSWORD_RESET_ERROR,
+      status: 500,
+    });
+  }
+}
