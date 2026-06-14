@@ -1,4 +1,4 @@
-import { resend } from '@/lib/mail/resend';
+import { getResend } from '@/lib/mail/resend';
 import { InviteRequestConfirmationEmail } from '@/lib/mail/templates/invite-request-confirmation';
 
 type SendInviteRequestConfirmationEmailProps = {
@@ -14,7 +14,7 @@ export async function sendInviteRequestConfirmationEmail({
   requestDate,
   requestId,
 }: SendInviteRequestConfirmationEmailProps) {
-  await resend.emails.send({
+  await getResend().emails.send({
     from: 'TryCatch <no-reply@trycatch.app.br>',
     to: email,
     subject: 'Confirmação de solicitação de acesso — TryCatch',

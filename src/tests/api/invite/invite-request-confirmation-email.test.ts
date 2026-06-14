@@ -1,12 +1,11 @@
 import { sendInviteRequestConfirmationEmail } from '@/lib/mail/send-invite-request-confirmation-email';
-import { resend } from '@/lib/mail/resend';
+
+const mockSend = jest.fn().mockResolvedValue({ id: 'test-email-id' });
 
 jest.mock('@/lib/mail/resend', () => ({
-  resend: {
-    emails: {
-      send: jest.fn().mockResolvedValue({ id: 'test-email-id' }),
-    },
-  },
+  getResend: () => ({
+    emails: { send: mockSend },
+  }),
 }));
 
 describe('sendInviteRequestConfirmationEmail', () => {
@@ -22,9 +21,9 @@ describe('sendInviteRequestConfirmationEmail', () => {
       requestId: 'abc-123',
     });
 
-    expect(resend.emails.send).toHaveBeenCalledTimes(1);
+    expect(mockSend).toHaveBeenCalledTimes(1);
 
-    expect(resend.emails.send).toHaveBeenCalledWith(
+    expect(mockSend).toHaveBeenCalledWith(
       expect.objectContaining({
         to: 'usertest@email.com',
         subject: expect.stringContaining('Confirmação'),
