@@ -2,7 +2,7 @@
 
 Classificação: Documento Técnico\
 Camada: 3 --- Técnico\
-Status: Atualizado com regras de edição controlada e encerramento manual
+Status: Atualizado após implementação do Portfólio Público, logging estruturado e refatorações de layout
 
 ------------------------------------------------------------------------
 
@@ -12,7 +12,8 @@ Status: Atualizado com regras de edição controlada e encerramento manual
 -   TypeScript
 -   Prisma ORM
 -   PostgreSQL
--   NextAuth
+-   NextAuth v4
+-   TanStack Query v5 (estado de servidor no cliente)
 
 ------------------------------------------------------------------------
 
@@ -27,15 +28,68 @@ serviços conforme critérios definidos.
 
 ## 3. Separação de Domínios
 
--   Produto
+-   Portfólio (público e privado)
 -   Autenticação
 -   Feedback
 -   Convites
 -   Projetos
+-   Produto
 
 ------------------------------------------------------------------------
 
-## 4. Máquina de Estados --- Project
+## 4. Estrutura de Rotas (App Router)
+
+```
+src/app/
+  (auth)/          # Login, registro, esqueci/reset senha — sem layout wrapper
+  (public)/        # Landing, listagem de portfólios, portfólio individual
+  (private)/       # /dashboard/** — todas as rotas exigem sessão ativa
+  api/             # Route handlers (Next.js App Router)
+```
+
+------------------------------------------------------------------------
+
+## 5. Providers Globais
+
+Todos os providers da aplicação são centralizados em `src/providers/index.tsx`
+e incluídos uma única vez no layout raiz (`src/app/layout.tsx`).
+
+Providers ativos:
+
+-   `QueryProvider` — TanStack Query client para estado de servidor
+-   `SessionProvider` — NextAuth session context
+
+------------------------------------------------------------------------
+
+## 6. Layout do Dashboard
+
+O dashboard usa um layout compartilhado em
+`src/app/(private)/dashboard/layout.tsx` como shell único para todas as
+rotas privadas (Navbar + DashboardHeader + área de conteúdo principal).
+
+O componente `BasePage` foi removido — ele duplicava Navbar e Header em
+cada página individualmente.
+
+------------------------------------------------------------------------
+
+## 7. Camada de Serviço
+
+Lógica de query complexa fica em arquivos de serviço dedicados em vez de
+dentro dos route handlers.
+
+Exemplo: `src/lib/portfolio.service.ts` com `getPublicPortfolio()` e
+`listPublicPortfolios()`.
+
+Serviços lançam erros semânticos (ex.: `PortfolioNotFoundError`) para que
+os handlers mapeiem para códigos HTTP corretos sem acoplamento de domínio.
+
+Server Components que precisam de dados chamam os serviços diretamente
+(sem fetch HTTP interno), eliminando latência de serialização e dependência
+de URL local.
+
+------------------------------------------------------------------------
+
+## 8. Máquina de Estados --- Project
 
 Fluxo oficial:
 
@@ -54,7 +108,7 @@ Regras técnicas:
 
 ------------------------------------------------------------------------
 
-## 5. Regra Técnica de Edição Condicional (Project)
+## 9. Regra Técnica de Edição Condicional (Project)
 
 Antes de existir qualquer StackTaken: - Update completo permitido.
 
@@ -65,7 +119,7 @@ substituição completa da descrição.
 
 ------------------------------------------------------------------------
 
-## 6. Escalabilidade
+## 10. Escalabilidade
 
 Critérios para futura separação de serviços:
 
@@ -76,13 +130,16 @@ Critérios para futura separação de serviços:
 
 ------------------------------------------------------------------------
 
-## 7. Observabilidade
+## 11. Observabilidade
 
--   Logs estruturados obrigatórios.
+-   Logs estruturados obrigatórios em todas as rotas de API.
+-   Logger centralizado em `src/lib/logger.ts` com assinatura
+    `logger.info/warn/error(message, context, metadata)`.
 -   Registro de ações críticas:
     -   Alteração de status de projeto.
     -   Tentativas bloqueadas de edição estrutural.
     -   Encerramento manual.
--   Proibição de console.log em ambiente produtivo.
--   Auditoria inicial de logging backend registrada em
+    -   Ações críticas de portfólio (GET, PATCH, erros de autenticação).
+-   Proibição de `console.log` em código de runtime.
+-   Auditoria completa de logging registrada em
     `docs/03 - tecnico/arquitetura/auditoria-logging-backend.md`.

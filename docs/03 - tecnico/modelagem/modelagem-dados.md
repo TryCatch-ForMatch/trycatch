@@ -141,37 +141,42 @@ Essas regras são aplicadas no backend e não dependem do frontend.
 
 ## 4. Logging e Auditoria
 
-Logging estruturado implementado em **todas** as rotas de portfólio e disponibilidade — tanto públicas quanto privadas.
-
-### Rotas com logging ativo
-
-| Rota | Eventos registrados |
-|------|---------------------|
-| `GET /api/portfolio/me` | Sucesso, usuário não encontrado no DB, erro inesperado |
-| `PATCH /api/portfolio/me` | Campos atualizados (sucesso), falha de validação (warn), erro inesperado |
-| `GET /api/user-availability/me` | Erro inesperado |
-| `GET /api/user-availability/[id]` | Erro inesperado |
-| `PUT /api/user-availability/[id]` | Erro inesperado |
-| `DELETE /api/user-availability/[id]` | Erro inesperado |
+Logging estruturado implementado em **todas** as rotas de API em `src/app/api`.
+A padronização foi concluída em 2026-06-14 (detalhes em
+`docs/03 - tecnico/arquitetura/auditoria-logging-backend.md`).
 
 ### Formato dos logs
 
 Todos os logs utilizam o logger estruturado em `src/lib/logger.ts`:
 
 ```ts
-logger.info(CONTEXT, 'mensagem', { metadados })
-logger.warn(CONTEXT, 'mensagem', { metadados })
-logger.error(CONTEXT, 'mensagem', { metadados })
+logger.info(message, context, metadata)
+logger.warn(message, context, metadata)
+logger.error(message, context, metadata)
+```
+
+Assinatura real:
+
+```ts
+logger.info(message: string, context?: string, metadata?: unknown)
 ```
 
 Saída em JSON com campos: `timestamp`, `level`, `context`, `message`, metadados livres.
 
+### Convenção de uso
+
+| Nível | Quando usar |
+|-------|-------------|
+| `logger.error` | Erros inesperados em blocos `catch` |
+| `logger.warn` | Tentativas inválidas, bloqueios, recursos não encontrados com relevância operacional |
+| `logger.info` | Ações críticas de negócio concluídas com sucesso |
+
 ### Regras
 
--   `console.log` / `console.error` não devem ser utilizados em produção.
+-   `context` no formato `'MÉTODO /api/rota'` (ex.: `'PATCH /api/portfolio/me'`).
+-   `console.log` / `console.error` não devem ser utilizados em código de runtime.
 -   Erros inesperados sempre incluem `error.message` nos metadados.
 -   Dados sensíveis (senha, token) nunca devem aparecer nos logs.
--   O logging é parte da estratégia de rastreabilidade e suporte.
 
 ------------------------------------------------------------------------
 
