@@ -1,6 +1,7 @@
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
+import { logger } from '@/lib/logger';
 
 export async function GET() {
   try {
@@ -31,7 +32,11 @@ export async function GET() {
 
     return NextResponse.json({ success: true, counts });
   } catch (error) {
-    console.error('Erro ao buscar número de projetos:', error);
+    logger.error(
+      'Erro ao buscar número de projetos:',
+      'GET /api/team-project/count',
+      { error: error instanceof Error ? error.message : String(error) }
+    );
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT.INTERNAL_ERROR,

@@ -4,6 +4,7 @@ import { getIdFromRequest } from '@/utils/url';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { logger } from '@/lib/logger';
 
 const idSchema = z.string().min(1, 'ID inválido.');
 const updateSkillSchema = z.object({
@@ -117,7 +118,9 @@ export async function PATCH(request: NextRequest) {
 
     return NextResponse.json(skill, { status: 200 });
   } catch (error) {
-    console.error('Erro ao atualizar skill:', error);
+    logger.error('Erro ao atualizar skill:', 'PATCH /api/skill/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.SKILL.INTERNAL_ERROR,
@@ -171,7 +174,9 @@ export async function DELETE(request: NextRequest) {
       status: 200,
     });
   } catch (error) {
-    console.error('Erro ao deletar skill:', error);
+    logger.error('Erro ao deletar skill:', 'DELETE /api/skill/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.SKILL.INTERNAL_ERROR,

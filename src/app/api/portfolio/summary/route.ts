@@ -1,76 +1,70 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { NextRequest } from 'next/server';
+import { z } from 'zod';
+import { UserRole } from '@prisma/client';
+import { logger } from '@/lib/logger';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { listPortfolioSummary } from '@/lib/portfolio.service';
 
-export async function GET() {
+const CONTEXT = 'GET /api/portfolio/summary';
+
+// Query params:
+//   ?cursor=joao_public  → cursor de paginação (resetar ao mudar filtros)
+//   ?take=20             → itens por página (default 20, máx 50)
+//   ?role=MENTOR         → filtra por role (USER | MENTOR | ADMIN)
+//   ?skills=id1,id2      → IDs de skills separados por vírgula (some/OR)
+const querySchema = z.object({
+  cursor: z.string().optional(),
+  take: z.coerce.number().int().positive().max(50).default(20),
+  role: z.nativeEnum(UserRole).optional(),
+  skills: z.string().optional(), // "id1,id2,id3"
+});
+
+export async function GET(request: NextRequest) {
   try {
-    const users = await prisma.user.findMany({
-      where: { isActive: true, portfolioPublic: true },
-      select: {
-        id: true,
-        name: true,
-        avatar: true,
-        role: true,
-        github: true,
-        linkedin: true,
-        bio: true,
-        showGithub: true,
-        showLinkedin: true,
-        showFeedback: true,
-        skills: {
-          select: {
-            skill: {
-              select: {
-                id: true,
-                name: true,
-                iconUrl: true,
-              },
-            },
-          },
-        },
-        feedbacksReceived: {
-          select: {
-            rating: true,
-          },
-        },
+    const raw = Object.fromEntries(request.nextUrl.searchParams.entries());
+    const parsed = querySchema.safeParse(raw);
+
+    if (!parsed.success) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.GENERAL.INVALID_DATA,
+        errors: parsed.error.format(),
+        status: 400,
+      });
+    }
+
+    const { cursor, take, role, skills } = parsed.data;
+
+    const result = await listPortfolioSummary(
+      {
+        role,
+        skillIds: skills ? skills.split(',').filter(Boolean) : undefined,
       },
-      orderBy: { name: 'asc' },
+      cursor,
+      take
+    );
+
+    logger.info('Portfolio summary fetched', CONTEXT, {
+      count: result.items.length,
+      cursor: cursor ?? 'start',
+      hasNextPage: result.hasNextPage,
+      filters: { role, skills },
     });
 
-    // Mapeia os dados para o formato esperado no frontend
-    const summary = users.map((user) => {
-      const averageFeedback =
-        user.feedbacksReceived.length > 0
-          ? user.feedbacksReceived.reduce(
-              (currentTotal, feedback) => currentTotal + feedback.rating,
-              0
-            ) / user.feedbacksReceived.length
-          : null;
-
-      return {
-        id: user.id,
-        avatar: user.avatar,
-        name: user.name,
-        role: user.role,
-        bio: user.bio,
-        github: user.showGithub ? user.github : null,
-        linkedin: user.showLinkedin ? user.linkedin : null,
-        feedback: user.showFeedback ? averageFeedback : null,
-        skills: user.skills.map((us) => ({
-          id: us.skill.id,
-          name: us.skill.name,
-          iconUrl: us.skill.iconUrl,
-        })),
-      };
+    return buildResponse({
+      success: true,
+      message: MESSAGES.GENERAL.SUCCESS,
+      data: result,
+      status: 200,
     });
-
-    return NextResponse.json(summary, { status: 200 });
   } catch (error) {
-    console.error('❌ Erro ao buscar portfólios:', error);
+    logger.error('Unexpected error fetching portfolio summary', CONTEXT, {
+      error: error instanceof Error ? error.message : String(error),
+    });
+
     return buildResponse({
       success: false,
       message: MESSAGES.USER.INTERNAL_ERROR,
-      errors: error instanceof Error ? error.message : 'Erro desconhecido',
       status: 500,
     });
   }

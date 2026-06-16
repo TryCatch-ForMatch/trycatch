@@ -3,6 +3,9 @@ import { checkAuth } from '@/lib/check-auth';
 import { NextResponse } from 'next/server';
 import { buildResponse, MESSAGES } from '@/constants/messages';
 import { ROLE_GROUPS } from '@/lib/roles';
+import { logger } from '@/lib/logger';
+
+const CONTEXT = 'GET /api/user-availability/me';
 
 export async function GET() {
   const { authorized, response, session } = await checkAuth({
@@ -59,7 +62,10 @@ export async function GET() {
       skills: user.skills.map((s) => s.skill),
     });
   } catch (error) {
-    console.error('[USER_AVAILABILITY_ME_GET]', error);
+    logger.error('Unexpected error fetching user availability', CONTEXT, {
+      userId: session.user.id,
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.USER_AVAILABILITY.INTERNAL_ERROR,

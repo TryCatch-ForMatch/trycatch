@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { logger } from '@/lib/logger';
 
 // Validação para atualização de percentage
 const updatePercentageSchema = z.object({
@@ -35,7 +36,11 @@ export async function GET(
 
     return NextResponse.json(projectStack, { status: 200 });
   } catch (error) {
-    console.error('Erro ao buscar ProjectStack:', error);
+    logger.error(
+      'Erro ao buscar ProjectStack:',
+      'GET /api/project-stack/[id]',
+      { error: error instanceof Error ? error.message : String(error) }
+    );
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT_STACK.INTERNAL_ERROR,
@@ -100,7 +105,11 @@ export async function DELETE(
       status: 200,
     });
   } catch (error) {
-    console.error('Erro ao remover ProjectStack:', error);
+    logger.error(
+      'Erro ao remover ProjectStack:',
+      'DELETE /api/project-stack/[id]',
+      { error: error instanceof Error ? error.message : String(error) }
+    );
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT_STACK.INTERNAL_ERROR,
@@ -121,7 +130,11 @@ export async function PATCH(
   try {
     body = await request.json();
   } catch (error) {
-    console.error('Erro ao fazer parse do JSON no PATCH:', error);
+    logger.error(
+      'Erro ao fazer parse do JSON no PATCH:',
+      'PATCH /api/project-stack/[id]',
+      { error: error instanceof Error ? error.message : String(error) }
+    );
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
@@ -185,7 +198,11 @@ export async function PATCH(
 
     return NextResponse.json(updated, { status: 200 });
   } catch (error) {
-    console.error('Erro ao atualizar ProjectStack:', error);
+    logger.error(
+      'Erro ao atualizar ProjectStack:',
+      'PATCH /api/project-stack/[id]',
+      { error: error instanceof Error ? error.message : String(error) }
+    );
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT_STACK.INTERNAL_ERROR,

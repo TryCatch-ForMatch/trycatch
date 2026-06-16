@@ -104,7 +104,7 @@ describe('GET /api/portfolio/[username]', () => {
     const body = await response.json();
 
     expect(response.status).toBe(200);
-    expect(body.email).toBeNull();
+    expect(body.data.email).toBeUndefined();
   });
 
   it('should hide feedbacks when showFeedback is false', async () => {
@@ -148,7 +148,7 @@ describe('GET /api/portfolio/[username]', () => {
     const body = await response.json();
 
     expect(response.status).toBe(200);
-    expect(body.feedbacks).toEqual([]);
+    expect(body.data.feedback).toBeUndefined();
   });
 
   it('should return only projects with status CONCLUIDO', async () => {
@@ -174,20 +174,13 @@ describe('GET /api/portfolio/[username]', () => {
       feedbacksReceived: [],
       stacksTaken: [
         {
-          stack: { id: '1', name: 'Backend' },
+          stackId: '1',
+          stack: { name: 'Backend' },
           project: {
             id: 'p1',
             name: 'Projeto 1',
             description: 'Descrição do projeto',
-            status: 'CONCLUIDO',
-            skills: [
-              {
-                skill: {
-                  id: 's1',
-                  name: 'Node.js',
-                },
-              },
-            ],
+            deadline: new Date('2025-01-01'),
           },
         },
       ],
@@ -202,11 +195,10 @@ describe('GET /api/portfolio/[username]', () => {
     const body = await response.json();
 
     expect(response.status).toBe(200);
-    expect(response.status).toBe(200);
-    expect(body.projects.length).toBe(1);
-    expect(body.projects[0].id).toBe('p1');
-    expect(body.projects[0].stacks.length).toBe(1);
-    expect(body.projects[0].stacks[0].name).toBe('Backend');
+    expect(body.data.projects.length).toBe(1);
+    expect(body.data.projects[0].projectId).toBe('p1');
+    expect(body.data.projects[0].stacks.length).toBe(1);
+    expect(body.data.projects[0].stacks[0].stackName).toBe('Backend');
   });
 
   it('should group multiple stacks under the same project', async () => {
@@ -232,23 +224,23 @@ describe('GET /api/portfolio/[username]', () => {
       feedbacksReceived: [],
       stacksTaken: [
         {
-          stack: { id: '1', name: 'Backend' },
+          stackId: '1',
+          stack: { name: 'Backend' },
           project: {
             id: 'p1',
             name: 'Projeto 1',
             description: 'Descrição',
-            status: 'CONCLUIDO',
-            skills: [],
+            deadline: new Date('2025-01-01'),
           },
         },
         {
-          stack: { id: '2', name: 'Frontend' },
+          stackId: '2',
+          stack: { name: 'Frontend' },
           project: {
             id: 'p1',
             name: 'Projeto 1',
             description: 'Descrição',
-            status: 'CONCLUIDO',
-            skills: [],
+            deadline: new Date('2025-01-01'),
           },
         },
       ],
@@ -260,8 +252,8 @@ describe('GET /api/portfolio/[username]', () => {
 
     const body = await response.json();
 
-    expect(body.projects.length).toBe(1);
-    expect(body.projects[0].stacks.length).toBe(2);
+    expect(body.data.projects.length).toBe(1);
+    expect(body.data.projects[0].stacks.length).toBe(2);
   });
 
   it('should return 500 on unexpected error', async () => {

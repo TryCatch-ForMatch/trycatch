@@ -4,6 +4,7 @@ import { MESSAGES, buildResponse } from '@/constants/messages';
 import { z } from 'zod';
 import crypto from 'crypto';
 import { sendResetPasswordEmail } from '@/lib/mail/send-reset-password-email';
+import { logger } from '@/lib/logger';
 
 const forgotPasswordSchema = z.object({
   email: z.string().email('Email inválido'),
@@ -68,6 +69,9 @@ export async function POST(request: NextRequest) {
       status: 200,
     });
   } catch (error) {
+    logger.error('Forgot password error', 'POST /api/auth/forgot-password', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.AUTH.FORGOT_PASSWORD_ERROR,

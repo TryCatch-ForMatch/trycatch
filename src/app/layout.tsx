@@ -1,11 +1,8 @@
-'use client';
-
 import './globals.css';
 import { ReactNode } from 'react';
-import { SessionProvider } from 'next-auth/react';
 import { Toaster } from '@/components/ui/sonner';
 import { Poppins } from 'next/font/google';
-import { SidebarProvider } from '@/Context/SidebarContextOpenClose';
+import Providers from '../providers';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -17,12 +14,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR" className={poppins.variable}>
       <body>
-        <SidebarProvider>
-          <SessionProvider>
-            <Toaster position="top-center" />
-            {children}
-          </SessionProvider>
-        </SidebarProvider>
+        <Providers>
+          <Toaster position="top-center" />
+          {children}
+        </Providers>
       </body>
     </html>
   );

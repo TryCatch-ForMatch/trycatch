@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { checkProjectStatus } from '@/lib/check-project-status';
 import { ROLE_GROUPS } from '@/lib/roles';
+import { logger } from '@/lib/logger';
 
 const updateStackTakenSchema = z.object({
   projectStackId: z.string().min(1, 'ID inválido.'),
@@ -54,7 +55,9 @@ export async function GET(
 
     return NextResponse.json(stackTaken, { status: 200 });
   } catch (error) {
-    console.error(error);
+    logger.error('Unexpected error', 'GET /api/stack-taken/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.STACK_TAKEN.INTERNAL_ERROR,
@@ -116,7 +119,9 @@ export async function PUT(
 
     return NextResponse.json(updated, { status: 200 });
   } catch (error) {
-    console.error('Erro ao atualizar StackTaken:', error);
+    logger.error('Erro ao atualizar StackTaken:', 'PUT /api/stack-taken/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.STACK_TAKEN.INTERNAL_ERROR,
@@ -169,7 +174,11 @@ export async function DELETE(
       status: 200,
     });
   } catch (error) {
-    console.error('Erro ao excluir StackTaken:', error);
+    logger.error(
+      'Erro ao excluir StackTaken:',
+      'DELETE /api/stack-taken/[id]',
+      { error: error instanceof Error ? error.message : String(error) }
+    );
     return buildResponse({
       success: false,
       message: MESSAGES.STACK_TAKEN.INTERNAL_ERROR,

@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { checkProjectStatus } from '@/lib/check-project-status';
 import { ROLE_GROUPS } from '@/lib/roles';
+import { logger } from '@/lib/logger';
 
 const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 const updateProjectSchema = z.object({
@@ -112,7 +113,9 @@ export async function GET(
 
     return NextResponse.json(formatted, { status: 200 });
   } catch (error) {
-    console.error('Erro ao buscar projeto:', error);
+    logger.error('Erro ao buscar projeto:', 'GET /api/team-project/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT.INTERNAL_ERROR,
@@ -209,7 +212,9 @@ export async function PUT(
 
     return NextResponse.json(updated, { status: 200 });
   } catch (error) {
-    console.error('Erro ao atualizar projeto:', error);
+    logger.error('Erro ao atualizar projeto:', 'PUT /api/team-project/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT.INTERNAL_ERROR,
@@ -271,7 +276,9 @@ export async function DELETE(
       status: 200,
     });
   } catch (error) {
-    console.error('Erro ao deletar projeto:', error);
+    logger.error('Erro ao deletar projeto:', 'DELETE /api/team-project/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT.INTERNAL_ERROR,

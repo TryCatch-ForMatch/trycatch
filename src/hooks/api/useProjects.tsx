@@ -66,7 +66,7 @@ export function useProjects() {
     const interval = setInterval(fetchProjectsStatics, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchProjectsStatics]);
 
   useEffect(() => {
     fetchProjects();

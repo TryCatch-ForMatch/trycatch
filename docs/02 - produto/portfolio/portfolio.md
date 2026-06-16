@@ -1,251 +1,272 @@
-# Documento de Produto --- Portfólio Público
+# Documento de Produto — Portfólio Público e Privado
 
 **Classificação:** Documento de Produto / Funcionalidade\
-**Camada:** 2 --- Documentos de Produto e Funcionalidades\
-**Status:** Implementado (primeira versão consolidada)
+**Camada:** 2 — Documentos de Produto e Funcionalidades\
+**Status:** Implementado (versão consolidada com visibilidade e segurança)
 
-------------------------------------------------------------------------
+---
 
 ## 1. Identificação da Funcionalidade
 
--   **Nome da funcionalidade:** Portfólio Público por Username\
--   **Domínio do produto:** Usuários / Reputação / Exposição
-    Profissional\
--   **Documento relacionado:** Documento 0 --- Visão Geral, Governança e
-    Arquitetura da Documentação
+- **Nome da funcionalidade:** Portfólio Público por Username + Configuração Privada
+- **Domínio do produto:** Usuários / Reputação / Exposição Profissional
+- **Documento relacionado:** Documento 0 — Visão Geral, Governança e Arquitetura da Documentação
 
-------------------------------------------------------------------------
+---
 
 ## 2. Contexto e Objetivo
 
-O Portfólio Público permite que usuários exponham suas informações
-profissionais dentro da plataforma TryCatch.
+O Portfólio permite que usuários exponham suas informações profissionais dentro da plataforma TryCatch, com controle granular sobre o que é visível para visitantes externos.
 
 Resolve os seguintes problemas:
 
--   Permite apresentação estruturada de habilidades e experiências;
--   Facilita formação de equipes por meio de transparência profissional;
--   Possibilita compartilhamento externo do perfil via link público.
+- Apresentação estruturada de habilidades e experiências;
+- Facilita formação de equipes por meio de transparência profissional;
+- Possibilita compartilhamento externo do perfil via link público;
+- Garante que cada usuário controle exatamente o que é exposto publicamente.
 
-A funcionalidade é acessada por meio da rota pública:
+---
 
-/portfolio/{username}
+## 3. Rotas
 
-Não exige autenticação.
+### Rotas Públicas (sem autenticação)
 
-------------------------------------------------------------------------
+| Rota | Descrição |
+|------|-----------|
+| `/portfolios` | Listagem pública paginada de portfólios com filtros |
+| `/portfolio/{username}` | Portfólio público individual do usuário |
 
-## 3. Escopo da Funcionalidade
+### Rotas Privadas (autenticação obrigatória)
 
-### 3.1 O que a funcionalidade faz
+| Rota | Descrição |
+|------|-----------|
+| `/dashboard/portfolio` | Configuração privada do portfólio (visibilidade, bio, links) |
 
--   Exibe dados públicos configurados pelo usuário;
--   Permite controle granular de visibilidade por meio de toggles;
--   Exibe apenas projetos com status **CONCLUIDO**;
--   Agrupa múltiplas stacks assumidas pelo usuário dentro de um mesmo
-    projeto;
--   Permite listagem pública resumida em `/portfolios`;
--   Permite compartilhamento externo via URL baseada em username;
--   Retorna 404 quando o portfólio não deve ser exibido.
+---
 
-### 3.2 O que a funcionalidade não faz
+## 4. Escopo da Funcionalidade
 
--   Não exibe projetos em andamento ou buscando equipe;
--   Não exibe email no resumo público;
--   Não expõe dados privados quando toggles estão desativados;
--   Não permite edição pública (edição apenas via `/portfolio/me`);
--   Não permite descobrir se um usuário existe quando o portfólio é
-    privado.
+### 4.1 O que a funcionalidade faz
 
-------------------------------------------------------------------------
+- Exibe dados públicos configurados pelo usuário;
+- Permite controle granular de visibilidade por meio de toggles;
+- Exibe apenas projetos com status **CONCLUIDO**;
+- Agrupa múltiplas stacks assumidas pelo usuário dentro de um mesmo projeto;
+- Permite listagem pública resumida em `/portfolios` com busca e filtros;
+- Permite compartilhamento externo via URL baseada em `username`;
+- Retorna 404 quando o portfólio não deve ser exibido;
+- Permite que o usuário configure bio, GitHub, LinkedIn e visibilidade via dashboard privado.
 
-## 4. Usuários Envolvidos e Permissões
+### 4.2 O que a funcionalidade não faz
 
-### Usuário Visitante (não autenticado)
+- Não exibe projetos em andamento ou em busca de equipe;
+- Não exibe email no resumo público (`/portfolios`);
+- Não expõe dados privados quando toggles estão desativados;
+- Não permite edição pública (edição apenas via `/dashboard/portfolio`);
+- Não permite descobrir se um usuário existe quando o portfólio é privado.
 
--   Pode acessar `/portfolio/{username}`;
--   Pode acessar `/portfolios`.
+---
+
+## 5. Usuários Envolvidos e Permissões
+
+### Visitante (não autenticado)
+
+- Pode acessar `/portfolio/{username}`;
+- Pode acessar `/portfolios`.
 
 ### Usuário Autenticado
 
--   Pode acessar `/portfolio/me`;
--   Pode alterar dados e configurações de visibilidade.
+- Pode acessar `/dashboard/portfolio`;
+- Pode alterar bio, GitHub, LinkedIn e todas as configurações de visibilidade.
 
 ### Restrições
 
--   Se `portfolioPublic = false`, a rota pública retorna 404.
--   Apenas usuários `isActive = true` podem ter portfólio público.
+- Se `portfolioPublic = false`, a rota pública retorna 404.
+- Se `isActive = false`, a rota pública retorna 404.
+- A resposta 404 é idêntica para usuário inexistente e portfólio privado (não revela existência do usuário).
 
-------------------------------------------------------------------------
+---
 
-## 5. Fluxo de Uso (UX)
+## 6. Fluxo de Uso (UX)
 
-### Fluxo principal público
+### Fluxo público — Listagem
 
-1.  Usuário acessa `/portfolios`;
-2.  Visualiza cards resumidos;
-3.  Clica em um card;
-4.  É direcionado para `/portfolio/{username}`;
-5.  Visualiza apenas dados permitidos pelos toggles.
+1. Visitante acessa `/portfolios`;
+2. Visualiza cards resumidos com nome, skills e role;
+3. Pode filtrar por nome, username, role ou skill;
+4. Clica em um card e é direcionado para `/portfolio/{username}`;
+5. Visualiza apenas os dados permitidos pelos toggles do usuário.
 
-### Estrutura da página pública
+### Fluxo público — Portfólio individual
 
-A página pública é composta pelas seguintes seções:
+A página pública é composta pelas seguintes seções (exibidas apenas se o toggle correspondente estiver ativo e o portfólio for público):
 
-1.  Identidade (avatar, nome, bio, links)
-2.  Tecnologias
-3.  Projetos Concluídos
-4.  Certificados
-5.  Feedback
+1. **Identidade** — avatar, nome, bio, email, GitHub, LinkedIn
+2. **Tecnologias** — skills cadastradas
+3. **Projetos Concluídos** — projetos com status CONCLUIDO
+4. **Certificados**
+5. **Feedback** *(implementado, exibição configurável)*
 
-### Estados
+### Fluxo privado — Configuração
 
--   404 se usuário inexistente;
--   404 se portfólio privado;
--   Exibição parcial caso toggles desativem campos.
+1. Usuário autenticado acessa `/dashboard/portfolio`;
+2. Visualiza formulário com seus dados e toggles atuais;
+3. Altera bio, GitHub, LinkedIn e configurações de visibilidade;
+4. Salva via `PATCH /api/portfolio/me`;
+5. Mudanças são refletidas imediatamente na rota pública (sem cache).
 
-------------------------------------------------------------------------
+### Estados da página pública
 
-## 6. Regras de Negócio
+- **404** — usuário inexistente ou portfólio privado;
+- **Exibição parcial** — seções ocultas quando toggle desativado;
+- **SEO** — metadados dinâmicos (`generateMetadata`) populados com nome e bio do usuário.
 
-1.  O portfólio público é identificado exclusivamente por `username`.
-2.  O campo `username` é único no sistema.
-3.  Se `portfolioPublic = false`, retornar 404.
-4.  Se `isActive = false`, retornar 404.
-5.  Email só é exibido se `showEmail = true`.
-6.  Github só é exibido se `showGithub = true`.
-7.  Linkedin só é exibido se `showLinkedin = true`.
-8.  Certificados só são exibidos se `showCertificates = true`.
-9.  Feedback só é exibido se `showFeedback = true`.
-10. Projetos exibidos apenas se:
+---
 
--   `showProjects = true`
--   `ProjectStatus = CONCLUIDO`
+## 7. Regras de Negócio
 
-11. Resumo (`/portfolios`) nunca exibe email.
-12. Resumo não exibe certificados ou projetos.
-13. Feedback exibe identificação do avaliador no frontend, mantendo
-    rastreabilidade completa no backend.
-14. O sistema utiliza logging estruturado para registrar acessos e
-    eventos relevantes.
-15. Quando um usuário assume múltiplas stacks em um mesmo projeto, o
-    sistema deve agrupá-las em um único card de projeto.
+1. O portfólio público é identificado exclusivamente por `username`.
+2. O campo `username` é único no sistema.
+3. Se `portfolioPublic = false` → retornar 404.
+4. Se `isActive = false` → retornar 404.
+5. Email só é exibido se `showEmail = true`.
+6. GitHub só é exibido se `showGithub = true`.
+7. LinkedIn só é exibido se `showLinkedin = true`.
+8. Certificados só são exibidos se `showCertificates = true`.
+9. Feedback só é exibido se `showFeedback = true`.
+10. Projetos exibidos apenas se `showProjects = true` **e** `ProjectStatus = CONCLUIDO`.
+11. O resumo (`/portfolios`) nunca exibe email, certificados ou projetos.
+12. Feedback exibe identificação do avaliador no frontend apenas se não for anônimo (`anonymous = false`).
+13. O sistema utiliza logging estruturado em todas as rotas de portfólio.
+14. Quando um usuário assume múltiplas stacks em um mesmo projeto, o sistema agrupa em um único card (lógica no backend).
+15. A rota pública chama o serviço diretamente (sem fetch interno), eliminando latência de cache.
 
-Todas as regras são testáveis.
+Todas as regras são aplicadas no backend e testáveis.
 
-------------------------------------------------------------------------
+---
 
-## 7. Impactos em Dados
+## 8. Impactos em Dados
 
 ### Entidades impactadas
 
--   User
--   UserSkill
--   UserCertificate
--   Feedback
--   StackTaken
--   Project
+- `User` — campos de visibilidade e perfil
+- `UserSkill` — skills do usuário
+- `UserCertificate` — certificados
+- `Feedback` — feedbacks recebidos
+- `StackTaken` — participação em projetos
+- `Project` — projetos com status CONCLUIDO
 
-### Dados sensíveis
+### Dados sensíveis e proteção
 
--   Email (controlado por toggle)
--   Links externos
--   Feedback
+| Dado | Controle |
+|------|----------|
+| Email | Toggle `showEmail`; nunca exposto no resumo |
+| GitHub | Toggle `showGithub` |
+| LinkedIn | Toggle `showLinkedin` |
+| Feedback | Toggle `showFeedback`; avaliador anonimizado se `anonymous = true` |
+| Senha | Nunca selecionada em nenhuma query de portfólio |
+| `id` interno | Nunca exposto na URL pública (usa `username`) |
 
-O sistema evita exposição indevida via:
+---
 
--   Toggles granulares;
--   Política de 404 para portfólio privado.
-
-------------------------------------------------------------------------
-
-## 8. Impactos em Reputação e Confiança
+## 9. Impactos em Reputação e Confiança
 
 O portfólio público impacta diretamente:
 
--   Percepção de competência;
--   Formação de equipes;
--   Confiança entre membros;
--   Exposição profissional externa.
+- Percepção de competência entre membros;
+- Formação de equipes;
+- Confiança e transparência na plataforma;
+- Exposição profissional externa.
 
 Riscos mitigados:
 
--   Controle granular de visibilidade;
--   Exibição apenas de projetos concluídos;
--   Impossibilidade de detectar existência de usuário privado;
--   Logging estruturado para rastreabilidade.
+- Controle granular de visibilidade;
+- Exibição apenas de projetos concluídos;
+- Impossibilidade de detectar existência de usuário privado via 404 uniforme;
+- Logging estruturado para rastreabilidade de acessos.
 
-------------------------------------------------------------------------
+---
 
-## 9. Comunicação com o Usuário
+## 10. Comunicação com o Usuário
 
-### Mensagens
+- 404 para portfólio inexistente ou privado;
+- Mensagens de erro padronizadas via `MESSAGES`;
+- Toast de sucesso/erro no dashboard privado ao salvar configurações.
 
--   404 para portfólio inexistente ou privado;
--   Mensagens de erro padronizadas via `MESSAGES`.
+Não há comunicação transacional (email) associada nesta versão.
 
-Não há comunicação transacional associada nesta versão.
+---
 
-------------------------------------------------------------------------
+## 11. Antipadrões Evitados
 
-## 10. Antipadrões Evitados
+- Uso de `id` interno na URL pública (substituído por `username`);
+- Exposição automática de dados pessoais sem consentimento;
+- Exposição de projetos em andamento;
+- `console.log` / `console.error` em produção (substituídos por logger estruturado);
+- Retorno 403 para portfólio privado (substituído por 404 por segurança);
+- Lógica de agrupamento de projetos no frontend (realizada no backend);
+- Fetch HTTP interno com cache no Server Component (substituído por chamada direta ao serviço);
+- URL hardcoded `localhost` em produção.
 
--   Uso de ID interno na URL pública (substituído por username);
--   Exposição automática de dados pessoais;
--   Exposição de projetos em andamento;
--   Uso de `console.log` (substituído por logger estruturado);
--   Retorno 403 para portfólio privado (substituído por 404 por
-    segurança);
--   Lógica de agrupamento de projetos no frontend (realizada no
-    backend).
+---
 
-------------------------------------------------------------------------
-
-## 11. Relação com Implementação Técnica
+## 12. Relação com Implementação Técnica
 
 ### Documentos técnicos relacionados
 
--   docs/03-tecnico/modelagem-dados.md
--   docs/03-tecnico/arquitetura-geral.md
+- `docs/03 - tecnico/modelagem/modelagem-dados.md`
+- `docs/03 - tecnico/arquitetura/arquitetura-geral.md`
+- `docs/03 - tecnico/arquitetura/auditoria-logging-backend.md`
 
 ### Templates relacionados
 
--   docs/templates/02 - template-dados-portfolio.md
+- `docs/templates/02 - template-dados-portfolio.md`
 
 ### Pontos técnicos relevantes
 
--   `username` é identificador público;
--   Filtro `ProjectStatus.CONCLUIDO` aplicado na query;
--   Uso de logger estruturado (timestamp, nível, contexto e metadados);
--   Uso de toggles no modelo `User`;
--   A resposta pública da API retorna projetos já agrupados, evitando
-    lógica de agregação no frontend.
+- `username` é o único identificador público do portfólio;
+- A página `/portfolio/{username}` é um Server Component que chama `getPublicPortfolio()` diretamente;
+- A página `/dashboard/portfolio` separa server wrapper (auth + layout) de client component (formulário);
+- O formulário privado usa React Hook Form + Zod com hook dedicado `usePortfolioSettings`;
+- Logger estruturado com timestamp, nível, contexto e metadados em todas as rotas;
+- Filtro `ProjectStatus.CONCLUIDO` aplicado na query Prisma;
+- A resposta pública retorna projetos já agrupados por `projectId`.
 
-------------------------------------------------------------------------
+---
 
-## 12. Histórico de Decisões
+## 13. Histórico de Decisões
 
--   Substituição de busca por ID para username;
--   Retorno 404 para portfólio privado;
--   Implementação de toggles de visibilidade;
--   Restrição a projetos concluídos;
--   Adoção de logging estruturado;
--   Agrupamento de stacks por projeto no backend.
+- Substituição de busca por `id` para `username` na URL pública;
+- Retorno 404 (em vez de 403) para portfólio privado;
+- Implementação de toggles de visibilidade granulares;
+- Restrição de exibição a projetos com status CONCLUIDO;
+- Adoção de logging estruturado em todas as rotas;
+- Agrupamento de stacks por projeto realizado no backend;
+- Chamada direta ao serviço no Server Component (elimina cache e dependência de URL local);
+- Separação de server component e client component na rota privada.
 
-------------------------------------------------------------------------
+---
 
-## 13. Status e Próximos Passos
+## 14. Status e Próximos Passos
 
-### Status atual:
+### Status atual
 
-Implementado (versão consolidada)
+Implementado — visibilidade, segurança, logging e separação público/privado concluídos.
 
-### Próximos passos:
+### Itens concluídos nesta iteração
 
--   Criar geração automática de `username` no cadastro;
--   Permitir edição de username pelo usuário;
--   Definir modelo definitivo de reputação;
--   Implementar versão interna ampliada para formação de equipes;
--   Revisar logging em todas as rotas;
--   Implementar SEO e metadados públicos;
--   Revisar padronização visual do portfólio.
+- ✅ Controle de visibilidade por toggle (backend + frontend)
+- ✅ Logging estruturado em todas as rotas de portfólio
+- ✅ SEO com `generateMetadata` dinâmico
+- ✅ Separação clara entre rota pública e privada
+- ✅ Eliminação de cache e URL hardcoded no Server Component
+- ✅ Correção do PATCH (dados não estavam sendo persistidos)
+- ✅ Suporte a GitHub e LinkedIn no PATCH
+
+### Próximos passos
+
+- Criar geração automática de `username` no cadastro;
+- Permitir edição de `username` pelo usuário;
+- Definir modelo definitivo de reputação e média de feedback;
+- Implementar versão interna ampliada para formação de equipes;
+- Revisar padronização visual do portfólio.

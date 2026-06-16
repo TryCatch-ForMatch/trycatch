@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { logger } from '@/lib/logger';
 
 const createStackSchema = z.object({
   name: z.string().min(1, 'O nome da stack é obrigatório.'),
@@ -16,7 +17,9 @@ export async function GET() {
 
     return NextResponse.json(stacks, { status: 200 });
   } catch (error) {
-    console.log(error);
+    logger.error('Unexpected error', 'GET /api/tech-stack', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.TECH_STACK.INTERNAL_ERROR,
@@ -66,7 +69,9 @@ export async function POST(request: NextRequest) {
       status: 201,
     });
   } catch (error) {
-    console.error('Erro ao criar stack:', error);
+    logger.error('Erro ao criar stack:', 'POST /api/tech-stack', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.TECH_STACK.INTERNAL_ERROR,

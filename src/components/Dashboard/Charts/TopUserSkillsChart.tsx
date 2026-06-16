@@ -22,6 +22,7 @@ export default function TopUserSkillsChart() {
         setData(res.data.topUserSkills || []);
       } catch (err) {
         setError('Erro ao carregar dados das skills.');
+        console.error(err);
       } finally {
         setLoading(false);
       }

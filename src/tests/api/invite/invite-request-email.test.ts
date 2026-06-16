@@ -1,12 +1,11 @@
 import { sendInviteRequestEmail } from '@/lib/mail/send-invite-request-email';
-import { resend } from '@/lib/mail/resend';
+
+const mockSend = jest.fn().mockResolvedValue({ id: 'email-test-id' });
 
 jest.mock('@/lib/mail/resend', () => ({
-  resend: {
-    emails: {
-      send: jest.fn().mockResolvedValue({ id: 'email-test-id' }),
-    },
-  },
+  getResend: () => ({
+    emails: { send: mockSend },
+  }),
 }));
 
 describe('sendInviteRequestEmail', () => {
@@ -35,9 +34,9 @@ describe('sendInviteRequestEmail', () => {
       role: 'USER',
     });
 
-    expect(resend.emails.send).toHaveBeenCalledTimes(1);
+    expect(mockSend).toHaveBeenCalledTimes(1);
 
-    expect(resend.emails.send).toHaveBeenCalledWith(
+    expect(mockSend).toHaveBeenCalledWith(
       expect.objectContaining({
         from: 'no-reply@trycatch.com',
         to: 'admin@trycatch.com',

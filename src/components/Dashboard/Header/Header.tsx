@@ -1,4 +1,5 @@
 'use client';
+
 import { signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { useProjects } from '@/hooks/api/useProjects';
@@ -7,7 +8,7 @@ import { useSidebar } from '@/Context/SidebarContextOpenClose';
 
 export function DashboardHeader() {
   const { projectsEstatistica, isProjectsLoading } = useProjects();
-  const { isOpen }= useSidebar()
+  const { isOpen } = useSidebar();
 
   // Componente reutilizável para os botões de estatística
   const StatButton = ({
@@ -22,7 +23,7 @@ export function DashboardHeader() {
     <Button
       variant="outline"
       size="default"
-      className="font-regular flex min-w-[160px] items-center justify-center gap-2 cursor-default"
+      className="font-regular flex min-w-[160px] cursor-default items-center justify-center gap-2"
     >
       <span className="text-[#3B38A1]">
         <Icon />
@@ -39,8 +40,9 @@ export function DashboardHeader() {
   );
 
   return (
-    <header className={`flex items-center justify-between shadow-sm p-4 py-5 fixed top-0 z-50  right-0  ${isOpen ? "left-20 w-[calc(100%-80px)]" : "left-60 w-[calc(100%-240px)]"}  bg-background`}>
-
+    <header
+      className={`fixed top-0 right-0 z-50 flex items-center justify-between p-4 py-5 shadow-sm ${isOpen ? 'left-20 w-[calc(100%-80px)]' : 'left-60 w-[calc(100%-240px)]'} bg-background`}
+    >
       {/* Botões de estatísticas */}
       <div className="flex items-center gap-10">
         <StatButton

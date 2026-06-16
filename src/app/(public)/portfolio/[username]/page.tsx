@@ -1,11 +1,46 @@
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { PublicPortfolioPage } from '@/components/Portfolio/PublicPortfolioPage';
+import {
+  getPublicPortfolio,
+  PortfolioNotFoundError,
+} from '@/lib/portfolio.service';
 
-type PageProps = {
+// ─── Metadata dinâmica para SEO ─────────────────────────────────────────────
+
+export async function generateMetadata({
+  params,
+}: {
   params: Promise<{ username: string }>;
-};
-
-export default async function Page({ params }: PageProps) {
+}): Promise<Metadata> {
   const { username } = await params;
 
-  return <PublicPortfolioPage userName={username} />;
+  try {
+    const data = await getPublicPortfolio(username);
+    return {
+      title: `${data.name} · TryCatch`,
+      description:
+        data.bio ?? `Portfólio de ${data.name} na plataforma TryCatch.`,
+    };
+  } catch {
+    return { title: 'Portfólio não encontrado · TryCatch' };
+  }
+}
+
+// ─── Page (Server Component) ─────────────────────────────────────────────────
+
+export default async function PortfolioPage({
+  params,
+}: {
+  params: Promise<{ username: string }>;
+}) {
+  const { username } = await params;
+
+  try {
+    const data = await getPublicPortfolio(username);
+    return <PublicPortfolioPage data={data} />;
+  } catch (err) {
+    if (err instanceof PortfolioNotFoundError) notFound();
+    throw err;
+  }
 }

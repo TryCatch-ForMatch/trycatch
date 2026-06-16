@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { checkAuth } from '@/lib/check-auth';
 import { buildResponse, MESSAGES } from '@/constants/messages';
+import { logger } from '@/lib/logger';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -34,7 +35,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(users, { status: 200 });
     }
   } catch (error) {
-    console.error(error);
+    logger.error('Unexpected error', 'GET /api/user-skill/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.USER_SKILL.INTERNAL_ERROR,
@@ -83,7 +86,9 @@ export async function DELETE(
       status: 200,
     });
   } catch (error) {
-    console.error(error);
+    logger.error('Unexpected error', 'DELETE /api/user-skill/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.USER_SKILL.INTERNAL_ERROR,

@@ -23,6 +23,7 @@ import { Skill } from '@prisma/client';
 import { toast } from 'sonner';
 import { ROLES, Role } from '@/lib/roles';
 import { ROLE_OPTIONS } from '@/lib/role-labels';
+import Image from 'next/image';
 
 const userAdminSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
@@ -248,6 +249,7 @@ export function UserAdminForm() {
                   >
                     {skill?.name || skillId}
                     <button
+                      title="button name"
                       type="button"
                       onClick={() => handleRemoveSkill(skillId)}
                       className="ml-1 text-gray-500 hover:text-red-500"
@@ -273,6 +275,7 @@ export function UserAdminForm() {
               <input
                 type="file"
                 accept="image/*"
+                title="input file"
                 onChange={handleAvatarChange}
                 disabled={uploadingAvatar}
                 className="block w-full text-sm text-gray-900 file:mr-4 file:rounded-full file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 hover:file:bg-indigo-100"
@@ -282,7 +285,7 @@ export function UserAdminForm() {
               )}
 
               {avatarUrl && (
-                <img
+                <Image
                   src={avatarUrl}
                   alt="Avatar Preview"
                   className="mt-2 h-16 w-16 rounded-full border object-cover"

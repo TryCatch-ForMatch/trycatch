@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import Image from 'next/image';
 
 const userEditFormSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
@@ -56,7 +57,6 @@ export function UserEdit({ user }: UserEditProps) {
   });
   const avatarPreview = watch('avatar');
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
 
   async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -90,7 +90,6 @@ export function UserEdit({ user }: UserEditProps) {
   }
 
   const onSubmit = async (values: UserEditFormValues) => {
-    setIsSaving(true);
     try {
       const res = await fetch(`/api/user/${user.id}`, {
         method: 'PUT',
@@ -107,7 +106,7 @@ export function UserEdit({ user }: UserEditProps) {
       if (err instanceof Error) toast.error(err.message);
       else toast.error('Erro ao atualizar usuário');
     } finally {
-      setIsSaving(false);
+      //
     }
   };
 
@@ -169,6 +168,7 @@ export function UserEdit({ user }: UserEditProps) {
             {/* input file para upload */}
             <input
               type="file"
+              title="file name"
               accept="image/*"
               onChange={handleAvatarChange}
               disabled={uploadingAvatar}
@@ -177,7 +177,7 @@ export function UserEdit({ user }: UserEditProps) {
 
             {/* preview do avatar atual */}
             {avatarPreview && (
-              <img
+              <Image
                 src={avatarPreview}
                 alt="Avatar Preview"
                 className="mt-2 h-16 w-16 rounded-full border object-cover"

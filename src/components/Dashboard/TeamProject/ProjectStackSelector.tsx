@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,7 +24,7 @@ interface StackItem {
 
 export function ProjectStackSelector() {
   const { control, setValue, watch } = useFormContext();
-  const stacks: StackItem[] = watch('stacks') || [];
+  const stacks: StackItem[] = useMemo(() => watch('stacks'), [watch]);
 
   const [availableStacks, setAvailableStacks] = useState<Stack[]>([]);
 

@@ -1,4 +1,4 @@
-import { resend } from '@/lib/mail/resend';
+import { getResend } from '@/lib/mail/resend';
 import { InviteRequestReceiverEmail } from '@/lib/mail/templates/invite-request-receiver';
 
 type SendInviteRequestEmailProps = {
@@ -12,7 +12,7 @@ export async function sendInviteRequestEmail({
   name,
   email,
   linkedin,
-  role,
+  // role,
 }: SendInviteRequestEmailProps) {
   const receiver = process.env.INVITE_REQUEST_RECEIVER_EMAIL;
   const sender = process.env.INVITE_REQUEST_SENDER_EMAIL;
@@ -34,7 +34,7 @@ export async function sendInviteRequestEmail({
 
   const adminPanelLink = new URL('/dashboard/admin', appUrl).toString();
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: sender,
     to: receiver,
     subject: 'Nova solicitação de acesso – TryCatch',

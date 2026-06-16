@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import type { CreateEmailOptions } from 'resend';
+import { logger } from '@/lib/logger';
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -9,7 +10,7 @@ function isValidEmail(email: string) {
 export async function POST(request: NextRequest) {
   try {
     if (!process.env.RESEND_API_KEY) {
-      console.warn('RESEND_API_KEY is not defined');
+      logger.warn('RESEND_API_KEY is not defined', 'POST /api/contact');
       return;
     }
 
@@ -41,7 +42,12 @@ export async function POST(request: NextRequest) {
     const result = await resend.emails.send(emailOptions);
 
     if (result.error) {
-      console.error('Resend error:', result.error);
+      logger.error('Resend error:', 'POST /api/contact', {
+        error:
+          result.error instanceof Error
+            ? result.error.message
+            : String(result.error),
+      });
       return NextResponse.json(
         { error: 'Erro ao enviar e-mail' },
         { status: 500 }
@@ -50,7 +56,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Contact API error:', error);
+    logger.error('Contact API error:', 'POST /api/contact', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }
