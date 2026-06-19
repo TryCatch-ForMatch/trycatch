@@ -26,7 +26,7 @@ export default function ProfilePage() {
   if (!user) return <p>Carregando perfil...</p>;
 
   return (
-    <div className="relative mx-auto mt-6 max-w-2xl">
+    <div className="relative mx-auto mt-6 max-w-md md:max-w-2xl lg:max-w-4xl">
       <DeleteAccountButton userId={user.id} />
 
       <h1 className="mb-4 text-2xl font-bold">Meu Perfil</h1>
