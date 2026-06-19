@@ -1,119 +1,91 @@
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
+import { checkAuth } from '@/lib/check-auth';
+import { MESSAGES, buildResponse } from '@/constants/messages';
+import { logger } from '@/lib/logger';
 
-// PUT: validação para trocar a skill associada ao projeto
-const updateProjectSkillSchema = z.object({
-  skillId: z.string(),
-});
+const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 
-// GET /api/project-skill/[id]
 export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: { id: string } }
 ) {
-  const session = await getServerSession(authOptions);
-  if (!session || !session.user?.id) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+  const auth = await checkAuth();
+  if (!auth.authorized) return auth.response;
+
+  const idParse = idSchema.safeParse(context.params.id);
+  if (!idParse.success) {
+    return buildResponse({
+      success: false,
+      errors: idParse.error.errors,
+      message: MESSAGES.PROJECT_SKILL.NOT_FOUND,
+      status: 400,
+    });
   }
+  const projectId = idParse.data;
 
   try {
     const projectSkill = await prisma.projectSkill.findUnique({
-      where: { id: params.id },
+      where: { id: projectId },
       include: { skill: true },
     });
 
     if (!projectSkill) {
-      return NextResponse.json(
-        { error: 'Associação não encontrada' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.PROJECT_SKILL.NOT_FOUND,
+        status: 404,
+      });
     }
 
-    return NextResponse.json(projectSkill);
+    return NextResponse.json(projectSkill, { status: 200 });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: 'Erro ao buscar associação' },
-      { status: 500 }
-    );
+    logger.error('Erro no GET /project-skill:', 'GET /api/project-skill/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.PROJECT_SKILL.INTERNAL_ERROR,
+      status: 500,
+    });
   }
 }
 
-// PUT /api/project-skill/[id]
-export async function PUT(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const session = await getServerSession(authOptions);
-  if (!session || !session.user?.id) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
-  }
-
-  const body = await req.json();
-  const parsed = updateProjectSkillSchema.safeParse(body);
-
-  if (!parsed.success) {
-    return NextResponse.json(
-      { error: 'Dados inválidos', issues: parsed.error.issues },
-      { status: 400 }
-    );
-  }
-
-  const { skillId } = parsed.data;
-
-  try {
-    const existing = await prisma.projectSkill.findUnique({
-      where: { id: params.id },
-    });
-
-    if (!existing) {
-      return NextResponse.json(
-        { error: 'Associação não encontrada' },
-        { status: 404 }
-      );
-    }
-
-    const updated = await prisma.projectSkill.update({
-      where: { id: params.id },
-      data: { skillId },
-    });
-
-    return NextResponse.json(updated);
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: 'Erro ao atualizar skill do projeto' },
-      { status: 500 }
-    );
-  }
-}
-
-// DELETE /api/project-skill/[id]
 export async function DELETE(
-  req: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const session = await getServerSession(authOptions);
-  if (!session || !session.user?.id) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
-  }
+  const auth = await checkAuth();
+  if (!auth.authorized) return auth.response;
 
   try {
     await prisma.projectSkill.delete({
       where: { id: params.id },
     });
 
-    return NextResponse.json({
-      message: 'Skill removida do projeto com sucesso',
+    return buildResponse({
+      success: true,
+      message: MESSAGES.PROJECT_SKILL.DELETED,
     });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: 'Erro ao remover skill' },
-      { status: 500 }
+    logger.error(
+      'Erro ao remover skill do projeto:',
+      'DELETE /api/project-skill/[id]',
+      { error: error instanceof Error ? error.message : String(error) }
     );
+    if (error instanceof z.ZodError) {
+      return buildResponse({
+        success: false,
+        errors: error.errors,
+        message: MESSAGES.PROJECT_SKILL.DELETE_ERROR,
+        status: 400,
+      });
+    }
+    return buildResponse({
+      success: false,
+      message: MESSAGES.PROJECT_SKILL.INTERNAL_ERROR,
+      status: 500,
+    });
   }
 }

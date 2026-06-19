@@ -1,42 +1,99 @@
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { checkAuth } from '@/lib/check-auth';
+import { buildResponse, MESSAGES } from '@/constants/messages';
+import { logger } from '@/lib/logger';
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const session = await getServerSession(authOptions);
-  if (!session || !session.user?.id) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const userId = searchParams.get('userId');
+  const skillId = searchParams.get('skillId');
+
+  if (!userId && !skillId) {
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+      errors: ['Informe userId ou skillId'],
+    });
   }
 
-  const userId = session.user.id;
-  const userSkillId = params.id;
+  try {
+    if (userId) {
+      const skills = await prisma.userSkill.findMany({
+        where: { userId },
+        include: { skill: true },
+      });
+      return NextResponse.json(skills, { status: 200 });
+    }
+
+    if (skillId) {
+      const users = await prisma.userSkill.findMany({
+        where: { skillId },
+        include: { user: true },
+      });
+      return NextResponse.json(users, { status: 200 });
+    }
+  } catch (error) {
+    logger.error('Unexpected error', 'GET /api/user-skill/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER_SKILL.INTERNAL_ERROR,
+      status: 500,
+      errors: ['Erro ao buscar skills de usuário'],
+    });
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const auth = await checkAuth();
+  if (!auth.authorized) return auth.response;
 
   try {
     const userSkill = await prisma.userSkill.findUnique({
-      where: { id: userSkillId },
+      where: { id: params.id },
     });
 
-    if (!userSkill || userSkill.userId !== userId) {
-      return NextResponse.json(
-        { error: 'Skill não encontrada ou acesso negado' },
-        { status: 404 }
-      );
+    if (!userSkill) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.USER_SKILL.NOT_FOUND,
+        status: 404,
+      });
     }
 
-    await prisma.userSkill.delete({
-      where: { id: userSkillId },
-    });
+    if (userSkill.userId !== params.id) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.AUTH.UNAUTHORIZED,
+        status: 403,
+        errors: [
+          'Você não tem permisssão para excluir skills de outros usuários.',
+        ],
+      });
+    }
 
-    return NextResponse.json({ message: 'Skill removida com sucesso' });
+    await prisma.userSkill.delete({ where: { id: params.id } });
+
+    return buildResponse({
+      success: true,
+      message: MESSAGES.USER_SKILL.DELETED,
+      status: 200,
+    });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: 'Erro ao remover skill' },
-      { status: 500 }
-    );
+    logger.error('Unexpected error', 'DELETE /api/user-skill/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER_SKILL.INTERNAL_ERROR,
+      status: 500,
+      errors: ['Erro ao remover skill'],
+    });
   }
 }

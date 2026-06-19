@@ -1,0 +1,56 @@
+name: '📚 Documentação'
+description: 'Criação ou atualização de documentação.'
+title: '[DOC] '
+labels: ['documentation']
+assignees: []
+body:
+  - type: textarea
+    id: descricao
+    attributes:
+      label: '📝 Descrição'
+      description: 'Explique o que será criado ou alterado.'
+      placeholder: 'Ex.: Atualizar o Documento de Feedback para incluir regra de bloqueio antes de CONCLUIDO.'
+    validations:
+      required: true
+
+  - type: textarea
+    id: documento
+    attributes:
+      label: '📎 Documento Impactado'
+      description: 'Informe o nome e o caminho do arquivo.'
+      placeholder: 'Ex.: docs/02-produto/produto-feedback-reputacao.md'
+    validations:
+      required: true
+
+  - type: textarea
+    id: objetivo
+    attributes:
+      label: '🎯 Objetivo da Atualização'
+      description: 'Por que essa atualização é necessária?'
+      placeholder: 'Ex.: Garantir alinhamento com o schema.prisma após inclusão do campo stackTakenId.'
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: dod
+    attributes:
+      label: '📌 Definition of Done (DoD)'
+      options:
+        - label: Documento criado/atualizado
+        - label: Coerente com Documento 0
+        - label: Revisado
+        - label: PR aprovado
+
+  - type: textarea
+    id: contribuidores
+    attributes:
+      label: '🙌 Torne-se um colaborador'
+      description: |
+        Após a aprovação e merge desta issue/PR, adicione o seguinte comentário nesta issue para registrar sua contribuição:
+
+        @all-contributors please add @SEU_USUARIO for code
+
+        Substitua @SEU_USUARIO pelo seu usuário do GitHub e inclua a categoria.
+
+        Caso sua contribuição não seja apenas código, consulte as categorias disponíveis:
+        https://allcontributors.org/docs/en/emoji-key

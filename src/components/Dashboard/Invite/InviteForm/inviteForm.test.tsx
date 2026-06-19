@@ -1,0 +1,3 @@
+describe('<InviteForm/>', () => {
+  it('should', () => {});
+});

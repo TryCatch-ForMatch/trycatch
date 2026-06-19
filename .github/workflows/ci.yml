@@ -1,0 +1,166 @@
+name: CI Pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  push:
+    branches:
+      - test/tests-ci
+
+jobs:
+  build:
+    name: Build and Prepare Environment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create .env
+        run: |
+          printf "JWT_SECRET=${{ secrets.JWT_SECRET }}\n\
+              NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}\n\
+              CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}\n\
+              CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}\n\
+              CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}\n\              
+              RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}\n\
+              INVITE_REQUEST_SENDER_EMAIL=${{ secrets.INVITE_REQUEST_SENDER_EMAIL }}\n\
+              RESET_PASSWORD_EMAIL=${{ secrets.RESET_PASSWORD_EMAIL }}\n\
+              CONTACT_SENDER_EMAIL=${{ secrets.CONTACT_SENDER_EMAIL }}\n\
+              INVITE_REQUEST_RECEIVER_EMAIL=${{ secrets.INVITE_REQUEST_RECEIVER_EMAIL }}\n\
+              RESET_PASSWORD_EMAIL=${{ secrets.RESET_PASSWORD_EMAIL }}\n" > .env
+
+      - name: Build project
+        run: npm run build
+
+  lint:
+    name: Lint Codebase
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Lint
+        run: npm run lint
+
+  test:
+    name: Run Tests (Jest)
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Tests
+        run: npm run test
+
+  coverage:
+    name: Run Tests with Coverage
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Tests with Coverage
+        run: |
+          npx jest --coverage \
+          --coverageThreshold='{"global":{"branches":60,"functions":60,"lines":60,"statements":60}}'
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-report
+          path: coverage/
+
+  sonar:
+    name: SonarQube Scan
+    runs-on: ubuntu-latest
+    needs: coverage
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v7.0.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  audit:
+    name: Audit Dependencies
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit dependencies
+        run: npm audit --audit-level=high

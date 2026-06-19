@@ -1,11 +1,10 @@
 import { PrismaClient } from '@prisma/client';
-import { compare } from 'bcrypt';
+import { compare } from 'bcryptjs';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { NextAuthOptions } from 'next-auth';
+import { ROLE_GROUPS, Role } from '@/lib/roles';
 
 const prisma = new PrismaClient();
-
-type UserRole = 'ADMIN' | 'USER';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -16,29 +15,34 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        const user = await prisma.user.findUnique({
-          where: { email: credentials?.email },
-        });
+        try {
+          const user = await prisma.user.findUnique({
+            where: { email: credentials?.email },
+          });
 
-        if (!user) throw new Error('Email não encontrado.');
+          if (!user) throw new Error('Email não encontrado.');
 
-        const isValid = await compare(credentials!.password, user.password);
-        if (!isValid) throw new Error('Senha incorreta.');
+          const isValid = await compare(credentials!.password, user.password);
 
-        const validRoles = ['ADMIN', 'USER'] as const;
-        const role = validRoles.includes(
-          user.role as (typeof validRoles)[number]
-        )
-          ? (user.role as UserRole)
-          : 'USER';
+          if (!isValid) throw new Error('Senha incorreta.');
 
-        return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          avatar: user.avatar ?? undefined,
-          role,
-        };
+          const validRoles = ROLE_GROUPS.ALL;
+          const role = validRoles.includes(user.role as Role)
+            ? (user.role as Role)
+            : 'USER';
+
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            avatar: user.avatar ?? undefined,
+            role,
+          };
+
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+          throw new Error('Erro ao autenticar. Verifique suas credenciais.');
+        }
       },
     }),
   ],
@@ -50,13 +54,15 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.role = user.role;
+        token.avatar = user.avatar;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
-        session.user.role = token.role as UserRole;
+        session.user.role = token.role as Role;
+        session.user.avatar = token.avatar as string;
       }
       return session;
     },
@@ -65,9 +71,6 @@ export const authOptions: NextAuthOptions = {
       return baseUrl;
     },
   },
-  pages: {
-    signIn: '/login',
-    error: '/auth/error',
-  },
+
   secret: process.env.NEXTAUTH_SECRET,
 };

@@ -1,0 +1,99 @@
+import { prisma } from '@/lib/prisma';
+import { NextRequest } from 'next/server';
+import { MESSAGES, buildResponse } from '@/constants/messages';
+import { z } from 'zod';
+import { sendInviteRequestEmail } from '@/lib/mail/send-invite-request-email';
+import { sendInviteRequestConfirmationEmail } from '@/lib/mail/send-invite-request-confirmation-email';
+import { logger } from '@/lib/logger';
+
+const inviteRequestSchema = z.object({
+  name: z.string().min(3, 'Nome inválido'),
+  email: z.string().email('Email inválido'),
+  linkedin: z
+    .string()
+    .url('LinkedIn inválido')
+    .refine(
+      (url) =>
+        url.startsWith('https://www.linkedin.com/') ||
+        url.startsWith('https://linkedin.com/'),
+      'URL do LinkedIn inválida'
+    ),
+  role: z.enum(['USER', 'MENTOR']),
+});
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const parsed = inviteRequestSchema.safeParse(body);
+
+    if (!parsed.success) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.GENERAL.INVALID_DATA,
+        status: 400,
+        errors: parsed.error.flatten().fieldErrors,
+      });
+    }
+
+    const { name, email, linkedin, role } = parsed.data;
+
+    const existingRequest = await prisma.inviteRequest.findUnique({
+      where: { email },
+    });
+
+    if (existingRequest) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.INVITE_REQUEST.ALREADY_EXISTS,
+        status: 409,
+      });
+    }
+
+    const inviteRequest = await prisma.inviteRequest.create({
+      data: {
+        name,
+        email,
+        linkedin,
+        role,
+      },
+    });
+
+    // formatação simples (ideal: usar util de data)
+    const requestDate = new Date().toLocaleString('pt-BR');
+
+    // Email para administrador
+    await sendInviteRequestEmail({
+      name,
+      email,
+      linkedin,
+      role,
+    });
+
+    // Email de confirmação para o solicitante
+    await sendInviteRequestConfirmationEmail({
+      name,
+      email,
+      requestDate,
+      requestId: inviteRequest.id,
+    });
+
+    return buildResponse({
+      success: true,
+      message: MESSAGES.INVITE_REQUEST.CREATED,
+      data: {
+        id: inviteRequest.id,
+        status: inviteRequest.status,
+      },
+      status: 201,
+    });
+  } catch (error) {
+    logger.error('Erro invite-request:', 'POST /api/invite-request', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.INVITE_REQUEST.GENERAL_ERROR,
+      status: 500,
+    });
+  }
+}

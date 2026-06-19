@@ -1,18 +1,18 @@
-// components/protected-layout.tsx
 import { ReactNode } from 'react';
 import { redirect } from 'next/navigation';
 import { checkAuth } from '@/lib/check-auth';
+import { Role } from '@/lib/roles';
 
 type ProtectedLayoutProps = {
   children: ReactNode;
-  roles?: Array<'ADMIN' | 'USER'>;
+  roles?: Role[];
 };
 
 export default async function ProtectedLayout({
   children,
   roles,
 }: ProtectedLayoutProps) {
-  const { authorized, session } = await checkAuth({
+  const { authorized } = await checkAuth({
     allowedRoles: roles,
   });
 

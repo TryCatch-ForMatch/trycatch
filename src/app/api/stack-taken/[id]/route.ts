@@ -1,23 +1,36 @@
-import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { NextRequest, NextResponse } from 'next/server';
+import { checkAuth } from '@/lib/check-auth';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
+import { MESSAGES, buildResponse } from '@/constants/messages';
+import { checkProjectStatus } from '@/lib/check-project-status';
+import { ROLE_GROUPS } from '@/lib/roles';
+import { logger } from '@/lib/logger';
 
-// Validação para edição de StackTaken
 const updateStackTakenSchema = z.object({
-  projectStackId: z.string().optional(),
-  stackId: z.string().optional(),
+  projectStackId: z.string().min(1, 'ID inválido.'),
+  stackId: z.string().min(1, 'ID inválido.'),
 });
 
+const idSchema = z.string().min(1, 'ID inválido.');
+
 export async function GET(
-  req: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const session = await getServerSession(authOptions);
+  const { authorized, response, session } = await checkAuth({
+    allowedRoles: ROLE_GROUPS.ALL,
+  });
+  if (!authorized || !session) return response;
 
-  if (!session || !session.user?.id) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+  const idParse = idSchema.safeParse(params.id);
+  if (!idParse.success) {
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+      errors: { id: ['ID inválido'] },
+    });
   }
 
   try {
@@ -32,40 +45,47 @@ export async function GET(
     });
 
     if (!stackTaken) {
-      return NextResponse.json(
-        { error: 'StackTaken não encontrado' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.STACK_TAKEN.NOT_FOUND,
+        status: 404,
+        errors: { id: ['StackTaken não encontrado'] },
+      });
     }
 
-    return NextResponse.json(stackTaken);
+    return NextResponse.json(stackTaken, { status: 200 });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: 'Erro ao buscar StackTaken' },
-      { status: 500 }
-    );
+    logger.error('Unexpected error', 'GET /api/stack-taken/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.STACK_TAKEN.INTERNAL_ERROR,
+      status: 500,
+      errors: { error: ['Erro ao buscar StackTaken'] },
+    });
   }
 }
 
 export async function PUT(
-  req: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const session = await getServerSession(authOptions);
+  const { authorized, response, session } = await checkAuth({
+    allowedRoles: ROLE_GROUPS.ALL,
+  });
+  if (!authorized || !session) return response;
 
-  if (!session || !session.user?.id) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
-  }
-
-  const body = await req.json();
+  const body = await request.json();
   const parsed = updateStackTakenSchema.safeParse(body);
 
   if (!parsed.success) {
-    return NextResponse.json(
-      { error: 'Dados inválidos', issues: parsed.error.issues },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+      errors: parsed.error.flatten().fieldErrors,
+    });
   }
 
   try {
@@ -74,17 +94,20 @@ export async function PUT(
     });
 
     if (!existing) {
-      return NextResponse.json(
-        { error: 'StackTaken não encontrado' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.STACK_TAKEN.NOT_FOUND,
+        status: 404,
+      });
     }
 
-    if (existing.userId !== session.user.id) {
-      return NextResponse.json(
-        { error: 'Ação não permitida' },
-        { status: 403 }
-      );
+    if (existing.userId !== session.user.id && session.user.role !== 'ADMIN') {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.AUTH.UNAUTHORIZED,
+        status: 403,
+        errors: { authorization: ['Ação não permitida'] },
+      });
     }
 
     const updated = await prisma.stackTaken.update({
@@ -92,25 +115,30 @@ export async function PUT(
       data: parsed.data,
     });
 
-    return NextResponse.json(updated);
+    await checkProjectStatus(existing.projectId);
+
+    return NextResponse.json(updated, { status: 200 });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: 'Erro ao atualizar StackTaken' },
-      { status: 500 }
-    );
+    logger.error('Erro ao atualizar StackTaken:', 'PUT /api/stack-taken/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.STACK_TAKEN.INTERNAL_ERROR,
+      status: 500,
+      errors: { error: ['Erro ao atualizar StackTaken'] },
+    });
   }
 }
 
 export async function DELETE(
-  req: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const session = await getServerSession(authOptions);
-
-  if (!session || !session.user?.id) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
-  }
+  const { authorized, response, session } = await checkAuth({
+    allowedRoles: ROLE_GROUPS.ALL,
+  });
+  if (!authorized || !session) return response;
 
   try {
     const existing = await prisma.stackTaken.findUnique({
@@ -118,29 +146,44 @@ export async function DELETE(
     });
 
     if (!existing) {
-      return NextResponse.json(
-        { error: 'StackTaken não encontrado' },
-        { status: 404 }
-      );
+      return buildResponse({
+        success: false,
+        message: MESSAGES.STACK_TAKEN.NOT_FOUND,
+        status: 404,
+      });
     }
 
-    if (existing.userId !== session.user.id) {
-      return NextResponse.json(
-        { error: 'Ação não permitida' },
-        { status: 403 }
-      );
+    if (existing.userId !== session.user.id && session.user.role !== 'ADMIN') {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.AUTH.UNAUTHORIZED,
+        status: 403,
+        errors: { authorization: ['Ação não permitida'] },
+      });
     }
 
     await prisma.stackTaken.delete({
       where: { id: params.id },
     });
 
-    return NextResponse.json({ message: 'StackTaken removido com sucesso' });
+    await checkProjectStatus(existing.projectId);
+
+    return buildResponse({
+      success: true,
+      message: MESSAGES.STACK_TAKEN.DELETED,
+      status: 200,
+    });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: 'Erro ao remover StackTaken' },
-      { status: 500 }
+    logger.error(
+      'Erro ao excluir StackTaken:',
+      'DELETE /api/stack-taken/[id]',
+      { error: error instanceof Error ? error.message : String(error) }
     );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.STACK_TAKEN.INTERNAL_ERROR,
+      status: 500,
+      errors: { error: ['Erro ao excluir StackTaken'] },
+    });
   }
 }

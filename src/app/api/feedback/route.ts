@@ -1,7 +1,10 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
+import { MESSAGES, buildResponse } from '@/constants/messages';
+import { ROLE_GROUPS } from '@/lib/roles';
+import { logger } from '@/lib/logger';
 
 const feedbackSchema = z.object({
   projectId: z.string(),
@@ -12,20 +15,34 @@ const feedbackSchema = z.object({
   stackTakenId: z.string().optional(),
 });
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   const { authorized, response, session } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
+    allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized || !session) return response;
 
-  const body = await req.json();
-  const parsed = feedbackSchema.safeParse(body);
+  let body;
+  try {
+    body = await request.json();
+  } catch (error) {
+    logger.error('Erro ao fazer parse do body:', 'POST /api/feedback', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+    });
+  }
 
+  const parsed = feedbackSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json(
-      { error: 'Dados inválidos', issues: parsed.error.issues },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      errors: parsed.error.flatten().fieldErrors,
+      status: 400,
+    });
   }
 
   const { projectId, toUserId, rating, comment, anonymous, stackTakenId } =
@@ -33,13 +50,72 @@ export async function POST(req: Request) {
   const fromUserId = session.user.id;
 
   if (fromUserId === toUserId) {
-    return NextResponse.json(
-      { error: 'Você não pode avaliar a si mesmo.' },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.FEEDBACK.SELF_FEEDBACK,
+      status: 400,
+    });
   }
 
   try {
+    // Verificar se o projeto existe
+    const project = await prisma.project.findUnique({
+      where: { id: projectId },
+    });
+    if (!project) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.PROJECT.NOT_FOUND,
+        status: 404,
+      });
+    }
+
+    // Verificar se o usuário avaliador participou do projeto
+    const fromUserParticipation = await prisma.stackTaken.findFirst({
+      where: {
+        projectId,
+        userId: fromUserId,
+      },
+    });
+    if (!fromUserParticipation) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.FEEDBACK.NO_PARTICIPATION,
+        status: 400,
+      });
+    }
+
+    // Verificar se o usuário a ser avaliado participou do projeto
+    const toUserParticipation = await prisma.stackTaken.findFirst({
+      where: {
+        projectId,
+        userId: toUserId,
+      },
+    });
+    if (!toUserParticipation) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.FEEDBACK.NO_PARTICIPATION,
+        status: 400,
+      });
+    }
+
+    // Verificar se já existe um feedback desse fromUserId para esse toUserId neste projeto
+    const existingFeedback = await prisma.feedback.findFirst({
+      where: {
+        projectId,
+        fromUserId,
+        toUserId,
+      },
+    });
+    if (existingFeedback) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.FEEDBACK.ALREADY_GIVEN,
+        status: 400,
+      });
+    }
+
     const feedback = await prisma.feedback.create({
       data: {
         projectId,
@@ -54,28 +130,47 @@ export async function POST(req: Request) {
 
     return NextResponse.json(feedback, { status: 201 });
   } catch (error) {
-    console.error('Erro ao criar feedback:', error);
-    return NextResponse.json(
-      { error: 'Erro interno ao criar feedback' },
-      { status: 500 }
-    );
+    logger.error('Erro ao criar feedback:', 'POST /api/feedback', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.FEEDBACK.INTERNAL_ERROR,
+      status: 500,
+    });
   }
 }
 
-export async function GET(req: Request) {
+export async function GET(request: NextRequest) {
   const { authorized, response } = await checkAuth({
-    allowedRoles: ['ADMIN', 'USER'],
+    allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized) return response;
 
-  const { searchParams } = new URL(req.url);
-  const projectId = searchParams.get('projectId');
+  let searchParams: URLSearchParams;
+  try {
+    const url = new URL(request.url);
+    searchParams = url.searchParams;
+  } catch (error) {
+    logger.error('Erro ao ler os parâmetros da URL:', 'GET /api/feedback', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_ID,
+      errors: { url: 'URL inválida' },
+      status: 400,
+    });
+  }
 
+  const projectId = searchParams.get('projectId');
   if (!projectId) {
-    return NextResponse.json(
-      { error: 'Parâmetro projectId é obrigatório' },
-      { status: 400 }
-    );
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      errors: { projectId: 'Parâmetro projectId é obrigatório.' },
+      status: 400,
+    });
   }
 
   try {
@@ -93,12 +188,16 @@ export async function GET(req: Request) {
       },
     });
 
-    return NextResponse.json(feedbacks);
+    return NextResponse.json(feedbacks, { status: 200 });
   } catch (error) {
-    console.error('Erro ao buscar feedbacks:', error);
-    return NextResponse.json(
-      { error: 'Erro interno ao buscar feedbacks' },
-      { status: 500 }
-    );
+    logger.error('Erro ao buscar feedbacks:', 'GET /api/feedback', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.FEEDBACK.INTERNAL_ERROR,
+      errors: process.env.NODE_ENV === 'development' ? error : undefined,
+      status: 500,
+    });
   }
 }

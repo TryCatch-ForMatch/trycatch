@@ -1,12 +1,12 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from './auth';
-import { NextResponse } from 'next/server';
-
-type Role = 'ADMIN' | 'USER';
+import { NextResponse, NextRequest } from 'next/server';
+import { Role } from '@/lib/roles';
 
 type CheckAuthParams = {
   allowedRoles?: Role[];
   requireAdmin?: boolean;
+  req?: NextRequest;
 };
 
 export async function checkAuth(params?: CheckAuthParams) {

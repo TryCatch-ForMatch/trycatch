@@ -1,0 +1,45 @@
+name: Docs Auto Translate
+
+on:
+  push:
+    paths:
+      - 'README.md'
+      - 'CONTRIBUTING.md'
+
+jobs:
+  translate:
+    if: "!contains(github.event.head_commit.message, 'auto-translate')"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install translate-shell
+        run: sudo apt-get update && sudo apt-get install -y translate-shell
+
+      - name: Translate files to English
+        run: |
+          # Traduz o README para o novo padrão
+          if [ -f README.md ]; then
+            trans -b :en < README.md > README.en.md
+            echo "README translated."
+          fi
+
+          # Traduz o CONTRIBUTING para o novo padrão
+          if [ -f CONTRIBUTING.md ]; then
+            trans -b :en < CONTRIBUTING.md > CONTRIBUTING.en.md
+            echo "CONTRIBUTING translated."
+          fi
+
+      - name: Commit translated files
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+
+          # Adiciona os arquivos com a extensão correta
+          git add README.en.md CONTRIBUTING.en.md
+
+          # Commita as alterações
+          git commit -m "docs: auto-translate docs to English [skip ci]" || echo "No changes"
+          git push

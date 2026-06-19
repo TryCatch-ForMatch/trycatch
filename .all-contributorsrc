@@ -1,0 +1,158 @@
+{
+  "projectName": "trycatch",
+  "projectOwner": "TryCatch-ForMatch",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "CONTRIBUTORS.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "contributors": [
+    {
+      "login": "karinaperes",
+      "name": "Karina Peres",
+      "avatar_url": "https://avatars.githubusercontent.com/u/134704973?v=4",
+      "profile": "https://github.com/karinaperes",
+      "contributions": [
+        "doc",
+        "code",
+        "eventOrganizing",
+        "ideas",
+        "projectManagement",
+        "promotion"
+      ]
+    },
+    {
+      "login": "FernandaBarrosLinhares",
+      "name": "FernandaBarrosLinhares",
+      "avatar_url": "https://avatars.githubusercontent.com/u/124844643?v=4",
+      "profile": "https://github.com/FernandaBarrosLinhares",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "dennisDev77",
+      "name": "Dennis Camela",
+      "avatar_url": "https://avatars.githubusercontent.com/u/123247070?v=4",
+      "profile": "https://github.com/dennisDev77",
+      "contributions": [
+        "code",
+        "bug",
+        "mentoring",
+        "review"
+      ]
+    },
+    {
+      "login": "RenataGrassi",
+      "name": "Renata Grassi",
+      "avatar_url": "https://avatars.githubusercontent.com/u/59033199?v=4",
+      "profile": "https://github.com/RenataGrassi",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "NathanRodriguesVieira99",
+      "name": "Nathan Rodrigues Vieira",
+      "avatar_url": "https://avatars.githubusercontent.com/u/116213876?v=4",
+      "profile": "https://github.com/NathanRodriguesVieira99",
+      "contributions": [
+        "code",
+        "test"
+      ]
+    },
+    {
+      "login": "concs-niemeyer",
+      "name": "Conrado Niemeyer",
+      "avatar_url": "https://avatars.githubusercontent.com/u/126495670?v=4",
+      "profile": "http://0xconcs.vercel.app",
+      "contributions": [
+        "code",
+        "bug",
+        "review"
+      ]
+    },
+    {
+      "login": "josuesantos7",
+      "name": "Josué Santos",
+      "avatar_url": "https://avatars.githubusercontent.com/u/110208995?v=4",
+      "profile": "https://github.com/josuesantos7",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "lPoltergeist",
+      "name": "Gabriel",
+      "avatar_url": "https://avatars.githubusercontent.com/u/72321620?v=4",
+      "profile": "https://github.com/lPoltergeist",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Eduardoqrn",
+      "name": "Eduardo Paiva",
+      "avatar_url": "https://avatars.githubusercontent.com/u/141378399?v=4",
+      "profile": "https://github.com/Eduardoqrn",
+      "contributions": [
+        "design"
+      ]
+    },
+    {
+      "login": "Furquimn",
+      "name": "Christian Furquim",
+      "avatar_url": "https://avatars.githubusercontent.com/u/102332171?v=4",
+      "profile": "https://github.com/Furquimn",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "SuYaSh-PaThAk04",
+      "name": "Suyash Pathak",
+      "avatar_url": "https://avatars.githubusercontent.com/u/130646936?v=4",
+      "profile": "https://suyashpathak-portfolio.netlify.app/",
+      "contributions": [
+        "code",
+        "infra"
+      ]
+    },
+    {
+      "login": "Rubenscode",
+      "name": "Rubens Almeida de Andrade",
+      "avatar_url": "https://avatars.githubusercontent.com/u/40808539?v=4",
+      "profile": "https://www.linkedin.com/in/rubens-almeida-andrade/",
+      "contributions": [
+        "test"
+      ]
+    },
+    {
+      "login": "usmanliaqat0",
+      "name": "Usman Liaqat",
+      "avatar_url": "https://avatars.githubusercontent.com/u/178957449?v=4",
+      "profile": "https://usmanliaqat.com",
+      "contributions": [
+        "code",
+        "doc",
+        "test"
+      ]
+    },
+    {
+      "login": "dev-mauricioAB",
+      "name": "Maurício Alexandre Barroso",
+      "avatar_url": "https://avatars.githubusercontent.com/u/62599099?v=4",
+      "profile": "https://github.com/dev-mauricioAB",
+      "contributions": [
+        "code"
+      ]
+    }
+  ]
+}

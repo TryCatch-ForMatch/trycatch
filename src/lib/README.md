@@ -19,4 +19,4 @@ Contém funções utilitárias e configurações centrais.
 
 - Objetivo
 
-- Função utilitária que centraliza a verificação de sessão e role (USER ou ADMIN)
+- Função utilitária que centraliza a verificação de sessão e role (USER, ADMIN ou MENTOR)

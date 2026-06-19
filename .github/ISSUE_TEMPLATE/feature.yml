@@ -1,0 +1,69 @@
+name: '✨ Feature'
+description: 'Nova funcionalidade ou melhoria de produto.'
+title: '[FEATURE] '
+labels: ['feature']
+assignees: []
+body:
+  - type: textarea
+    id: descricao
+    attributes:
+      label: '📝 Descrição'
+      description: 'Explique claramente o que deve ser implementado.'
+      placeholder: 'Ex.: Impedir criação de feedback quando o projeto não estiver CONCLUIDO.'
+    validations:
+      required: true
+
+  - type: textarea
+    id: problema
+    attributes:
+      label: '🎯 Problema que resolve'
+      description: 'Qual problema real esta feature resolve?'
+      placeholder: 'Ex.: Usuários conseguem enviar feedback antes da conclusão do projeto.'
+    validations:
+      required: true
+
+  - type: textarea
+    id: documento
+    attributes:
+      label: '📎 Documento Relacionado'
+      description: 'Indique o documento afetado.'
+      placeholder: 'Ex.: docs/02-produto/produto-feedback-reputacao.md'
+    validations:
+      required: true
+
+  - type: textarea
+    id: aceite
+    attributes:
+      label: '🕵️ Critério de Aceite'
+      description: 'Liste critérios objetivos e testáveis.'
+      placeholder: |
+        - Não permitir criação se status != CONCLUIDO
+        - Retornar erro 400
+        - Exibir mensagem clara no frontend
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: dod
+    attributes:
+      label: '📌 Definition of Done (DoD)'
+      options:
+        - label: Código implementado
+        - label: Regras de negócio respeitadas
+        - label: Testes passando
+        - label: Documentação atualizada (se necessário)
+        - label: PR revisado e aprovado
+
+  - type: textarea
+    id: contribuidores
+    attributes:
+      label: '🙌 Torne-se um colaborador'
+      description: |
+        Após a aprovação e merge desta issue/PR, adicione o seguinte comentário nesta issue para registrar sua contribuição:
+
+        @all-contributors please add @SEU_USUARIO for code
+
+        Substitua @SEU_USUARIO pelo seu usuário do GitHub e inclua a categoria.
+
+        Caso sua contribuição não seja apenas código, consulte as categorias disponíveis:
+        https://allcontributors.org/docs/en/emoji-key

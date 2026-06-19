@@ -1,101 +1,270 @@
 import { prisma } from '@/lib/prisma';
-import { hash } from 'bcrypt';
-import { NextRequest } from 'next/server';
-import { getIdFromRequest } from '@/utils/url';
-import jwt from 'jsonwebtoken';
+import { hash } from 'bcryptjs';
+import { NextRequest, NextResponse } from 'next/server';
+import { checkAuth } from '@/lib/check-auth';
+import { z } from 'zod';
+import { MESSAGES, buildResponse } from '@/constants/messages';
+import { ROLE_GROUPS } from '@/lib/roles';
+import { logger } from '@/lib/logger';
 
-function getUserFromRequest(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader) return null;
-  const token = authHeader.split(' ')[1];
+const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
+const updateUserSchema = z.object({
+  name: z.string().min(1, 'O nome é obrigatório.'),
+  email: z.string().email('Email inválido.'),
+  password: z
+    .union([
+      z.string().min(6, 'A senha deve ter pelo menos 6 caracteres.'),
+      z.literal(''),
+    ])
+    .optional(),
+  avatar: z.union([z.string().url(), z.literal('')]).nullable(),
+  linkedin: z.union([z.string().url().optional(), z.literal('')]),
+  github: z.union([z.string().url().optional(), z.literal('')]),
+  bio: z.string().optional(),
+});
+
+export async function GET(
+  request: NextRequest,
+  context: { params: { id: string } }
+) {
+  const { authorized, response, session } = await checkAuth({
+    allowedRoles: ROLE_GROUPS.ALL,
+  });
+  if (!authorized || !session) return response;
+
+  const idParse = idSchema.safeParse(context.params.id);
+  if (!idParse.success) {
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_ID,
+      status: 400,
+    });
+  }
+
+  const id = idParse.data;
   try {
-    return jwt.verify(token, process.env.JWT_SECRET as string) as {
-      id: string;
-    };
-  } catch {
-    return null;
-  }
-}
-
-export async function GET(request: NextRequest) {
-  const id = getIdFromRequest(request);
-
-  const userAuth = getUserFromRequest(request);
-
-  if (!userAuth || userAuth.id !== id) {
-    return new Response('Acesso negado', { status: 403 });
-  }
-
-  const user = await prisma.user.findUnique({
-    where: { id },
-    include: {
-      skills: {
-        include: { skill: true },
+    const user = await prisma.user.findUnique({
+      where: { id },
+      include: {
+        skills: {
+          include: { skill: true },
+        },
       },
-    },
-  });
+    });
 
-  if (!user) {
-    return new Response('Usuário não encontrado', { status: 404 });
+    if (!user) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.USER.NOT_FOUND,
+        status: 404,
+      });
+    }
+
+    return NextResponse.json(user, { status: 200 });
+  } catch (error) {
+    logger.error('Unexpected error', 'GET /api/user/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER.INTERNAL_ERROR,
+      status: 500,
+      errors: ['Erro ao buscar usuário.'],
+    });
   }
-
-  return Response.json(user);
 }
 
-export async function PUT(request: NextRequest) {
-  const id = getIdFromRequest(request);
+export async function PUT(
+  request: NextRequest,
+  context: { params: { id: string } }
+) {
+  const { authorized, response, session } = await checkAuth({
+    allowedRoles: ROLE_GROUPS.ALL,
+  });
+  if (!authorized || !session) return response;
 
-  const userAuth = getUserFromRequest(request);
-  if (!userAuth || userAuth.id !== id) {
-    return new Response('Acesso negado', { status: 403 });
+  const idParse = idSchema.safeParse(context.params.id);
+  if (!idParse.success) {
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_ID,
+      status: 400,
+    });
   }
 
-  const body = await request.json();
+  const id = idParse.data;
 
-  const { name, email, password, avatar, linkedin, github, bio, skills } = body;
+  if (session.user.id !== id) {
+    return buildResponse({
+      success: false,
+      message: MESSAGES.AUTH.UNAUTHORIZED,
+      status: 403,
+      errors: ['Acesso negado. Você não é o dono desse perfil.'],
+    });
+  }
 
-  const hashedPassword = password ? await hash(password, 10) : undefined;
+  let body;
 
-  const user = await prisma.user.update({
-    where: { id },
-    data: {
-      name,
-      email,
-      password: hashedPassword,
-      avatar,
-      linkedin,
-      github,
-      bio,
-      skills: skills
-        ? {
-            deleteMany: {},
-            create: skills.map((skillId: string) => ({
-              skill: { connect: { id: skillId } },
-            })),
-          }
-        : undefined,
-    },
-    include: {
-      skills: {
-        include: { skill: true },
+  try {
+    body = await request.json();
+  } catch (error) {
+    logger.error('Unexpected error', 'PUT /api/user/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+      errors: ['Erro ao ler o corpo da requisição.'],
+    });
+  }
+
+  const parse = updateUserSchema.safeParse(body);
+  if (!parse.success) {
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_DATA,
+      status: 400,
+      errors: ['Dados inválidos.', parse.error.format()],
+    });
+  }
+
+  const { name, email, password, avatar, linkedin, github, bio } = parse.data;
+
+  try {
+    const userExists = await prisma.user.findUnique({ where: { id } });
+    if (!userExists) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.USER.NOT_FOUND,
+        status: 404,
+      });
+    }
+
+    const hashedPassword = password ? await hash(password, 10) : undefined;
+
+    const existingEmailUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingEmailUser && existingEmailUser.id !== id) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.USER.ALREADY_EXISTS,
+        status: 400,
+        errors: ['Já existe um usuário com este e-mail.'],
+      });
+    }
+
+    const user = await prisma.user.update({
+      where: { id },
+      data: {
+        name,
+        email,
+        ...(hashedPassword && { password: hashedPassword }),
+        avatar,
+        linkedin,
+        github,
+        bio,
       },
-    },
-  });
+    });
 
-  return Response.json(user);
+    return NextResponse.json(user, { status: 200 });
+  } catch (error) {
+    logger.error('Unexpected error', 'PUT /api/user/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER.INTERNAL_ERROR,
+      status: 500,
+      errors: ['Erro ao atualizar usuário.'],
+    });
+  }
 }
 
-export async function DELETE(request: NextRequest) {
-  const id = getIdFromRequest(request);
+export async function DELETE(
+  request: NextRequest,
+  context: { params: { id: string } }
+) {
+  const { authorized, response, session } = await checkAuth({
+    allowedRoles: ROLE_GROUPS.ALL,
+  });
+  if (!authorized || !session) return response;
 
-  const userAuth = getUserFromRequest(request);
-  if (!userAuth || userAuth.id !== id) {
-    return new Response('Acesso negado', { status: 403 });
+  const idParse = idSchema.safeParse(context.params.id);
+  if (!idParse.success) {
+    return buildResponse({
+      success: false,
+      message: MESSAGES.GENERAL.INVALID_ID,
+      status: 400,
+    });
   }
 
-  await prisma.user.delete({
-    where: { id },
-  });
+  const id = idParse.data;
 
-  return new Response(null, { status: 204 });
+  if (session.user.id !== id && session.user.role !== 'ADMIN') {
+    return buildResponse({
+      success: false,
+      message: MESSAGES.AUTH.UNAUTHORIZED,
+      status: 403,
+      errors: ['Acesso negado. Você só pode excluir seu próprio perfil.'],
+    });
+  }
+
+  try {
+    const userExists = await prisma.user.findUnique({ where: { id } });
+    if (!userExists) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.USER.NOT_FOUND,
+        status: 404,
+      });
+    }
+
+    // Verifica se o usuário tem vínculos em StackTaken
+    const hasStackTaken = await prisma.stackTaken.findFirst({
+      where: { userId: id },
+    });
+
+    if (hasStackTaken) {
+      // Soft delete: apenas desativa
+      await prisma.user.update({
+        where: { id },
+        data: { isActive: false },
+      });
+
+      return NextResponse.json(
+        {
+          message:
+            'Usuário desativado (soft delete) devido a vínculos em StackTaken.',
+        },
+        { status: 200 }
+      );
+    } else {
+      // Hard delete: se não tem vinculo com a tabela StackTaken, exclui do banco
+      await prisma.userSkill.deleteMany({
+        where: { userId: id },
+      });
+      await prisma.user.delete({
+        where: { id },
+      });
+
+      return buildResponse({
+        success: true,
+        message: MESSAGES.USER.DELETED,
+        status: 200,
+      });
+    }
+  } catch (error) {
+    logger.error('Unexpected error', 'DELETE /api/user/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return buildResponse({
+      success: false,
+      message: MESSAGES.USER.INTERNAL_ERROR,
+      status: 500,
+      errors: ['Erro interno ao deletar usuário.'],
+    });
+  }
 }
