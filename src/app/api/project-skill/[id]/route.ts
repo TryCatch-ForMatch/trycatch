@@ -18,7 +18,7 @@ export async function GET(
   if (!idParse.success) {
     return buildResponse({
       success: false,
-      errors: idParse.error.errors,
+      errors: idParse.error.issues,
       message: MESSAGES.PROJECT_SKILL.NOT_FOUND,
       status: 400,
     });
@@ -77,7 +77,7 @@ export async function DELETE(
     if (error instanceof z.ZodError) {
       return buildResponse({
         success: false,
-        errors: error.errors,
+        errors: error.issues,
         message: MESSAGES.PROJECT_SKILL.DELETE_ERROR,
         status: 400,
       });

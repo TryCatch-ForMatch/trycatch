@@ -26,7 +26,7 @@ import { useSkills } from '@/hooks/api/useSkills';
 
 const schema = z.object({
   skills: z.array(z.string(), {
-    required_error: 'Selecione ao menos uma skill',
+    error: 'Selecione ao menos uma skill',
   }),
   availabilities: z
     .array(

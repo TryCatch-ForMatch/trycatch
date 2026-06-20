@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
         success: false,
         message: MESSAGES.GENERAL.INVALID_DATA,
         status: 400,
-        errors: parse.error.errors.map((e) => e.message),
+        errors: parse.error.issues.map((e) => e.message),
       });
     }
 

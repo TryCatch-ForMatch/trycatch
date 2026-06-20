@@ -21,7 +21,7 @@ const querySchema = z.object({
   take: z.coerce.number().int().positive().max(50).default(20),
   name: z.string().min(1).optional(),
   username: z.string().min(1).optional(),
-  role: z.nativeEnum(UserRole).optional(),
+  role: z.enum(UserRole).optional(),
   skills: z.string().min(1).optional(), // busca parcial no nome da skill
   stacks: z.string().optional(), // "id1,id2,id3"
   projectName: z.string().min(1).optional(),

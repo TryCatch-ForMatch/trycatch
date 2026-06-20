@@ -15,7 +15,7 @@ const CONTEXT = 'GET /api/portfolio/summary';
 const querySchema = z.object({
   cursor: z.string().optional(),
   take: z.coerce.number().int().positive().max(50).default(20),
-  role: z.nativeEnum(UserRole).optional(),
+  role: z.enum(UserRole).optional(),
   skills: z.string().optional(), // "id1,id2,id3"
 });
 

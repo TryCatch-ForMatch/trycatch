@@ -12,9 +12,9 @@ const CONTEXT_PATCH = 'PATCH /api/portfolio/me';
 
 const updatePortfolioSchema = z.object({
   bio: z.string().optional(),
-  avatar: z.string().url().optional(),
-  github: z.string().url('URL inválida').optional().or(z.literal('')),
-  linkedin: z.string().url('URL inválida').optional().or(z.literal('')),
+  avatar: z.url().optional(),
+  github: z.url('URL inválida').optional().or(z.literal('')),
+  linkedin: z.url('URL inválida').optional().or(z.literal('')),
   skills: z
     .array(
       z.object({
@@ -28,7 +28,7 @@ const updatePortfolioSchema = z.object({
         id: z.string().optional(),
         title: z.string().min(1, 'O título é obrigatório'),
         issuer: z.string().min(1, 'O emissor é obrigatório'),
-        url: z.string().url('URL inválida'),
+        url: z.url('URL inválida'),
         date: z.string().min(4, 'Data inválida (mes/ano)'),
         description: z.string().optional(),
       })

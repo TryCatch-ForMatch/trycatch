@@ -8,9 +8,8 @@ import { logger } from '@/lib/logger';
 
 const inviteRequestSchema = z.object({
   name: z.string().min(3, 'Nome inválido'),
-  email: z.string().email('Email inválido'),
+  email: z.email('Email inválido'),
   linkedin: z
-    .string()
     .url('LinkedIn inválido')
     .refine(
       (url) =>
