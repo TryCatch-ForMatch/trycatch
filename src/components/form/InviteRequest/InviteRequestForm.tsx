@@ -13,9 +13,8 @@ import { AxiosError } from 'axios';
 
 const inviteRequestSchema = z.object({
   name: z.string().min(3, 'Informe seu nome completo'),
-  email: z.string().email('Informe um email válido'),
+  email: z.email('Informe um email válido'),
   linkedin: z
-    .string()
     .url('Informe uma URL válida')
     .refine(
       (url) =>

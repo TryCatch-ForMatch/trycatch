@@ -15,7 +15,7 @@ import { CardContent } from '@/components/ui/card';
 import { getRoleLabel, ROLE_OPTIONS } from '@/lib/role-labels';
 
 const editInviteSchema = z.object({
-  email: z.string().email('Email inválido'),
+  email: z.email('Email inválido'),
   role: z.enum(['USER', 'ADMIN', 'MENTOR']),
 });
 

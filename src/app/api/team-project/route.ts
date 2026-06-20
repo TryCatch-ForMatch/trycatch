@@ -16,7 +16,7 @@ const createProjectSchema = z.object({
   totalValue: z
     .number()
     .nonnegative('O valor total deve ser um número positivo'),
-  status: z.nativeEnum(ProjectStatus),
+  status: z.enum(ProjectStatus),
   skills: z.array(z.string().min(1, 'ID inválido.')).optional(),
   stacks: z
     .array(

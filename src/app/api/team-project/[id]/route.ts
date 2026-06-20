@@ -16,7 +16,7 @@ const updateProjectSchema = z.object({
     message: 'Data inválida.',
   }),
   totalValue: z.number({
-    invalid_type_error: 'Valor total deve ser um número.',
+    error: 'Valor total deve ser um número.',
   }),
   status: z.nativeEnum(ProjectStatus),
   skills: z.array(z.string().min(1, 'ID inválido.')),
@@ -153,7 +153,7 @@ export async function PUT(
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
       status: 400,
-      errors: parse.error.errors.map((e) => e.message),
+      errors: parse.error.issues.map((e) => e.message),
     });
   }
 

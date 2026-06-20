@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 
 const inviteSchema = z.object({
-  email: z.string().email({ message: 'Email inválido.' }),
+  email: z.email({ message: 'Email inválido.' }),
   inviteCode: z.string().min(4, {
     message: 'O código do convite deve ter pelo menos 4 caracteres.',
   }),
@@ -40,7 +40,7 @@ export default function RegisterForm() {
 
     if (!validation.success) {
       const errors: { email?: string; inviteCode?: string } = {};
-      validation.error.errors.forEach((err) => {
+      validation.error.issues.forEach((err) => {
         if (err.path[0] === 'email') errors.email = err.message;
         if (err.path[0] === 'inviteCode') errors.inviteCode = err.message;
       });

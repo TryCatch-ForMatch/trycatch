@@ -9,11 +9,11 @@ import { logger } from '@/lib/logger';
 
 const adminCreateUserSchema = z.object({
   name: z.string(),
-  email: z.string().email(),
+  email: z.email(),
   password: z.string().min(6),
-  avatar: z.union([z.string().url(), z.literal('')]).nullable(),
-  linkedin: z.union([z.string().url(), z.literal(''), z.null()]).optional(),
-  github: z.union([z.string().url(), z.literal(''), z.null()]).optional(),
+  avatar: z.union([z.url(), z.literal('')]).nullable(),
+  linkedin: z.union([z.url(), z.literal(''), z.null()]).optional(),
+  github: z.union([z.url(), z.literal(''), z.null()]).optional(),
   bio: z.string().optional(),
   role: z.enum(Object.values(ROLES) as [Role, ...Role[]]),
   skills: z.array(z.string()).optional(),
