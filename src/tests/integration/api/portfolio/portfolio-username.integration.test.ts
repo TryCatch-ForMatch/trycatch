@@ -9,7 +9,7 @@
 // Para rodar: INTEGRATION_TEST=true DATABASE_URL="postgresql://postgres:postgres@localhost:5433/trycatch_local" \
 //               npx jest src/app/api/portfolio
 
-import { GET } from '../route';
+import { GET } from '@/app/api/portfolio/[username]/route';
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
