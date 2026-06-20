@@ -16,6 +16,8 @@
     "test:coverage": "jest --coverage",
     "test:staged": "jest --findRelatedTests --passWithNoTests",
     "test:push": "jest --coverage --passWithNoTests",
+    "test:unit": "jest",
+    "test:integration": "jest --config jest.integration.config.ts",
     "prepare": "husky",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
