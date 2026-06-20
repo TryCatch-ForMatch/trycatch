@@ -123,6 +123,7 @@ describe('POST /api/auth/signup', () => {
         github: '',
         bio: 'Backend developer',
         inviteCode: 'valid-code',
+        userName: 'member-test',
       }),
     };
 
@@ -147,6 +148,7 @@ describe('POST /api/auth/signup', () => {
         github: '',
         bio: 'Backend developer',
         role: 'MENTOR',
+        userName: 'member-test',
       },
     });
     expect(prisma.invite.update).toHaveBeenCalledWith({
@@ -168,6 +170,7 @@ describe('POST /api/auth/signup', () => {
         github: '',
         bio: 'Backend developer',
         inviteCode: 'used-code',
+        userName: 'member-test',
       }),
     };
 
