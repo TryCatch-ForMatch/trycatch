@@ -13,7 +13,7 @@
 //   DATABASE_URL="postgresql://postgres:postgres@localhost:5433/trycatch_local" \
 //     npx jest src/app/api/portfolio/me
 
-import { GET, PATCH } from '../route';
+import { GET, PATCH } from '@/app/api/portfolio/me/route';
 import { NextRequest } from 'next/server';
 
 // ---------------------------------------------------------------------------

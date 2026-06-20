@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { NextRequest } from 'next/server';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { logger } from '@/lib/logger';
+import { generateUniqueUsername } from '@/lib/generate-username';
 
 const createUserSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
@@ -82,9 +83,12 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    const userName = await generateUniqueUsername(name);
+
     const user = await prisma.user.create({
       data: {
         name,
+        userName,
         email,
         password: hashedPassword,
         avatar,

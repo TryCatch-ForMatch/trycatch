@@ -79,27 +79,54 @@ Essa meta é inicial e deve subir conforme a base de testes amadurecer.
 
 ## 5. Estrutura de Arquivos
 
-Os testes backend devem ficar em `src/tests/api`.
+O projeto utiliza dois tipos de testes backend:
 
-Estrutura recomendada:
+### Testes Unitários
+
+Executados no pipeline padrão e isolados de banco de dados.
 
 ```text
 src/tests/
-  api/
-    dominio/
-      rota-ou-caso.test.ts
-  utils/
-    test-utils.tsx
+└── unit/
+    ├── api/
+    ├── lib/
+    ├── services/
+    └── utils/
 ```
 
-Exemplos atuais:
+Exemplos:
 
 ```text
-src/tests/api/invite/invite-request-route.test.ts
-src/tests/api/portfolio/portfolio-me.test.ts
-src/tests/api/portfolio/portfolio-summary.test.ts
-src/tests/api/portfolio/portfolio-username.test.ts
+src/tests/unit/api/invite/invite-request-route.test.ts
+src/tests/unit/api/portfolio/portfolio-me.test.ts
+src/tests/unit/api/portfolio/portfolio-summary.test.ts
+src/tests/unit/api/portfolio/portfolio-username.test.ts
 ```
+
+### Testes de Integração
+
+Utilizam banco de dados e seeds de teste.
+
+```
+src/tests/
+└── integration/
+    ├── api/
+    └── services/
+```
+
+Exemplos:
+
+```text
+src/tests/integration/api/portfolio/portfolio-username.integration.test.ts
+src/tests/integration/api/portfolio/portfolio-me.integration.test.ts
+```
+
+### Regras
+
+- Novos testes unitários devem ser criados em src/tests/unit.
+- Novos testes de integração devem ser criados em src/tests/integration.
+- Não criar testes dentro de src/app/api/**/__tests__.
+- Não misturar testes unitários e integração na mesma pasta.
 
 ------------------------------------------------------------------------
 
@@ -108,6 +135,8 @@ src/tests/api/portfolio/portfolio-username.test.ts
 ### Arquivos
 
 Use o formato:
+
+### Testes Unitários
 
 ```text
 nome-da-rota-ou-caso.test.ts
@@ -118,6 +147,16 @@ Exemplos:
 - `invite-request-route.test.ts`
 - `portfolio-username.test.ts`
 - `portfolio-summary.test.ts`
+
+### Testes de Integração
+```text
+nome-da-rota-ou-caso.integration.test.ts
+```
+
+Exemplos:
+
+- portfolio-username.integration.test.ts
+- portfolio-me.integration.test.ts
 
 ### Blocos de teste
 
@@ -157,7 +196,7 @@ ambiente de browser simulado.
 
 ------------------------------------------------------------------------
 
-## 8. Padrão de Mock do Prisma
+## 8. Padrão de Mock e Isolamento
 
 Testes unitários de rotas backend não devem acessar o banco real.
 
@@ -183,7 +222,7 @@ jest.mock('@/lib/prisma', () => ({
 });
 ```
 
-Regras:
+### Regras:
 
 - Mockar apenas os modelos e métodos usados pelo teste.
 - Declarar retornos explícitos para cada cenário relevante.
@@ -191,6 +230,17 @@ Regras:
 - Não depender de ordem global de execução.
 - Não usar dados reais de banco em teste unitário.
 
+### Rotas que utilizam Services
+
+Quando a rota delegar a lógica para um service, o teste unitário deve mockar o service e não o Prisma.
+
+Exemplo:
+
+```ts
+jest.mock('@/lib/portfolio.service', () => ({
+  getPublicPortfolio: jest.fn(),
+}));
+```
 ------------------------------------------------------------------------
 
 ## 9. Cenários Obrigatórios por Rota
@@ -210,15 +260,47 @@ quando algum cenário não se aplica.
 
 ------------------------------------------------------------------------
 
-## 10. Comandos de Validação
+## 10. Testes de Integração
 
-Durante o desenvolvimento:
+Testes de integração validam a integração entre rotas, services e banco de dados.
+
+Características:
+
+- Utilizam Prisma real;
+- Utilizam banco de teste;
+- Podem depender de seed;
+- Não são executados no pipeline padrão.
+
+### Regras:
+
+- Devem ficar em `src/tests/integration`;
+- Devem possuir sufixo `.integration.test.ts`;
+- Devem ser independentes entre si;
+- Não devem modificar dados compartilhados sem limpeza adequada.
+
+Exemplo:
+
+```text
+portfolio-username.integration.test.ts
+```
+
+------------------------------------------------------------------------
+
+## 11. Comandos de Validação
+
+### Testes Unitários
 
 ```bash
 npm run test
 ```
 
-Para cobertura local:
+### Testes de Integração
+
+```bash
+npm run test:integration
+```
+
+### Cobertura
 
 ```bash
 npm run test:coverage
@@ -240,13 +322,14 @@ npx jest --coverage --coverageThreshold='{"global":{"branches":60,"functions":60
 
 ------------------------------------------------------------------------
 
-## 11. Critérios para Pull Request
+## 12. Critérios para Pull Request
 
 Um PR que altera backend deve informar:
 
 - Quais rotas ou funções foram testadas;
 - Quais cenários foram cobertos;
-- Qual comando de teste foi executado;
+- Quais comandos de teste foram executados;
+- Se houve execução de testes de integração;
 - Se houve mudança de regra de negócio;
 - Se a documentação precisou ser atualizada.
 
@@ -263,23 +346,25 @@ Modelo mínimo:
 Quando houver teste específico:
 
 ```md
-- `npm run test -- src/tests/api/portfolio/portfolio-me.test.ts`
+- `npm run test -- src/tests/unit/api/portfolio/portfolio-me.test.ts`
 ```
 
 ------------------------------------------------------------------------
 
-## 12. Antipadrões Evitados
+## 13. Antipadrões Evitados
 
-- Teste unitário que acessa banco real;
 - Mock genérico que esconde regra de negócio;
 - Teste que valida apenas se a função foi chamada, sem validar resposta;
 - Teste que depende de data, ordem ou estado global sem controle;
 - Cobertura alta sem cenários relevantes;
 - Alteração de código backend sem teste quando a regra é testável.
+- Testes de integração dentro de `src/app/api/**/__tests__`;
+- Testes unitários dependentes de banco real;
+- Mock de Prisma quando a unidade testada depende de um service;
 
 ------------------------------------------------------------------------
 
-## 13. Relação com Outros Documentos
+## 14. Relação com Outros Documentos
 
 - `docs/01 - estrategia/qualidade/planejamento-qualidade-software.md`
 - `docs/04 - processo/ci-e-validacao.md`
@@ -288,9 +373,12 @@ Quando houver teste específico:
 
 ------------------------------------------------------------------------
 
-## 14. Histórico de Decisões
+## 15. Histórico de Decisões
 
 - Definida cobertura mínima inicial de 60% para backend.
-- Padronizada estrutura `src/tests/api/{dominio}`.
-- Confirmado uso de Prisma mockado para testes unitários de API.
+- Padronizada estrutura de testes em `src/tests/unit` e `src/tests/integration`.
+- Proibida criação de testes em `src/app/api/**/__tests__`.
+- Confirmado uso de mocks para isolamento dos testes unitários.
+- Confirmado uso de Prisma mockado ou Services mockados em testes unitários.
+- Confirmado uso de Prisma real apenas em testes de integração.
 - Confirmado ambiente Node por arquivo para rotas backend.
