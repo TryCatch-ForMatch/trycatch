@@ -24,7 +24,7 @@ interface StackItem {
 
 export function ProjectStackSelector() {
   const { control, setValue, watch } = useFormContext();
-  const stacks: StackItem[] = useMemo(() => watch('stacks'), [watch]);
+  const stacks: StackItem[] = watch('stacks') || [];
 
   const [availableStacks, setAvailableStacks] = useState<Stack[]>([]);
 
@@ -112,31 +112,30 @@ export function ProjectStackSelector() {
             />
 
             {/* Input percentual */}
-            <div className="mt-[1rem] flex h-[40px] w-[72px] items-center">
-              <Input
-                type="number"
-                value={stack.percentage}
-                onFocus={(e) => {
-                  if (e.target.value === '0') {
-                    e.target.value = ''; // limpa o campo quando o valor é 0
-                  }
-                }}
-                onBlur={(e) => {
-                  if (e.target.value === '') {
-                    // se o usuário não digitar nada, volta o 0
-                    const newStacks = [...stacks];
-                    newStacks[index].percentage = 0;
-                    setValue('stacks', newStacks);
-                  }
-                }}
-                onChange={(e) => {
-                  const newStacks = [...stacks];
-                  newStacks[index].percentage = Number(e.target.value);
-                  setValue('stacks', newStacks);
-                }}
-                className="h-[40px] w-full rounded-xl border border-[#3B38A0] text-center"
-              />
-            </div>
+            <Controller
+              control={control}
+              name={`stacks.${index}.percentage`}
+              render={({ field }) => (
+                <div className="mt-[1rem] flex h-[40px] w-[72px] items-center">
+                  <Input
+                    type="number"
+                    value={field.value ?? 0}
+                    onFocus={(e) => {
+                      if (e.target.value === '0') {
+                        e.target.value = '';
+                      }
+                    }}
+                    onBlur={(e) => {
+                      if (e.target.value === '') {
+                        field.onChange(0);
+                      }
+                    }}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    className="h-[40px] w-full rounded-xl border border-[#3B38A0] text-center"
+                  />
+                </div>
+              )}
+            />
             <p>%</p>
 
             {/* Botão remover */}
