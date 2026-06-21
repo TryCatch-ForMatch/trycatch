@@ -8,6 +8,7 @@ export const portfolioSchema = z.object({
     .or(z.literal('')),
   github: z.string().url('URL inválida').optional().or(z.literal('')),
   linkedin: z.string().url('URL inválida').optional().or(z.literal('')),
+  skills: z.array(z.string()).optional(),
   portfolioPublic: z.boolean(),
   showEmail: z.boolean(),
   showGithub: z.boolean(),

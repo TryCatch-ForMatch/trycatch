@@ -6,8 +6,8 @@ import {
   GlobeLock,
   Save,
   ExternalLink,
-  Github,
-  Linkedin,
+  Code,
+  Link,
   Mail,
   User,
 } from 'lucide-react';
@@ -19,6 +19,7 @@ import { ToggleField } from '@/components/ui/toggle-field';
 import { FormField } from '@/components/ui/form-field';
 import { PortfolioPageSkeleton } from '@/components/Dashboard/Portfolio/PortfolioPageSkeleton';
 import { usePortfolioSettings } from './hooks/usePortfolioSettings';
+import { UserSkillSelector } from '@/components/Dashboard/User/UserSkillSelector';
 
 export default function DashboardPortfolioClient() {
   const { form, username, isLoading, isSaving, saveStatus, onSubmit } =
@@ -32,6 +33,7 @@ export default function DashboardPortfolioClient() {
   } = form;
 
   const portfolioPublic = watch('portfolioPublic');
+  const selectedSkills: string[] = watch('skills') || [];
 
   if (isLoading) return <PortfolioPageSkeleton />;
 
@@ -43,6 +45,23 @@ export default function DashboardPortfolioClient() {
           <h1 className="text-xl font-semibold tracking-tight">
             Meu portfólio
           </h1>
+          <UserSkillSelector
+            selectedSkills={selectedSkills}
+            onAddSkill={(skillId) =>
+              setValue('skills', [...selectedSkills, skillId], {
+                shouldDirty: true,
+              })
+            }
+            onRemoveSkill={(skillId) =>
+              setValue(
+                'skills',
+                selectedSkills.filter((id) => id !== skillId),
+                {
+                  shouldDirty: true,
+                }
+              )
+            }
+          />
           <p className="mt-1 text-sm text-muted-foreground">
             Configure o que aparece no seu portfólio público
           </p>
@@ -111,7 +130,7 @@ export default function DashboardPortfolioClient() {
 
             <FormField label="GitHub" error={errors.github?.message}>
               <div className="relative">
-                <Github className="absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+                <Code className="absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
                 <input
                   {...register('github')}
                   type="url"
@@ -123,7 +142,7 @@ export default function DashboardPortfolioClient() {
 
             <FormField label="LinkedIn" error={errors.linkedin?.message}>
               <div className="relative">
-                <Linkedin className="absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+                <Link className="absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
                 <input
                   {...register('linkedin')}
                   type="url"
@@ -152,14 +171,14 @@ export default function DashboardPortfolioClient() {
               onChange={(v) => setValue('showEmail', v, { shouldDirty: true })}
             />
             <ToggleField
-              icon={<Github className="h-3.5 w-3.5" />}
+              icon={<Code className="h-3.5 w-3.5" />}
               label="GitHub"
               description="Exibir link do GitHub"
               checked={watch('showGithub')}
               onChange={(v) => setValue('showGithub', v, { shouldDirty: true })}
             />
             <ToggleField
-              icon={<Linkedin className="h-3.5 w-3.5" />}
+              icon={<Link className="h-3.5 w-3.5" />}
               label="LinkedIn"
               description="Exibir link do LinkedIn"
               checked={watch('showLinkedin')}
