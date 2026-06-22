@@ -16,6 +16,7 @@ export interface ProjectDetailsType {
   id: string;
   name: string;
   description: string;
+  status: ProjectStatus;
   deadline: string;
   totalValue: number;
   github?: string | null;

@@ -5,15 +5,17 @@ import { Calendar, DollarSign, User } from 'lucide-react';
 import { Github } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
-import { ProjectDetailsType } from '@/types/interface/team-project';
+import type { ProjectDetailsType } from '@/types/interface/team-project';
 import { useCurrentUser } from '@/lib/use-current-user';
 import { useProjects } from '@/hooks/api/useProjects';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
 export function ProjectDetails({ projectId }: { projectId: string }) {
   const user = useCurrentUser();
+  const router = useRouter();
   const { getProjectDetailsById } = useProjects();
   const [project, setProject] = useState<ProjectDetailsType | null>(null);
   const [loading, setLoading] = useState(true);
@@ -34,8 +36,6 @@ export function ProjectDetails({ projectId }: { projectId: string }) {
   useEffect(() => {
     fetchDetailsProject();
   }, [projectId, fetchDetailsProject]);
-
-  if (!user) return null;
   if (loading)
     return <p className="p-6 text-gray-500">Carregando detalhes...</p>;
   if (!project)
@@ -103,6 +103,18 @@ export function ProjectDetails({ projectId }: { projectId: string }) {
             </a>
           </div>
         )}
+        {user && user.id === project.owner.id && (
+          <div className="ml-4">
+            <Button
+              size="sm"
+              onClick={() =>
+                router.push(`/dashboard/team-projects/${project.id}/edit`)
+              }
+            >
+              Editar
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* SKILLS ICONS */}
@@ -130,7 +142,7 @@ export function ProjectDetails({ projectId }: { projectId: string }) {
         {(project.stacks ?? []).map((stack) => {
           const takenBy = stack.takenBy;
           const canRelease =
-            takenBy && (takenBy.id === user.id || user.role === 'ADMIN');
+            takenBy && (takenBy.id === user?.id || user?.role === 'ADMIN');
 
           return (
             <Card

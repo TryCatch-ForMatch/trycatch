@@ -110,19 +110,23 @@ export async function POST(request: NextRequest) {
       totalValue,
       status,
       github: github || null,
-      skills: {
-        create: skills?.map((skillId: string) => ({
-          skill: { connect: { id: skillId } },
-        })),
-      },
-      stacks: {
-        create: stacks?.map(
-          (item: { stackId: string; percentage: number }) => ({
-            stack: { connect: { id: item.stackId } },
-            percentage: item.percentage,
-          })
-        ),
-      },
+      ...(skills && {
+        skills: {
+          create: skills.map((skillId: string) => ({
+            skill: { connect: { id: skillId } },
+          })),
+        },
+      }),
+      ...(stacks && {
+        stacks: {
+          create: stacks.map(
+            (item: { stackId: string; percentage: number }) => ({
+              stack: { connect: { id: item.stackId } },
+              percentage: item.percentage,
+            })
+          ),
+        },
+      }),
     },
   });
 
