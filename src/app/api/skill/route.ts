@@ -21,21 +21,28 @@ export async function GET() {
     logger.error('Unexpected error', 'GET /api/skill', {
       error: error instanceof Error ? error.message : String(error),
     });
+
     return buildResponse({
       success: false,
       message: MESSAGES.SKILL.INTERNAL_ERROR,
       status: 500,
-      errors: { message: 'Erro ao buscar skills.' },
+      errors: {
+        message: 'Erro ao buscar skills.',
+      },
     });
   }
 }
 
 export async function POST(request: NextRequest) {
   const auth = await checkAuth({ requireAdmin: true });
-  if (!auth.authorized) return auth.response;
+
+  if (!auth.authorized) {
+    return auth.response;
+  }
 
   try {
     const body = await request.json();
+
     const parse = createSkillSchema.safeParse(body);
 
     if (!parse.success) {
@@ -47,23 +54,12 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    const { name } = parse.data;
-    const normalizedName = name.trim().toLowerCase();
+    const { name, iconUrl: userIconUrl } = parse.data;
 
-    const iconUrl = `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${normalizedName}/${normalizedName}-original.svg`;
+    const existingSkill = await prisma.skill.findUnique({
+      where: { name },
+    });
 
-    // Verifica se o ícone realmente existe
-    const response = await fetch(iconUrl);
-    if (!response.ok) {
-      return buildResponse({
-        success: false,
-        message: 'Ícone não encontrado no repositório Devicon.',
-        status: 400,
-      });
-    }
-
-    // Verifica se já existe uma skill com esse nome
-    const existingSkill = await prisma.skill.findUnique({ where: { name } });
     if (existingSkill) {
       return buildResponse({
         success: false,
@@ -72,8 +68,29 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    let iconUrl: string | null = userIconUrl || null;
+
+    if (!iconUrl) {
+      const normalizedName = name.trim().toLowerCase();
+
+      const defaultIconUrl = `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${normalizedName}/${normalizedName}-original.svg`;
+
+      try {
+        const response = await fetch(defaultIconUrl);
+
+        if (response.ok) {
+          iconUrl = defaultIconUrl;
+        }
+      } catch {
+        iconUrl = null;
+      }
+    }
+
     const skill = await prisma.skill.create({
-      data: { name, iconUrl },
+      data: {
+        name,
+        iconUrl,
+      },
     });
 
     return buildResponse({
@@ -86,11 +103,14 @@ export async function POST(request: NextRequest) {
     logger.error('Erro ao criar skill:', 'POST /api/skill', {
       error: error instanceof Error ? error.message : String(error),
     });
+
     return buildResponse({
       success: false,
       message: MESSAGES.SKILL.INTERNAL_ERROR,
       status: 500,
-      errors: { message: 'Erro ao criar skill.' },
+      errors: {
+        message: 'Erro ao criar skill.',
+      },
     });
   }
 }
