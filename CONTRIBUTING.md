@@ -221,6 +221,28 @@ git commit --no-verify
 
 ---
 
+## 🤖 Integração Contínua (CI)
+
+Ao abrir um Pull Request, a CI roda automaticamente: **build**, **lint**,
+**testes**, **cobertura**, **auditoria de dependências** e, em seguida,
+a análise do **SonarCloud**.
+
+Pontos importantes para contribuidores:
+
+- A análise do **SonarCloud roda em um workflow separado** (disparado
+  após a CI). Isso é necessário porque PRs vindos de **forks** não
+  recebem secrets — sem essa separação, o Sonar falharia sempre.
+- Para instalar dependências use `npm ci` (e **evite `npm install` no
+  Windows** apenas para instalar, pois isso pode reescrever o
+  `package-lock.json` e quebrar a CI).
+- O **Prisma Client** é gerado automaticamente via `postinstall`; não
+  precisa rodar `npx prisma generate` manualmente após instalar.
+
+O fluxo completo, os motivos e as orientações detalhadas estão em
+[`docs/04 - processo/ci-e-validacao.md`](docs/04%20-%20processo/ci-e-validacao.md).
+
+---
+
 ## 💬 Onde pedir ajuda?
 
 - No grupo da comunidade [Discord](https://discord.gg/ZgUHkzf3r)
