@@ -1,6 +1,8 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { ProjectDetailsType } from '@/types/interface/team-project';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -46,9 +48,14 @@ const projectSchema = z.object({
 
 export type ProjectFormData = z.infer<typeof projectSchema>;
 
-export function ProjectForm() {
+export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
   const router = useRouter();
   const user = useCurrentUser();
+  const searchParams = useSearchParams();
+  const editIdParam = searchParams?.get('edit') || null;
+  const editId = editIdProp ?? editIdParam;
+  const [editingProject, setEditingProject] =
+    useState<ProjectDetailsType | null>(null);
 
   const methods = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -82,31 +89,76 @@ export function ProjectForm() {
         deadline: data.deadline,
         totalValue: data.totalValue,
         github: data.github,
-        status: 'BUSCANDO',
+        status: editingProject ? editingProject.status : 'BUSCANDO',
         skills: data.skills,
         stacks: data.stacks,
       };
 
       console.log('Payload enviado:', payload);
 
-      const res = await fetch('/api/team-project', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+      let res: Response;
+      if (editId) {
+        res = await fetch(`/api/team-project/${editId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+      } else {
+        res = await fetch('/api/team-project', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+      }
 
       if (!res.ok) {
         const error = await res.json().catch(() => null);
         console.error('Erro da API:', error);
-        throw new Error('Erro ao criar projeto');
+        throw new Error(
+          editId ? 'Erro ao atualizar projeto' : 'Erro ao criar projeto'
+        );
       }
 
-      router.push('/dashboard/team-projects');
+      router.push(
+        editId
+          ? `/dashboard/team-projects/${editId}`
+          : '/dashboard/team-projects'
+      );
     } catch (err) {
       console.error(err);
       toast.error('Erro ao salvar projeto');
     }
   };
+
+  // Fetch project data when editing
+  useEffect(() => {
+    async function loadProject() {
+      if (!editId) return;
+      try {
+        const res = await fetch(`/api/team-project/${editId}`);
+        if (!res.ok) throw new Error('Não foi possível buscar projeto');
+        const data = (await res.json()) as ProjectDetailsType;
+        setEditingProject(data);
+        methods.reset({
+          name: data.name || '',
+          description: data.description || '',
+          deadline: data.deadline ? data.deadline.split('T')[0] : '',
+          totalValue: data.totalValue ?? 0,
+          github: data.github ?? '',
+          stacks: (data.stacks || []).map((s) => ({
+            stackId: s.stackId,
+            percentage: s.percentage,
+          })),
+          skills: (data.skills || []).map((s) => s.id),
+        });
+      } catch (error) {
+        console.error(error);
+        toast.error('Erro ao carregar dados do projeto para edição');
+      }
+    }
+    loadProject();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editId]);
 
   return (
     <FormProvider {...methods}>
