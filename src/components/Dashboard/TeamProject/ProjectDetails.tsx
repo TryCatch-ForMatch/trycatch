@@ -5,7 +5,7 @@ import { Calendar, DollarSign, User } from 'lucide-react';
 import { Github } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
-import { ProjectDetailsType } from '@/types/interface/team-project';
+import type { ProjectDetailsType } from '@/types/interface/team-project';
 import { useCurrentUser } from '@/lib/use-current-user';
 import { useProjects } from '@/hooks/api/useProjects';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
