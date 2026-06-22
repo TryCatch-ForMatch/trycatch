@@ -20,6 +20,7 @@
     "test:unit": "jest",
     "test:integration": "jest --config jest.integration.config.ts",
     "prepare": "husky",
+    "postinstall": "prisma generate",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "contributors:add": "npx all-contributors add",
@@ -117,5 +118,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "overrides": {
+    "tmp": "^0.2.6"
   }
 }
