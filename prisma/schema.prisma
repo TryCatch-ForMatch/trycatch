@@ -96,6 +96,7 @@ model Project {
   skills      ProjectSkill[]
   stacks      ProjectStack[]
   stacksTaken StackTaken[]   @relation("ProjectStacksTaken")
+  github      String?
 }
 
 model ProjectStack {

@@ -26,6 +26,7 @@ const createProjectSchema = z.object({
       })
     )
     .optional(),
+  github: z.string().url('URL inválida').optional().or(z.literal('')),
 });
 
 export async function GET() {
@@ -90,8 +91,16 @@ export async function POST(request: NextRequest) {
       status: 400,
     });
   }
-  const { name, description, deadline, totalValue, status, skills, stacks } =
-    parse.data;
+  const {
+    name,
+    description,
+    deadline,
+    totalValue,
+    status,
+    skills,
+    stacks,
+    github,
+  } = parse.data;
   const project = await prisma.project.create({
     data: {
       ownerId: session.user.id,
@@ -100,6 +109,7 @@ export async function POST(request: NextRequest) {
       deadline: new Date(deadline),
       totalValue,
       status,
+      github: github || null,
       skills: {
         create: skills?.map((skillId: string) => ({
           skill: { connect: { id: skillId } },

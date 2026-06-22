@@ -27,6 +27,7 @@ const projectSchema = z.object({
     { message: 'Data deve ser válida e futura' }
   ),
   totalValue: z.number().min(0, 'Valor total deve ser maior ou igual a 0'),
+  github: z.string().url('URL inválida').optional().or(z.literal('')),
   stacks: z
     .array(
       z.object({
@@ -56,6 +57,7 @@ export function ProjectForm() {
       description: '',
       deadline: '',
       totalValue: 0,
+      github: '',
       stacks: [{ stackId: '', percentage: 0 }],
       skills: [],
     },
@@ -79,6 +81,7 @@ export function ProjectForm() {
         description: data.description,
         deadline: data.deadline,
         totalValue: data.totalValue,
+        github: data.github,
         status: 'BUSCANDO',
         skills: data.skills,
         stacks: data.stacks,
@@ -152,6 +155,19 @@ export function ProjectForm() {
               <p className="text-sm text-red-500">
                 {errors.description.message}
               </p>
+            )}
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium">
+              GitHub (opcional)
+            </label>
+            <Input
+              placeholder="https://github.com/usuario/repositorio"
+              {...register('github')}
+            />
+            {errors.github && (
+              <p className="text-sm text-red-500">{errors.github.message}</p>
             )}
           </div>
 
