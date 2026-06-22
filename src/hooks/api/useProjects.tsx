@@ -73,14 +73,14 @@ export function useProjects() {
     fetchProjectsDetails();
   }, [fetchProjects, fetchProjectsDetails]);
 
-  const getProjectDetailsById = async (id: string) => {
+  const getProjectDetailsById = useCallback(async (id: string) => {
     try {
       const response = await apiTryCatch.get(`/team-project/${id}`);
       return response.data;
     } catch (err) {
       console.log(err);
     }
-  };
+  }, []);
 
   return {
     allProjects,

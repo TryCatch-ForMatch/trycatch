@@ -9,6 +9,7 @@ const DEFAULT_VALUES: PortfolioFormData = {
   bio: '',
   github: '',
   linkedin: '',
+  skills: [],
   portfolioPublic: false,
   showEmail: false,
   showGithub: false,
@@ -36,7 +37,8 @@ export function usePortfolioSettings() {
     async function load() {
       try {
         const res = await fetch('/api/portfolio/me');
-        if (!res.ok) throw new Error();
+        if (!res.ok)
+          throw new Error('Falha ao carregar configurações do portfólio');
         const data = await res.json();
 
         setUsername(data.userName ?? null);
@@ -45,6 +47,10 @@ export function usePortfolioSettings() {
           bio: data.bio ?? '',
           github: data.github ?? '',
           linkedin: data.linkedin ?? '',
+          skills:
+            data.skills?.map(
+              (item: { skill: { id: string } }) => item.skill.id
+            ) ?? [],
           portfolioPublic: data.portfolioPublic ?? false,
           showEmail: data.showEmail ?? false,
           showGithub: data.showGithub ?? false,
@@ -75,7 +81,8 @@ export function usePortfolioSettings() {
         body: JSON.stringify(values),
       });
 
-      if (!res.ok) throw new Error();
+      if (!res.ok)
+        throw new Error('Falha ao salvar configurações do portfólio');
 
       setSaveStatus('success');
       form.reset(values);
