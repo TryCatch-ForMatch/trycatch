@@ -24,7 +24,11 @@ interface StackItem {
 
 export function ProjectStackSelector() {
   const { control, setValue, watch } = useFormContext();
-  const stacks: StackItem[] = watch('stacks') || [];
+  const watchedStacks = watch('stacks');
+  const stacks: StackItem[] = useMemo(
+    () => watchedStacks || [],
+    [watchedStacks]
+  );
 
   const [availableStacks, setAvailableStacks] = useState<Stack[]>([]);
 
@@ -73,12 +77,12 @@ export function ProjectStackSelector() {
   return (
     <div className="flex flex-col gap-3">
       {/* Título e botão adicionar */}
-      <div className="flex h-[33px] items-center justify-between">
+      <div className="flex h-8.25 items-center justify-between">
         <span className="text-lg font-medium text-[#312E41]">Stacks</span>
         <Button
           type="button"
           onClick={addStack}
-          className="h-[33px] w-[115px] rounded-lg bg-[#3B38A0] text-white shadow-md"
+          className="h-8.25 w-28.75 rounded-lg bg-[#3B38A0] text-white shadow-md"
         >
           Adicionar
         </Button>
@@ -87,7 +91,7 @@ export function ProjectStackSelector() {
       {/* Linhas de stacks */}
       <div className="flex flex-col gap-3">
         {stacks.map((stack, index) => (
-          <div key={index} className="flex h-[40px] items-center gap-1">
+          <div key={index} className="flex h-10 items-center gap-1">
             {/* Select para stack */}
             <Controller
               control={control}
@@ -97,7 +101,7 @@ export function ProjectStackSelector() {
                   value={field.value}
                   onValueChange={(val) => field.onChange(val)}
                 >
-                  <SelectTrigger className="w-[400px] rounded-xl border border-[#3B38A0] bg-white">
+                  <SelectTrigger className="w-100 rounded-xl border border-[#3B38A0] bg-white">
                     <SelectValue placeholder="Selecione a stack..." />
                   </SelectTrigger>
                   <SelectContent>
@@ -116,7 +120,7 @@ export function ProjectStackSelector() {
               control={control}
               name={`stacks.${index}.percentage`}
               render={({ field }) => (
-                <div className="mt-[1rem] flex h-[40px] w-[72px] items-center">
+                <div className="mt-4 flex h-10 w-18 items-center">
                   <Input
                     type="number"
                     value={field.value ?? 0}
@@ -131,7 +135,7 @@ export function ProjectStackSelector() {
                       }
                     }}
                     onChange={(e) => field.onChange(Number(e.target.value))}
-                    className="h-[40px] w-full rounded-xl border border-[#3B38A0] text-center"
+                    className="h-10 w-full rounded-xl border border-[#3B38A0] text-center"
                   />
                 </div>
               )}
@@ -142,7 +146,7 @@ export function ProjectStackSelector() {
             <button
               type="button"
               onClick={() => removeStack(index)}
-              className="flex h-[32px] w-[32px] items-center justify-center rounded-full text-[#3B38A0] transition-colors hover:bg-[#3B38A022]"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-[#3B38A0] transition-colors hover:bg-[#3B38A022]"
             >
               ×
             </button>

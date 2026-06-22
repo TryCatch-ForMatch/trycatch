@@ -13,7 +13,7 @@ export function ContactSenderEmail({
   name,
   requestDate,
   responseTimeframe,
-  contactId,
+  // contactId,
   appUrl,
 }: ContactSenderEmailProps) {
   return (

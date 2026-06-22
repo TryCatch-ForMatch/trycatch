@@ -7,20 +7,13 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Moon, X } from 'lucide-react';
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from '@/components/ui/select';
+import { Moon } from 'lucide-react';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
 
 import { IAvailability } from '@/types/interface/IAvailability';
-import { useSkills } from '@/hooks/api/useSkills';
 
 const weekdays = [
   'Domingo',
@@ -68,7 +61,6 @@ export function UserAvailability() {
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
