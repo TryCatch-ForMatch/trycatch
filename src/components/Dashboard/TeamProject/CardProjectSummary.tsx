@@ -2,7 +2,7 @@
 
 import { Clock, Check, Ellipsis, Users, Calendar1 } from 'lucide-react';
 import Image from 'next/image';
-import { ProjectSummaryType } from '@/types/interface/team-project';
+import type { ProjectSummaryType } from '@/types/interface/team-project';
 
 interface CardProjectSummaryProps {
   project: ProjectSummaryType;
