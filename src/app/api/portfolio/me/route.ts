@@ -1,5 +1,4 @@
 import { prisma } from '@/lib/prisma';
-import { Prisma } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
@@ -17,9 +16,10 @@ const updatePortfolioSchema = z.object({
   linkedin: z.string().url('URL inválida').optional().or(z.literal('')),
   skills: z
     .array(
-      z.object({
-        skillId: z.string().min(1, 'ID inválido.'),
-      })
+      z.union([
+        z.string().min(1, 'ID inválido.'),
+        z.object({ skillId: z.string().min(1, 'ID inválido.') }),
+      ])
     )
     .optional(),
   certificates: z
@@ -42,6 +42,20 @@ const updatePortfolioSchema = z.object({
   showFeedback: z.boolean().optional(),
   portfolioPublic: z.boolean().optional(),
 });
+
+type PortfolioUpdateData = {
+  bio?: string;
+  avatar?: string | null;
+  github?: string | null;
+  linkedin?: string | null;
+  showEmail?: boolean;
+  showGithub?: boolean;
+  showLinkedin?: boolean;
+  showCertificates?: boolean;
+  showProjects?: boolean;
+  showFeedback?: boolean;
+  portfolioPublic?: boolean;
+};
 
 export async function GET() {
   const { authorized, response, session } = await checkAuth({
@@ -169,7 +183,7 @@ export async function PATCH(request: NextRequest) {
   } = parsed.data;
 
   try {
-    const updateData: Partial<Prisma.UserUpdateInput> = {};
+    const updateData: PortfolioUpdateData = {};
 
     if (bio !== undefined) updateData.bio = bio;
     if (avatar !== undefined) updateData.avatar = avatar;
@@ -192,7 +206,10 @@ export async function PATCH(request: NextRequest) {
     if (skills) {
       await prisma.userSkill.deleteMany({ where: { userId } });
       await prisma.userSkill.createMany({
-        data: skills.map((s) => ({ userId, skillId: s.skillId })),
+        data: skills.map((s) => ({
+          userId,
+          skillId: typeof s === 'string' ? s : s.skillId,
+        })),
       });
     }
 

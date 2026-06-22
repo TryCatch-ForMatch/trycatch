@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { Calendar, DollarSign, User } from 'lucide-react';
+import { Github } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { ProjectDetailsType } from '@/types/interface/team-project';
@@ -89,6 +90,19 @@ export function ProjectDetails({ projectId }: { projectId: string }) {
             </span>
           </div>
         </div>
+        {project.github && (
+          <div className="ml-4">
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-2 text-sm text-blue-600"
+            >
+              <Github className="h-4 w-4" />
+              <span>Repositório</span>
+            </a>
+          </div>
+        )}
       </div>
 
       {/* SKILLS ICONS */}

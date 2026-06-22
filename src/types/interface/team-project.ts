@@ -7,6 +7,7 @@ export interface ProjectSummaryType {
   stacksFilled?: number;
   stacksTotal?: number;
   status?: string;
+  github?: string | null;
 }
 
 export type ProjectStatus = 'BUSCANDO' | 'EM_ANDAMENTO' | 'CONCLUIDO';
@@ -17,6 +18,7 @@ export interface ProjectDetailsType {
   description: string;
   deadline: string;
   totalValue: number;
+  github?: string | null;
   owner: {
     id: string;
     name: string;
