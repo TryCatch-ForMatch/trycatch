@@ -40,9 +40,13 @@ No TryCatch, a CI protege a branch de desenvolvimento contra:
 
 ## 3. Quando a pipeline roda
 
-O workflow principal está definido em `.github/workflows/ci.yml`.
+O projeto possui dois workflows que atuam em conjunto:
 
-Atualmente ele roda em:
+-   `.github/workflows/ci.yml` --- workflow principal (**CI Pipeline**);
+-   `.github/workflows/sonarcloud.yml` --- análise de qualidade
+    (**SonarCloud**), executada após a CI Pipeline.
+
+O **CI Pipeline** roda em:
 
 -   Pull Requests direcionados para `main`;
 -   Pull Requests direcionados para `develop`;
@@ -51,6 +55,16 @@ Atualmente ele roda em:
 A branch `test/tests-ci` é usada para validar alterações no próprio
 workflow. Para contribuições comuns, o fluxo esperado é abrir PR para
 `develop`.
+
+O **SonarCloud** não roda diretamente em `pull_request`. Ele é disparado
+pelo gatilho `workflow_run`, ou seja, **somente depois que a CI Pipeline
+termina com sucesso**. O motivo dessa separação está explicado na seção
+4.5.
+
+> **Importante:** workflows com gatilho `workflow_run` só são executados
+> a partir da versão do arquivo que está na branch padrão do repositório
+> (`develop`/`main`). Alterações nesse workflow feitas em uma branch de
+> feature só passam a valer depois do merge.
 
 ------------------------------------------------------------------------
 
@@ -100,18 +114,69 @@ npx jest --coverage \
   --coverageThreshold='{"global":{"branches":60,"functions":60,"lines":60,"statements":60}}'
 ```
 
-O relatório de cobertura é enviado como artefato do workflow.
+O relatório de cobertura é enviado como artefato do workflow
+(`coverage-report`). Em Pull Requests, o job também publica um artefato
+`pr-metadata` (número do PR, branch de origem e branch de destino). Esses
+artefatos são consumidos pelo workflow SonarCloud (seção 4.5).
 
 O padrão oficial de testes backend está documentado em
 `docs/04 - processo/testes-backend.md`.
 
-### 4.5 SonarQube Scan
+### 4.5 SonarCloud Scan (workflow separado)
 
-Objetivo: executar análise de qualidade e segurança via SonarQube.
+Objetivo: executar análise de qualidade e segurança via SonarCloud.
 
-Esse job depende do secret `SONAR_TOKEN`. Caso falhe por ausência de
-permissão ou configuração externa, o responsável pelo projeto deve ser
-acionado.
+#### Por que é um workflow separado
+
+A análise do SonarCloud precisa do secret `SONAR_TOKEN` para se
+autenticar no projeto. Por segurança, o GitHub **não disponibiliza
+secrets para workflows disparados por `pull_request` quando o PR vem de
+um fork**. Como a maioria das contribuições é feita a partir de forks, o
+antigo job de Sonar dentro da CI Pipeline recebia um `SONAR_TOKEN` vazio
+e falhava sempre com a mensagem:
+
+```text
+Not authorized or project not found. Please check the 'SONAR_TOKEN'...
+```
+
+Para resolver isso sem expor o token a código não confiável, a análise
+foi movida para o workflow `sonarcloud.yml`, disparado por
+`workflow_run`. Workflows `workflow_run` executam **no contexto do
+repositório base**, e por isso têm acesso ao `SONAR_TOKEN` mesmo quando a
+CI Pipeline original foi disparada por um fork.
+
+#### Como o fluxo funciona
+
+1.  A **CI Pipeline** roda no PR (inclusive de forks), sem secrets,
+    compila, testa e gera cobertura. Ela publica os artefatos
+    `coverage-report` e `pr-metadata`.
+2.  Ao terminar com sucesso, ela dispara o workflow **SonarCloud**.
+3.  O SonarCloud roda no contexto do repositório base (com
+    `SONAR_TOKEN`), faz checkout exato do commit analisado, baixa os
+    artefatos e executa **apenas o scanner**.
+
+O scanner apenas **lê arquivos** --- ele não executa `npm ci`, build ou
+qualquer script do projeto. Assim, o token nunca fica exposto ao código
+do fork, evitando o risco de vazamento que existiria com a abordagem
+`pull_request_target`.
+
+#### De onde vem o `SONAR_TOKEN`
+
+Ele **não é aleatório**: é um token gerado no SonarCloud e armazenado
+como secret no repositório base.
+
+-   Gere em SonarCloud → projeto → *Administration → Analysis Method*
+    (token de análise do projeto) ou em *My Account → Security*;
+-   Cadastre no **repositório base** (`TryCatch-ForMatch/trycatch`), em
+    *Settings → Secrets and variables → Actions*, com o nome exato
+    `SONAR_TOKEN`;
+-   O token é um segredo: nunca deve ser commitado. Se vazar, revogue no
+    SonarCloud e gere outro.
+
+> Por rodar no contexto do repositório base, a análise do SonarCloud só
+> aparece após o merge na branch padrão. Em PRs de fork, basta garantir
+> que os demais checks estejam verdes; o Sonar passa a decorar o PR
+> quando o `SONAR_TOKEN` está configurado no repositório base.
 
 ### 4.6 Audit Dependencies
 
@@ -240,7 +305,57 @@ executadas manualmente.
 
 ------------------------------------------------------------------------
 
-## 10. Responsabilidades
+## 10. Prisma Client e `package-lock.json`
+
+### 10.1 Geração do Prisma Client (`postinstall`)
+
+A partir do Prisma 7, o pacote `@prisma/client` só fica utilizável depois
+que o client é gerado. Sem isso, jobs que rodam testes falham com:
+
+```text
+Cannot find module '.prisma/client/default'
+```
+
+Para garantir que o client seja gerado em **todos os ambientes** (CI e
+local), existe o script `postinstall` no `package.json`:
+
+```json
+"postinstall": "prisma generate"
+```
+
+Ele roda automaticamente após `npm ci` / `npm install`. Não é necessário
+rodar `npx prisma generate` manualmente após instalar dependências.
+
+### 10.2 Lockfile e diferenças entre sistemas operacionais
+
+Algumas dependências nativas opcionais (por exemplo bindings de
+`@unrs/resolver-binding-*` e `@tailwindcss/oxide-*`, que embarcam
+`@emnapi/*`) são resolvidas de forma diferente conforme o sistema
+operacional. Por isso, rodar `npm install` no **Windows** pode reescrever
+o `package-lock.json` de um jeito que o `npm ci` da CI (Linux) rejeita,
+com o erro:
+
+```text
+npm ci can only install packages when your package.json and
+package-lock.json or npm-shrinkwrap.json are in sync.
+```
+
+Diretrizes para evitar esse problema:
+
+-   Para **instalar dependências** sem alterar o lockfile, use `npm ci`
+    (ele é somente leitura sobre o lock);
+-   Evite `npm install` no Windows nessas branches apenas para instalar:
+    isso pode reescrever o lock e quebrar a CI;
+-   Ao **alterar dependências de propósito**, gere o lockfile em ambiente
+    Linux equivalente ao da CI (por exemplo via Docker
+    `node:24`) antes de commitar, garantindo um lock compatível;
+-   Após um `npm install` acidental, verifique `git status`: se o
+    `package-lock.json` aparecer modificado sem intenção, descarte com
+    `git checkout package-lock.json`.
+
+------------------------------------------------------------------------
+
+## 11. Responsabilidades
 
 Contribuidor:
 
