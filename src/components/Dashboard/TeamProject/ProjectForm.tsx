@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { ProjectDetailsType } from '@/types/interface/team-project';
 import { useForm, FormProvider } from 'react-hook-form';
@@ -51,9 +51,7 @@ export type ProjectFormData = z.infer<typeof projectSchema>;
 export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
   const router = useRouter();
   const user = useCurrentUser();
-  const searchParams = useSearchParams();
-  const editIdParam = searchParams?.get('edit') || null;
-  const editId = editIdProp ?? editIdParam;
+  const editId = editIdProp;
   const [editingProject, setEditingProject] =
     useState<ProjectDetailsType | null>(null);
 
