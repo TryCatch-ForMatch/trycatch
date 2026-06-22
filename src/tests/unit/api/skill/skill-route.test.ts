@@ -6,6 +6,7 @@ import { GET, POST } from '@/app/api/skill/route';
 import { GET as GET_COUNT } from '@/app/api/skill/count/route';
 import { checkAuth } from '@/lib/check-auth';
 import { prisma } from '@/lib/prisma';
+import { logger } from '@/lib/logger';
 import { NextRequest } from 'next/server';
 
 jest.mock('@/lib/prisma', () => ({
@@ -23,6 +24,12 @@ jest.mock('@/lib/check-auth', () => ({
   checkAuth: jest.fn(),
 }));
 
+jest.mock('@/lib/logger', () => ({
+  logger: {
+    error: jest.fn(),
+  },
+}));
+
 type MockRequest = {
   json: () => Promise<unknown>;
 };
@@ -31,7 +38,10 @@ const authorizeAdmin = () => {
   (checkAuth as jest.Mock).mockResolvedValue({
     authorized: true,
     session: {
-      user: { id: 'admin-1', role: 'ADMIN' },
+      user: {
+        id: 'admin-1',
+        role: 'ADMIN',
+      },
     },
   });
 };
@@ -52,26 +62,49 @@ describe('GET /api/skill', () => {
 
     (prisma.skill.findMany as jest.Mock).mockResolvedValue(skills);
 
-    const response = await GET();
+    const response = (await GET()) as Response;
     const body = await response.json();
 
     expect(response.status).toBe(200);
+
     expect(body).toEqual(skills);
+
     expect(prisma.skill.findMany).toHaveBeenCalledWith({
-      orderBy: { name: 'asc' },
+      orderBy: {
+        name: 'asc',
+      },
     });
+  });
+
+  it('deve retornar 500 quando ocorrer erro ao buscar skills', async () => {
+    (prisma.skill.findMany as jest.Mock).mockRejectedValue(
+      new Error('Database error')
+    );
+
+    const response = (await GET()) as Response;
+    const body = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(body.success).toBe(false);
+
+    expect(logger.error).toHaveBeenCalled();
   });
 });
 
 describe('POST /api/skill', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
     authorizeAdmin();
-    global.fetch = jest.fn().mockResolvedValue({ ok: true }) as jest.Mock;
+
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+    }) as jest.Mock;
   });
 
   it('deve criar skill quando nome for válido e não existir conflito', async () => {
     (prisma.skill.findUnique as jest.Mock).mockResolvedValue(null);
+
     (prisma.skill.create as jest.Mock).mockResolvedValue({
       id: 'skill-1',
       name: 'React',
@@ -85,20 +118,87 @@ describe('POST /api/skill', () => {
       }),
     };
 
-    const response = await POST(request as NextRequest);
+    const response = (await POST(request as NextRequest)) as Response;
     const body = await response.json();
 
     expect(response.status).toBe(201);
+
     expect(body.success).toBe(true);
     expect(body.data.name).toBe('React');
+
     expect(global.fetch).toHaveBeenCalledWith(
       'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg'
     );
+
     expect(prisma.skill.create).toHaveBeenCalledWith({
       data: {
         name: 'React',
         iconUrl:
           'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
+      },
+    });
+  });
+
+  it('deve criar skill sem ícone quando Devicon não possuir o arquivo', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+    }) as jest.Mock;
+
+    (prisma.skill.findUnique as jest.Mock).mockResolvedValue(null);
+
+    (prisma.skill.create as jest.Mock).mockResolvedValue({
+      id: 'skill-1',
+      name: 'UnknownSkill',
+      iconUrl: null,
+    });
+
+    const request: MockRequest = {
+      json: async () => ({
+        name: 'UnknownSkill',
+      }),
+    };
+
+    const response = (await POST(request as NextRequest)) as Response;
+    const body = await response.json();
+
+    expect(response.status).toBe(201);
+
+    expect(prisma.skill.create).toHaveBeenCalledWith({
+      data: {
+        name: 'UnknownSkill',
+        iconUrl: null,
+      },
+    });
+
+    expect(body.success).toBe(true);
+  });
+
+  it('deve usar iconUrl fornecida pelo usuário', async () => {
+    (prisma.skill.findUnique as jest.Mock).mockResolvedValue(null);
+
+    (prisma.skill.create as jest.Mock).mockResolvedValue({
+      id: 'skill-1',
+      name: 'React',
+      iconUrl: 'https://meusite.com/react.svg',
+    });
+
+    const request: MockRequest = {
+      json: async () => ({
+        name: 'React',
+        iconUrl: 'https://meusite.com/react.svg',
+      }),
+    };
+
+    const response = (await POST(request as NextRequest)) as Response;
+
+    expect(response.status).toBe(201);
+
+    expect(global.fetch).not.toHaveBeenCalled();
+
+    expect(prisma.skill.create).toHaveBeenCalledWith({
+      data: {
+        name: 'React',
+        iconUrl: 'https://meusite.com/react.svg',
       },
     });
   });
@@ -110,29 +210,29 @@ describe('POST /api/skill', () => {
       }),
     };
 
-    const response = await POST(request as NextRequest);
+    const response = (await POST(request as NextRequest)) as Response;
     const body = await response.json();
 
     expect(response.status).toBe(400);
     expect(body.success).toBe(false);
+
     expect(prisma.skill.create).not.toHaveBeenCalled();
   });
 
-  it('deve retornar 400 quando ícone não existir no Devicon', async () => {
-    global.fetch = jest.fn().mockResolvedValue({ ok: false }) as jest.Mock;
-
+  it('deve retornar 400 quando iconUrl for inválida', async () => {
     const request: MockRequest = {
       json: async () => ({
-        name: 'UnknownSkill',
+        name: 'React',
+        iconUrl: 'url-invalida',
       }),
     };
 
-    const response = await POST(request as NextRequest);
+    const response = (await POST(request as NextRequest)) as Response;
     const body = await response.json();
 
     expect(response.status).toBe(400);
     expect(body.success).toBe(false);
-    expect(body.message).toBe('Ícone não encontrado no repositório Devicon.');
+
     expect(prisma.skill.create).not.toHaveBeenCalled();
   });
 
@@ -148,18 +248,23 @@ describe('POST /api/skill', () => {
       }),
     };
 
-    const response = await POST(request as NextRequest);
+    const response = (await POST(request as NextRequest)) as Response;
     const body = await response.json();
 
     expect(response.status).toBe(409);
     expect(body.success).toBe(false);
+
     expect(prisma.skill.create).not.toHaveBeenCalled();
   });
 
   it('deve bloquear criação para usuário não autorizado', async () => {
     const authResponse = Response.json(
-      { error: 'Acesso negado.' },
-      { status: 403 }
+      {
+        error: 'Acesso negado.',
+      },
+      {
+        status: 403,
+      }
     );
 
     (checkAuth as jest.Mock).mockResolvedValue({
@@ -173,10 +278,33 @@ describe('POST /api/skill', () => {
       }),
     };
 
-    const response = await POST(request as NextRequest);
+    const response = (await POST(request as NextRequest)) as Response;
 
     expect(response.status).toBe(403);
+
     expect(prisma.skill.create).not.toHaveBeenCalled();
+  });
+
+  it('deve retornar 500 quando ocorrer erro ao criar skill', async () => {
+    (prisma.skill.findUnique as jest.Mock).mockResolvedValue(null);
+
+    (prisma.skill.create as jest.Mock).mockRejectedValue(
+      new Error('Database error')
+    );
+
+    const request: MockRequest = {
+      json: async () => ({
+        name: 'React',
+      }),
+    };
+
+    const response = (await POST(request as NextRequest)) as Response;
+    const body = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(body.success).toBe(false);
+
+    expect(logger.error).toHaveBeenCalled();
   });
 });
 
@@ -188,11 +316,15 @@ describe('GET /api/skill/count', () => {
   it('deve retornar total de skills', async () => {
     (prisma.skill.count as jest.Mock).mockResolvedValue(4);
 
-    const response = await GET_COUNT();
+    const response = (await GET_COUNT()) as Response;
     const body = await response.json();
 
     expect(response.status).toBe(200);
-    expect(body).toEqual({ count: 4 });
+
+    expect(body).toEqual({
+      count: 4,
+    });
+
     expect(prisma.skill.count).toHaveBeenCalledWith();
   });
 });
