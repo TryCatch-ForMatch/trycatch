@@ -27,11 +27,11 @@ import Image from 'next/image';
 
 const userAdminSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
-  email: z.string().email('Email inválido'),
+  email: z.email('Email inválido'),
   password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
-  avatar: z.string().url('URL inválida').optional().or(z.literal('')),
-  linkedin: z.string().url('URL inválida').optional().or(z.literal('')),
-  github: z.string().url('URL inválida').optional().or(z.literal('')),
+  avatar: z.url('URL inválida').optional().or(z.literal('')),
+  linkedin: z.url('URL inválida').optional().or(z.literal('')),
+  github: z.url('URL inválida').optional().or(z.literal('')),
   bio: z.string().optional(),
   role: z.enum(Object.values(ROLES) as [Role, ...Role[]]),
   skills: z.array(z.string()).optional(),

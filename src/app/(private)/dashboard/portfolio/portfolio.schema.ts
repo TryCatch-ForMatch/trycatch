@@ -6,8 +6,8 @@ export const portfolioSchema = z.object({
     .max(500, 'Máximo 500 caracteres')
     .optional()
     .or(z.literal('')),
-  github: z.string().url('URL inválida').optional().or(z.literal('')),
-  linkedin: z.string().url('URL inválida').optional().or(z.literal('')),
+  github: z.url('URL inválida').optional().or(z.literal('')),
+  linkedin: z.url('URL inválida').optional().or(z.literal('')),
   skills: z.array(z.string()).optional(),
   portfolioPublic: z.boolean(),
   showEmail: z.boolean(),

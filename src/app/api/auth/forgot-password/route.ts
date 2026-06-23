@@ -7,7 +7,7 @@ import { sendResetPasswordEmail } from '@/lib/mail/send-reset-password-email';
 import { logger } from '@/lib/logger';
 
 const forgotPasswordSchema = z.object({
-  email: z.string().email('Email inválido'),
+  email: z.email('Email inválido'),
 });
 
 export async function POST(request: NextRequest) {

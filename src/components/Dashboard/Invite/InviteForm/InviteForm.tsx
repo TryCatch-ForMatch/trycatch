@@ -19,7 +19,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const inviteSchema = z.object({
-  email: z.string().email('E-mail inválido'),
+  email: z.email('E-mail inválido'),
   role: z.enum(['USER', 'ADMIN', 'MENTOR']),
 });
 

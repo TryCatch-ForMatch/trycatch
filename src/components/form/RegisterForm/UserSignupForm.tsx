@@ -18,11 +18,11 @@ import { getRoleLabel } from '@/lib/role-labels';
 
 const schema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
-  email: z.string().email('Email inválido'),
+  email: z.email('Email inválido'),
   password: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres'),
   role: z.string().min(1, 'Perfil é obrigatório'),
-  linkedin: z.string().url('LinkedIn inválido').optional().or(z.literal('')),
-  github: z.string().url('GitHub inválido').optional().or(z.literal('')),
+  linkedin: z.url('LinkedIn inválido').optional().or(z.literal('')),
+  github: z.url('GitHub inválido').optional().or(z.literal('')),
   avatar: z.string(),
   bio: z.string().optional(),
   inviteCode: z.string().min(1, 'Código do convite é obrigatório'),

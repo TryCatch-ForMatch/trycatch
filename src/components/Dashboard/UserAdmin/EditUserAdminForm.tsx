@@ -24,13 +24,13 @@ import Image from 'next/image';
 
 const editUserSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
-  email: z.string().email('Email inválido'),
-  linkedin: z.string().url('URL inválida').optional().or(z.literal('')),
-  github: z.string().url('URL inválida').optional().or(z.literal('')),
+  email: z.email('Email inválido'),
+  linkedin: z.url('URL inválida').optional().or(z.literal('')),
+  github: z.url('URL inválida').optional().or(z.literal('')),
   bio: z.string().optional(),
-  avatar: z.string().url('URL inválida').optional().or(z.literal('')),
+  avatar: z.url('URL inválida').optional().or(z.literal('')),
   role: z.enum(Object.values(ROLES) as [Role, ...Role[]], {
-    required_error: 'Selecione uma permissão',
+    error: 'Selecione uma permissão',
   }),
 });
 
