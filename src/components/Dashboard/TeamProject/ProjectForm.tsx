@@ -1,6 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import type { ProjectDetailsType } from '@/types/interface/team-project';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -27,6 +29,7 @@ const projectSchema = z.object({
     { message: 'Data deve ser válida e futura' }
   ),
   totalValue: z.number().min(0, 'Valor total deve ser maior ou igual a 0'),
+  github: z.string().url('URL inválida').optional().or(z.literal('')),
   stacks: z
     .array(
       z.object({
@@ -45,9 +48,12 @@ const projectSchema = z.object({
 
 export type ProjectFormData = z.infer<typeof projectSchema>;
 
-export function ProjectForm() {
+export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
   const router = useRouter();
   const user = useCurrentUser();
+  const editId = editIdProp;
+  const [editingProject, setEditingProject] =
+    useState<ProjectDetailsType | null>(null);
 
   const methods = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -56,6 +62,7 @@ export function ProjectForm() {
       description: '',
       deadline: '',
       totalValue: 0,
+      github: '',
       stacks: [{ stackId: '', percentage: 0 }],
       skills: [],
     },
@@ -79,31 +86,77 @@ export function ProjectForm() {
         description: data.description,
         deadline: data.deadline,
         totalValue: data.totalValue,
-        status: 'BUSCANDO',
+        github: data.github,
+        status: editingProject ? editingProject.status : 'BUSCANDO',
         skills: data.skills,
         stacks: data.stacks,
       };
 
       console.log('Payload enviado:', payload);
 
-      const res = await fetch('/api/team-project', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+      let res: Response;
+      if (editId) {
+        res = await fetch(`/api/team-project/${editId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+      } else {
+        res = await fetch('/api/team-project', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+      }
 
       if (!res.ok) {
         const error = await res.json().catch(() => null);
         console.error('Erro da API:', error);
-        throw new Error('Erro ao criar projeto');
+        throw new Error(
+          editId ? 'Erro ao atualizar projeto' : 'Erro ao criar projeto'
+        );
       }
 
-      router.push('/dashboard/team-projects');
+      router.push(
+        editId
+          ? `/dashboard/team-projects/${editId}`
+          : '/dashboard/team-projects'
+      );
     } catch (err) {
       console.error(err);
       toast.error('Erro ao salvar projeto');
     }
   };
+
+  // Fetch project data when editing
+  useEffect(() => {
+    async function loadProject() {
+      if (!editId) return;
+      try {
+        const res = await fetch(`/api/team-project/${editId}`);
+        if (!res.ok) throw new Error('Não foi possível buscar projeto');
+        const data = (await res.json()) as ProjectDetailsType;
+        setEditingProject(data);
+        methods.reset({
+          name: data.name || '',
+          description: data.description || '',
+          deadline: data.deadline ? data.deadline.split('T')[0] : '',
+          totalValue: data.totalValue ?? 0,
+          github: data.github ?? '',
+          stacks: (data.stacks || []).map((s) => ({
+            stackId: s.stackId,
+            percentage: s.percentage,
+          })),
+          skills: (data.skills || []).map((s) => s.id),
+        });
+      } catch (error) {
+        console.error(error);
+        toast.error('Erro ao carregar dados do projeto para edição');
+      }
+    }
+    loadProject();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editId]);
 
   return (
     <FormProvider {...methods}>
@@ -152,6 +205,19 @@ export function ProjectForm() {
               <p className="text-sm text-red-500">
                 {errors.description.message}
               </p>
+            )}
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium">
+              GitHub (opcional)
+            </label>
+            <Input
+              placeholder="https://github.com/usuario/repositorio"
+              {...register('github')}
+            />
+            {errors.github && (
+              <p className="text-sm text-red-500">{errors.github.message}</p>
             )}
           </div>
 

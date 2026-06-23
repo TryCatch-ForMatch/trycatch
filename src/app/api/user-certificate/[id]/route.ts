@@ -7,7 +7,7 @@ import { z } from 'zod';
 
 const updateSchema = z.object({
   title: z.string().min(1).optional(),
-  url: z.string().url().optional(),
+  url: z.url().optional(),
   issuer: z.string().min(1).optional(),
   date: z.string().optional(),
   description: z.string().optional(),

@@ -16,10 +16,11 @@ const updateProjectSchema = z.object({
     message: 'Data inválida.',
   }),
   totalValue: z.number({
-    invalid_type_error: 'Valor total deve ser um número.',
+    error: 'Valor total deve ser um número.',
   }),
   status: z.nativeEnum(ProjectStatus),
   skills: z.array(z.string().min(1, 'ID inválido.')),
+  github: z.string().url('URL inválida').optional().or(z.literal('')),
   stacks: z
     .array(
       z.object({
@@ -83,6 +84,7 @@ export async function GET(
       id: project.id,
       name: project.name,
       description: project.description,
+      github: project.github || null,
       deadline: project.deadline.toISOString(),
       totalValue: project.totalValue,
       status: project.status,
@@ -153,7 +155,7 @@ export async function PUT(
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
       status: 400,
-      errors: parse.error.errors.map((e) => e.message),
+      errors: parse.error.issues.map((e) => e.message),
     });
   }
 
@@ -179,8 +181,16 @@ export async function PUT(
       });
     }
 
-    const { name, description, deadline, totalValue, status, skills, stacks } =
-      parse.data;
+    const {
+      name,
+      description,
+      deadline,
+      totalValue,
+      status,
+      skills,
+      stacks,
+      github,
+    } = parse.data;
 
     const updated = await prisma.project.update({
       where: { id: projectId },
@@ -190,6 +200,7 @@ export async function PUT(
         deadline: new Date(deadline),
         totalValue,
         status,
+        github: github || null,
         skills: {
           deleteMany: {},
           create: skills?.map((skillId: string) => ({

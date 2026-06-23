@@ -1,8 +1,8 @@
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { useState, useEffect, useCallback } from 'react';
-import { ProjectSummaryType } from '@/types/interface/team-project';
-import { ProjectDetailsType } from '@/types/interface/team-project';
-import { ProjectCountType } from '@/types/interface/team-project';
+import type { ProjectSummaryType } from '@/types/interface/team-project';
+import type { ProjectDetailsType } from '@/types/interface/team-project';
+import type { ProjectCountType } from '@/types/interface/team-project';
 
 export function useProjects() {
   const [allProjects, setAllProjects] = useState<ProjectSummaryType[]>([]);
@@ -73,14 +73,14 @@ export function useProjects() {
     fetchProjectsDetails();
   }, [fetchProjects, fetchProjectsDetails]);
 
-  const getProjectDetailsById = async (id: string) => {
+  const getProjectDetailsById = useCallback(async (id: string) => {
     try {
       const response = await apiTryCatch.get(`/team-project/${id}`);
       return response.data;
     } catch (err) {
       console.log(err);
     }
-  };
+  }, []);
 
   return {
     allProjects,

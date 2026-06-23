@@ -10,10 +10,10 @@ const idSchema = z.string().min(24, 'ID inválido').max(36, 'ID inválido');
 
 const updateUserSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
-  email: z.string().email('Email inválido.'),
-  avatar: z.union([z.string().url(), z.literal('')]).nullable(),
-  linkedin: z.union([z.string().url(), z.literal('')]).optional(),
-  github: z.union([z.string().url(), z.literal('')]).optional(),
+  email: z.email('Email inválido.'),
+  avatar: z.union([z.url(), z.literal('')]).nullable(),
+  linkedin: z.union([z.url(), z.literal('')]).optional(),
+  github: z.union([z.url(), z.literal('')]).optional(),
   bio: z.string().optional(),
   role: z.enum(Object.values(ROLES) as [Role, ...Role[]]),
   skills: z.array(z.string()).optional(),

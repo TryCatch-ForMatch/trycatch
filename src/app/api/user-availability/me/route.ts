@@ -34,18 +34,7 @@ export async function GET() {
           },
           orderBy: { weekday: 'asc' },
         },
-        // pega skills
-        skills: {
-          select: {
-            skill: {
-              select: {
-                id: true,
-                name: true,
-                iconUrl: true,
-              },
-            },
-          },
-        },
+        // skills removed from this endpoint
       },
     });
 
@@ -57,10 +46,7 @@ export async function GET() {
       });
     }
 
-    return NextResponse.json({
-      ...user,
-      skills: user.skills.map((s) => s.skill),
-    });
+    return NextResponse.json(user);
   } catch (error) {
     logger.error('Unexpected error fetching user availability', CONTEXT, {
       userId: session.user.id,

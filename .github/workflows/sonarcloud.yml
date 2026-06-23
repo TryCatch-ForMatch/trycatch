@@ -1,0 +1,68 @@
+name: SonarCloud
+
+# This workflow runs AFTER the "CI Pipeline" workflow finishes. Unlike the CI
+# workflow (which is triggered by `pull_request` and therefore receives NO
+# secrets when the PR comes from a fork), a `workflow_run` workflow always runs
+# in the context of the base repository, so `secrets.SONAR_TOKEN` is available
+# even for fork pull requests.
+#
+# Security note: we only check out the already-analyzed source and download the
+# coverage artifact produced by the CI run, then run the Sonar scanner — which
+# reads files but never executes project scripts (no `npm ci`, no build). The
+# token is therefore never exposed to untrusted fork code.
+on:
+  workflow_run:
+    workflows: ['CI Pipeline']
+    types:
+      - completed
+
+jobs:
+  sonar:
+    name: SonarQube Scan
+    runs-on: ubuntu-latest
+    # Only analyze when the CI run succeeded (build, lint, test and coverage green).
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout analyzed code
+        uses: actions/checkout@v6
+        with:
+          # Check out the exact commit that CI analyzed. For fork PRs this lives
+          # in the contributor's repository, so we target it explicitly.
+          repository: ${{ github.event.workflow_run.head_repository.full_name }}
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0 # Disable shallow clone for better analysis relevancy.
+
+      - name: Download coverage report
+        uses: actions/download-artifact@v7
+        with:
+          name: coverage-report
+          path: coverage
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download PR metadata
+        continue-on-error: true # Absent for non-PR (push) runs.
+        uses: actions/download-artifact@v7
+        with:
+          name: pr-metadata
+          path: pr-meta
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Resolve Sonar analysis args
+        id: args
+        run: |
+          if [ -f pr-meta/number ]; then
+            # Pull request analysis (decorates the PR in SonarCloud + GitHub).
+            echo "args=-Dsonar.scm.revision=${{ github.event.workflow_run.head_sha }} -Dsonar.pullrequest.key=$(cat pr-meta/number) -Dsonar.pullrequest.branch=$(cat pr-meta/head_ref) -Dsonar.pullrequest.base=$(cat pr-meta/base_ref)" >> "$GITHUB_OUTPUT"
+          else
+            # Branch analysis (push to a tracked branch).
+            echo "args=-Dsonar.scm.revision=${{ github.event.workflow_run.head_sha }} -Dsonar.branch.name=${{ github.event.workflow_run.head_branch }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v7.0.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: ${{ steps.args.outputs.args }}
