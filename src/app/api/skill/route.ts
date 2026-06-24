@@ -7,7 +7,11 @@ import { logger } from '@/lib/logger';
 
 const createSkillSchema = z.object({
   name: z.string().min(1, 'O nome da skill é obrigatório.'),
-  iconUrl: z.url('A URL do ícone deve ser válida.').optional(),
+  iconUrl: z
+    .string()
+    .url('A URL do ícone deve ser válida.')
+    .optional()
+    .or(z.literal('')),
 });
 
 export async function GET() {

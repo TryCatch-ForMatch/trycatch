@@ -9,7 +9,11 @@ import { logger } from '@/lib/logger';
 const idSchema = z.string().min(1, 'ID inválido.');
 const updateSkillSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
-  iconUrl: z.url('A URL do ícone deve ser válida.').optional(),
+  iconUrl: z
+    .string()
+    .url('A URL do ícone deve ser válida.')
+    .optional()
+    .or(z.literal('')),
   forceUpdate: z.boolean().optional(),
 });
 
@@ -111,9 +115,14 @@ export async function PATCH(request: NextRequest) {
       });
     }
 
+    const normalizedIconUrl = iconUrl || null;
+
     const skill = await prisma.skill.update({
       where: { id },
-      data: { name, iconUrl },
+      data: {
+        name,
+        iconUrl: normalizedIconUrl,
+      },
     });
 
     return NextResponse.json(skill, { status: 200 });

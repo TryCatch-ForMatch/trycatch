@@ -11,7 +11,7 @@ const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 
 const updateStatusSchema = z.object({
   id: idSchema,
-  status: z.enum(ProjectStatus),
+  status: z.nativeEnum(ProjectStatus),
 });
 
 export async function GET() {

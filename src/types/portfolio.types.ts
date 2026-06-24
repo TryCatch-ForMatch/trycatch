@@ -91,3 +91,18 @@ export interface PortfolioPublicResponse {
   certificates?: PortfolioCertificate[];
   feedback?: PortfolioFeedback[];
 }
+
+export interface UserPortfolioCardData {
+  id: string;
+  avatarUrl: string | null;
+  displayName: string;
+  role: UserRole;
+  bio: string | null;
+  skills: Array<{
+    id: string;
+    name: string;
+    iconUrl: string | null;
+  }>;
+  githubUrl: string | null;
+  linkedinUrl: string | null;
+}
