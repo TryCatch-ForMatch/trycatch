@@ -122,6 +122,6 @@
   "overrides": {
     "tmp": "^0.2.6",
     "postcss": "^8.5.10",
-    "@hono/node-server": ">=1.19.13"
+    "@hono/node-server": "^1.19.13"
   }
 }
