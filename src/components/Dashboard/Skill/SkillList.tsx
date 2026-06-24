@@ -131,7 +131,11 @@ export function SkillList() {
         setSkills((prev) =>
           prev.map((skill) =>
             skill.id === id
-              ? { ...skill, name: editedName, iconUrl: editedIconUrl }
+              ? {
+                  ...skill,
+                  name: editedName,
+                  iconUrl: editedIconUrl || null,
+                }
               : skill
           )
         );
@@ -189,17 +193,15 @@ export function SkillList() {
               >
                 {/* Ícone + nome ou inputs */}
                 <div className="skill-icon flex items-center gap-3">
-                  <Image
-                    src={
-                      skill.iconUrl || 'https://via.placeholder.com/40?text=?'
-                    }
-                    alt={skill.name}
-                    className="h-10 w-10 rounded object-contain"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src =
-                        'https://via.placeholder.com/40?text=?';
-                    }}
-                  />
+                  {skill.iconUrl && (
+                    <Image
+                      src={skill.iconUrl}
+                      alt={skill.name}
+                      width={40}
+                      height={40}
+                      className="h-10 w-10 rounded object-contain"
+                    />
+                  )}
 
                   {editingId === skill.id ? (
                     <div className="flex flex-col gap-2">

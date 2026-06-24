@@ -306,6 +306,35 @@ describe('POST /api/skill', () => {
 
     expect(logger.error).toHaveBeenCalled();
   });
+
+  it('deve criar skill com iconUrl null quando não existir iconUrl e o Devicon falhar', async () => {
+    global.fetch = jest.fn().mockRejectedValue(new Error('network error'));
+
+    (prisma.skill.findUnique as jest.Mock).mockResolvedValue(null);
+
+    (prisma.skill.create as jest.Mock).mockResolvedValue({
+      id: 'skill-1',
+      name: 'Scrum',
+      iconUrl: null,
+    });
+
+    const request: MockRequest = {
+      json: async () => ({
+        name: 'Scrum',
+      }),
+    };
+
+    const response = (await POST(request as NextRequest)) as Response;
+
+    expect(response.status).toBe(201);
+
+    expect(prisma.skill.create).toHaveBeenCalledWith({
+      data: {
+        name: 'Scrum',
+        iconUrl: null,
+      },
+    });
+  });
 });
 
 describe('GET /api/skill/count', () => {

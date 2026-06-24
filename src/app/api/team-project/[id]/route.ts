@@ -16,7 +16,7 @@ const updateProjectSchema = z.object({
     message: 'Data inválida.',
   }),
   totalValue: z.number({
-    error: 'Valor total deve ser um número.',
+    invalid_type_error: 'Valor total deve ser um número.',
   }),
   status: z.nativeEnum(ProjectStatus),
   skills: z.array(z.string().min(1, 'ID inválido.')),
