@@ -25,7 +25,8 @@
     "build-storybook": "storybook build",
     "contributors:add": "npx all-contributors add",
     "contributors:fix": "node scripts/fix-contributors-style.js",
-    "review": "tsx scripts/code-reviewer.ts"
+    "review": "tsx scripts/code-reviewer.ts",
+    "setup": "npm ci"
   },
   "dependencies": {
     "@google/genai": "^1.48.0",
@@ -122,6 +123,9 @@
   "overrides": {
     "tmp": "^0.2.6",
     "postcss": "^8.5.10",
-    "@hono/node-server": "^1.19.13"
+    "@hono/node-server": ">=1.19.13",
+    "@istanbuljs/load-nyc-config": {
+      "js-yaml": ">=4.2.0"
+    }
   }
 }
