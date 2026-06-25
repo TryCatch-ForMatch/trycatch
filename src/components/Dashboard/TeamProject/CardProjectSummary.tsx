@@ -30,17 +30,26 @@ export function CardProjectSummary({
       {/* Descrição resumida */}
       <div className="flex flex-col rounded-md bg-white p-4 break-all">
         {/* Ícones das skills */}
-        <div className="skill-icon mb-2 flex gap-2">
-          {project?.skills?.map((skill) => (
-            <Image
-              key={skill.id}
-              src={skill.iconUrl || '/placeholder-icon.png'}
-              alt={skill.name}
-              width={24}
-              height={24}
-              className="rounded"
-            />
-          ))}
+        <div className="skill-icon mb-2 flex flex-wrap gap-2">
+          {project?.skills?.map((skill) =>
+            skill.iconUrl ? (
+              <Image
+                key={skill.id}
+                src={skill.iconUrl}
+                alt={skill.name}
+                width={24}
+                height={24}
+                className="rounded"
+              />
+            ) : (
+              <span
+                key={skill.id}
+                className="rounded border px-2 py-1 text-xs font-medium"
+              >
+                {skill.name}
+              </span>
+            )
+          )}
         </div>
 
         <p className="line-clamp-2 text-sm text-gray-700">
