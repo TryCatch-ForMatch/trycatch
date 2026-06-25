@@ -10,16 +10,16 @@ import { logger } from '@/lib/logger';
 const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 const updateUserSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
-  email: z.string().email('Email inválido.'),
+  email: z.email('Email inválido.'),
   password: z
     .union([
       z.string().min(6, 'A senha deve ter pelo menos 6 caracteres.'),
       z.literal(''),
     ])
     .optional(),
-  avatar: z.union([z.string().url(), z.literal('')]).nullable(),
-  linkedin: z.union([z.string().url().optional(), z.literal('')]),
-  github: z.union([z.string().url().optional(), z.literal('')]),
+  avatar: z.union([z.url(), z.literal('')]).nullable(),
+  linkedin: z.union([z.url().optional(), z.literal('')]),
+  github: z.union([z.url().optional(), z.literal('')]),
   bio: z.string().optional(),
 });
 

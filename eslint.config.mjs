@@ -11,7 +11,11 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const eslintConfig = [...compat.extends('next/core-web-vitals', 'next/typescript'), {
+const eslintConfig = [
+  {
+    ignores: ['.next/**', 'node_modules/**', 'coverage/**', 'storybook-static/**', 'next-env.d.ts'],
+  },
+  ...compat.extends('next/core-web-vitals', 'next/typescript'), {
   files: ['**/tests/**/*', '**/*.{test,spec}.*'],
   plugins: {
     'testing-library': testingLibrary,

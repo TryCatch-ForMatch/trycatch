@@ -103,7 +103,7 @@ export async function PATCH(request: NextRequest) {
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
       status: 400,
-      errors: parsed.success ? null : parsed.error.errors.map((e) => e.message),
+      errors: parsed.success ? null : parsed.error.issues.map((e) => e.message),
     });
   }
 

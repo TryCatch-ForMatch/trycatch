@@ -24,6 +24,12 @@ jest.mock('@/lib/prisma', () => ({
   },
 }));
 
+jest.mock('@/lib/normalize-skill-name', () => ({
+  normalizeSkillName: jest.fn((name: string) =>
+    name.toLowerCase().replace(/\s/g, '')
+  ),
+}));
+
 jest.mock('@/lib/check-auth', () => ({
   checkAuth: jest.fn(),
 }));
@@ -109,14 +115,17 @@ describe('PATCH /api/skill/[id]', () => {
         iconUrl: 'https://cdn.example.com/vue.svg',
       })
     );
-    const body = await response.json();
+    expect(response).toBeDefined();
 
-    expect(response.status).toBe(200);
+    const body = await response!.json();
+
+    expect(response!.status).toBe(200);
     expect(body.name).toBe('Vue');
     expect(prisma.skill.update).toHaveBeenCalledWith({
       where: { id: 'skill-1' },
       data: {
         name: 'Vue',
+        normalizedName: 'vue',
         iconUrl: 'https://cdn.example.com/vue.svg',
       },
     });
@@ -128,9 +137,9 @@ describe('PATCH /api/skill/[id]', () => {
         name: '',
       })
     );
-    const body = await response.json();
+    const body = await response!.json();
 
-    expect(response.status).toBe(400);
+    expect(response!.status).toBe(400);
     expect(body.success).toBe(false);
     expect(prisma.skill.update).not.toHaveBeenCalled();
   });
@@ -139,6 +148,7 @@ describe('PATCH /api/skill/[id]', () => {
     (prisma.skill.findFirst as jest.Mock).mockResolvedValue({
       id: 'skill-2',
       name: 'React',
+      normalizedName: 'react',
     });
 
     const response = await PATCH(
@@ -146,9 +156,9 @@ describe('PATCH /api/skill/[id]', () => {
         name: 'React',
       })
     );
-    const body = await response.json();
+    const body = await response!.json();
 
-    expect(response.status).toBe(409);
+    expect(response!.status).toBe(409);
     expect(body.success).toBe(false);
     expect(prisma.skill.update).not.toHaveBeenCalled();
   });
@@ -165,9 +175,9 @@ describe('PATCH /api/skill/[id]', () => {
         name: 'React Native',
       })
     );
-    const body = await response.json();
+    const body = await response!.json();
 
-    expect(response.status).toBe(409);
+    expect(response!.status).toBe(409);
     expect(body.success).toBe(false);
     expect(prisma.skill.update).not.toHaveBeenCalled();
   });
@@ -181,7 +191,7 @@ describe('PATCH /api/skill/[id]', () => {
     (prisma.skill.update as jest.Mock).mockResolvedValue({
       id: 'skill-1',
       name: 'React Native',
-      iconUrl: undefined,
+      iconUrl: null,
     });
 
     const response = await PATCH(
@@ -190,17 +200,73 @@ describe('PATCH /api/skill/[id]', () => {
         forceUpdate: true,
       })
     );
-    const body = await response.json();
+    const body = await response!.json();
 
-    expect(response.status).toBe(200);
+    expect(response!.status).toBe(200);
     expect(body.name).toBe('React Native');
     expect(prisma.skill.update).toHaveBeenCalledWith({
       where: { id: 'skill-1' },
       data: {
         name: 'React Native',
-        iconUrl: undefined,
+        normalizedName: 'reactnative',
+        iconUrl: null,
       },
     });
+  });
+
+  it('deve converter iconUrl vazio para null', async () => {
+    (prisma.skill.findFirst as jest.Mock).mockResolvedValue(null);
+    (prisma.projectSkill.findFirst as jest.Mock).mockResolvedValue(null);
+    (prisma.userSkill.findFirst as jest.Mock).mockResolvedValue(null);
+
+    (prisma.skill.update as jest.Mock).mockResolvedValue({
+      id: 'skill-1',
+      name: 'Scrum',
+      iconUrl: null,
+    });
+
+    await PATCH(
+      createRequest('skill-1', {
+        name: 'Scrum',
+        iconUrl: '',
+      })
+    );
+
+    expect(prisma.skill.update).toHaveBeenCalledWith({
+      where: { id: 'skill-1' },
+      data: {
+        name: 'Scrum',
+        normalizedName: 'scrum',
+        iconUrl: null,
+      },
+    });
+  });
+});
+
+it('deve gerar normalizedName automaticamente', async () => {
+  (prisma.skill.findFirst as jest.Mock).mockResolvedValue(null);
+  (prisma.projectSkill.findFirst as jest.Mock).mockResolvedValue(null);
+  (prisma.userSkill.findFirst as jest.Mock).mockResolvedValue(null);
+
+  (prisma.skill.update as jest.Mock).mockResolvedValue({
+    id: 'skill-1',
+    name: 'Node JS',
+    normalizedName: 'nodejs',
+  });
+
+  await PATCH(
+    createRequest('skill-1', {
+      name: 'Node JS',
+    })
+  );
+
+  expect(prisma.skill.update).toHaveBeenCalledWith({
+    where: { id: 'skill-1' },
+    data: {
+      name: 'Node JS',
+      normalizedName: 'nodejs',
+      iconUrl: null,
+    },
   });
 });
 
@@ -218,9 +284,9 @@ describe('DELETE /api/skill/[id]', () => {
     });
 
     const response = await DELETE(createRequest());
-    const body = await response.json();
+    const body = await response!.json();
 
-    expect(response.status).toBe(200);
+    expect(response!.status).toBe(200);
     expect(body.success).toBe(true);
     expect(prisma.skill.delete).toHaveBeenCalledWith({
       where: { id: 'skill-1' },
@@ -234,9 +300,9 @@ describe('DELETE /api/skill/[id]', () => {
     (prisma.projectSkill.findFirst as jest.Mock).mockResolvedValue(null);
 
     const response = await DELETE(createRequest());
-    const body = await response.json();
+    const body = await response!.json();
 
-    expect(response.status).toBe(400);
+    expect(response!.status).toBe(400);
     expect(body.success).toBe(false);
     expect(prisma.skill.delete).not.toHaveBeenCalled();
   });

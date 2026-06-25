@@ -17,15 +17,15 @@ import Image from 'next/image';
 
 const userEditFormSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
-  email: z.string().email('Email inválido.'),
+  email: z.email('Email inválido.'),
   password: z
     .string()
     .min(6, 'Senha deve ter pelo menos 6 caracteres.')
     .optional()
     .or(z.literal('')),
-  avatar: z.string().url('URL inválida').optional().or(z.literal('')),
-  linkedin: z.string().url('URL inválida').optional().or(z.literal('')),
-  github: z.string().url('URL inválida').optional().or(z.literal('')),
+  avatar: z.url('URL inválida').optional().or(z.literal('')),
+  linkedin: z.url('URL inválida').optional().or(z.literal('')),
+  github: z.url('URL inválida').optional().or(z.literal('')),
   bio: z.string().optional(),
 });
 

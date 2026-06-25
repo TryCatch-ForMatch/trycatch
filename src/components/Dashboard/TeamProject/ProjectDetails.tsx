@@ -119,17 +119,26 @@ export function ProjectDetails({ projectId }: { projectId: string }) {
 
       {/* SKILLS ICONS */}
       <div className="skill-icon flex flex-wrap gap-3">
-        {(project.skills ?? []).map((skill) => (
-          <Image
-            key={skill.id}
-            src={skill.iconUrl || '/placeholder.png'}
-            alt={skill.name}
-            title={skill.name}
-            width={36}
-            height={36}
-            className="h-9 w-9"
-          />
-        ))}
+        {(project.skills ?? []).map((skill) =>
+          skill.iconUrl ? (
+            <Image
+              key={skill.id}
+              src={skill.iconUrl}
+              alt={skill.name}
+              title={skill.name}
+              width={36}
+              height={36}
+              className="h-9 w-9"
+            />
+          ) : (
+            <span
+              key={skill.id}
+              className="rounded-md border px-3 py-1 text-sm font-medium"
+            >
+              {skill.name}
+            </span>
+          )
+        )}
       </div>
 
       {/* DESCRIÇÃO */}

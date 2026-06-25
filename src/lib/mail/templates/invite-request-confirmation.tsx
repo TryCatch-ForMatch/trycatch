@@ -11,7 +11,7 @@ type InviteRequestConfirmationEmailProps = {
 export function InviteRequestConfirmationEmail({
   name,
   requestDate,
-  requestId,
+  // requestId,
   appUrl,
 }: InviteRequestConfirmationEmailProps) {
   return (

@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "commit": "cz",
-    "lint": "next lint",
+    "lint": "eslint . --no-cache",
+    "lint:fix": "eslint . --no-cache --fix",
     "format": "prettier --write .",
     "seed": "node scripts/createTestUser.js",
     "test": "jest  --passWithNoTests --maxWorkers=50%",
@@ -19,6 +20,7 @@
     "test:unit": "jest",
     "test:integration": "jest --config jest.integration.config.ts",
     "prepare": "husky",
+    "postinstall": "prisma generate",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "contributors:add": "npx all-contributors add",
@@ -29,7 +31,7 @@
     "@google/genai": "^1.48.0",
     "@hookform/resolvers": "^5.1.1",
     "@next/font": "^14.2.15",
-    "@prisma/client": "^6.9.0",
+    "@prisma/client": "^6.19.3",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-label": "^2.1.7",
@@ -41,6 +43,7 @@
     "@tanstack/react-query": "^5.101.0",
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.14.2",
+    "@types/pg": "^8.20.0",
     "axios": "^1.11.0",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
@@ -48,12 +51,14 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.4.2",
     "hook-form": "^0.0.1",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.525.0",
-    "next": "15.5.14",
-    "next-auth": "^4.24.11",
+    "next": "15.5.19",
+    "next-auth": "^4.24.14",
     "next-themes": "^0.4.6",
+    "pg": "^8.22.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.60.0",
@@ -62,7 +67,7 @@
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.11",
-    "zod": "^3.25.64"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
@@ -88,7 +93,7 @@
     "autoprefixer": "^10.4.21",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.30.1",
-    "eslint-config-next": "^15.3.4",
+    "eslint-config-next": "^15.5.19",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
     "eslint-plugin-storybook": "^9.0.15",
@@ -101,7 +106,7 @@
     "postcss": "^8.5.6",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.13",
-    "prisma": "^6.12.0",
+    "prisma": "^6.19.3",
     "storybook": "^9.0.15",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
@@ -113,5 +118,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "overrides": {
+    "tmp": "^0.2.6"
   }
 }

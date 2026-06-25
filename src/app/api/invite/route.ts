@@ -8,7 +8,7 @@ import { ROLES, Role } from '@/lib/roles';
 import { logger } from '@/lib/logger';
 
 const inviteSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
   role: z.enum(Object.values(ROLES) as [Role, ...Role[]]),
 });
 

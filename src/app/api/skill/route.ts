@@ -4,10 +4,15 @@ import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { logger } from '@/lib/logger';
+import { normalizeSkillName } from '@/lib/normalize-skill-name';
 
 const createSkillSchema = z.object({
   name: z.string().min(1, 'O nome da skill é obrigatório.'),
-  iconUrl: z.string().url('A URL do ícone deve ser válida.').optional(),
+  iconUrl: z
+    .string()
+    .url('A URL do ícone deve ser válida.')
+    .optional()
+    .or(z.literal('')),
 });
 
 export async function GET() {
@@ -56,8 +61,12 @@ export async function POST(request: NextRequest) {
 
     const { name, iconUrl: userIconUrl } = parse.data;
 
-    const existingSkill = await prisma.skill.findUnique({
-      where: { name },
+    const normalizedName = normalizeSkillName(name);
+
+    const existingSkill = await prisma.skill.findFirst({
+      where: {
+        normalizedName,
+      },
     });
 
     if (existingSkill) {
@@ -71,9 +80,9 @@ export async function POST(request: NextRequest) {
     let iconUrl: string | null = userIconUrl || null;
 
     if (!iconUrl) {
-      const normalizedName = name.trim().toLowerCase();
+      const iconSlug = name.trim().toLowerCase();
 
-      const defaultIconUrl = `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${normalizedName}/${normalizedName}-original.svg`;
+      const defaultIconUrl = `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${iconSlug}/${iconSlug}-original.svg`;
 
       try {
         const response = await fetch(defaultIconUrl);
@@ -89,6 +98,7 @@ export async function POST(request: NextRequest) {
     const skill = await prisma.skill.create({
       data: {
         name,
+        normalizedName,
         iconUrl,
       },
     });
