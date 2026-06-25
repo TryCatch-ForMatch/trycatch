@@ -7,7 +7,8 @@ on:
       - develop
   push:
     branches:
-      - test/tests-ci
+      - main
+      - develop
 
 jobs:
   build:
@@ -28,25 +29,28 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Generate Prisma Client
-        run: npx prisma generate
-
       - name: Create .env
         run: |
           printf "JWT_SECRET=${{ secrets.JWT_SECRET }}\n\
               NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}\n\
               CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}\n\
               CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}\n\
-              CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}\n\              
+              CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}\n\
               RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}\n\
               INVITE_REQUEST_SENDER_EMAIL=${{ secrets.INVITE_REQUEST_SENDER_EMAIL }}\n\
               RESET_PASSWORD_EMAIL=${{ secrets.RESET_PASSWORD_EMAIL }}\n\
               CONTACT_SENDER_EMAIL=${{ secrets.CONTACT_SENDER_EMAIL }}\n\
-              INVITE_REQUEST_RECEIVER_EMAIL=${{ secrets.INVITE_REQUEST_RECEIVER_EMAIL }}\n\
-              RESET_PASSWORD_EMAIL=${{ secrets.RESET_PASSWORD_EMAIL }}\n" > .env
+              INVITE_REQUEST_RECEIVER_EMAIL=${{ secrets.INVITE_REQUEST_RECEIVER_EMAIL }}\n" > .env
 
       - name: Build project
         run: npm run build
+
+      - name: Upload node_modules
+        uses: actions/upload-artifact@v7
+        with:
+          name: node-modules
+          path: node_modules/
+          retention-days: 1
 
   lint:
     name: Lint Codebase
@@ -62,10 +66,12 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Download node_modules
+        uses: actions/download-artifact@v7
+        with:
+          name: node-modules
+          path: node_modules/
 
       - name: Run Lint
         run: npm run lint
@@ -84,10 +90,12 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Download node_modules
+        uses: actions/download-artifact@v7
+        with:
+          name: node-modules
+          path: node_modules/
 
       - name: Run Tests
         run: npm run test
@@ -106,10 +114,12 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Download node_modules
+        uses: actions/download-artifact@v7
+        with:
+          name: node-modules
+          path: node_modules/
 
       - name: Run Tests with Coverage
         run: |
@@ -154,10 +164,12 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Download node_modules
+        uses: actions/download-artifact@v7
+        with:
+          name: node-modules
+          path: node_modules/
 
       - name: Audit dependencies
         run: npm audit --audit-level=high
