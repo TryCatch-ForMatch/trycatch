@@ -5,6 +5,7 @@ import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { logger } from '@/lib/logger';
+import { normalizeSkillName } from '@/lib/normalize-skill-name';
 
 const idSchema = z.string().min(1, 'ID inválido.');
 const updateSkillSchema = z.object({
@@ -84,10 +85,12 @@ export async function PATCH(request: NextRequest) {
 
   const { name, iconUrl, forceUpdate } = parse.data;
 
+  const normalizedName = normalizeSkillName(name);
+
   try {
     const existing = await prisma.skill.findFirst({
       where: {
-        name,
+        normalizedName,
         NOT: { id }, // ignora a própria skill que está sendo atualizada
       },
     });
@@ -121,6 +124,7 @@ export async function PATCH(request: NextRequest) {
       where: { id },
       data: {
         name,
+        normalizedName,
         iconUrl: normalizedIconUrl,
       },
     });
