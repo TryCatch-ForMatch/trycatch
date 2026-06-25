@@ -18,7 +18,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@v6
@@ -26,7 +26,15 @@ jobs:
           node-version: 24
           cache: 'npm'
 
+      - name: Cache node_modules
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules/
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Create .env
@@ -45,14 +53,6 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Upload node_modules
-        uses: actions/upload-artifact@v7
-        with:
-          name: node-modules
-          path: node_modules/
-          retention-days: 1
-          include-hidden-files: true
-
   lint:
     name: Lint Codebase
     runs-on: ubuntu-latest
@@ -61,21 +61,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 24
+          cache: 'npm'
 
-      - name: Download node_modules
-        uses: actions/download-artifact@v7
+      - name: Restore node_modules
+        id: cache
+        uses: actions/cache@v4
         with:
-          name: node-modules
           path: node_modules/
+          key: node-modules-${{ hashFiles('package-lock.json') }}
 
-      - name: Restore bin permissions
-        run: chmod -R +x node_modules/.bin/
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
 
       - name: Run Lint
         run: npm run lint
@@ -88,21 +91,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 24
+          cache: 'npm'
 
-      - name: Download node_modules
-        uses: actions/download-artifact@v7
+      - name: Restore node_modules
+        id: cache
+        uses: actions/cache@v4
         with:
-          name: node-modules
           path: node_modules/
+          key: node-modules-${{ hashFiles('package-lock.json') }}
 
-      - name: Restore bin permissions
-        run: chmod -R +x node_modules/.bin/
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
 
       - name: Run Tests
         run: npm run test
@@ -115,21 +121,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 24
+          cache: 'npm'
 
-      - name: Download node_modules
-        uses: actions/download-artifact@v7
+      - name: Restore node_modules
+        id: cache
+        uses: actions/cache@v4
         with:
-          name: node-modules
           path: node_modules/
+          key: node-modules-${{ hashFiles('package-lock.json') }}
 
-      - name: Restore bin permissions
-        run: chmod -R +x node_modules/.bin/
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
 
       - name: Run Tests with Coverage
         run: |
@@ -168,21 +177,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 24
+          cache: 'npm'
 
-      - name: Download node_modules
-        uses: actions/download-artifact@v7
+      - name: Restore node_modules
+        id: cache
+        uses: actions/cache@v4
         with:
-          name: node-modules
           path: node_modules/
+          key: node-modules-${{ hashFiles('package-lock.json') }}
 
-      - name: Restore bin permissions
-        run: chmod -R +x node_modules/.bin/
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
 
       - name: Audit dependencies
         run: npm audit --audit-level=high
