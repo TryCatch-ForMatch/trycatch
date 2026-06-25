@@ -15,9 +15,18 @@ jest.mock('@/lib/prisma', () => ({
       count: jest.fn(),
       create: jest.fn(),
       findMany: jest.fn(),
-      findUnique: jest.fn(),
+      findFirst: jest.fn(),
     },
   },
+}));
+
+jest.mock('@/lib/normalize-skill-name', () => ({
+  normalizeSkillName: jest.fn((name: string) =>
+    name
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, '')
+  ),
 }));
 
 jest.mock('@/lib/check-auth', () => ({
@@ -103,7 +112,7 @@ describe('POST /api/skill', () => {
   });
 
   it('deve criar skill quando nome for válido e não existir conflito', async () => {
-    (prisma.skill.findUnique as jest.Mock).mockResolvedValue(null);
+    (prisma.skill.findFirst as jest.Mock).mockResolvedValue(null);
 
     (prisma.skill.create as jest.Mock).mockResolvedValue({
       id: 'skill-1',
@@ -133,6 +142,7 @@ describe('POST /api/skill', () => {
     expect(prisma.skill.create).toHaveBeenCalledWith({
       data: {
         name: 'React',
+        normalizedName: 'react',
         iconUrl:
           'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
       },
@@ -144,7 +154,7 @@ describe('POST /api/skill', () => {
       ok: false,
     }) as jest.Mock;
 
-    (prisma.skill.findUnique as jest.Mock).mockResolvedValue(null);
+    (prisma.skill.findFirst as jest.Mock).mockResolvedValue(null);
 
     (prisma.skill.create as jest.Mock).mockResolvedValue({
       id: 'skill-1',
@@ -166,6 +176,7 @@ describe('POST /api/skill', () => {
     expect(prisma.skill.create).toHaveBeenCalledWith({
       data: {
         name: 'UnknownSkill',
+        normalizedName: 'unknownskill',
         iconUrl: null,
       },
     });
@@ -174,7 +185,7 @@ describe('POST /api/skill', () => {
   });
 
   it('deve usar iconUrl fornecida pelo usuário', async () => {
-    (prisma.skill.findUnique as jest.Mock).mockResolvedValue(null);
+    (prisma.skill.findFirst as jest.Mock).mockResolvedValue(null);
 
     (prisma.skill.create as jest.Mock).mockResolvedValue({
       id: 'skill-1',
@@ -198,6 +209,7 @@ describe('POST /api/skill', () => {
     expect(prisma.skill.create).toHaveBeenCalledWith({
       data: {
         name: 'React',
+        normalizedName: 'react',
         iconUrl: 'https://meusite.com/react.svg',
       },
     });
@@ -237,8 +249,9 @@ describe('POST /api/skill', () => {
   });
 
   it('deve retornar 409 quando skill já existir', async () => {
-    (prisma.skill.findUnique as jest.Mock).mockResolvedValue({
+    (prisma.skill.findFirst as jest.Mock).mockResolvedValue({
       id: 'skill-existing',
+      normalizedName: 'react',
       name: 'React',
     });
 
@@ -286,7 +299,7 @@ describe('POST /api/skill', () => {
   });
 
   it('deve retornar 500 quando ocorrer erro ao criar skill', async () => {
-    (prisma.skill.findUnique as jest.Mock).mockResolvedValue(null);
+    (prisma.skill.findFirst as jest.Mock).mockResolvedValue(null);
 
     (prisma.skill.create as jest.Mock).mockRejectedValue(
       new Error('Database error')
@@ -305,6 +318,36 @@ describe('POST /api/skill', () => {
     expect(body.success).toBe(false);
 
     expect(logger.error).toHaveBeenCalled();
+  });
+
+  it('deve criar skill com iconUrl null quando não existir iconUrl e o Devicon falhar', async () => {
+    global.fetch = jest.fn().mockRejectedValue(new Error('network error'));
+
+    (prisma.skill.findFirst as jest.Mock).mockResolvedValue(null);
+
+    (prisma.skill.create as jest.Mock).mockResolvedValue({
+      id: 'skill-1',
+      name: 'Scrum',
+      iconUrl: null,
+    });
+
+    const request: MockRequest = {
+      json: async () => ({
+        name: 'Scrum',
+      }),
+    };
+
+    const response = (await POST(request as NextRequest)) as Response;
+
+    expect(response.status).toBe(201);
+
+    expect(prisma.skill.create).toHaveBeenCalledWith({
+      data: {
+        name: 'Scrum',
+        normalizedName: 'scrum',
+        iconUrl: null,
+      },
+    });
   });
 });
 

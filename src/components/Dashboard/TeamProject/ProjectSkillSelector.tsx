@@ -8,7 +8,7 @@ import Image from 'next/image';
 type Skill = {
   id: string;
   name: string;
-  iconUrl?: string;
+  iconUrl?: string | null;
 };
 
 export function ProjectSkillSelector() {
@@ -88,7 +88,7 @@ export function ProjectSkillSelector() {
                       src={skill.iconUrl}
                       alt={skill.name}
                       width={15}
-                      height={3}
+                      height={15}
                     />
                   )}
                   {skill.name}
