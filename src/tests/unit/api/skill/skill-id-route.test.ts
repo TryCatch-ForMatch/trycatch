@@ -24,6 +24,12 @@ jest.mock('@/lib/prisma', () => ({
   },
 }));
 
+jest.mock('@/lib/normalize-skill-name', () => ({
+  normalizeSkillName: jest.fn((name: string) =>
+    name.toLowerCase().replace(/\s/g, '')
+  ),
+}));
+
 jest.mock('@/lib/check-auth', () => ({
   checkAuth: jest.fn(),
 }));
@@ -119,6 +125,7 @@ describe('PATCH /api/skill/[id]', () => {
       where: { id: 'skill-1' },
       data: {
         name: 'Vue',
+        normalizedName: 'vue',
         iconUrl: 'https://cdn.example.com/vue.svg',
       },
     });
@@ -141,6 +148,7 @@ describe('PATCH /api/skill/[id]', () => {
     (prisma.skill.findFirst as jest.Mock).mockResolvedValue({
       id: 'skill-2',
       name: 'React',
+      normalizedName: 'react',
     });
 
     const response = await PATCH(
@@ -200,6 +208,7 @@ describe('PATCH /api/skill/[id]', () => {
       where: { id: 'skill-1' },
       data: {
         name: 'React Native',
+        normalizedName: 'reactnative',
         iconUrl: null,
       },
     });
@@ -227,9 +236,37 @@ describe('PATCH /api/skill/[id]', () => {
       where: { id: 'skill-1' },
       data: {
         name: 'Scrum',
+        normalizedName: 'scrum',
         iconUrl: null,
       },
     });
+  });
+});
+
+it('deve gerar normalizedName automaticamente', async () => {
+  (prisma.skill.findFirst as jest.Mock).mockResolvedValue(null);
+  (prisma.projectSkill.findFirst as jest.Mock).mockResolvedValue(null);
+  (prisma.userSkill.findFirst as jest.Mock).mockResolvedValue(null);
+
+  (prisma.skill.update as jest.Mock).mockResolvedValue({
+    id: 'skill-1',
+    name: 'Node JS',
+    normalizedName: 'nodejs',
+  });
+
+  await PATCH(
+    createRequest('skill-1', {
+      name: 'Node JS',
+    })
+  );
+
+  expect(prisma.skill.update).toHaveBeenCalledWith({
+    where: { id: 'skill-1' },
+    data: {
+      name: 'Node JS',
+      normalizedName: 'nodejs',
+      iconUrl: null,
+    },
   });
 });
 
