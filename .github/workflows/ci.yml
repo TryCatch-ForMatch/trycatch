@@ -51,6 +51,7 @@ jobs:
           name: node-modules
           path: node_modules/
           retention-days: 1
+          include-hidden-files: true
 
   lint:
     name: Lint Codebase
@@ -71,10 +72,10 @@ jobs:
         uses: actions/download-artifact@v7
         with:
           name: node-modules
-          path: .
+          path: node_modules/
 
       - name: Restore bin permissions
-        run: find node_modules/.bin -type f -exec chmod +x {} +
+        run: chmod -R +x node_modules/.bin/
 
       - name: Run Lint
         run: npm run lint
@@ -98,10 +99,10 @@ jobs:
         uses: actions/download-artifact@v7
         with:
           name: node-modules
-          path: .
+          path: node_modules/
 
       - name: Restore bin permissions
-        run: find node_modules/.bin -type f -exec chmod +x {} +
+        run: chmod -R +x node_modules/.bin/
 
       - name: Run Tests
         run: npm run test
@@ -125,10 +126,10 @@ jobs:
         uses: actions/download-artifact@v7
         with:
           name: node-modules
-          path: .
+          path: node_modules/
 
       - name: Restore bin permissions
-        run: find node_modules/.bin -type f -exec chmod +x {} +
+        run: chmod -R +x node_modules/.bin/
 
       - name: Run Tests with Coverage
         run: |
@@ -178,10 +179,10 @@ jobs:
         uses: actions/download-artifact@v7
         with:
           name: node-modules
-          path: .
+          path: node_modules/
 
       - name: Restore bin permissions
-        run: find node_modules/.bin -type f -exec chmod +x {} +
+        run: chmod -R +x node_modules/.bin/
 
       - name: Audit dependencies
         run: npm audit --audit-level=high
