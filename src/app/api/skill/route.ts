@@ -4,7 +4,10 @@ import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { logger } from '@/lib/logger';
-import { normalizeSkillName } from '@/lib/normalize-skill-name';
+import {
+  normalizeSkillName,
+  formatSkillName,
+} from '@/lib/normalize-skill-name';
 
 const createSkillSchema = z.object({
   name: z.string().min(1, 'O nome da skill é obrigatório.'),
@@ -38,7 +41,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const auth = await checkAuth({ requireAdmin: true });
+  const auth = await checkAuth();
 
   if (!auth.authorized) {
     return auth.response;
@@ -96,7 +99,7 @@ export async function POST(request: NextRequest) {
 
     const skill = await prisma.skill.create({
       data: {
-        name,
+        name: formatSkillName(name),
         normalizedName,
         iconUrl,
       },
