@@ -9,7 +9,6 @@ import { normalizeSkillName } from '@/lib/normalize-skill-name';
 const createSkillSchema = z.object({
   name: z.string().min(1, 'O nome da skill é obrigatório.'),
   iconUrl: z
-    .string()
     .url('A URL do ícone deve ser válida.')
     .optional()
     .or(z.literal('')),
