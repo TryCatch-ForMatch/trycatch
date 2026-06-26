@@ -11,7 +11,6 @@ const idSchema = z.string().min(1, 'ID inválido.');
 const updateSkillSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
   iconUrl: z
-    .string()
     .url('A URL do ícone deve ser válida.')
     .optional()
     .or(z.literal('')),
@@ -26,7 +25,7 @@ export async function GET(request: NextRequest) {
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_ID,
-      errors: idParse.error.format(),
+      errors: z.treeifyError(idParse.error),
       status: 400,
     });
   }
@@ -66,7 +65,7 @@ export async function PATCH(request: NextRequest) {
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_ID,
-      errors: idParse.error.format(),
+      errors: z.treeifyError(idParse.error),
       status: 400,
     });
   }
@@ -78,7 +77,7 @@ export async function PATCH(request: NextRequest) {
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
-      errors: parse.error.format(),
+      errors: z.treeifyError(parse.error),
       status: 400,
     });
   }
@@ -154,7 +153,7 @@ export async function DELETE(request: NextRequest) {
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_ID,
-      errors: idParse.error.format(),
+      errors: z.treeifyError(idParse.error),
       status: 400,
     });
   }

@@ -7,7 +7,8 @@ on:
       - develop
   push:
     branches:
-      - test/tests-ci
+      - main
+      - develop
 
 jobs:
   build:
@@ -17,7 +18,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@v6
@@ -25,11 +26,16 @@ jobs:
           node-version: 24
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Cache node_modules
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules/
+          key: node-modules-${{ hashFiles('package-lock.json') }}
 
-      - name: Generate Prisma Client
-        run: npx prisma generate
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
 
       - name: Create .env
         run: |
@@ -37,13 +43,12 @@ jobs:
               NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}\n\
               CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}\n\
               CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}\n\
-              CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}\n\              
+              CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}\n\
               RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}\n\
               INVITE_REQUEST_SENDER_EMAIL=${{ secrets.INVITE_REQUEST_SENDER_EMAIL }}\n\
               RESET_PASSWORD_EMAIL=${{ secrets.RESET_PASSWORD_EMAIL }}\n\
               CONTACT_SENDER_EMAIL=${{ secrets.CONTACT_SENDER_EMAIL }}\n\
-              INVITE_REQUEST_RECEIVER_EMAIL=${{ secrets.INVITE_REQUEST_RECEIVER_EMAIL }}\n\
-              RESET_PASSWORD_EMAIL=${{ secrets.RESET_PASSWORD_EMAIL }}\n" > .env
+              INVITE_REQUEST_RECEIVER_EMAIL=${{ secrets.INVITE_REQUEST_RECEIVER_EMAIL }}\n" > .env
 
       - name: Build project
         run: npm run build
@@ -56,7 +61,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@v6
@@ -64,7 +69,15 @@ jobs:
           node-version: 24
           cache: 'npm'
 
+      - name: Restore node_modules
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules/
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Run Lint
@@ -78,7 +91,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@v6
@@ -86,7 +99,15 @@ jobs:
           node-version: 24
           cache: 'npm'
 
+      - name: Restore node_modules
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules/
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Run Tests
@@ -100,7 +121,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@v6
@@ -108,7 +129,15 @@ jobs:
           node-version: 24
           cache: 'npm'
 
+      - name: Restore node_modules
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules/
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Run Tests with Coverage
@@ -148,7 +177,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@v6
@@ -156,7 +185,15 @@ jobs:
           node-version: 24
           cache: 'npm'
 
+      - name: Restore node_modules
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules/
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Audit dependencies
