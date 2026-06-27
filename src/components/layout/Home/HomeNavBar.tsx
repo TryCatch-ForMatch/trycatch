@@ -143,11 +143,14 @@ export function HomeNavBar() {
                 <Link href="/#FAQ">Dúvidas</Link>
               </li>
               <li onClick={() => setOpen(false)}>
+                <Link href="/contact">Contato</Link>
+              </li>
+              <li onClick={() => setOpen(false)}>
                 <Button
                   asChild
                   className="mt-2 rounded-full bg-[#35343C] hover:bg-[#35343C]/90"
                 >
-                  <Link href="/contact">Entre em contato</Link>
+                  <Link href="/login">Login</Link>
                 </Button>
               </li>
             </ul>
