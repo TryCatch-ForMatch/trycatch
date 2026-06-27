@@ -27,6 +27,13 @@ jest.mock('@/lib/normalize-skill-name', () => ({
       .toLowerCase()
       .replace(/[^a-z0-9]/g, '')
   ),
+
+  formatSkillName: jest.fn((name: string) =>
+    name
+      .trim()
+      .toLowerCase()
+      .replace(/\b\w/g, (letter) => letter.toUpperCase())
+  ),
 }));
 
 jest.mock('@/lib/check-auth', () => ({
@@ -43,13 +50,13 @@ type MockRequest = {
   json: () => Promise<unknown>;
 };
 
-const authorizeAdmin = () => {
+const authorizeUser = () => {
   (checkAuth as jest.Mock).mockResolvedValue({
     authorized: true,
     session: {
       user: {
-        id: 'admin-1',
-        role: 'ADMIN',
+        id: 'user-1',
+        role: 'USER',
       },
     },
   });
@@ -104,7 +111,7 @@ describe('POST /api/skill', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    authorizeAdmin();
+    authorizeUser();
 
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
@@ -117,6 +124,7 @@ describe('POST /api/skill', () => {
     (prisma.skill.create as jest.Mock).mockResolvedValue({
       id: 'skill-1',
       name: 'React',
+      normalizedName: 'react',
       iconUrl:
         'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
     });
@@ -158,7 +166,8 @@ describe('POST /api/skill', () => {
 
     (prisma.skill.create as jest.Mock).mockResolvedValue({
       id: 'skill-1',
-      name: 'UnknownSkill',
+      name: 'Unknownskill',
+      normalizedName: 'unknownskill',
       iconUrl: null,
     });
 
@@ -175,7 +184,7 @@ describe('POST /api/skill', () => {
 
     expect(prisma.skill.create).toHaveBeenCalledWith({
       data: {
-        name: 'UnknownSkill',
+        name: 'Unknownskill',
         normalizedName: 'unknownskill',
         iconUrl: null,
       },
@@ -190,6 +199,7 @@ describe('POST /api/skill', () => {
     (prisma.skill.create as jest.Mock).mockResolvedValue({
       id: 'skill-1',
       name: 'React',
+      normalizedName: 'react',
       iconUrl: 'https://meusite.com/react.svg',
     });
 
@@ -270,13 +280,13 @@ describe('POST /api/skill', () => {
     expect(prisma.skill.create).not.toHaveBeenCalled();
   });
 
-  it('deve bloquear criação para usuário não autorizado', async () => {
+  it('deve bloquear criação quando usuário não estiver autenticado', async () => {
     const authResponse = Response.json(
       {
-        error: 'Acesso negado.',
+        error: 'Não autenticado.',
       },
       {
-        status: 403,
+        status: 401,
       }
     );
 
@@ -293,7 +303,7 @@ describe('POST /api/skill', () => {
 
     const response = (await POST(request as NextRequest)) as Response;
 
-    expect(response.status).toBe(403);
+    expect(response.status).toBe(401);
 
     expect(prisma.skill.create).not.toHaveBeenCalled();
   });
@@ -328,6 +338,7 @@ describe('POST /api/skill', () => {
     (prisma.skill.create as jest.Mock).mockResolvedValue({
       id: 'skill-1',
       name: 'Scrum',
+      normalizedName: 'scrum',
       iconUrl: null,
     });
 

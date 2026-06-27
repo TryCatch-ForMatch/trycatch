@@ -19,7 +19,7 @@ import { ToggleField } from '@/components/ui/toggle-field';
 import { FormField } from '@/components/ui/form-field';
 import { PortfolioPageSkeleton } from '@/components/Dashboard/Portfolio/PortfolioPageSkeleton';
 import { usePortfolioSettings } from './hooks/usePortfolioSettings';
-import { UserSkillSelector } from '@/components/Dashboard/User/UserSkillSelector';
+import { SkillSelector } from '@/components/shared/SkillSelector';
 
 export default function DashboardPortfolioClient() {
   const { form, username, isLoading, isSaving, saveStatus, onSubmit } =
@@ -45,8 +45,9 @@ export default function DashboardPortfolioClient() {
           <h1 className="text-xl font-semibold tracking-tight">
             Meu portfólio
           </h1>
-          <UserSkillSelector
+          <SkillSelector
             selectedSkills={selectedSkills}
+            errorMessage={errors.skills?.message}
             onAddSkill={(skillId) =>
               setValue('skills', [...selectedSkills, skillId], {
                 shouldDirty: true,

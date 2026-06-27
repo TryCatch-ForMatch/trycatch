@@ -2,6 +2,7 @@ export type ISkillsProps = {
   id?: string;
   name?: string;
   iconUrl?: string | null;
+  normalizedName?: string;
   createdAt?: string | Date;
 };
 
