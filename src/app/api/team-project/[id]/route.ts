@@ -192,6 +192,11 @@ export async function PUT(
       github,
     } = parse.data;
 
+    // Delete StackTaken records first (they reference ProjectStack)
+    await prisma.stackTaken.deleteMany({
+      where: { projectId },
+    });
+
     const updated = await prisma.project.update({
       where: { id: projectId },
       data: {
