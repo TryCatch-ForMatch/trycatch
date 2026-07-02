@@ -22,7 +22,9 @@ interface StackItem {
   percentage: number;
 }
 
-export function ProjectStackSelector() {
+export function ProjectStackSelector({
+  stackAssignments = {},
+}: Readonly<{ stackAssignments?: Record<string, string> }>) {
   const { control, setValue, watch } = useFormContext();
   const watchedStacks = watch('stacks');
   const stacks: StackItem[] = useMemo(
@@ -76,86 +78,110 @@ export function ProjectStackSelector() {
 
   return (
     <div className="flex flex-col gap-3">
-      {/* Título e botão adicionar */}
-      <div className="flex h-8.25 items-center justify-between">
-        <span className="text-lg font-medium text-[#312E41]">Stacks</span>
+      <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2">
+        <div>
+          <p className="text-sm font-semibold text-slate-800">
+            Stacks do projeto
+          </p>
+          <p className="text-xs text-slate-500">
+            Defina cada stack e seu percentual. A soma precisa fechar em 100%.
+          </p>
+        </div>
         <Button
           type="button"
           onClick={addStack}
-          className="h-8.25 w-28.75 rounded-lg bg-[#3B38A0] text-white shadow-md"
+          className="rounded-lg bg-[#3B38A0] px-3 py-2 text-sm text-white shadow-sm hover:bg-[#33318c]"
         >
-          Adicionar
+          + Adicionar
         </Button>
       </div>
 
-      {/* Linhas de stacks */}
       <div className="flex flex-col gap-3">
         {stacks.map((stack, index) => (
-          <div key={index} className="flex h-10 items-center gap-1">
-            {/* Select para stack */}
-            <Controller
-              control={control}
-              name={`stacks.${index}.stackId`}
-              render={({ field }) => (
-                <Select
-                  value={field.value}
-                  onValueChange={(val) => field.onChange(val)}
+          <div
+            key={index}
+            className="flex flex-col gap-2 rounded-xl border border-slate-200 bg-white p-3 shadow-sm"
+          >
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <div className="flex-1">
+                <Controller
+                  control={control}
+                  name={`stacks.${index}.stackId`}
+                  render={({ field }) => (
+                    <Select
+                      value={field.value}
+                      onValueChange={(val) => field.onChange(val)}
+                    >
+                      <SelectTrigger className="h-11 w-full rounded-xl border border-slate-300 bg-white shadow-sm">
+                        <SelectValue placeholder="Selecione a stack..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availableStacks.map((s) => (
+                          <SelectItem key={s.id} value={s.id}>
+                            {s.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </div>
+
+              <div className="flex items-center gap-2 sm:w-[162px]">
+                <Controller
+                  control={control}
+                  name={`stacks.${index}.percentage`}
+                  render={({ field }) => (
+                    <div className="flex h-10 w-full items-center rounded-xl border border-slate-300 bg-white px-3 shadow-sm">
+                      <Input
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={field.value ?? 0}
+                        onFocus={(e) => {
+                          if (e.target.value === '0') {
+                            e.target.value = '';
+                          }
+                        }}
+                        onBlur={(e) => {
+                          if (e.target.value === '') {
+                            field.onChange(0);
+                          }
+                        }}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                        className="mt-4 h-full w-full border-0 bg-transparent p-0 text-center text-sm shadow-none focus-visible:ring-0"
+                      />
+                      <span className="text-sm font-medium text-slate-500">
+                        %
+                      </span>
+                    </div>
+                  )}
+                />
+                <button
+                  type="button"
+                  onClick={() => removeStack(index)}
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-lg text-slate-500 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+                  aria-label="Remover stack"
                 >
-                  <SelectTrigger className="w-100 rounded-xl border border-[#3B38A0] bg-white">
-                    <SelectValue placeholder="Selecione a stack..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {availableStacks.map((s) => (
-                      <SelectItem key={s.id} value={s.id}>
-                        {s.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            />
+                  ×
+                </button>
+              </div>
+            </div>
 
-            {/* Input percentual */}
-            <Controller
-              control={control}
-              name={`stacks.${index}.percentage`}
-              render={({ field }) => (
-                <div className="mt-4 flex h-10 w-18 items-center">
-                  <Input
-                    type="number"
-                    value={field.value ?? 0}
-                    onFocus={(e) => {
-                      if (e.target.value === '0') {
-                        e.target.value = '';
-                      }
-                    }}
-                    onBlur={(e) => {
-                      if (e.target.value === '') {
-                        field.onChange(0);
-                      }
-                    }}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                    className="h-10 w-full rounded-xl border border-[#3B38A0] text-center"
-                  />
-                </div>
-              )}
-            />
-            <p>%</p>
-
-            {/* Botão remover */}
-            <button
-              type="button"
-              onClick={() => removeStack(index)}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-[#3B38A0] transition-colors hover:bg-[#3B38A022]"
-            >
-              ×
-            </button>
+            {stack.stackId && stackAssignments[stack.stackId] ? (
+              <span className="text-[10px] leading-4 text-slate-500">
+                {stackAssignments[stack.stackId]}
+              </span>
+            ) : null}
           </div>
         ))}
       </div>
 
-      {/* Mensagem de erro */}
-      {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
+      {errorMessage && (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-700">
+          {errorMessage}
+        </div>
+      )}
     </div>
   );
 }
