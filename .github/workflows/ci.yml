@@ -35,7 +35,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install --no-package-lock
+        run: npm ci
 
       - name: Create .env
         run: |
@@ -84,7 +84,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install --no-package-lock
+        run: npm ci
 
       - name: Run Lint
         run: npm run lint
@@ -113,7 +113,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install --no-package-lock
+        run: npm ci
 
       - name: Run Tests
         run: npm run test
@@ -142,7 +142,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install --no-package-lock
+        run: npm ci
 
       - name: Run Tests with Coverage
         run: |
@@ -197,7 +197,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install --no-package-lock
+        run: npm ci
 
       - name: Audit dependencies
         run: npm audit --audit-level=high
