@@ -7,6 +7,7 @@ import { MESSAGES, buildResponse } from '@/constants/messages';
 import { checkProjectStatus } from '@/lib/check-project-status';
 import { ROLE_GROUPS } from '@/lib/roles';
 import { logger } from '@/lib/logger';
+import { planProjectStackChanges } from '@/lib/project-stack-update';
 
 const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 const updateProjectSchema = z.object({
@@ -192,10 +193,39 @@ export async function PUT(
       github,
     } = parse.data;
 
-    // Delete StackTaken records first (they reference ProjectStack)
-    await prisma.stackTaken.deleteMany({
+    const existingStacks = await prisma.projectStack.findMany({
       where: { projectId },
+      select: { id: true, stackId: true, percentage: true },
     });
+
+    const { toUpdate, toCreate, toDelete } = planProjectStackChanges(
+      existingStacks,
+      stacks ?? []
+    );
+
+    for (const stackToDelete of toDelete) {
+      await prisma.stackTaken.deleteMany({
+        where: { projectStackId: stackToDelete.id },
+      });
+      await prisma.projectStack.delete({ where: { id: stackToDelete.id } });
+    }
+
+    for (const stackToUpdate of toUpdate) {
+      await prisma.projectStack.update({
+        where: { id: stackToUpdate.id },
+        data: { percentage: stackToUpdate.percentage },
+      });
+    }
+
+    for (const stackToCreate of toCreate) {
+      await prisma.projectStack.create({
+        data: {
+          projectId,
+          stackId: stackToCreate.stackId,
+          percentage: stackToCreate.percentage,
+        },
+      });
+    }
 
     const updated = await prisma.project.update({
       where: { id: projectId },
@@ -211,15 +241,6 @@ export async function PUT(
           create: skills?.map((skillId: string) => ({
             skill: { connect: { id: skillId } },
           })),
-        },
-        stacks: {
-          deleteMany: {},
-          create: stacks?.map(
-            (item: { stackId: string; percentage: number }) => ({
-              stack: { connect: { id: item.stackId } },
-              percentage: item.percentage,
-            })
-          ),
         },
       },
     });

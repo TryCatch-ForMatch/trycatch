@@ -24,6 +24,13 @@
     "forceConsistentCasingInFileNames": true
   },
   "typeRoots": ["./types", "./node_modules/@types"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "./scripts/createTestUser.js", "src/components/form/ContactForm"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "./scripts/createTestUser.js",
+    "src/**/*"
+  ],
   "exclude": ["node_modules"]
 }
