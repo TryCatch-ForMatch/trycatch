@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
+          cache: "npm"
 
       - name: Cache node_modules
         id: cache
@@ -53,6 +53,13 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Upload node_modules
+        uses: actions/upload-artifact@v7
+        with:
+          name: node-modules
+          path: node_modules/
+          retention-days: 1
+
   lint:
     name: Lint Codebase
     runs-on: ubuntu-latest
@@ -67,7 +74,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
 
       - name: Restore node_modules
         id: cache
@@ -97,7 +103,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
 
       - name: Restore node_modules
         id: cache
@@ -127,7 +132,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
 
       - name: Restore node_modules
         id: cache
@@ -183,7 +187,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
 
       - name: Restore node_modules
         id: cache
