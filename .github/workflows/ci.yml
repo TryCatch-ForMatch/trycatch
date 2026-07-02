@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
+          cache: "npm"
 
       - name: Cache node_modules
         id: cache
@@ -35,7 +35,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: npm install --no-package-lock
 
       - name: Create .env
         run: |
@@ -53,6 +53,13 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Upload node_modules
+        uses: actions/upload-artifact@v7
+        with:
+          name: node-modules
+          path: node_modules/
+          retention-days: 1
+
   lint:
     name: Lint Codebase
     runs-on: ubuntu-latest
@@ -67,7 +74,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
 
       - name: Restore node_modules
         id: cache
@@ -78,7 +84,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: npm install --no-package-lock
 
       - name: Run Lint
         run: npm run lint
@@ -97,7 +103,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
 
       - name: Restore node_modules
         id: cache
@@ -108,7 +113,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: npm install --no-package-lock
 
       - name: Run Tests
         run: npm run test
@@ -127,7 +132,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
 
       - name: Restore node_modules
         id: cache
@@ -138,7 +142,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: npm install --no-package-lock
 
       - name: Run Tests with Coverage
         run: |
@@ -183,7 +187,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
 
       - name: Restore node_modules
         id: cache
@@ -194,7 +197,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: npm install --no-package-lock
 
       - name: Audit dependencies
         run: npm audit --audit-level=high
