@@ -1,6 +1,6 @@
 // src/types/portfolio.types.ts
 
-import { UserRole } from '@prisma/client';
+import { ProjectStatus, UserRole } from '@prisma/client';
 
 // ---------------------------------------------------------------------------
 // Filtros
@@ -44,6 +44,7 @@ export interface PortfolioProject {
   projectName: string;
   description: string;
   deadline: string;
+  status?: ProjectStatus;
   stacks: PortfolioStackItem[];
 }
 

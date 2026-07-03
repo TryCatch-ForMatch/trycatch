@@ -62,12 +62,17 @@ export async function getPublicPortfolio(
         },
       },
       stacksTaken: {
-        where: { project: { status: ProjectStatus.CONCLUIDO } },
         select: {
           stackId: true,
           stack: { select: { name: true } },
           project: {
-            select: { id: true, name: true, description: true, deadline: true },
+            select: {
+              id: true,
+              name: true,
+              description: true,
+              deadline: true,
+              status: true,
+            },
           },
         },
       },
@@ -110,6 +115,7 @@ export async function getPublicPortfolio(
         projectName: st.project.name,
         description: st.project.description,
         deadline: st.project.deadline.toISOString(),
+        status: st.project.status,
         stacks: [{ stackId: st.stackId, stackName: st.stack.name }],
       });
     }
@@ -233,9 +239,7 @@ export async function listPublicPortfolios(
 
   const hasNextPage = users.length > take;
   const page = hasNextPage ? users.slice(0, take) : users;
-  const nextCursor = hasNextPage
-    ? (page[page.length - 1].userName ?? null)
-    : null;
+  const nextCursor = hasNextPage ? (page.at(-1)?.userName ?? null) : null;
 
   return {
     items: page.map((u) => ({
@@ -307,9 +311,7 @@ export async function listPortfolioSummary(
 
   const hasNextPage = users.length > take;
   const page = hasNextPage ? users.slice(0, take) : users;
-  const nextCursor = hasNextPage
-    ? (page[page.length - 1].userName ?? null)
-    : null;
+  const nextCursor = hasNextPage ? (page.at(-1)?.userName ?? null) : null;
 
   return {
     items: page.map((u) => {

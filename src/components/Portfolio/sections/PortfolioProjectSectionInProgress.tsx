@@ -7,22 +7,22 @@ interface PortfolioProjectsSectionProps {
   readonly data: PortfolioPublicResponse;
 }
 
-export function PortfolioProjectsSection({
+export function PortfolioProjectSectionInProgress({
   data,
 }: PortfolioProjectsSectionProps) {
-  const completedProjects = data.projects?.filter(
-    (project) => project.status === ProjectStatus.CONCLUIDO
+  const inProgressProjects = data.projects?.filter(
+    (project) => project.status === ProjectStatus.EM_ANDAMENTO
   );
 
-  if (!completedProjects || completedProjects.length === 0) return null;
+  if (!inProgressProjects || inProgressProjects.length === 0) return null;
 
   return (
     <Section
       icon={<Briefcase className="h-4 w-4" />}
-      title="Projetos concluídos"
+      title="Projetos em andamento"
     >
       <div className="grid gap-4 sm:grid-cols-2">
-        {completedProjects.map((project) => (
+        {inProgressProjects.map((project) => (
           <div
             key={project.projectId}
             className="space-y-3 rounded-lg border border-border bg-card p-4"
@@ -50,7 +50,7 @@ export function PortfolioProjectsSection({
             )}
 
             <p className="text-[11px] text-muted-foreground">
-              Concluído em{' '}
+              Prazo em{' '}
               {new Date(project.deadline).toLocaleDateString('pt-BR', {
                 month: 'short',
                 year: 'numeric',
