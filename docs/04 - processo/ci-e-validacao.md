@@ -2,7 +2,7 @@
 
 **Classificação:** Documento de Processo\
 **Camada:** 4 --- Processo\
-**Status:** Versão inicial
+**Status:** Fluxo oficial documentado
 
 ------------------------------------------------------------------------
 
@@ -22,7 +22,38 @@ Ele deve ajudar novos contribuidores a entender:
 
 ------------------------------------------------------------------------
 
-## 2. O que é CI
+## 2. Resumo rápido para contribuidores
+
+Antes de abrir um Pull Request, siga este fluxo:
+
+1.  Crie a branch a partir de `develop`.
+2.  Faça a mudança mantendo o escopo da issue.
+3.  Rode as validações locais:
+
+```bash
+npm run lint
+npm run test
+npm run test:push
+npm run build
+```
+
+4.  Abra o PR com destino para `develop`.
+5.  Inclua na descrição o que mudou, como foi validado e a issue
+    relacionada.
+6.  Se algum check falhar, corrija na mesma branch e envie novo commit.
+
+Para mudanças apenas em documentação, rode pelo menos:
+
+```bash
+npm run lint
+```
+
+Se a mudança tocar código TypeScript, rotas, componentes, Prisma ou
+dependências, rode o fluxo completo.
+
+------------------------------------------------------------------------
+
+## 3. O que é CI
 
 CI, ou Integração Contínua, é o processo automatizado que executa
 validações sempre que uma mudança é enviada para revisão.
@@ -38,7 +69,7 @@ No TryCatch, a CI protege a branch de desenvolvimento contra:
 
 ------------------------------------------------------------------------
 
-## 3. Quando a pipeline roda
+## 4. Quando a pipeline roda
 
 O projeto possui dois workflows que atuam em conjunto:
 
@@ -50,11 +81,12 @@ O **CI Pipeline** roda em:
 
 -   Pull Requests direcionados para `main`;
 -   Pull Requests direcionados para `develop`;
--   Pushes na branch `test/tests-ci`.
+-   Pushes diretos em `main`;
+-   Pushes diretos em `develop`.
 
-A branch `test/tests-ci` é usada para validar alterações no próprio
-workflow. Para contribuições comuns, o fluxo esperado é abrir PR para
-`develop`.
+Para contribuições comuns, o fluxo esperado é abrir PR para `develop`.
+Push direto em `main` ou `develop` deve ser reservado para mantenedores e
+casos autorizados.
 
 O **SonarCloud** não roda diretamente em `pull_request`. Ele é disparado
 pelo gatilho `workflow_run`, ou seja, **somente depois que a CI Pipeline
@@ -68,9 +100,9 @@ termina com sucesso**. O motivo dessa separação está explicado na seção
 
 ------------------------------------------------------------------------
 
-## 4. Validações executadas pela CI
+## 5. Validações executadas pela CI
 
-### 4.1 Build and Prepare Environment
+### 5.1 Build and Prepare Environment
 
 Objetivo: garantir que a aplicação consiga compilar em ambiente limpo.
 
@@ -82,7 +114,7 @@ Passos principais:
 -   Cria arquivo `.env` com secrets configurados no GitHub;
 -   Executa `npm run build`.
 
-### 4.2 Lint Codebase
+### 5.2 Lint Codebase
 
 Objetivo: verificar padrões de código e regras do Next.js/ESLint.
 
@@ -92,7 +124,7 @@ Comando executado:
 npm run lint
 ```
 
-### 4.3 Run Tests (Jest)
+### 5.3 Run Tests (Jest)
 
 Objetivo: garantir que os testes automatizados continuem passando.
 
@@ -102,7 +134,7 @@ Comando executado:
 npm run test
 ```
 
-### 4.4 Run Tests with Coverage
+### 5.4 Run Tests with Coverage
 
 Objetivo: gerar cobertura de testes e impedir queda abaixo do mínimo
 definido.
@@ -117,12 +149,12 @@ npx jest --coverage \
 O relatório de cobertura é enviado como artefato do workflow
 (`coverage-report`). Em Pull Requests, o job também publica um artefato
 `pr-metadata` (número do PR, branch de origem e branch de destino). Esses
-artefatos são consumidos pelo workflow SonarCloud (seção 4.5).
+artefatos são consumidos pelo workflow SonarCloud (seção 5.5).
 
 O padrão oficial de testes backend está documentado em
 `docs/04 - processo/testes-backend.md`.
 
-### 4.5 SonarCloud Scan (workflow separado)
+### 5.5 SonarCloud Scan (workflow separado)
 
 Objetivo: executar análise de qualidade e segurança via SonarCloud.
 
@@ -178,7 +210,7 @@ como secret no repositório base.
 > que os demais checks estejam verdes; o Sonar passa a decorar o PR
 > quando o `SONAR_TOKEN` está configurado no repositório base.
 
-### 4.6 Audit Dependencies
+### 5.6 Audit Dependencies
 
 Objetivo: bloquear dependências com vulnerabilidades de severidade alta
 ou superior.
@@ -191,7 +223,7 @@ npm audit --audit-level=high
 
 ------------------------------------------------------------------------
 
-## 5. Validação local antes de abrir PR
+## 6. Validação local antes de abrir PR
 
 Antes de abrir um Pull Request, o contribuidor deve rodar as validações
 principais localmente.
@@ -219,7 +251,7 @@ Observações:
 
 ------------------------------------------------------------------------
 
-## 6. Requisitos para abrir Pull Request
+## 7. Requisitos para abrir Pull Request
 
 Antes de abrir o PR:
 
@@ -254,7 +286,7 @@ issue.
 
 ------------------------------------------------------------------------
 
-## 7. O que fazer quando um check falhar
+## 8. O que fazer quando um check falhar
 
 Quando a CI falhar:
 
@@ -274,7 +306,7 @@ aguarde orientação de um mantenedor.
 
 ------------------------------------------------------------------------
 
-## 8. Requisitos para merge
+## 9. Requisitos para merge
 
 Um PR só deve ser considerado pronto para merge quando:
 
@@ -288,7 +320,7 @@ Um PR só deve ser considerado pronto para merge quando:
 
 ------------------------------------------------------------------------
 
-## 9. Relação com Husky
+## 10. Relação com Husky
 
 O projeto usa Husky para validações locais antes de commits e pushes.
 
@@ -305,9 +337,9 @@ executadas manualmente.
 
 ------------------------------------------------------------------------
 
-## 10. Prisma Client e `package-lock.json`
+## 11. Prisma Client e `package-lock.json`
 
-### 10.1 Geração do Prisma Client (`postinstall`)
+### 11.1 Geração do Prisma Client (`postinstall`)
 
 A partir do Prisma 7, o pacote `@prisma/client` só fica utilizável depois
 que o client é gerado. Sem isso, jobs que rodam testes falham com:
@@ -326,7 +358,7 @@ local), existe o script `postinstall` no `package.json`:
 Ele roda automaticamente após `npm ci` / `npm install`. Não é necessário
 rodar `npx prisma generate` manualmente após instalar dependências.
 
-### 10.2 Lockfile e diferenças entre sistemas operacionais
+### 11.2 Lockfile e diferenças entre sistemas operacionais
 
 Algumas dependências nativas opcionais (por exemplo bindings de
 `@unrs/resolver-binding-*` e `@tailwindcss/oxide-*`, que embarcam
@@ -355,7 +387,7 @@ Diretrizes para evitar esse problema:
 
 ------------------------------------------------------------------------
 
-## 11. Responsabilidades
+## 12. Responsabilidades
 
 Contribuidor:
 
