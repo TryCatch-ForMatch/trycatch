@@ -7,6 +7,7 @@ import {
   FolderKanban,
   GraduationCap,
   Handshake,
+  UserPlus,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -92,6 +93,13 @@ const participationPaths: ParticipationPath[] = [
   },
 ];
 
+const entryProfiles = [
+  'Membro de equipe',
+  'Mentor técnico',
+  'Colaborador open source',
+  'Autor de projeto',
+];
+
 export default function HowToJoinPage() {
   return (
     <main className="px-5 py-5 md:px-7 lg:px-6 xl:px-10 xxl:px-[39px]">
@@ -116,11 +124,62 @@ export default function HowToJoinPage() {
             organização, processos e colaboração.
           </p>
 
+          <div className="mt-6 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+            <div className="max-w-[600px]">
+              <p className="flex items-center gap-2 text-[13px] leading-[140%] font-medium text-[#3B38A0] md:text-[15px]">
+                <UserPlus className="h-4 w-4" aria-hidden />
+                Entrada por convite
+              </p>
+
+              <p className="mt-2 text-[14px] leading-[150%] text-[#5C5C65] md:text-[16px] xxl:text-[18px]">
+                O acesso à plataforma acontece por convite. Envie sua
+                solicitação e escolha o perfil de participação mais adequado.
+              </p>
+            </div>
+
+            <Button
+              asChild
+              className="h-auto min-h-12 w-full rounded-full bg-[#3B38A0] px-5 py-3 text-[14px] leading-[120%] text-white hover:bg-[#3B38A0]/90 md:w-auto xxl:text-[16px]"
+            >
+              <Link href="/invite-request">
+                <span>Solicitar convite</span>
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </Link>
+            </Button>
+          </div>
+
           <p className="mt-5 max-w-[760px] text-[14px] leading-[150%] text-[#5C5C65] md:text-[16px] xxl:text-[18px]">
             O TryCatch reúne diferentes formas de participação para quem deseja
             contribuir com a plataforma, propor projetos, integrar equipes ou
             apoiar outras pessoas como mentor.
           </p>
+
+          <div className="mt-8 border-t border-[#D9D9ED] pt-8 md:mt-10 md:pt-10">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-[680px]">
+                <h2 className="text-[22px] leading-[120%] font-medium tracking-normal text-[#35343C] md:text-[30px] xxl:text-[40px]">
+                  Principais perfis de participação
+                </h2>
+
+                <p className="mt-4 text-[14px] leading-[150%] text-[#5C5C65] md:text-[16px] xxl:text-[18px]">
+                  Você pode entrar como membro, mentor, colaborador da
+                  plataforma ou autor de projeto. A solicitação de convite ajuda
+                  a comunidade a entender seu melhor caminho de entrada.
+                </p>
+              </div>
+            </div>
+
+            <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {entryProfiles.map((profile) => (
+                <li
+                  key={profile}
+                  className="rounded-full bg-white px-4 py-3 text-center text-[13px] leading-[120%] font-medium text-[#35343C] ring-1 ring-[#D9D9ED] md:text-[14px]"
+                >
+                  {profile}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 
