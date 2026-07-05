@@ -31,6 +31,30 @@ Esse fluxo garante controle, equidade na distribuição e rastreabilidade das re
 
 ---
 
+## 🧭 Fluxo de acompanhamento da tarefa
+
+Depois que a tarefa for atribuída, mantenha o card sempre atualizado para que a equipe saiba o estado real do trabalho.
+
+### ✔️ Status do card:
+- **Em andamento:** use quando começar a implementar ou revisar a tarefa.
+- **Bloqueado:** use quando precisar de uma decisão, acesso, ajuste de escopo ou ajuda técnica para continuar.
+- **Concluído:** use apenas depois de abrir o Pull Request, validar localmente e deixar o link do PR no card.
+
+### ✔️ Comunicação no card:
+- Informe o prazo combinado antes de iniciar.
+- Registre mudanças de prazo no próprio card.
+- Explique bloqueios com contexto suficiente para outra pessoa ajudar.
+- Ao abrir o PR, informe o link e diga quais validações foram executadas.
+
+### ✔️ Fluxo de branch e PR:
+- Crie a branch a partir de `develop`.
+- Use um prefixo coerente com o tipo de trabalho: `feat`, `fix`, `docs`, `test`, `refactor`, `style` ou `chore`.
+- Faça commits pequenos e claros.
+- Abra o Pull Request sempre apontando para `develop`.
+- Relacione o PR com a issue usando uma palavra de fechamento, por exemplo `Fixes: #123`, quando o PR concluir a tarefa.
+
+---
+
 ## 🗂️ Regras e Organização
 
 ### ✔️ Ao demonstrar interesse em uma tarefa (card):
