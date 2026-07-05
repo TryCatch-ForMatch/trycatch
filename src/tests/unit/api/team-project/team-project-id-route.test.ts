@@ -12,6 +12,7 @@ import { NextRequest } from 'next/server';
 
 jest.mock('@/lib/prisma', () => ({
   prisma: {
+    $transaction: jest.fn(),
     project: {
       findUnique: jest.fn(),
       update: jest.fn(),
@@ -109,6 +110,9 @@ describe('PUT /api/team-project/[id]', () => {
       id: projectId,
       ...validPayload,
     });
+    (prisma.$transaction as jest.Mock).mockImplementation(async (callback) =>
+      callback(prisma)
+    );
     (checkProjectStatus as jest.Mock).mockResolvedValue(null);
   });
 
@@ -124,6 +128,7 @@ describe('PUT /api/team-project/[id]', () => {
 
     expect(response.status).toBe(200);
     expect(body.id).toBe(projectId);
+    expect(prisma.$transaction).toHaveBeenCalledWith(expect.any(Function));
     expect(prisma.project.update).toHaveBeenCalledWith({
       where: { id: projectId },
       data: {

@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { ProjectStatus } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
@@ -90,10 +91,11 @@ function hasStructuralProjectChanges(
 }
 
 async function applyProjectStackChanges(
+  tx: Prisma.TransactionClient,
   projectId: string,
   incomingStacks: NonNullable<IncomingProjectState['stacks']>
 ) {
-  const existingStacks = await prisma.projectStack.findMany({
+  const existingStacks = await tx.projectStack.findMany({
     where: { projectId },
     select: { id: true, stackId: true, percentage: true },
   });
@@ -104,21 +106,21 @@ async function applyProjectStackChanges(
   );
 
   for (const stackToDelete of toDelete) {
-    await prisma.stackTaken.deleteMany({
+    await tx.stackTaken.deleteMany({
       where: { projectStackId: stackToDelete.id },
     });
-    await prisma.projectStack.delete({ where: { id: stackToDelete.id } });
+    await tx.projectStack.delete({ where: { id: stackToDelete.id } });
   }
 
   for (const stackToUpdate of toUpdate) {
-    await prisma.projectStack.update({
+    await tx.projectStack.update({
       where: { id: stackToUpdate.id },
       data: { percentage: stackToUpdate.percentage },
     });
   }
 
   for (const stackToCreate of toCreate) {
-    await prisma.projectStack.create({
+    await tx.projectStack.create({
       data: {
         projectId,
         stackId: stackToCreate.stackId,
@@ -308,24 +310,26 @@ export async function PUT(
       });
     }
 
-    await applyProjectStackChanges(projectId, stacks ?? []);
+    const updated = await prisma.$transaction(async (tx) => {
+      await applyProjectStackChanges(tx, projectId, stacks ?? []);
 
-    const updated = await prisma.project.update({
-      where: { id: projectId },
-      data: {
-        name,
-        description,
-        deadline: new Date(deadline),
-        totalValue,
-        status,
-        github: github || null,
-        skills: {
-          deleteMany: {},
-          create: skills?.map((skillId: string) => ({
-            skill: { connect: { id: skillId } },
-          })),
+      return tx.project.update({
+        where: { id: projectId },
+        data: {
+          name,
+          description,
+          deadline: new Date(deadline),
+          totalValue,
+          status,
+          github: github || null,
+          skills: {
+            deleteMany: {},
+            create: skills?.map((skillId: string) => ({
+              skill: { connect: { id: skillId } },
+            })),
+          },
         },
-      },
+      });
     });
 
     await checkProjectStatus(projectId);
