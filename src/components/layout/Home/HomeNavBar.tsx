@@ -39,39 +39,24 @@ export function HomeNavBar() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [open]);
 
-  // Detecta scroll para alterar o estilo da navbar
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
-    <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'h-12 bg-white/80 shadow-sm backdrop-blur-md'
-          : 'h-20 bg-transparent'
-      }`}
-    >
-      <nav className="relative flex h-full items-center justify-center">
-        <div className="mx-[20px] flex w-full max-w-[335px] items-center justify-between md:mx-[28px] md:max-w-[968px] lg:mx-[34px] lg:max-w-[1152px] xl:mx-[80px] xl:max-w-[1360px] xxl:mx-[80px] xxl:max-w-[1842px]">
+    <header className="sticky top-0 z-50 border-b border-gray-400/10 bg-secondary backdrop-blur-xl transition-all duration-300">
+      <nav className="relative flex items-center">
+        <div className="mx-12 flex w-full items-center justify-between">
           <Link href="/" aria-label="Ir para página inicial">
             <div
-              className={`relative flex items-center justify-center transition-all duration-300 ${
-                scrolled ? 'h-8 w-24' : 'h-28 w-46'
-              }`}
+              className={`relative flex items-center justify-center transition-all duration-300`}
             >
               <Image
                 src="/logo-trycatch-poppins-transparente.png"
                 alt="TryCatch"
-                fill
-                className="object-contain"
+                width={180}
+                height={100}
+                className="object-cover"
               />
             </div>
           </Link>
 
-          {/* DESKTOP */}
           <ul className="hidden items-center gap-6 lg:flex">
             <li>
               <Link href="/" onClick={() => setOpen(false)}>
@@ -106,7 +91,7 @@ export function HomeNavBar() {
           {/* MOBILE BUTTON */}
           <button
             ref={buttonRef}
-            className="p-2 lg:hidden"
+            className="cursor-pointer p-2 lg:hidden"
             aria-label="Abrir menu"
             aria-expanded={open}
             aria-controls="mobile-menu"
@@ -122,7 +107,7 @@ export function HomeNavBar() {
             ref={menuRef}
             id="mobile-menu"
             role="navigation"
-            className="absolute top-full left-0 w-full bg-white/95 shadow-md backdrop-blur-md lg:hidden"
+            className="absolute top-full left-0 w-full rounded-b-2xl border-b border-gray-400/10 bg-secondary backdrop-blur-3xl lg:hidden"
           >
             <ul className="flex flex-col gap-4 px-6 py-6 text-lg">
               <li onClick={() => setOpen(false)}>
