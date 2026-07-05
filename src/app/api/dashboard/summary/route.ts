@@ -1,5 +1,4 @@
 import { ProjectStatus } from '@prisma/client';
-import { NextResponse } from 'next/server';
 
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { checkAuth } from '@/lib/check-auth';
@@ -65,14 +64,16 @@ export async function GET() {
       }
     );
 
-    return NextResponse.json(
-      {
+    return buildResponse({
+      success: true,
+      message: MESSAGES.GENERAL.SUCCESS,
+      data: {
         ...projectCounts,
         skills,
         feedbacks,
       },
-      { status: 200 }
-    );
+      status: 200,
+    });
   } catch (error) {
     logger.error(
       'Erro ao buscar resumo do dashboard:',

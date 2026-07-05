@@ -64,10 +64,15 @@ describe('GET /api/dashboard/summary', () => {
 
     expect(response.status).toBe(200);
     expect(body).toEqual({
-      projectsInProgress: 1,
-      projectsCompleted: 2,
-      skills: 4,
-      feedbacks: 6,
+      success: true,
+      message: 'Request realizada com sucesso',
+      data: {
+        projectsInProgress: 1,
+        projectsCompleted: 2,
+        skills: 4,
+        feedbacks: 6,
+      },
+      errors: null,
     });
 
     expect(checkAuth).toHaveBeenCalledWith({
