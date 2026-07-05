@@ -23,7 +23,7 @@ export async function createTestUser() {
 
 function isDirectRun() {
   return process.argv[1]
-    ?.replace(/\\/g, '/')
+    ?.replaceAll('\\', '/')
     .endsWith('/scripts/createTestUser.ts');
 }
 

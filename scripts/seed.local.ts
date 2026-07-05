@@ -299,7 +299,7 @@ export async function seedLocalPortfolio() {
 
 function isDirectRun() {
   return process.argv[1]
-    ?.replace(/\\/g, '/')
+    ?.replaceAll('\\', '/')
     .endsWith('/scripts/seed.local.ts');
 }
 
