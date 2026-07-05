@@ -157,14 +157,25 @@ export async function PATCH(request: NextRequest) {
       });
     }
 
-    const totalProjectStacks = await prisma.projectStack.count({
-      where: { projectId },
-    });
-    const totalStackTaken = await prisma.stackTaken.count({
-      where: { projectId },
+    const updated = await prisma.$transaction(async (tx) => {
+      const totalProjectStacks = await tx.projectStack.count({
+        where: { projectId },
+      });
+      const totalStackTaken = await tx.stackTaken.count({
+        where: { projectId },
+      });
+
+      if (totalProjectStacks === 0 || totalStackTaken < totalProjectStacks) {
+        return null;
+      }
+
+      return tx.project.update({
+        where: { id: projectId },
+        data: { status },
+      });
     });
 
-    if (totalProjectStacks === 0 || totalStackTaken < totalProjectStacks) {
+    if (!updated) {
       return buildResponse({
         success: false,
         message: MESSAGES.GENERAL.INVALID_DATA,
@@ -172,11 +183,6 @@ export async function PATCH(request: NextRequest) {
         errors: ['Todas as stacks devem estar assumidas para concluir.'],
       });
     }
-
-    const updated = await prisma.project.update({
-      where: { id: projectId },
-      data: { status },
-    });
 
     // se houver lógica de verificação pós-update
     await checkProjectStatus(projectId);
