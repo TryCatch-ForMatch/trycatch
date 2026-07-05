@@ -118,6 +118,48 @@ describe('GET /api/user/[id]', () => {
     });
     expect(prisma.user.findUnique).not.toHaveBeenCalled();
   });
+
+  it('retorna 401 quando checkAuth não autoriza', async () => {
+    (checkAuth as jest.Mock).mockResolvedValue({
+      authorized: false,
+      response: Response.json({ error: 'Não autenticado' }, { status: 401 }),
+    });
+
+    const response = await GET(createRequest(), createContext());
+    const body = await response.json();
+
+    expect(response.status).toBe(401);
+    expect(body).toEqual({ error: 'Não autenticado' });
+    expect(prisma.user.findUnique).not.toHaveBeenCalled();
+  });
+
+  it('retorna 404 quando usuário não existe', async () => {
+    (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);
+
+    const response = await GET(createRequest(), createContext());
+    const body = await response.json();
+
+    expect(response.status).toBe(404);
+    expect(body).toMatchObject({
+      success: false,
+      message: MESSAGES.USER.NOT_FOUND,
+    });
+  });
+
+  it('retorna 500 quando ocorre erro inesperado', async () => {
+    (prisma.user.findUnique as jest.Mock).mockRejectedValue(
+      new Error('Database error')
+    );
+
+    const response = await GET(createRequest(), createContext());
+    const body = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(body).toMatchObject({
+      success: false,
+      message: MESSAGES.USER.INTERNAL_ERROR,
+    });
+  });
 });
 
 describe('PUT /api/user/[id]', () => {
@@ -155,6 +197,52 @@ describe('PUT /api/user/[id]', () => {
     expect(response.status).toBe(400);
     expect(body.success).toBe(false);
     expect(prisma.user.update).not.toHaveBeenCalled();
+  });
+
+  it('retorna 401 quando checkAuth não autoriza atualização', async () => {
+    (checkAuth as jest.Mock).mockResolvedValue({
+      authorized: false,
+      response: Response.json({ error: 'Não autenticado' }, { status: 401 }),
+    });
+
+    const response = await PUT(createRequest(validPayload), createContext());
+    const body = await response.json();
+
+    expect(response.status).toBe(401);
+    expect(body).toEqual({ error: 'Não autenticado' });
+    expect(prisma.user.update).not.toHaveBeenCalled();
+  });
+
+  it('retorna 404 quando usuário de atualização não existe', async () => {
+    (prisma.user.findUnique as jest.Mock).mockResolvedValueOnce(null);
+
+    const response = await PUT(createRequest(validPayload), createContext());
+    const body = await response.json();
+
+    expect(response.status).toBe(404);
+    expect(body).toMatchObject({
+      success: false,
+      message: MESSAGES.USER.NOT_FOUND,
+    });
+    expect(prisma.user.update).not.toHaveBeenCalled();
+  });
+
+  it('retorna 500 quando atualização falha inesperadamente', async () => {
+    (prisma.user.findUnique as jest.Mock)
+      .mockResolvedValueOnce({ id: userId })
+      .mockResolvedValueOnce(null);
+    (prisma.user.update as jest.Mock).mockRejectedValue(
+      new Error('Update failed')
+    );
+
+    const response = await PUT(createRequest(validPayload), createContext());
+    const body = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(body).toMatchObject({
+      success: false,
+      message: MESSAGES.USER.INTERNAL_ERROR,
+    });
   });
 
   it('bloqueia e-mail já usado por outro usuário', async () => {
@@ -227,6 +315,49 @@ describe('DELETE /api/user/[id]', () => {
       message: MESSAGES.AUTH.UNAUTHORIZED,
     });
     expect(prisma.user.delete).not.toHaveBeenCalled();
+  });
+
+  it('retorna 401 quando checkAuth não autoriza remoção', async () => {
+    (checkAuth as jest.Mock).mockResolvedValue({
+      authorized: false,
+      response: Response.json({ error: 'Não autenticado' }, { status: 401 }),
+    });
+
+    const response = await DELETE(createRequest(), createContext());
+    const body = await response.json();
+
+    expect(response.status).toBe(401);
+    expect(body).toEqual({ error: 'Não autenticado' });
+    expect(prisma.user.delete).not.toHaveBeenCalled();
+  });
+
+  it('retorna 404 quando usuário de remoção não existe', async () => {
+    (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);
+
+    const response = await DELETE(createRequest(), createContext());
+    const body = await response.json();
+
+    expect(response.status).toBe(404);
+    expect(body).toMatchObject({
+      success: false,
+      message: MESSAGES.USER.NOT_FOUND,
+    });
+    expect(prisma.user.delete).not.toHaveBeenCalled();
+  });
+
+  it('retorna 500 quando remoção falha inesperadamente', async () => {
+    (prisma.user.findUnique as jest.Mock).mockRejectedValue(
+      new Error('Delete failed')
+    );
+
+    const response = await DELETE(createRequest(), createContext());
+    const body = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(body).toMatchObject({
+      success: false,
+      message: MESSAGES.USER.INTERNAL_ERROR,
+    });
   });
 
   it('desativa usuário quando existem vínculos em StackTaken', async () => {
