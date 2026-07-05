@@ -1,10 +1,5 @@
-const { PrismaClient } = require('@prisma/client');
-const { PrismaPg } = require('@prisma/adapter-pg');
-const bcrypt = require('bcryptjs');
-
-const connectionString = process.env.DATABASE_URL;
-const adapter = new PrismaPg({ connectionString });
-const prisma = new PrismaClient({ adapter });
+import bcrypt from 'bcryptjs';
+import { prisma } from '../src/lib/prisma';
 
 async function main() {
   const password = 'teste123';
@@ -29,11 +24,13 @@ async function main() {
 }
 
 main()
-  .then(() => {
+  .then(async () => {
     console.log('✅ Script finalizado.');
+    await prisma.$disconnect();
     process.exit(0);
   })
-  .catch((error) => {
+  .catch(async (error) => {
     console.error('❌ Ocorreu um erro:', error);
+    await prisma.$disconnect();
     process.exit(1);
   });

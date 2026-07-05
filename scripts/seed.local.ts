@@ -10,13 +10,9 @@
  * Rodar: npx tsx scripts/seed.local.ts
  */
 
-import { PrismaClient, ProjectStatus } from '@prisma/client';
-import { PrismaPg } from '@prisma/adapter-pg';
+import { ProjectStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-
-const connectionString = process.env.DATABASE_URL!;
-const adapter = new PrismaPg({ connectionString });
-const prisma = new PrismaClient({ adapter });
+import { prisma } from '../src/lib/prisma';
 
 async function main() {
   console.log('🌱 Iniciando seed local para feature de portfólio...\n');
