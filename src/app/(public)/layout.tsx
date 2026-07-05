@@ -1,5 +1,5 @@
-import { HomeNavBar } from '@/components/layout/Home/HomeNavBar';
-import Footer from '@/components/layout/Home/Footer';
+import { HomeNavBar } from '@/components/shell/HomeNavBar';
+import { Footer } from '@/components/shell/Footer';
 
 export default function PublicLayout({
   children,

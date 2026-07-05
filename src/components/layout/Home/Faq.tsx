@@ -58,9 +58,7 @@ export default function FAQ() {
         </h3>
       </div>
 
-      {/* MOBILE + TABLET */}
       <div className="block lg:hidden">
-        {/* Bloco superior */}
         <div className="relative mt-10 flex h-auto flex-col justify-between rounded-2xl bg-[#35343C] px-6 py-8 md:mt-16">
           <div className="flex">
             <p className="text-[14px] leading-[140%] font-medium text-[#D9D9ED] md:text-[16px]">
@@ -82,7 +80,6 @@ export default function FAQ() {
           />
         </div>
 
-        {/* Lista inferior */}
         <div className="mt-4 flex flex-col gap-4">
           {perguntas
             .filter((_, index) => index !== ativo)
@@ -107,10 +104,8 @@ export default function FAQ() {
         </div>
       </div>
 
-      {/* DESKTOP (lg+) */}
       <div className="hidden lg:block">
         <div className="mt-10 grid grid-cols-12 items-stretch gap-4">
-          {/* Coluna esquerda – lista completa */}
           <div className="col-start-2 col-end-7">
             <div className="flex h-full flex-col justify-evenly gap-4">
               {perguntas.map((item, index) => (
@@ -133,11 +128,8 @@ export default function FAQ() {
               ))}
             </div>
           </div>
-
-          {/* Coluna direita – resposta */}
           <div className="col-start-7 col-end-12">
             <div className="relative flex min-h-[360px] flex-col justify-between rounded-[28px] bg-[#35343C] px-10 py-10 xl:min-h-[420px] xxl:min-h-[520px]">
-              {/* Ícone superior decorativo */}
               <Image
                 src="/icon_faq_1.svg"
                 alt=""
@@ -147,7 +139,6 @@ export default function FAQ() {
                 className="absolute top-9 right-9 xl:top-8 xl:right-8 xl:h-[34px]! xl:w-20! xxl:h-[68px]! xxl:w-[30px]!"
               />
 
-              {/* ZONA SEGURA DO TEXTO */}
               <div className="mx-auto flex h-auto max-w-[80%] items-center px-6 py-12 xl:py-14 xxl:py-16">
                 <div className="flex flex-col gap-4">
                   <p className="text-[20px] leading-[140%] font-medium text-white xl:text-[22px] xxl:text-[26px]">
@@ -165,7 +156,7 @@ export default function FAQ() {
                   )}
                 </div>
               </div>
-              {/* Ícone inferior decorativo */}
+
               <Image
                 src="/icon_faq_2.svg"
                 alt=""
