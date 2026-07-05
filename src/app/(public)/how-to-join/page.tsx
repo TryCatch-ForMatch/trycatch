@@ -93,12 +93,7 @@ const participationPaths: ParticipationPath[] = [
   },
 ];
 
-const entryProfiles = [
-  'Membro de equipe',
-  'Mentor técnico',
-  'Colaborador open source',
-  'Autor de projeto',
-];
+const entryProfiles = participationPaths.map((path) => path.title);
 
 export default function HowToJoinPage() {
   return (
