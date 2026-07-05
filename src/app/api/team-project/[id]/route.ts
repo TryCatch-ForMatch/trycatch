@@ -43,7 +43,7 @@ type StructuralProjectState = {
 type IncomingProjectState = z.infer<typeof updateProjectSchema>;
 
 function sortedValues(values: string[]) {
-  return [...values].sort();
+  return [...values].sort((first, second) => first.localeCompare(second));
 }
 
 function hasSameSkills(
@@ -87,6 +87,45 @@ function hasStructuralProjectChanges(
     !hasSameSkills(existing.skills, incoming.skills) ||
     !hasSameStacks(existing.stacks, incomingStacks)
   );
+}
+
+async function applyProjectStackChanges(
+  projectId: string,
+  incomingStacks: NonNullable<IncomingProjectState['stacks']>
+) {
+  const existingStacks = await prisma.projectStack.findMany({
+    where: { projectId },
+    select: { id: true, stackId: true, percentage: true },
+  });
+
+  const { toUpdate, toCreate, toDelete } = planProjectStackChanges(
+    existingStacks,
+    incomingStacks
+  );
+
+  for (const stackToDelete of toDelete) {
+    await prisma.stackTaken.deleteMany({
+      where: { projectStackId: stackToDelete.id },
+    });
+    await prisma.projectStack.delete({ where: { id: stackToDelete.id } });
+  }
+
+  for (const stackToUpdate of toUpdate) {
+    await prisma.projectStack.update({
+      where: { id: stackToUpdate.id },
+      data: { percentage: stackToUpdate.percentage },
+    });
+  }
+
+  for (const stackToCreate of toCreate) {
+    await prisma.projectStack.create({
+      data: {
+        projectId,
+        stackId: stackToCreate.stackId,
+        percentage: stackToCreate.percentage,
+      },
+    });
+  }
 }
 
 export async function GET(
@@ -269,39 +308,7 @@ export async function PUT(
       });
     }
 
-    const existingStacks = await prisma.projectStack.findMany({
-      where: { projectId },
-      select: { id: true, stackId: true, percentage: true },
-    });
-
-    const { toUpdate, toCreate, toDelete } = planProjectStackChanges(
-      existingStacks,
-      stacks ?? []
-    );
-
-    for (const stackToDelete of toDelete) {
-      await prisma.stackTaken.deleteMany({
-        where: { projectStackId: stackToDelete.id },
-      });
-      await prisma.projectStack.delete({ where: { id: stackToDelete.id } });
-    }
-
-    for (const stackToUpdate of toUpdate) {
-      await prisma.projectStack.update({
-        where: { id: stackToUpdate.id },
-        data: { percentage: stackToUpdate.percentage },
-      });
-    }
-
-    for (const stackToCreate of toCreate) {
-      await prisma.projectStack.create({
-        data: {
-          projectId,
-          stackId: stackToCreate.stackId,
-          percentage: stackToCreate.percentage,
-        },
-      });
-    }
+    await applyProjectStackChanges(projectId, stacks ?? []);
 
     const updated = await prisma.project.update({
       where: { id: projectId },
