@@ -31,6 +31,8 @@ Antes de abrir um Pull Request, siga este fluxo:
 3.  Rode as validações locais:
 
 ```bash
+npm ci
+npm run format
 npm run lint
 npm run test
 npm run test:push
@@ -45,6 +47,8 @@ npm run build
 Para mudanças apenas em documentação, rode pelo menos:
 
 ```bash
+npm ci
+npm run format
 npm run lint
 ```
 
@@ -234,6 +238,7 @@ Fluxo recomendado:
 git checkout develop
 git pull origin develop
 npm ci
+npm run format
 npm run lint
 npm run test
 npm run test:push
@@ -273,6 +278,8 @@ Resumo objetivo da mudança.
 
 ## Validação
 
+- npm ci
+- npm run format
 - npm run lint
 - npm run test
 - npm run test:push
