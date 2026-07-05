@@ -32,6 +32,63 @@ const updateProjectSchema = z.object({
     .optional(),
 });
 
+type StructuralProjectState = {
+  name: string;
+  deadline: Date;
+  totalValue: number;
+  skills: { skillId: string }[];
+  stacks: { stackId: string; percentage: number }[];
+};
+
+type IncomingProjectState = z.infer<typeof updateProjectSchema>;
+
+function sortedValues(values: string[]) {
+  return [...values].sort();
+}
+
+function hasSameSkills(
+  existingSkills: StructuralProjectState['skills'],
+  incomingSkills: string[]
+) {
+  const existing = sortedValues(existingSkills.map((skill) => skill.skillId));
+  const incoming = sortedValues(incomingSkills);
+
+  return (
+    existing.length === incoming.length &&
+    existing.every((skillId, index) => skillId === incoming[index])
+  );
+}
+
+function hasSameStacks(
+  existingStacks: StructuralProjectState['stacks'],
+  incomingStacks: NonNullable<IncomingProjectState['stacks']>
+) {
+  if (existingStacks.length !== incomingStacks.length) return false;
+
+  const incomingByStackId = new Map(
+    incomingStacks.map((stack) => [stack.stackId, stack.percentage])
+  );
+
+  return existingStacks.every(
+    (stack) => incomingByStackId.get(stack.stackId) === stack.percentage
+  );
+}
+
+function hasStructuralProjectChanges(
+  existing: StructuralProjectState,
+  incoming: IncomingProjectState
+) {
+  const incomingStacks = incoming.stacks ?? [];
+
+  return (
+    existing.name !== incoming.name ||
+    existing.deadline.getTime() !== new Date(incoming.deadline).getTime() ||
+    existing.totalValue !== incoming.totalValue ||
+    !hasSameSkills(existing.skills, incoming.skills) ||
+    !hasSameStacks(existing.stacks, incomingStacks)
+  );
+}
+
 export async function GET(
   request: NextRequest,
   context: { params: { id: string } }
@@ -163,6 +220,11 @@ export async function PUT(
   try {
     const existing = await prisma.project.findUnique({
       where: { id: projectId },
+      include: {
+        skills: { select: { skillId: true } },
+        stacks: { select: { stackId: true, percentage: true } },
+        stacksTaken: { select: { id: true }, take: 1 },
+      },
     });
 
     if (!existing) {
@@ -192,6 +254,20 @@ export async function PUT(
       stacks,
       github,
     } = parse.data;
+
+    if (
+      existing.stacksTaken.length > 0 &&
+      hasStructuralProjectChanges(existing, parse.data)
+    ) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.AUTH.UNAUTHORIZED,
+        status: 403,
+        errors: [
+          'Não é permitido alterar estrutura do projeto após formação da equipe.',
+        ],
+      });
+    }
 
     const existingStacks = await prisma.projectStack.findMany({
       where: { projectId },
