@@ -29,7 +29,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "./scripts/createTestUser.js",
+    "./scripts/createTestUser.ts",
     "src/**/*"
   ],
   "exclude": ["node_modules"]
