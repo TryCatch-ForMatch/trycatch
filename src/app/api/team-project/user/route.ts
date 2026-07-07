@@ -138,10 +138,59 @@ export async function PATCH(request: NextRequest) {
       });
     }
 
-    const updated = await prisma.project.update({
-      where: { id: projectId },
-      data: { status },
+    if (status !== ProjectStatus.CONCLUIDO) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.GENERAL.INVALID_DATA,
+        status: 400,
+        errors: ['O encerramento manual só permite status CONCLUIDO.'],
+      });
+    }
+
+    if (existing.ownerId !== session.user.id) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.AUTH.UNAUTHORIZED,
+        status: 403,
+        errors: ['Apenas o owner pode concluir este projeto.'],
+      });
+    }
+
+    if (existing.status !== ProjectStatus.EM_ANDAMENTO) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.GENERAL.INVALID_DATA,
+        status: 400,
+        errors: ['Projeto só pode ser concluído em status EM_ANDAMENTO.'],
+      });
+    }
+
+    const updated = await prisma.$transaction(async (tx) => {
+      const totalProjectStacks = await tx.projectStack.count({
+        where: { projectId },
+      });
+      const totalStackTaken = await tx.stackTaken.count({
+        where: { projectId },
+      });
+
+      if (totalProjectStacks === 0 || totalStackTaken < totalProjectStacks) {
+        return null;
+      }
+
+      return tx.project.update({
+        where: { id: projectId },
+        data: { status },
+      });
     });
+
+    if (!updated) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.GENERAL.INVALID_DATA,
+        status: 400,
+        errors: ['Todas as stacks devem estar assumidas para concluir.'],
+      });
+    }
 
     // se houver lógica de verificação pós-update
     await checkProjectStatus(projectId);
