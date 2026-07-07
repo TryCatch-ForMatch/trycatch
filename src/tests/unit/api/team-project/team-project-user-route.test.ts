@@ -97,7 +97,7 @@ describe('PATCH /api/team-project/user', () => {
     authorizeUser();
 
     (prisma.project.findUnique as jest.Mock).mockResolvedValue(mockProject());
-    (prisma.projectStack as any).count.mockResolvedValue(2);
+    (prisma.projectStack as jest.Mock).count.mockResolvedValue(2);
     (prisma.stackTaken.count as jest.Mock).mockResolvedValue(2);
 
     (prisma.project.update as jest.Mock).mockResolvedValue(
