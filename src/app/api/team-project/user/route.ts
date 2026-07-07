@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { checkProjectStatus } from '@/lib/check-project-status';
 import { ROLE_GROUPS } from '@/lib/roles';
+import { logger } from '@/lib/logger';
 
 const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 
@@ -78,7 +79,14 @@ export async function GET() {
 
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
-    console.error('[team-project/user GET] Erro:', error);
+    logger.error(
+      'Erro ao buscar projetos do usuário',
+      'GET /api/team-project/user',
+      {
+        error: error instanceof Error ? error.message : String(error),
+      }
+    );
+
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT.INTERNAL_ERROR,
@@ -189,7 +197,14 @@ export async function PATCH(request: NextRequest) {
 
     return NextResponse.json(updated, { status: 200 });
   } catch (error) {
-    console.error('[team-project/user PATCH] Erro ao alterar status:', error);
+    logger.error(
+      'Erro ao alterar status do projeto',
+      'PATCH /api/team-project/user',
+      {
+        error: error instanceof Error ? error.message : String(error),
+      }
+    );
+
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT.INTERNAL_ERROR,

@@ -12,8 +12,8 @@ const poppins = Poppins({
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR" className={poppins.variable}>
-      <body>
+    <html lang="pt-BR" className={poppins.variable} suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <Providers>
           <Toaster position="top-center" />
           {children}
