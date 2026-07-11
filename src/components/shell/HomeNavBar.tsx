@@ -5,38 +5,35 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRef } from 'react';
 import { Button } from '../ui/button';
+import { MenuItem } from './menuItem';
+import { motion, AnimatePresence } from 'motion/react';
 
 export function HomeNavBar() {
-  const [open, setOpen] = useState(false);
-  // Referência ao botão do menu mobile (controle de foco)
+  const [openMobile, setOpenMobile] = useState(false);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-
-  // Referência ao container do menu mobile (controle de foco e navegação)
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  // Move o foco para o menu ao abrir e retorna para o botão ao fechar (acessibilidade)
   useEffect(() => {
-    if (open) {
+    if (openMobile) {
       const firstLink = menuRef.current?.querySelector('a, button');
       (firstLink as HTMLElement | null)?.focus();
     } else {
       buttonRef.current?.focus();
     }
-  }, [open]);
+  }, [openMobile]);
 
-  // Permite fechar o menu mobile ao pressionar ESC (navegação por teclado)
   useEffect(() => {
-    if (!open) return;
+    if (!openMobile) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setOpen(false);
+        setOpenMobile(false);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [open]);
+  }, [openMobile]);
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200/20 bg-secondary transition-all duration-300">
@@ -57,75 +54,81 @@ export function HomeNavBar() {
           </Link>
 
           <ul className="hidden items-center gap-6 lg:flex">
-            <li>
-              <Link href="/" onClick={() => setOpen(false)}>
-                Início
-              </Link>
-            </li>
-            <li>
-              <Link href="/#aboutUs" onClick={() => setOpen(false)}>
-                Sobre
-              </Link>
-            </li>
-            <li>
-              <Link href="/portfolios" onClick={() => setOpen(false)}>
-                Portfolios
-              </Link>
-            </li>
-            <li>
-              <Link href="/#FAQ" onClick={() => setOpen(false)}>
-                Dúvidas
-              </Link>
-            </li>
-            <li>
-              <Button className="transition-color rounded-full bg-[#35343C]">
-                <Link href="/contact">Entre em contato</Link>
-              </Button>
-            </li>
+            {MenuItem.map((menu) => (
+              <li key={menu.label}>
+                <Link href={menu.href} onClick={() => setOpenMobile(false)}>
+                  {menu.href !== '/contact' && menu.label}
+                </Link>
+
+                {menu.href === '/contact' && (
+                  <Button className="transition-color rounded-full bg-[#35343C]">
+                    <Link href="/contact">Entre em contato</Link>
+                  </Button>
+                )}
+              </li>
+            ))}
           </ul>
 
-          {/* MOBILE BUTTON */}
           <button
             ref={buttonRef}
             className="cursor-pointer p-2 lg:hidden"
             aria-label="Abrir menu"
-            aria-expanded={open}
+            aria-expanded={openMobile}
             aria-controls="mobile-menu"
-            onClick={() => setOpen(!open)}
+            onClick={() => setOpenMobile(!openMobile)}
           >
             <Image src="/menuBurguer.svg" alt="" width={20} height={20} />
           </button>
         </div>
 
-        {/* MOBILE MENU */}
-        {open && (
-          <div
-            ref={menuRef}
-            id="mobile-menu"
-            role="navigation"
-            className="absolute top-full left-0 w-full rounded-b-2xl border-b border-gray-400/10 bg-secondary backdrop-blur-3xl lg:hidden"
-          >
-            <ul className="flex flex-col gap-4 px-6 py-6 text-lg">
-              <li onClick={() => setOpen(false)}>
-                <Link href="/">Início</Link>
-              </li>
-              <li onClick={() => setOpen(false)}>
-                <Link href="/#aboutUs">Sobre</Link>
-              </li>
-              <li onClick={() => setOpen(false)}>
-                <Link href="/portfolios">Portfolios</Link>
-              </li>
-              <li onClick={() => setOpen(false)}>
-                <Link href="/#FAQ">Dúvidas</Link>
-              </li>
-              <li onClick={() => setOpen(false)} className="border">
-                <Button className="rounded-full bg-[#35343C] p-4 transition-colors">
-                  <Link href="/contact">Entre em contato</Link>
-                </Button>
-              </li>
-            </ul>
-          </div>
-        )}
+        <AnimatePresence>
+          {openMobile && (
+            <motion.div
+              ref={menuRef}
+              id="mobile-menu"
+              role="navigation"
+              initial={{
+                opacity: 0,
+                y: -20,
+                scaleY: 0.95,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                scaleY: 1,
+              }}
+              exit={{
+                opacity: 0,
+                y: -20,
+                scaleY: 0.95,
+              }}
+              transition={{
+                duration: 0.25,
+                ease: 'easeInOut',
+              }}
+              className="absolute top-full left-0 w-full origin-top rounded-b-2xl border-b border-gray-400/10 bg-secondary backdrop-blur-3xl lg:hidden"
+            >
+              <ul className="flex flex-col gap-4 px-6 py-6 text-lg">
+                {MenuItem.map((menu) => (
+                  <li key={menu.label}>
+                    <Link href={menu.href} onClick={() => setOpenMobile(false)}>
+                      {menu.href !== '/contact' && menu.label}
+                    </Link>
+
+                    {menu.href === '/contact' && (
+                      <Button
+                        onClick={() => setOpenMobile(false)}
+                        className="w-full rounded-full bg-[#35343C]"
+                      >
+                        <Link href="/contact">Entre em contato</Link>
+                      </Button>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
     </header>
   );
