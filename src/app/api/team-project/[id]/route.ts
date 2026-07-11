@@ -6,6 +6,8 @@ import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { checkProjectStatus } from '@/lib/check-project-status';
 import { ROLE_GROUPS } from '@/lib/roles';
+import { logger } from '@/lib/logger';
+import { planProjectStackChanges } from '@/lib/project-stack-update';
 
 const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 const updateProjectSchema = z.object({
@@ -15,10 +17,11 @@ const updateProjectSchema = z.object({
     message: 'Data inválida.',
   }),
   totalValue: z.number({
-    invalid_type_error: 'Valor total deve ser um número.',
+    error: 'Valor total deve ser um número.',
   }),
-  status: z.nativeEnum(ProjectStatus),
+  status: z.enum(ProjectStatus),
   skills: z.array(z.string().min(1, 'ID inválido.')),
+  github: z.string().url('URL inválida').optional().or(z.literal('')),
   stacks: z
     .array(
       z.object({
@@ -82,6 +85,7 @@ export async function GET(
       id: project.id,
       name: project.name,
       description: project.description,
+      github: project.github || null,
       deadline: project.deadline.toISOString(),
       totalValue: project.totalValue,
       status: project.status,
@@ -112,7 +116,9 @@ export async function GET(
 
     return NextResponse.json(formatted, { status: 200 });
   } catch (error) {
-    console.error('Erro ao buscar projeto:', error);
+    logger.error('Erro ao buscar projeto:', 'GET /api/team-project/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT.INTERNAL_ERROR,
@@ -150,7 +156,7 @@ export async function PUT(
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
       status: 400,
-      errors: parse.error.errors.map((e) => e.message),
+      errors: parse.error.issues.map((e) => e.message),
     });
   }
 
@@ -176,8 +182,50 @@ export async function PUT(
       });
     }
 
-    const { name, description, deadline, totalValue, status, skills, stacks } =
-      parse.data;
+    const {
+      name,
+      description,
+      deadline,
+      totalValue,
+      status,
+      skills,
+      stacks,
+      github,
+    } = parse.data;
+
+    const existingStacks = await prisma.projectStack.findMany({
+      where: { projectId },
+      select: { id: true, stackId: true, percentage: true },
+    });
+
+    const { toUpdate, toCreate, toDelete } = planProjectStackChanges(
+      existingStacks,
+      stacks ?? []
+    );
+
+    for (const stackToDelete of toDelete) {
+      await prisma.stackTaken.deleteMany({
+        where: { projectStackId: stackToDelete.id },
+      });
+      await prisma.projectStack.delete({ where: { id: stackToDelete.id } });
+    }
+
+    for (const stackToUpdate of toUpdate) {
+      await prisma.projectStack.update({
+        where: { id: stackToUpdate.id },
+        data: { percentage: stackToUpdate.percentage },
+      });
+    }
+
+    for (const stackToCreate of toCreate) {
+      await prisma.projectStack.create({
+        data: {
+          projectId,
+          stackId: stackToCreate.stackId,
+          percentage: stackToCreate.percentage,
+        },
+      });
+    }
 
     const updated = await prisma.project.update({
       where: { id: projectId },
@@ -187,20 +235,12 @@ export async function PUT(
         deadline: new Date(deadline),
         totalValue,
         status,
+        github: github || null,
         skills: {
           deleteMany: {},
           create: skills?.map((skillId: string) => ({
             skill: { connect: { id: skillId } },
           })),
-        },
-        stacks: {
-          deleteMany: {},
-          create: stacks?.map(
-            (item: { stackId: string; percentage: number }) => ({
-              stack: { connect: { id: item.stackId } },
-              percentage: item.percentage,
-            })
-          ),
         },
       },
     });
@@ -209,7 +249,9 @@ export async function PUT(
 
     return NextResponse.json(updated, { status: 200 });
   } catch (error) {
-    console.error('Erro ao atualizar projeto:', error);
+    logger.error('Erro ao atualizar projeto:', 'PUT /api/team-project/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT.INTERNAL_ERROR,
@@ -271,7 +313,9 @@ export async function DELETE(
       status: 200,
     });
   } catch (error) {
-    console.error('Erro ao deletar projeto:', error);
+    logger.error('Erro ao deletar projeto:', 'DELETE /api/team-project/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT.INTERNAL_ERROR,

@@ -30,7 +30,7 @@ Definições adotadas:
 - Nenhum HTML inline será utilizado em services
 - Envio centralizado via `lib/mail`
 - Utilização do SDK Resend
-- Instância única de `resend`
+- Cliente Resend instanciado via factory `getResend()` (lazy initialization)
 
 Estrutura definida:
 
@@ -51,6 +51,25 @@ lib/
     send-invite-request-email.ts
     send-reset-password-email.ts
 ```
+
+### Inicialização do cliente Resend
+
+O cliente Resend **não** é instanciado no nível do módulo. Em vez disso,
+`resend.ts` exporta uma factory `getResend()` que cria a instância sob
+demanda na primeira chamada durante o runtime de uma requisição:
+
+```ts
+export function getResend(): Resend {
+  // inicializa apenas quando chamado, não no import
+}
+```
+
+Isso evita que a verificação de `RESEND_API_KEY` ocorra durante o build
+do Next.js (fase de coleta de dados das páginas), que causava crash quando
+a variável de ambiente não estava disponível em build time.
+
+Os helpers de envio de email chamam `getResend()` internamente. Testes
+devem mockar `getResend` em vez de uma instância global `resend`.
 
 ## Consequências
 

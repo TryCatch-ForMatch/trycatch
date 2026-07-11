@@ -16,7 +16,7 @@ const createProjectSchema = z.object({
   totalValue: z
     .number()
     .nonnegative('O valor total deve ser um número positivo'),
-  status: z.nativeEnum(ProjectStatus),
+  status: z.enum(ProjectStatus),
   skills: z.array(z.string().min(1, 'ID inválido.')).optional(),
   stacks: z
     .array(
@@ -26,6 +26,7 @@ const createProjectSchema = z.object({
       })
     )
     .optional(),
+  github: z.string().url('URL inválida').optional().or(z.literal('')),
 });
 
 export async function GET() {
@@ -90,8 +91,16 @@ export async function POST(request: NextRequest) {
       status: 400,
     });
   }
-  const { name, description, deadline, totalValue, status, skills, stacks } =
-    parse.data;
+  const {
+    name,
+    description,
+    deadline,
+    totalValue,
+    status,
+    skills,
+    stacks,
+    github,
+  } = parse.data;
   const project = await prisma.project.create({
     data: {
       ownerId: session.user.id,
@@ -100,19 +109,24 @@ export async function POST(request: NextRequest) {
       deadline: new Date(deadline),
       totalValue,
       status,
-      skills: {
-        create: skills?.map((skillId: string) => ({
-          skill: { connect: { id: skillId } },
-        })),
-      },
-      stacks: {
-        create: stacks?.map(
-          (item: { stackId: string; percentage: number }) => ({
-            stack: { connect: { id: item.stackId } },
-            percentage: item.percentage,
-          })
-        ),
-      },
+      github: github || null,
+      ...(skills && {
+        skills: {
+          create: skills.map((skillId: string) => ({
+            skill: { connect: { id: skillId } },
+          })),
+        },
+      }),
+      ...(stacks && {
+        stacks: {
+          create: stacks.map(
+            (item: { stackId: string; percentage: number }) => ({
+              stack: { connect: { id: item.stackId } },
+              percentage: item.percentage,
+            })
+          ),
+        },
+      }),
     },
   });
 

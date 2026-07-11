@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
 import { buildResponse, MESSAGES } from '@/constants/messages';
+import { logger } from '@/lib/logger';
 
 const userSkillSchema = z.object({
   userId: z.string(),
@@ -18,7 +19,11 @@ export async function POST(request: NextRequest) {
   try {
     body = await request.json();
   } catch (error) {
-    console.error('Erro ao fazer parse do JSON no POST:', error);
+    logger.error(
+      'Erro ao fazer parse do JSON no POST:',
+      'POST /api/user-skill',
+      { error: error instanceof Error ? error.message : String(error) }
+    );
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
@@ -74,7 +79,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(newUserSkill, { status: 201 });
   } catch (error) {
-    console.error('Erro ao criar UserSkill:', error);
+    logger.error('Erro ao criar UserSkill:', 'POST /api/user-skill', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.USER_SKILL.INTERNAL_ERROR,
@@ -98,7 +105,9 @@ export async function GET() {
 
     return NextResponse.json(allUserSkills, { status: 200 });
   } catch (error) {
-    console.error(error);
+    logger.error('Unexpected error', 'GET /api/user-skill', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.USER_SKILL.INTERNAL_ERROR,

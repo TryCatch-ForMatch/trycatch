@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { buildResponse, MESSAGES } from '@/constants/messages';
+import { logger } from '@/lib/logger';
 
 export async function GET() {
   try {
@@ -8,7 +9,9 @@ export async function GET() {
 
     return NextResponse.json({ count });
   } catch (error) {
-    console.error('Erro ao buscar número de usuários:', error);
+    logger.error('Erro ao buscar número de usuários:', 'GET /api/user/count', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.USER.INTERNAL_ERROR,

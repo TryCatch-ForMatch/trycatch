@@ -11,11 +11,16 @@ const config: Config = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    '^@tests/(.*)$': '<rootDir>/src/tests/$1',
+    '^@tests/(.*)$': '<rootDir>/src/tests/unit/$1',
   },
   transform: {
     '^.+\\.tsx?$': '@swc/jest',
   },
+
+  testMatch: [
+    '<rootDir>/src/tests/unit/**/*.test.ts',
+    '<rootDir>/src/tests/unit/**/*.test.tsx',
+  ],
 
   testEnvironmentOptions: {
     customExportConditions: [''],

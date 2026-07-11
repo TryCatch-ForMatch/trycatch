@@ -11,32 +11,10 @@ const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 
 const updateStatusSchema = z.object({
   id: idSchema,
-  status: z.nativeEnum(ProjectStatus),
+  status: z.enum(ProjectStatus),
 });
 
-const updateProjectSchema = z.object({
-  id: idSchema,
-  name: z.string().min(1, 'O nome é obrigatório.'),
-  description: z.string().min(1, 'A descrição é obrigatória.'),
-  deadline: z
-    .string()
-    .refine((val) => !isNaN(Date.parse(val)), { message: 'Data inválida.' }),
-  totalValue: z.number({
-    invalid_type_error: 'Valor total deve ser um número.',
-  }),
-  status: z.nativeEnum(ProjectStatus),
-  skills: z.array(z.string().min(1, 'ID inválido.')),
-  stacks: z
-    .array(
-      z.object({
-        stackId: z.string().min(1, 'ID inválido.'),
-        percentage: z.number().min(0).max(100),
-      })
-    )
-    .optional(),
-});
-
-export async function GET(request: NextRequest) {
+export async function GET() {
   const { authorized, response, session } = await checkAuth({
     allowedRoles: ROLE_GROUPS.ALL,
   });
@@ -125,7 +103,7 @@ export async function PATCH(request: NextRequest) {
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
       status: 400,
-      errors: parsed.success ? null : parsed.error.errors.map((e) => e.message),
+      errors: parsed.success ? null : parsed.error.issues.map((e) => e.message),
     });
   }
 

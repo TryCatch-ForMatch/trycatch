@@ -1,4 +1,4 @@
-import { Text, Heading, Link, Section } from '@react-email/components';
+import { Text, Link, Section } from '@react-email/components';
 import { EmailLayout } from './layout/layout';
 
 type InviteRequestReceiverEmailProps = {

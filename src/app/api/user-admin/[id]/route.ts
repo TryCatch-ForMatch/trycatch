@@ -4,15 +4,16 @@ import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 import { buildResponse, MESSAGES } from '@/constants/messages';
 import { ROLES, Role } from '@/lib/roles';
+import { logger } from '@/lib/logger';
 
 const idSchema = z.string().min(24, 'ID inválido').max(36, 'ID inválido');
 
 const updateUserSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
-  email: z.string().email('Email inválido.'),
-  avatar: z.union([z.string().url(), z.literal('')]).nullable(),
-  linkedin: z.union([z.string().url(), z.literal('')]).optional(),
-  github: z.union([z.string().url(), z.literal('')]).optional(),
+  email: z.email('Email inválido.'),
+  avatar: z.union([z.url(), z.literal('')]).nullable(),
+  linkedin: z.union([z.url(), z.literal('')]).optional(),
+  github: z.union([z.url(), z.literal('')]).optional(),
   bio: z.string().optional(),
   role: z.enum(Object.values(ROLES) as [Role, ...Role[]]),
   skills: z.array(z.string()).optional(),
@@ -56,7 +57,9 @@ export async function GET(
 
     return NextResponse.json(user, { status: 200 });
   } catch (error) {
-    console.error(error);
+    logger.error('Unexpected error', 'GET /api/user-admin/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
 
     return buildResponse({
       success: false,
@@ -92,7 +95,9 @@ export async function PUT(
   try {
     body = await request.json();
   } catch (error) {
-    console.error(error);
+    logger.error('Unexpected error', 'PUT /api/user-admin/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
@@ -163,7 +168,9 @@ export async function PUT(
 
     return NextResponse.json(updatedUser, { status: 200 });
   } catch (error) {
-    console.log('Erro ao atualizar usuário: ', error);
+    logger.error('Erro ao atualizar usuário:', 'PUT /api/user-admin/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.USER.INTERNAL_ERROR,
@@ -237,7 +244,9 @@ export async function DELETE(
       });
     }
   } catch (error) {
-    console.error(error);
+    logger.error('Unexpected error', 'DELETE /api/user-admin/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.USER.INTERNAL_ERROR,

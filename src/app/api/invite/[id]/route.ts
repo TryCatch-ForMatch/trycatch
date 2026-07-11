@@ -3,6 +3,7 @@ import { NextResponse, NextRequest } from 'next/server';
 import { getIdFromRequest } from '@/utils/url';
 import { checkAuth } from '@/lib/check-auth';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { logger } from '@/lib/logger';
 
 export async function GET(request: NextRequest) {
   const id = getIdFromRequest(request);
@@ -25,7 +26,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(invite);
   } catch (error) {
-    console.error('Erro ao buscar convite:', error);
+    logger.error('Erro ao buscar convite:', 'GET /api/invite/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.INVITE.INTERNAL_ERROR,
@@ -44,7 +47,11 @@ export async function PATCH(request: NextRequest) {
   try {
     body = await request.json();
   } catch (error) {
-    console.error('Erro ao fazer parse do body no PATCH:', error);
+    logger.error(
+      'Erro ao fazer parse do body no PATCH:',
+      'PATCH /api/invite/[id]',
+      { error: error instanceof Error ? error.message : String(error) }
+    );
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
@@ -87,7 +94,9 @@ export async function PATCH(request: NextRequest) {
 
     return NextResponse.json(invite);
   } catch (error) {
-    console.error('Erro ao atualizar convite:', error);
+    logger.error('Erro ao atualizar convite:', 'PATCH /api/invite/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.INVITE.INTERNAL_ERROR,
@@ -109,7 +118,9 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ message: 'Convite deletado com sucesso.' });
   } catch (error) {
-    console.error('Erro ao deletar convite:', error);
+    logger.error('Erro ao deletar convite:', 'DELETE /api/invite/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.INVITE.INTERNAL_DELETE_ERROR,

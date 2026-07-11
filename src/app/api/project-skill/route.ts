@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { logger } from '@/lib/logger';
 
 const createProjectSkillSchema = z.object({
   projectId: z.string(),
@@ -18,7 +19,11 @@ export async function POST(request: NextRequest) {
   try {
     body = await request.json();
   } catch (error) {
-    console.error('Erro ao fazer parse do JSON no POST:', error);
+    logger.error(
+      'Erro ao fazer parse do JSON no POST:',
+      'POST /api/project-skill',
+      { error: error instanceof Error ? error.message : String(error) }
+    );
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
@@ -64,7 +69,11 @@ export async function POST(request: NextRequest) {
       status: 201,
     });
   } catch (error) {
-    console.error('Erro ao adicionar skill ao projeto:', error);
+    logger.error(
+      'Erro ao adicionar skill ao projeto:',
+      'POST /api/project-skill',
+      { error: error instanceof Error ? error.message : String(error) }
+    );
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT_SKILL.CREATE_ERROR,
@@ -83,7 +92,9 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     projectId = searchParams.get('projectId');
   } catch (error) {
-    console.error('Erro ao processar URL no GET:', error);
+    logger.error('Erro ao processar URL no GET:', 'GET /api/project-skill', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT_SKILL.NOT_FOUND,
@@ -109,7 +120,11 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(skills, { status: 200 });
   } catch (error) {
-    console.error('Erro ao buscar skills do projeto:', error);
+    logger.error(
+      'Erro ao buscar skills do projeto:',
+      'GET /api/project-skill',
+      { error: error instanceof Error ? error.message : String(error) }
+    );
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT_SKILL.INTERNAL_ERROR,

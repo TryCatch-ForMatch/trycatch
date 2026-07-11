@@ -2,12 +2,11 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import { useRef } from 'react';
+import { Button } from '../ui/button';
 
 export function HomeNavBar() {
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   // Referência ao botão do menu mobile (controle de foco)
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -40,7 +39,7 @@ export function HomeNavBar() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-400/10 bg-secondary backdrop-blur-xl transition-all duration-300">
+    <header className="sticky top-0 z-50 border-b border-gray-200/20 bg-secondary transition-all duration-300">
       <nav className="relative flex items-center">
         <div className="mx-12 flex w-full items-center justify-between">
           <Link href="/" aria-label="Ir para página inicial">
@@ -79,10 +78,7 @@ export function HomeNavBar() {
               </Link>
             </li>
             <li>
-              <Button
-                asChild
-                className="rounded-full bg-[#35343C] hover:bg-[#35343C]/90"
-              >
+              <Button className="transition-color rounded-full bg-[#35343C]">
                 <Link href="/contact">Entre em contato</Link>
               </Button>
             </li>
@@ -122,11 +118,8 @@ export function HomeNavBar() {
               <li onClick={() => setOpen(false)}>
                 <Link href="/#FAQ">Dúvidas</Link>
               </li>
-              <li onClick={() => setOpen(false)}>
-                <Button
-                  asChild
-                  className="mt-2 rounded-full bg-[#35343C] hover:bg-[#35343C]/90"
-                >
+              <li onClick={() => setOpen(false)} className="border">
+                <Button className="rounded-full bg-[#35343C] p-4 transition-colors">
                   <Link href="/contact">Entre em contato</Link>
                 </Button>
               </li>

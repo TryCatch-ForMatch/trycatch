@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { checkAuth } from '@/lib/check-auth';
-import { z } from 'zod';
-import { MESSAGES, buildResponse } from '@/constants/messages';
+import { buildResponse } from '@/constants/messages';
 import {
   v2 as cloudinary,
   UploadApiResponse,
   UploadApiErrorResponse,
 } from 'cloudinary';
 import { CloudinaryResource } from '@/types/interface/cloudinary';
+import { logger } from '@/lib/logger';
 
 // Config Cloudinary
 cloudinary.config({
@@ -16,12 +16,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
-const uploadSchema = z.object({
-  file: z.string().min(1, 'O arquivo é obrigatório.'),
-  folder: z.string().min(1, 'A pasta é obrigatória.'),
-});
-
-export async function GET(request: NextRequest) {
+export async function GET() {
   const auth = await checkAuth({ requireAdmin: true });
   if (!auth.authorized) return auth.response;
 
@@ -50,7 +45,11 @@ export async function GET(request: NextRequest) {
       status: 200,
     });
   } catch (error) {
-    console.error('Erro ao listar imagens do Cloudinary:', error);
+    logger.error(
+      'Erro ao listar imagens do Cloudinary:',
+      'GET /api/upload/ui-assets',
+      { error: error instanceof Error ? error.message : String(error) }
+    );
     return buildResponse({
       success: false,
       message: 'Erro ao listar imagens.',
@@ -66,7 +65,6 @@ export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const file = formData.get('file') as File;
-    const folder = formData.get('folder');
 
     if (!file) {
       return buildResponse({
@@ -108,7 +106,9 @@ export async function POST(req: NextRequest) {
       status: 201,
     });
   } catch (error) {
-    console.error('Erro ao enviar imagem:', error);
+    logger.error('Erro ao enviar imagem:', 'POST /api/upload/ui-assets', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: 'Erro interno ao enviar imagem.',

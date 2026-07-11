@@ -50,6 +50,34 @@ This flow guarantees control, equity in the distribution and traceability of res
 
 ---
 
+## ⚙️ Local Environment Setup
+
+Before starting, install dependencies with:
+
+```bash
+npm run setup
+```
+
+> This command is an alias for `npm ci`, which installs **exactly** what is in `package-lock.json` without modifying it. **Never use `npm install` just to set up your environment** — it may rewrite `package-lock.json` and generate unnecessary diffs in your PR.
+
+**Node version:** use Node 18 or higher (CI uses Node 24). This guarantees the v3 lockfile format, which is cross-platform compatible (Windows, Linux, macOS).
+
+**If you need to add or update a package**, use `npm install <package>` normally — in that case it is expected that both `package.json` and `package-lock.json` will change. Commit both together:
+
+```bash
+git add package.json package-lock.json
+git commit -m "chore(deps): add <package>"
+```
+
+**If `package-lock.json` appears modified after setup**, you accidentally ran `npm install`. Restore it with:
+
+```bash
+git checkout -- package-lock.json
+npm run setup
+```
+
+---
+
 ## 🌿 Git Flow - Branches Pattern
 
 ### 🔥 Branch principal:
@@ -218,6 +246,28 @@ If necessary, you can bypass the hooks with:
 ```bash
 git commit --no-verify
 ```
+
+---
+
+## 🤖 Continuous Integration (CI)
+
+When you open a Pull Request, CI runs automatically: **build**, **lint**,
+**tests**, **coverage**, **dependency audit**, and then the **SonarCloud**
+analysis.
+
+Key points for contributors:
+
+- The **SonarCloud analysis runs in a separate workflow** (triggered after
+  CI). This is required because PRs from **forks** don't receive secrets —
+  without this split, Sonar would always fail.
+- To install dependencies use `npm ci` (and **avoid `npm install` on
+  Windows** just to install, as it may rewrite `package-lock.json` and
+  break CI).
+- The **Prisma Client** is generated automatically via `postinstall`; you
+  don't need to run `npx prisma generate` manually after installing.
+
+The full flow, the reasoning, and detailed guidance are in
+[`docs/04 - processo/ci-e-validacao.md`](docs/04%20-%20processo/ci-e-validacao.md).
 
 ---
 

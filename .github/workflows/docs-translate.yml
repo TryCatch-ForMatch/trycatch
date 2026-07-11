@@ -2,6 +2,8 @@ name: Docs Auto Translate
 
 on:
   push:
+    branches:
+      - main
     paths:
       - 'README.md'
       - 'CONTRIBUTING.md'
@@ -13,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install translate-shell
         run: sudo apt-get update && sudo apt-get install -y translate-shell
@@ -42,4 +44,4 @@ jobs:
 
           # Commita as alterações
           git commit -m "docs: auto-translate docs to English [skip ci]" || echo "No changes"
-          git push
+          git push origin HEAD:main

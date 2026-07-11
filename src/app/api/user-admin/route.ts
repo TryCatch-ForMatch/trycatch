@@ -5,14 +5,15 @@ import { NextResponse, NextRequest } from 'next/server';
 import { hash } from 'bcryptjs';
 import { buildResponse, MESSAGES } from '@/constants/messages';
 import { ROLES, Role } from '@/lib/roles';
+import { logger } from '@/lib/logger';
 
 const adminCreateUserSchema = z.object({
   name: z.string(),
-  email: z.string().email(),
+  email: z.email(),
   password: z.string().min(6),
-  avatar: z.union([z.string().url(), z.literal('')]).nullable(),
-  linkedin: z.union([z.string().url(), z.literal(''), z.null()]).optional(),
-  github: z.union([z.string().url(), z.literal(''), z.null()]).optional(),
+  avatar: z.union([z.url(), z.literal('')]).nullable(),
+  linkedin: z.union([z.url(), z.literal(''), z.null()]).optional(),
+  github: z.union([z.url(), z.literal(''), z.null()]).optional(),
   bio: z.string().optional(),
   role: z.enum(Object.values(ROLES) as [Role, ...Role[]]),
   skills: z.array(z.string()).optional(),
@@ -26,7 +27,11 @@ export async function POST(request: NextRequest) {
   const parse = adminCreateUserSchema.safeParse(json);
 
   if (!parse.success) {
-    console.log('Erro no parse:', parse.error.format());
+    logger.error(
+      'Erro no parse:',
+      'POST /api/user-admin',
+      parse.error.format()
+    );
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
@@ -88,7 +93,9 @@ export async function POST(request: NextRequest) {
       status: 200,
     });
   } catch (error) {
-    console.error('Erro interno ao criar usuário:', error);
+    logger.error('Erro interno ao criar usuário:', 'POST /api/user-admin', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.USER.INTERNAL_ERROR,
@@ -113,7 +120,9 @@ export async function GET() {
 
     return NextResponse.json(users, { status: 200 });
   } catch (error) {
-    console.error('Erro ao buscar usuários:', error);
+    logger.error('Erro ao buscar usuários:', 'GET /api/user-admin', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.USER.INTERNAL_ERROR,

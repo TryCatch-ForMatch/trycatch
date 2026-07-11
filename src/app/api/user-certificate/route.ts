@@ -7,7 +7,7 @@ import { z } from 'zod';
 
 const createCertificateSchema = z.object({
   title: z.string().min(1, 'Título obrigatório'),
-  url: z.string().url('URL inválida').optional(),
+  url: z.url('URL inválida').optional(),
   issuer: z.string().min(1, 'Emissor obrigatório'),
   date: z.string().min(1, 'Data obrigatória'), // mês/ano
   description: z.string().optional(),

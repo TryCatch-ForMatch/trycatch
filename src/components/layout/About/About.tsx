@@ -56,7 +56,7 @@ export default function About() {
           <ul className="mt-4 list-disc pl-5 text-[#5C5C65]">
             <li>
               <Link
-                href="/register-project"
+                href="/dashboard/team-projects/new"
                 className="cursor-pointer hover:underline"
               >
                 Cadastrar um projeto
@@ -110,7 +110,10 @@ export default function About() {
               </Link>
             </li>
             <li>
-              <Link href="portfolio" className="cursor-pointer hover:underline">
+              <Link
+                href="portfolios"
+                className="cursor-pointer hover:underline"
+              >
                 Portfólios
               </Link>
             </li>
@@ -148,7 +151,7 @@ export default function About() {
           <ul className="mt-4 list-disc pl-5 text-[#5C5C65]">
             <li>
               <Link
-                href="/register-project"
+                href="/dashboard/team-projects/new"
                 className="cursor-pointer hover:underline"
               >
                 Cadastrar um projeto

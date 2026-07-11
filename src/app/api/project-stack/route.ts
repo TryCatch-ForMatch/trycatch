@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { checkProjectStatus } from '@/lib/check-project-status';
+import { logger } from '@/lib/logger';
 
 // Validação de criação
 const createProjectStackSchema = z.object({
@@ -20,7 +21,11 @@ export async function POST(request: NextRequest) {
   try {
     body = await request.json();
   } catch (error) {
-    console.error('Erro ao fazer parse do JSON no POST:', error);
+    logger.error(
+      'Erro ao fazer parse do JSON no POST:',
+      'POST /api/project-stack',
+      { error: error instanceof Error ? error.message : String(error) }
+    );
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
@@ -93,7 +98,9 @@ export async function POST(request: NextRequest) {
       data: newProjectStack,
     });
   } catch (error) {
-    console.error('Erro ao criar ProjectStack:', error);
+    logger.error('Erro ao criar ProjectStack:', 'POST /api/project-stack', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT_STACK.INTERNAL_ERROR,
@@ -112,7 +119,9 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     projectId = searchParams.get('projectId');
   } catch (error) {
-    console.error('Erro ao processar URL no GET:', error);
+    logger.error('Erro ao processar URL no GET:', 'GET /api/project-stack', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
@@ -140,7 +149,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(stacks, { status: 200 });
   } catch (error) {
-    console.error('Erro ao buscar ProjectStacks:', error);
+    logger.error('Erro ao buscar ProjectStacks:', 'GET /api/project-stack', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT_STACK.INTERNAL_ERROR,

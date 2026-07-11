@@ -50,6 +50,34 @@ Esse fluxo garante controle, equidade na distribuição e rastreabilidade das re
 
 ---
 
+## ⚙️ Configuração do Ambiente Local
+
+Antes de começar, instale as dependências com:
+
+```bash
+npm run setup
+```
+
+> Este comando é um alias para `npm ci`, que instala **exatamente** o que está no `package-lock.json` sem modificá-lo. **Nunca use `npm install` apenas para configurar o ambiente** — isso pode reescrever o `package-lock.json` e gerar diffs desnecessários no seu PR.
+
+**Versão do Node:** use Node 18 ou superior (a CI usa Node 24). Isso garante o formato v3 do lockfile, que é compatível entre plataformas (Windows, Linux, macOS).
+
+**Se você precisar adicionar ou atualizar um pacote**, use `npm install <pacote>` normalmente — nesse caso é esperado que tanto `package.json` quanto `package-lock.json` sejam alterados. Faça commit dos dois juntos:
+
+```bash
+git add package.json package-lock.json
+git commit -m "chore(deps): add <pacote>"
+```
+
+**Se o `package-lock.json` aparecer como modificado após o setup**, você acidentalmente rodou `npm install`. Restaure com:
+
+```bash
+git checkout -- package-lock.json
+npm run setup
+```
+
+---
+
 ## 🌿 Git Flow - Padrão de Branches
 
 ### 🔥 Branch principal:
@@ -218,6 +246,28 @@ Se necessário, pode ignorar os hooks com:
 ```bash
 git commit --no-verify
 ```
+
+---
+
+## 🤖 Integração Contínua (CI)
+
+Ao abrir um Pull Request, a CI roda automaticamente: **build**, **lint**,
+**testes**, **cobertura**, **auditoria de dependências** e, em seguida,
+a análise do **SonarCloud**.
+
+Pontos importantes para contribuidores:
+
+- A análise do **SonarCloud roda em um workflow separado** (disparado
+  após a CI). Isso é necessário porque PRs vindos de **forks** não
+  recebem secrets — sem essa separação, o Sonar falharia sempre.
+- Para instalar dependências use `npm ci` (e **evite `npm install` no
+  Windows** apenas para instalar, pois isso pode reescrever o
+  `package-lock.json` e quebrar a CI).
+- O **Prisma Client** é gerado automaticamente via `postinstall`; não
+  precisa rodar `npx prisma generate` manualmente após instalar.
+
+O fluxo completo, os motivos e as orientações detalhadas estão em
+[`docs/04 - processo/ci-e-validacao.md`](docs/04%20-%20processo/ci-e-validacao.md).
 
 ---
 

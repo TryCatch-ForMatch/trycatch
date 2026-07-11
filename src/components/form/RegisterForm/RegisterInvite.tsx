@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 
 const inviteSchema = z.object({
-  email: z.string().email({ message: 'Email inválido.' }),
+  email: z.email({ message: 'Email inválido.' }),
   inviteCode: z.string().min(4, {
     message: 'O código do convite deve ter pelo menos 4 caracteres.',
   }),
@@ -40,7 +40,7 @@ export default function RegisterForm() {
 
     if (!validation.success) {
       const errors: { email?: string; inviteCode?: string } = {};
-      validation.error.errors.forEach((err) => {
+      validation.error.issues.forEach((err) => {
         if (err.path[0] === 'email') errors.email = err.message;
         if (err.path[0] === 'inviteCode') errors.inviteCode = err.message;
       });
@@ -82,7 +82,7 @@ export default function RegisterForm() {
     <section className="flex min-h-screen items-center justify-center">
       <div className="flex w-full max-w-md flex-col gap-4 rounded-md border border-[#71717b67] p-8 px-4">
         <h2 className="mx-auto text-2xl font-bold text-[#3B38A0]">
-          Registre seu Convite
+          Validar Convite
         </h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
           <div className="space-y-1">
@@ -101,9 +101,9 @@ export default function RegisterForm() {
 
           <div className="space-y-1">
             <Input
-              label="Codigo de Convite"
+              label="Código de Convite"
               type="text"
-              placeholder="Seu codigo de convite"
+              placeholder="Código de convite recebido por email"
               value={inviteCode}
               onChange={(e) => setInviteCode(e.target.value)}
               required
@@ -125,13 +125,18 @@ export default function RegisterForm() {
                 <span>Validando seu convite</span>
               </span>
             ) : (
-              <span>Validar o convite</span>
+              <span>Validar convite</span>
             )}
           </Button>
         </form>
 
         <Link href="/login" className="text-center text-sm text-zinc-500">
-          Já tem uma conta ? <span className="underline">Entrar</span>
+          Já tem uma conta? <span className="underline">Entrar</span>
+        </Link>
+
+        <Link href="/how-to-join" className="text-center text-sm text-zinc-500">
+          Ainda não tem um código de convite?{' '}
+          <span className="underline">Solicite aqui</span>
         </Link>
       </div>
     </section>

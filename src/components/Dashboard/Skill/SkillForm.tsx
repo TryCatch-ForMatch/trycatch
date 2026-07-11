@@ -6,14 +6,18 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import Image from 'next/image';
 
 export function SkillForm() {
   const [name, setName] = useState('');
   const [iconUrl, setIconUrl] = useState('');
   const [loading, setLoading] = useState(false);
+  const [previewError, setPreviewError] = useState(false);
 
   // Atualiza o ícone automaticamente conforme o nome digitado
   useEffect(() => {
+    setPreviewError(false);
+
     if (!name.trim()) {
       setIconUrl('');
       return;
@@ -21,9 +25,9 @@ export function SkillForm() {
 
     const normalized = name.trim().toLowerCase();
     const url = `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${normalized}/${normalized}-original.svg`;
+
     setIconUrl(url);
   }, [name]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -72,18 +76,24 @@ export function SkillForm() {
           </div>
 
           {/* Pré-visualização do ícone */}
-          {iconUrl && (
+          {(iconUrl || name) && (
             <div className="flex flex-col items-center space-y-2">
               <p className="text-sm text-gray-500">Pré-visualização:</p>
-              <img
-                src={iconUrl}
-                alt={`Ícone da skill ${name}`}
-                className="skill-icon h-12 w-12 object-contain"
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).src =
-                    'https://via.placeholder.com/48?text=?';
-                }}
-              />
+
+              {iconUrl && !previewError ? (
+                <Image
+                  src={iconUrl}
+                  alt={`Ícone da skill ${name}`}
+                  width={48}
+                  height={48}
+                  className="skill-icon object-contain"
+                  onError={() => setPreviewError(true)}
+                />
+              ) : (
+                <span className="text-sm font-medium text-muted-foreground">
+                  {name}
+                </span>
+              )}
             </div>
           )}
 

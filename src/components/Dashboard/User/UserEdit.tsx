@@ -13,18 +13,19 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import Image from 'next/image';
 
 const userEditFormSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
-  email: z.string().email('Email inválido.'),
+  email: z.email('Email inválido.'),
   password: z
     .string()
     .min(6, 'Senha deve ter pelo menos 6 caracteres.')
     .optional()
     .or(z.literal('')),
-  avatar: z.string().url('URL inválida').optional().or(z.literal('')),
-  linkedin: z.string().url('URL inválida').optional().or(z.literal('')),
-  github: z.string().url('URL inválida').optional().or(z.literal('')),
+  avatar: z.url('URL inválida').optional().or(z.literal('')),
+  linkedin: z.url('URL inválida').optional().or(z.literal('')),
+  github: z.url('URL inválida').optional().or(z.literal('')),
   bio: z.string().optional(),
 });
 
@@ -56,7 +57,6 @@ export function UserEdit({ user }: UserEditProps) {
   });
   const avatarPreview = watch('avatar');
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
 
   async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -90,7 +90,6 @@ export function UserEdit({ user }: UserEditProps) {
   }
 
   const onSubmit = async (values: UserEditFormValues) => {
-    setIsSaving(true);
     try {
       const res = await fetch(`/api/user/${user.id}`, {
         method: 'PUT',
@@ -107,7 +106,7 @@ export function UserEdit({ user }: UserEditProps) {
       if (err instanceof Error) toast.error(err.message);
       else toast.error('Erro ao atualizar usuário');
     } finally {
-      setIsSaving(false);
+      //
     }
   };
 
@@ -115,6 +114,47 @@ export function UserEdit({ user }: UserEditProps) {
     <Card className="rounded-2xl p-6 shadow-lg">
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* Avatar */}
+          <div className="flex flex-col items-center gap-4">
+            <Label className="text-base font-semibold">Avatar</Label>
+
+            {avatarPreview && (
+              <Image
+                src={avatarPreview}
+                alt="Avatar Preview"
+                width={96}
+                height={96}
+                className="h-24 w-24 rounded-full border object-cover"
+              />
+            )}
+
+            <label htmlFor="avatar-upload">
+              <Button
+                type="button"
+                variant="outline"
+                disabled={uploadingAvatar}
+                asChild
+              >
+                <span>
+                  {uploadingAvatar ? 'Enviando...' : 'Escolher imagem'}
+                </span>
+              </Button>
+            </label>
+
+            <input
+              id="avatar-upload"
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              disabled={uploadingAvatar}
+              className="hidden"
+            />
+
+            {errors.avatar && (
+              <p className="text-sm text-red-500">{errors.avatar.message}</p>
+            )}
+          </div>
+
           {/* Nome */}
           <div>
             <Label>Nome</Label>
@@ -124,22 +164,26 @@ export function UserEdit({ user }: UserEditProps) {
             )}
           </div>
 
-          {/* Email */}
-          <div>
-            <Label>Email</Label>
-            <Input type="email" {...register('email')} />
-            {errors.email && (
-              <p className="text-sm text-red-500">{errors.email.message}</p>
-            )}
-          </div>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {/* Email */}
+            <div className="md:col-span-2">
+              <Label>Email</Label>
+              <Input type="email" {...register('email')} />
+              {errors.email && (
+                <p className="text-sm text-red-500">{errors.email.message}</p>
+              )}
+            </div>
 
-          {/* Senha */}
-          <div>
-            <Label>Senha (opcional)</Label>
-            <Input type="password" {...register('password')} />
-            {errors.password && (
-              <p className="text-sm text-red-500">{errors.password.message}</p>
-            )}
+            {/* Senha */}
+            <div>
+              <Label>Senha (opcional)</Label>
+              <Input type="password" {...register('password')} />
+              {errors.password && (
+                <p className="text-sm text-red-500">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
           </div>
 
           {/* LinkedIn & GitHub */}
@@ -162,42 +206,10 @@ export function UserEdit({ user }: UserEditProps) {
             </div>
           </div>
 
-          {/* Avatar + preview */}
-          <div>
-            <Label>Avatar</Label>
-
-            {/* input file para upload */}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleAvatarChange}
-              disabled={uploadingAvatar}
-              className="block w-full text-sm text-gray-900 file:mr-4 file:rounded-full file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 hover:file:bg-indigo-100"
-            />
-
-            {/* preview do avatar atual */}
-            {avatarPreview && (
-              <img
-                src={avatarPreview}
-                alt="Avatar Preview"
-                className="mt-2 h-16 w-16 rounded-full border object-cover"
-              />
-            )}
-
-            {/* status de upload */}
-            {uploadingAvatar && (
-              <p className="mt-1 text-sm text-gray-500">Enviando avatar...</p>
-            )}
-
-            {errors.avatar && (
-              <p className="text-sm text-red-500">{errors.avatar.message}</p>
-            )}
-          </div>
-
           {/* Bio */}
           <div>
             <Label>Bio</Label>
-            <Textarea {...register('bio')} />
+            <Textarea {...register('bio')} className="min-h-[150px] resize-y" />
           </div>
           <Button type="submit" disabled={isSubmitting} className="w-full">
             {isSubmitting ? 'Salvando...' : 'Salvar Alterações'}

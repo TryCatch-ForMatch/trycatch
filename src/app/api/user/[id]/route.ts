@@ -5,20 +5,21 @@ import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { ROLE_GROUPS } from '@/lib/roles';
+import { logger } from '@/lib/logger';
 
 const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 const updateUserSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
-  email: z.string().email('Email inválido.'),
+  email: z.email('Email inválido.'),
   password: z
     .union([
       z.string().min(6, 'A senha deve ter pelo menos 6 caracteres.'),
       z.literal(''),
     ])
     .optional(),
-  avatar: z.union([z.string().url(), z.literal('')]).nullable(),
-  linkedin: z.union([z.string().url().optional(), z.literal('')]),
-  github: z.union([z.string().url().optional(), z.literal('')]),
+  avatar: z.union([z.url(), z.literal('')]).nullable(),
+  linkedin: z.union([z.url().optional(), z.literal('')]),
+  github: z.union([z.url().optional(), z.literal('')]),
   bio: z.string().optional(),
 });
 
@@ -61,7 +62,9 @@ export async function GET(
 
     return NextResponse.json(user, { status: 200 });
   } catch (error) {
-    console.error(error);
+    logger.error('Unexpected error', 'GET /api/user/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.USER.INTERNAL_ERROR,
@@ -105,7 +108,9 @@ export async function PUT(
   try {
     body = await request.json();
   } catch (error) {
-    console.error(error);
+    logger.error('Unexpected error', 'PUT /api/user/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
@@ -166,7 +171,9 @@ export async function PUT(
 
     return NextResponse.json(user, { status: 200 });
   } catch (error) {
-    console.error(error);
+    logger.error('Unexpected error', 'PUT /api/user/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.USER.INTERNAL_ERROR,
@@ -250,7 +257,9 @@ export async function DELETE(
       });
     }
   } catch (error) {
-    console.error(error);
+    logger.error('Unexpected error', 'DELETE /api/user/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.USER.INTERNAL_ERROR,

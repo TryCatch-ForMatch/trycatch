@@ -4,11 +4,16 @@ import { getIdFromRequest } from '@/utils/url';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { logger } from '@/lib/logger';
+import { normalizeSkillName } from '@/lib/normalize-skill-name';
 
 const idSchema = z.string().min(1, 'ID inválido.');
 const updateSkillSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
-  iconUrl: z.string().url('A URL do ícone deve ser válida.').optional(),
+  iconUrl: z
+    .url('A URL do ícone deve ser válida.')
+    .optional()
+    .or(z.literal('')),
   forceUpdate: z.boolean().optional(),
 });
 
@@ -20,7 +25,7 @@ export async function GET(request: NextRequest) {
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_ID,
-      errors: idParse.error.format(),
+      errors: z.treeifyError(idParse.error),
       status: 400,
     });
   }
@@ -60,7 +65,7 @@ export async function PATCH(request: NextRequest) {
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_ID,
-      errors: idParse.error.format(),
+      errors: z.treeifyError(idParse.error),
       status: 400,
     });
   }
@@ -72,17 +77,19 @@ export async function PATCH(request: NextRequest) {
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
-      errors: parse.error.format(),
+      errors: z.treeifyError(parse.error),
       status: 400,
     });
   }
 
   const { name, iconUrl, forceUpdate } = parse.data;
 
+  const normalizedName = normalizeSkillName(name);
+
   try {
     const existing = await prisma.skill.findFirst({
       where: {
-        name,
+        normalizedName,
         NOT: { id }, // ignora a própria skill que está sendo atualizada
       },
     });
@@ -110,14 +117,22 @@ export async function PATCH(request: NextRequest) {
       });
     }
 
+    const normalizedIconUrl = iconUrl || null;
+
     const skill = await prisma.skill.update({
       where: { id },
-      data: { name, iconUrl },
+      data: {
+        name,
+        normalizedName,
+        iconUrl: normalizedIconUrl,
+      },
     });
 
     return NextResponse.json(skill, { status: 200 });
   } catch (error) {
-    console.error('Erro ao atualizar skill:', error);
+    logger.error('Erro ao atualizar skill:', 'PATCH /api/skill/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.SKILL.INTERNAL_ERROR,
@@ -138,7 +153,7 @@ export async function DELETE(request: NextRequest) {
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_ID,
-      errors: idParse.error.format(),
+      errors: z.treeifyError(idParse.error),
       status: 400,
     });
   }
@@ -171,7 +186,9 @@ export async function DELETE(request: NextRequest) {
       status: 200,
     });
   } catch (error) {
-    console.error('Erro ao deletar skill:', error);
+    logger.error('Erro ao deletar skill:', 'DELETE /api/skill/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.SKILL.INTERNAL_ERROR,

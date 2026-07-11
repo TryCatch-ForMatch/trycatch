@@ -21,6 +21,7 @@ export default function TopProjectSkillsChart() {
         const res = await apiTryCatch.get('/metrics');
         setData(res.data.topProjectSkills || []);
       } catch (err) {
+        console.error(err);
         setError('Erro ao carregar dados das skills dos projetos.');
       } finally {
         setLoading(false);

@@ -3,14 +3,16 @@ import { hash } from 'bcryptjs';
 import { z } from 'zod';
 import { NextRequest } from 'next/server';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { logger } from '@/lib/logger';
+import { generateUniqueUsername } from '@/lib/generate-username';
 
 const createUserSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
-  email: z.string().email('Email inválido.'),
+  email: z.email('Email inválido.'),
   password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres.'),
   avatar: z.string(),
-  linkedin: z.union([z.string().url(), z.literal('')]).nullable(),
-  github: z.union([z.string().url(), z.literal('')]).nullable(),
+  linkedin: z.union([z.url(), z.literal('')]).nullable(),
+  github: z.union([z.url(), z.literal('')]).nullable(),
   bio: z.string().optional(),
   inviteCode: z.string(),
 });
@@ -20,7 +22,11 @@ export async function POST(request: NextRequest) {
   try {
     json = await request.json();
   } catch (error) {
-    console.error('Erro ao ler o corpo da requisição:', error);
+    logger.error(
+      'Erro ao ler o corpo da requisição:',
+      'POST /api/auth/signup',
+      { error: error instanceof Error ? error.message : String(error) }
+    );
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
@@ -67,7 +73,9 @@ export async function POST(request: NextRequest) {
     try {
       hashedPassword = await hash(password, 10);
     } catch (error) {
-      console.error('Erro ao hashear senha:', error);
+      logger.error('Erro ao hashear senha:', 'POST /api/auth/signup', {
+        error: error instanceof Error ? error.message : String(error),
+      });
       return buildResponse({
         success: false,
         message: MESSAGES.USER.INTERNAL_ERROR_HASH,
@@ -75,9 +83,12 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    const userName = await generateUniqueUsername(name);
+
     const user = await prisma.user.create({
       data: {
         name,
+        userName,
         email,
         password: hashedPassword,
         avatar,
@@ -105,7 +116,9 @@ export async function POST(request: NextRequest) {
       status: 201,
     });
   } catch (error) {
-    console.error('Erro interno ao criar usuário:', error);
+    logger.error('Erro interno ao criar usuário:', 'POST /api/auth/signup', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.USER.USER_CREATION_ERROR,

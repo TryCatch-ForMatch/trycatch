@@ -5,9 +5,10 @@ import { checkAuth } from '@/lib/check-auth';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { z } from 'zod';
 import { ROLES, Role } from '@/lib/roles';
+import { logger } from '@/lib/logger';
 
 const inviteSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
   role: z.enum(Object.values(ROLES) as [Role, ...Role[]]),
 });
 
@@ -21,7 +22,9 @@ export async function GET() {
     });
     return NextResponse.json(invites, { status: 200 });
   } catch (error) {
-    console.error('Erro ao buscar convites:', error);
+    logger.error('Erro ao buscar convites:', 'GET /api/invite', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.INVITE.INTERNAL_ERROR,
@@ -39,7 +42,9 @@ export async function POST(request: NextRequest) {
     body = await request.json();
     body = inviteSchema.parse(body);
   } catch (error) {
-    console.error('Erro ao validar dados do convite:', error);
+    logger.error('Erro ao validar dados do convite:', 'POST /api/invite', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.GENERAL.INVALID_DATA,
@@ -73,7 +78,9 @@ export async function POST(request: NextRequest) {
       status: 201,
     });
   } catch (error) {
-    console.error('Erro ao criar convite:', error);
+    logger.error('Erro ao criar convite:', 'POST /api/invite', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.INVITE.INTERNAL_ERROR,

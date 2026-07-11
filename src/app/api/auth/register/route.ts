@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { NextRequest } from 'next/server';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { logger } from '@/lib/logger';
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,7 +29,9 @@ export async function POST(request: NextRequest) {
       status: 200,
     });
   } catch (error) {
-    console.error('Erro de validação:', error);
+    logger.error('Erro de validação:', 'POST /api/auth/register', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.REGISTER.VALIDATION_ERROR,

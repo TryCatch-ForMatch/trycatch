@@ -4,6 +4,7 @@ import { getIdFromRequest } from '@/utils/url';
 import { checkAuth } from '@/lib/check-auth';
 import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { logger } from '@/lib/logger';
 
 const idSchema = z.string().min(1, 'ID inválido.');
 const updateTechStackSchema = z.object({
@@ -39,7 +40,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(stack, { status: 200 });
   } catch (error) {
-    console.log(error);
+    logger.error('Unexpected error', 'GET /api/tech-stack/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.TECH_STACK.INTERNAL_ERROR,
@@ -113,8 +116,9 @@ export async function PATCH(request: NextRequest) {
 
     return NextResponse.json(updated, { status: 200 });
   } catch (error) {
-    console.log(error);
-    console.error('Erro ao atualizar stack:', error);
+    logger.error('Erro ao atualizar stack:', 'PATCH /api/tech-stack/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.TECH_STACK.INTERNAL_ERROR,
@@ -165,7 +169,9 @@ export async function DELETE(request: NextRequest) {
       data: { deletedId: deleted.id },
     });
   } catch (error) {
-    console.log(error);
+    logger.error('Unexpected error', 'DELETE /api/tech-stack/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.TECH_STACK.INTERNAL_ERROR,

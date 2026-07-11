@@ -7,7 +7,8 @@ on:
       - develop
   push:
     branches:
-      - test/tests-ci
+      - main
+      - develop
 
 jobs:
   build:
@@ -17,15 +18,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
+          cache: "npm"
+
+      - name: Cache node_modules
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules/
+          key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Create .env
@@ -34,16 +43,22 @@ jobs:
               NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}\n\
               CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}\n\
               CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}\n\
-              CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}\n\              
+              CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}\n\
               RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}\n\
               INVITE_REQUEST_SENDER_EMAIL=${{ secrets.INVITE_REQUEST_SENDER_EMAIL }}\n\
               RESET_PASSWORD_EMAIL=${{ secrets.RESET_PASSWORD_EMAIL }}\n\
               CONTACT_SENDER_EMAIL=${{ secrets.CONTACT_SENDER_EMAIL }}\n\
-              INVITE_REQUEST_RECEIVER_EMAIL=${{ secrets.INVITE_REQUEST_RECEIVER_EMAIL }}\n\
-              RESET_PASSWORD_EMAIL=${{ secrets.RESET_PASSWORD_EMAIL }}\n" > .env
+              INVITE_REQUEST_RECEIVER_EMAIL=${{ secrets.INVITE_REQUEST_RECEIVER_EMAIL }}\n" > .env
 
       - name: Build project
         run: npm run build
+
+      - name: Upload node_modules
+        uses: actions/upload-artifact@v7
+        with:
+          name: node-modules
+          path: node_modules/
+          retention-days: 1
 
   lint:
     name: Lint Codebase
@@ -53,15 +68,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
+
+      - name: Restore node_modules
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules/
+          key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Run Lint
@@ -75,15 +97,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
+
+      - name: Restore node_modules
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules/
+          key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Run Tests
@@ -97,15 +126,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
+
+      - name: Restore node_modules
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules/
+          key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Run Tests with Coverage
@@ -119,29 +155,23 @@ jobs:
           name: coverage-report
           path: coverage/
 
-  sonar:
-    name: SonarQube Scan
-    runs-on: ubuntu-latest
-    needs: coverage
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
+      # SonarCloud runs in a separate "SonarCloud" workflow (workflow_run) so it
+      # has access to SONAR_TOKEN even for pull requests from forks. Persist the
+      # PR context here so that workflow can decorate the correct pull request.
+      - name: Save PR metadata
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          mkdir -p pr-meta
+          echo "${{ github.event.pull_request.number }}" > pr-meta/number
+          echo "${{ github.event.pull_request.head.ref }}" > pr-meta/head_ref
+          echo "${{ github.event.pull_request.base.ref }}" > pr-meta/base_ref
+
+      - name: Upload PR metadata
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/upload-artifact@v7
         with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
-
-      - name: Use Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v7.0.0
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          name: pr-metadata
+          path: pr-meta/
 
   audit:
     name: Audit Dependencies
@@ -151,15 +181,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: 'npm'
+
+      - name: Restore node_modules
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules/
+          key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Audit dependencies

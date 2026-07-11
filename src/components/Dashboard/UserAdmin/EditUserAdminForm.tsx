@@ -20,16 +20,17 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { ROLES, Role } from '@/lib/roles';
 import { ROLE_OPTIONS } from '@/lib/role-labels';
+import Image from 'next/image';
 
 const editUserSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
-  email: z.string().email('Email inválido'),
-  linkedin: z.string().url('URL inválida').optional().or(z.literal('')),
-  github: z.string().url('URL inválida').optional().or(z.literal('')),
+  email: z.email('Email inválido'),
+  linkedin: z.url('URL inválida').optional().or(z.literal('')),
+  github: z.url('URL inválida').optional().or(z.literal('')),
   bio: z.string().optional(),
-  avatar: z.string().url('URL inválida').optional().or(z.literal('')),
+  avatar: z.url('URL inválida').optional().or(z.literal('')),
   role: z.enum(Object.values(ROLES) as [Role, ...Role[]], {
-    required_error: 'Selecione uma permissão',
+    error: 'Selecione uma permissão',
   }),
 });
 
@@ -153,6 +154,7 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
             <input
               type="file"
               accept="image/*"
+              title="input file"
               onChange={handleAvatarChange}
               disabled={uploadingAvatar}
               className="block w-full text-sm text-gray-900 file:mr-4 file:rounded-full file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 hover:file:bg-indigo-100"
@@ -161,7 +163,7 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
               <p className="text-xs text-red-500">{errors.avatar.message}</p>
             )}
             {avatarUrl && (
-              <img
+              <Image
                 src={avatarUrl}
                 alt="Avatar Preview"
                 className="mt-2 h-16 w-16 rounded-full border object-cover"

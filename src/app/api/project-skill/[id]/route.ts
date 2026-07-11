@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { checkAuth } from '@/lib/check-auth';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { logger } from '@/lib/logger';
 
 const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 
@@ -17,7 +18,7 @@ export async function GET(
   if (!idParse.success) {
     return buildResponse({
       success: false,
-      errors: idParse.error.errors,
+      errors: idParse.error.issues,
       message: MESSAGES.PROJECT_SKILL.NOT_FOUND,
       status: 400,
     });
@@ -40,7 +41,9 @@ export async function GET(
 
     return NextResponse.json(projectSkill, { status: 200 });
   } catch (error) {
-    console.error('Erro no GET /project-skill:', error);
+    logger.error('Erro no GET /project-skill:', 'GET /api/project-skill/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT_SKILL.INTERNAL_ERROR,
@@ -66,11 +69,15 @@ export async function DELETE(
       message: MESSAGES.PROJECT_SKILL.DELETED,
     });
   } catch (error) {
-    console.error('Erro ao remover skill do projeto:', error);
+    logger.error(
+      'Erro ao remover skill do projeto:',
+      'DELETE /api/project-skill/[id]',
+      { error: error instanceof Error ? error.message : String(error) }
+    );
     if (error instanceof z.ZodError) {
       return buildResponse({
         success: false,
-        errors: error.errors,
+        errors: error.issues,
         message: MESSAGES.PROJECT_SKILL.DELETE_ERROR,
         status: 400,
       });

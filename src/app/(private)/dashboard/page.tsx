@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import BasePage from '@/components/Dashboard/BasePage';
 import UnderDevelopment from '@/components/UnderDevelopment';
 import { checkAuth } from '@/lib/check-auth';
 import { redirect } from 'next/navigation';
@@ -21,10 +20,5 @@ export default async function Page() {
     redirect('/dashboard/admin-page');
   }
 
-  return (
-    <BasePage>
-      <h1>Dashboard</h1>
-      <UnderDevelopment />
-    </BasePage>
-  );
+  return <UnderDevelopment title="Dashboards" />;
 }

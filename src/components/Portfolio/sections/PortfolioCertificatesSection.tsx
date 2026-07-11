@@ -1,10 +1,9 @@
-'use client';
-
-import { Card, CardContent } from '@/components/ui/card';
-import { PublicPortfolio } from '@/types/portfolio/public-portfolio';
+import { Award } from 'lucide-react';
+import type { PortfolioPublicResponse } from '@/types/portfolio.types';
+import { Section } from '@/components/ui/section';
 
 interface PortfolioCertificatesSectionProps {
-  data: PublicPortfolio;
+  data: PortfolioPublicResponse;
 }
 
 export function PortfolioCertificatesSection({
@@ -13,40 +12,40 @@ export function PortfolioCertificatesSection({
   if (!data.certificates || data.certificates.length === 0) return null;
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-      <h2 className="mb-6 text-2xl font-semibold text-[#101014]">
-        Certificados
-      </h2>
-
-      <div className="grid gap-6 md:grid-cols-2">
+    <Section icon={<Award className="h-4 w-4" />} title="Certificados">
+      <div className="grid gap-3 sm:grid-cols-2">
         {data.certificates.map((cert) => (
-          <Card
+          <div
             key={cert.id}
-            className="rounded-2xl border border-[#EAEAEB] shadow-sm transition hover:shadow-md"
+            className="space-y-1 rounded-lg border border-border bg-card p-4"
           >
-            <CardContent className="space-y-2 p-5">
-              <h3 className="text-base font-semibold text-[#101014]">
+            <div className="flex items-start justify-between gap-2">
+              <h3 className="text-sm leading-snug font-medium text-foreground">
                 {cert.title}
               </h3>
-
-              <p className="text-sm text-[#5C5C65]">{cert.issuer}</p>
-
-              <p className="text-xs text-[#A6A6AA]">{cert.date}</p>
-
               {cert.url && (
                 <a
                   href={cert.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block pt-2 text-sm font-medium text-[#3B38A0] hover:underline"
+                  className="flex-shrink-0 text-xs text-primary hover:underline"
                 >
-                  Ver certificado
+                  Ver
                 </a>
               )}
-            </CardContent>
-          </Card>
+            </div>
+            <p className="text-xs text-muted-foreground">{cert.issuer}</p>
+            {cert.date && (
+              <p className="text-[11px] text-muted-foreground">{cert.date}</p>
+            )}
+            {cert.description && (
+              <p className="line-clamp-2 pt-1 text-xs text-muted-foreground">
+                {cert.description}
+              </p>
+            )}
+          </div>
         ))}
       </div>
-    </section>
+    </Section>
   );
 }

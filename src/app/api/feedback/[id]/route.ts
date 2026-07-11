@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { checkAuth } from '@/lib/check-auth';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { ROLE_GROUPS } from '@/lib/roles';
+import { logger } from '@/lib/logger';
 
 export async function GET(
   request: NextRequest,
@@ -40,7 +41,9 @@ export async function GET(
 
     return NextResponse.json(feedback);
   } catch (error) {
-    console.error('Erro ao buscar feedback:', error);
+    logger.error('Erro ao buscar feedback:', 'GET /api/feedback/[id]', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return buildResponse({
       success: false,
       message: MESSAGES.FEEDBACK.INTERNAL_ERROR,

@@ -7,26 +7,27 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Moon, X } from 'lucide-react';
-
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from '@/components/ui/select';
+import { Moon } from 'lucide-react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
 
 import { IAvailability } from '@/types/interface/IAvailability';
-import { useSkills } from '@/hooks/api/useSkills';
+
+const weekdays = [
+  'Domingo',
+  'Segunda',
+  'Terça',
+  'Quarta',
+  'Quinta',
+  'Sexta',
+  'Sábado',
+];
 
 const schema = z.object({
   skills: z.array(z.string(), {
-    required_error: 'Selecione ao menos uma skill',
+    error: 'Selecione ao menos uma skill',
   }),
   availabilities: z
     .array(
@@ -49,9 +50,8 @@ type UserAvailabilityResponse = {
   availability: IAvailability[];
 };
 
-export function UserAvailabilityForm() {
+export function UserAvailability() {
   const router = useRouter();
-  const { allSkills, allUserSkills } = useSkills();
 
   const [userAvailability, setUserAvailability] =
     useState<UserAvailabilityResponse | null>(null);
@@ -61,12 +61,10 @@ export function UserAvailabilityForm() {
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      skills: [],
       availabilities: [],
     },
   });
@@ -75,18 +73,6 @@ export function UserAvailabilityForm() {
     control,
     name: 'availabilities',
   });
-
-  const selectedSkills = watch('skills');
-
-  const weekdays = [
-    'Domingo',
-    'Segunda',
-    'Terça',
-    'Quarta',
-    'Quinta',
-    'Sexta',
-    'Sábado',
-  ];
 
   useEffect(() => {
     fetch('/api/user-availability/me')
@@ -97,41 +83,26 @@ export function UserAvailabilityForm() {
       });
   }, []);
 
-  // HIDRATA SKILLS NO FORM
-
-  useEffect(() => {
-    if (!userAvailability?.skills?.length) return;
-
-    setValue(
-      'skills',
-      userAvailability.skills.map((s) => s.id)
-    );
-  }, [userAvailability, setValue]);
-
-  // HIDRATA HORÁRIOS NO FORM
-
   useEffect(() => {
     if (!userAvailability?.availability?.length) return;
 
     setValue(
       'availabilities',
-      userAvailability.availability.map((a) => ({
-        weekday: a.weekday,
-        startTime: a.startTime,
-        endTime: a.endTime,
+      userAvailability.availability.map((availability) => ({
+        weekday: availability.weekday,
+        startTime: availability.startTime,
+        endTime: availability.endTime,
       }))
     );
   }, [userAvailability, setValue]);
 
   const onToggleWeekday = (dayIndex: number, checked: boolean) => {
-    const idx = fields.findIndex((f) => f.weekday === dayIndex);
+    const idx = fields.findIndex((field) => field.weekday === dayIndex);
 
-    // Ligando o dia
     if (checked && idx === -1) {
       append({ weekday: dayIndex, startTime: '', endTime: '' });
     }
 
-    // Desligando o dia
     if (!checked && idx >= 0) {
       remove(idx);
     }
@@ -159,72 +130,10 @@ export function UserAvailabilityForm() {
     }
   };
 
-  const availableSkills = allSkills.filter(
-    (s) =>
-      !selectedSkills.includes(s.id ?? '') &&
-      !allUserSkills.some((item) => item.skill?.id === s.id)
-  );
-
   return (
     <Card className="mx-auto mt-6 rounded-2xl p-6 shadow-lg">
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Skills */}
-          <div className="space-y-2">
-            <Label>Selecionar Skills</Label>
-
-            <Select
-              onValueChange={(value: string) => {
-                if (!selectedSkills.includes(value)) {
-                  setValue('skills', [...selectedSkills, value]);
-                }
-              }}
-              value=""
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione uma skill" />
-              </SelectTrigger>
-              <SelectContent>
-                {availableSkills.map((skill) => (
-                  <SelectItem key={skill.id} value={skill.id ?? ''}>
-                    {skill.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {errors.skills && (
-              <p className="text-sm text-red-500">{errors.skills.message}</p>
-            )}
-
-            <div className="mt-3 flex flex-wrap gap-2">
-              {selectedSkills.map((skillId) => {
-                const skill = allSkills.find((s) => s.id === skillId);
-
-                return (
-                  <span
-                    key={skillId}
-                    className="flex items-center gap-1 rounded-full bg-gray-200 px-3 py-1 text-xs"
-                  >
-                    {skill?.name}
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setValue(
-                          'skills',
-                          selectedSkills.filter((id) => id !== skillId)
-                        )
-                      }
-                    >
-                      <X size={12} />
-                    </button>
-                  </span>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Disponibilidade */}
           <div>
             <Label className="font-semibold">Disponibilidade de horários</Label>
 

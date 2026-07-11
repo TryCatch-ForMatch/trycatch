@@ -5,7 +5,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 enum ProjectStatus {
@@ -63,13 +62,15 @@ model User {
 }
 
 model Skill {
-  id        String         @id @default(cuid())
-  name      String         @unique
+  id            String         @id @default(cuid())
+  name          String         @unique  
+  iconUrl       String?
+  projects      ProjectSkill[]
+  users         UserSkill[]
+  normalizedName String?
+  
   createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
-  iconUrl   String?
-  projects  ProjectSkill[]
-  users     UserSkill[]
+  updatedAt DateTime       @updatedAt  
 }
 
 model Stack {
@@ -96,6 +97,7 @@ model Project {
   skills      ProjectSkill[]
   stacks      ProjectStack[]
   stacksTaken StackTaken[]   @relation("ProjectStacksTaken")
+  github      String?
 }
 
 model ProjectStack {

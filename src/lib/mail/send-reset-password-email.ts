@@ -1,4 +1,4 @@
-import { resend } from '@/lib/mail/resend';
+import { getResend } from '@/lib/mail/resend';
 import { ResetPasswordEmail } from './templates/reset-password';
 
 type SendResetPasswordEmailParams = {
@@ -32,7 +32,7 @@ export async function sendResetPasswordEmail({
     appUrl
   ).toString();
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: sender,
     to: email,
     subject: 'Redefinição de senha',

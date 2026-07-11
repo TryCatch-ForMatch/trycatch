@@ -1,6 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import type { ProjectDetailsType } from '@/types/interface/team-project';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -8,10 +10,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { ProjectStackSelector } from './ProjectStackSelector';
-import { ProjectSkillSelector } from './ProjectSkillSelector';
+import { SkillSelector } from '@/components/shared/SkillSelector';
+import { useWatch } from 'react-hook-form';
 import { useCurrentUser } from '@/lib/use-current-user';
 import { toast } from 'sonner';
 import { MoneyInput } from '@/components/form/MoneyInput/MoneyInput';
+import { getStackAssignmentLabel } from '@/lib/stack-assignment';
 
 const projectSchema = z.object({
   name: z.string().min(3, 'Nome do projeto é obrigatório'),
@@ -27,6 +31,7 @@ const projectSchema = z.object({
     { message: 'Data deve ser válida e futura' }
   ),
   totalValue: z.number().min(0, 'Valor total deve ser maior ou igual a 0'),
+  github: z.string().url('URL inválida').optional().or(z.literal('')),
   stacks: z
     .array(
       z.object({
@@ -45,9 +50,15 @@ const projectSchema = z.object({
 
 export type ProjectFormData = z.infer<typeof projectSchema>;
 
-export function ProjectForm() {
+export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
   const router = useRouter();
   const user = useCurrentUser();
+  const editId = editIdProp;
+  const [editingProject, setEditingProject] =
+    useState<ProjectDetailsType | null>(null);
+  const [stackAssignments, setStackAssignments] = useState<
+    Record<string, string>
+  >({});
 
   const methods = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -56,6 +67,7 @@ export function ProjectForm() {
       description: '',
       deadline: '',
       totalValue: 0,
+      github: '',
       stacks: [{ stackId: '', percentage: 0 }],
       skills: [],
     },
@@ -66,6 +78,12 @@ export function ProjectForm() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = methods;
+
+  const selectedSkills =
+    useWatch({
+      control: methods.control,
+      name: 'skills',
+    }) ?? [];
 
   const onSubmit: (data: ProjectFormData) => Promise<void> = async (data) => {
     if (!user) {
@@ -79,31 +97,84 @@ export function ProjectForm() {
         description: data.description,
         deadline: data.deadline,
         totalValue: data.totalValue,
-        status: 'BUSCANDO',
+        github: data.github,
+        status: editingProject ? editingProject.status : 'BUSCANDO',
         skills: data.skills,
         stacks: data.stacks,
       };
 
       console.log('Payload enviado:', payload);
 
-      const res = await fetch('/api/team-project', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+      let res: Response;
+      if (editId) {
+        res = await fetch(`/api/team-project/${editId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+      } else {
+        res = await fetch('/api/team-project', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+      }
 
       if (!res.ok) {
         const error = await res.json().catch(() => null);
         console.error('Erro da API:', error);
-        throw new Error('Erro ao criar projeto');
+        throw new Error(
+          editId ? 'Erro ao atualizar projeto' : 'Erro ao criar projeto'
+        );
       }
 
-      router.push('/dashboard/team-projects');
+      router.push(
+        editId
+          ? `/dashboard/team-projects/${editId}`
+          : '/dashboard/team-projects'
+      );
     } catch (err) {
       console.error(err);
       toast.error('Erro ao salvar projeto');
     }
   };
+
+  // Fetch project data when editing
+  useEffect(() => {
+    async function loadProject() {
+      if (!editId) return;
+      try {
+        const res = await fetch(`/api/team-project/${editId}`);
+        if (!res.ok) throw new Error('Não foi possível buscar projeto');
+        const data = (await res.json()) as ProjectDetailsType;
+        setEditingProject(data);
+        const assignments = Object.fromEntries(
+          (data.stacks || []).map((stack) => [
+            stack.stackId,
+            getStackAssignmentLabel(stack) ?? '',
+          ])
+        );
+        setStackAssignments(assignments);
+        methods.reset({
+          name: data.name || '',
+          description: data.description || '',
+          deadline: data.deadline ? data.deadline.split('T')[0] : '',
+          totalValue: data.totalValue ?? 0,
+          github: data.github ?? '',
+          stacks: (data.stacks || []).map((s) => ({
+            stackId: s.stackId,
+            percentage: s.percentage,
+          })),
+          skills: (data.skills || []).map((s) => s.id),
+        });
+      } catch (error) {
+        console.error(error);
+        toast.error('Erro ao carregar dados do projeto para edição');
+      }
+    }
+    loadProject();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editId]);
 
   return (
     <FormProvider {...methods}>
@@ -122,14 +193,33 @@ export function ProjectForm() {
           </div>
 
           <div>
-            <ProjectSkillSelector />
+            <SkillSelector
+              selectedSkills={selectedSkills}
+              errorMessage={errors.skills?.message}
+              onAddSkill={(skillId) =>
+                methods.setValue('skills', [...selectedSkills, skillId], {
+                  shouldDirty: true,
+                  shouldValidate: true,
+                })
+              }
+              onRemoveSkill={(skillId) =>
+                methods.setValue(
+                  'skills',
+                  selectedSkills.filter((id) => id !== skillId),
+                  {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  }
+                )
+              }
+            />
             {errors.skills && (
               <p className="text-sm text-red-500">{errors.skills.message}</p>
             )}
           </div>
 
           <div>
-            <ProjectStackSelector />
+            <ProjectStackSelector stackAssignments={stackAssignments} />
             {errors.stacks && (
               <p className="text-sm text-red-500">
                 {'message' in errors.stacks ? errors.stacks.message : ''}
@@ -152,6 +242,19 @@ export function ProjectForm() {
               <p className="text-sm text-red-500">
                 {errors.description.message}
               </p>
+            )}
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium">
+              GitHub (opcional)
+            </label>
+            <Input
+              placeholder="https://github.com/usuario/repositorio"
+              {...register('github')}
+            />
+            {errors.github && (
+              <p className="text-sm text-red-500">{errors.github.message}</p>
             )}
           </div>
 

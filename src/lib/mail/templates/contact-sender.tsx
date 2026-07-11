@@ -13,7 +13,7 @@ export function ContactSenderEmail({
   name,
   requestDate,
   responseTimeframe,
-  contactId,
+  // contactId,
   appUrl,
 }: ContactSenderEmailProps) {
   return (
@@ -38,11 +38,11 @@ export function ContactSenderEmail({
         </Text>
       </Section>
 
-      <Section style={{ marginTop: '16px' }}>
+      {/* <Section style={{ marginTop: '16px' }}>
         <Text>
           Protocolo da solicitação: <strong>{contactId}</strong>
         </Text>
-      </Section>
+      </Section> */}
 
       <Section style={{ marginTop: '32px', fontSize: '12px' }}>
         <Text>

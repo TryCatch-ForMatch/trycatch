@@ -1,1 +1,17 @@
+if git diff --cached --name-only | grep -q "package-lock.json"; then
+  if ! git diff --cached --name-only | grep -q "package.json"; then
+    echo ""
+    echo "ERROR: package-lock.json is staged without package.json."
+    echo "You likely ran 'npm install' instead of 'npm ci' for local setup."
+    echo ""
+    echo "To fix:"
+    echo "  git restore --staged package-lock.json"
+    echo "  git checkout -- package-lock.json"
+    echo "  npm run setup"
+    echo ""
+    echo "If you intentionally updated a dependency, also stage package.json."
+    exit 1
+  fi
+fi
+
 npx lint-staged --allow-empty
