@@ -3,10 +3,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default function Footer() {
+export function Footer() {
   return (
-    <footer className="mt-16 pb-6 md:mt-28 lg:mt-[121px] xl:mt-[145px] xxl:mt-[202px]">
-      <div className="mx-auto max-w-[1440px] px-8 md:px-12 lg:px-16 xl:px-20">
+    <footer className="mt-16 pb-6 md:mt-28 lg:mt-30.25 xl:mt-36.25 xxl:mt-50.5">
+      <div className="mx-auto max-w-360 px-8 md:px-12 lg:px-16 xl:px-20">
         <div className="flex flex-col gap-12 border-t border-[#EAEAEB] pt-12 lg:flex-row lg:items-start lg:justify-between lg:gap-24">
           {/* Marca */}
           <div>

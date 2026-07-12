@@ -98,8 +98,8 @@ export default function UserSignupForm() {
   };
 
   return (
-    <section className="my-10 flex min-h-screen flex-col items-center justify-center gap-3">
-      <section className="flex w-full max-w-md flex-col gap-4 rounded-md border border-[#71717b67] p-8 px-4">
+    <section className="my-10 flex min-h-screen items-center justify-center px-10">
+      <section className="flex w-full max-w-xl flex-col gap-4 rounded-md border border-[#71717b25] p-8 px-3 shadow">
         <h2 className="mx-auto text-2xl font-bold text-[#3B38A0]">
           Cadastro de Usuario
         </h2>
@@ -122,6 +122,7 @@ export default function UserSignupForm() {
             <Input
               type="password"
               label="Senha"
+              className="py-6"
               placeholder="Sua senha"
               autoComplete="new-password"
               {...register('password')}
@@ -133,7 +134,12 @@ export default function UserSignupForm() {
 
           <div className="space-y-1">
             <input type="hidden" {...register('role')} />
-            <Input label="Perfil" value={getRoleLabel(selectedRole)} disabled />
+            <Input
+              className="py-6"
+              label="Perfil"
+              value={getRoleLabel(selectedRole)}
+              disabled
+            />
             {errors.role && (
               <p className="text-sm text-red-500">{errors.role.message}</p>
             )}
@@ -145,6 +151,7 @@ export default function UserSignupForm() {
               <Input
                 {...register('linkedin')}
                 label="Linkedin"
+                className="py-6"
                 placeholder="Seu Linkedin"
               />
               {errors.linkedin && (
@@ -158,6 +165,7 @@ export default function UserSignupForm() {
               <Input
                 {...register('github')}
                 label="Github"
+                className="py-6"
                 placeholder="Seu github"
               />
               {errors.github && (
@@ -179,7 +187,7 @@ export default function UserSignupForm() {
           <input type="hidden" {...register('inviteCode')} />
 
           {/* Botão */}
-          <Button type="submit" disabled={isSubmitting} className="w-full">
+          <Button type="submit" disabled={isSubmitting} className="w-full py-6">
             {isSubmitting ? (
               <span className="flex items-center justify-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />

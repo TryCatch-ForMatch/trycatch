@@ -16,20 +16,17 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative flex h-[calc(100vh-100px)] items-center overflow-hidden rounded-2xl bg-linear-to-r from-[#e3f0ff] via-[#f8f5ff] to-[#ffeef5] md:h-auto"
+      className="relative mx-4 flex h-[60vh] items-center overflow-hidden rounded-2xl bg-linear-to-r from-[#e3f0ff] via-[#f8f5ff] to-[#ffeef5]"
     >
-      {/* Container em coluna única */}
-      <div className="max-w-auto mx-auto flex flex-col items-center p-10 md:my-4 md:px-7 lg:flex-row lg:items-end lg:gap-10 lg:pt-10 lg:pb-0 xl:gap-20 xl:px-4 xxl:lg:pt-20">
-        {/* TEXTO */}
+      <div className="max-w-auto mx-auto flex flex-col items-center p-10 md:my-4 md:px-7 lg:flex-row lg:items-end lg:gap-10 lg:pt-10 lg:pb-0 xl:gap-20 xl:px-4">
         <div className="pb-8 text-center lg:text-left">
           <Title />
 
-          <p className="mx-auto mt-8 max-w-[377px] text-[12px] leading-[140%] text-[#5C5C65] sm:text-[14px] md:text-[16px] lg:mx-0 xl:mt-14 xxl:max-w-[600px] xxl:text-[25px]">
+          <p className="mx-auto mt-8 max-w-[377px] text-[12px] leading-[140%] text-[#5C5C65] sm:text-[14px] md:text-[16px] lg:mx-0 xl:mt-14 xxl:max-w-[600px]">
             Uma rede colaborativa para desenvolvimento de soluções digitais com
             aprendizado prático, mentoria e trabalho em equipe.
           </p>
 
-          {/* CTA */}
           <div className="mt-8 flex justify-center lg:justify-normal">
             <Link href={ctaHref}>
               <Button className="flex h-10 justify-between rounded-[84px] bg-[#35343C] p-[3px] pl-5 hover:bg-[#35343C]/90 xxl:h-16 xxl:w-auto xxl:pr-2">
@@ -44,21 +41,18 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* IMAGEM — SOMENTE lg+ */}
         <div className="mt-12 hidden lg:block">
           <Image
             src="https://res.cloudinary.com/daxa1bpny/image/upload/v1764190245/ui_assets/heroBackground_tablet.svg"
             alt="Pessoas colaborando em um projeto"
-            width={500}
-            height={382}
+            width={700}
+            height={400}
             priority
-            className="xl:w-[600px] xxl:w-[700px]"
           />
         </div>
 
-        {/* INDICADOR DE SCROLL */}
         <div className="absolute bottom-5 flex gap-2 text-[#5C5C65] md:hidden lg:right-10 lg:bottom-10">
-          <ArrowDown className="h-4 w-4 md:hidden" />
+          <ArrowDown className="h-4 w-4" />
           <Mouse className="hidden lg:block" />
           <p className="text-[10px] md:text-[11px] lg:text-[14px]">
             rolar para baixo
