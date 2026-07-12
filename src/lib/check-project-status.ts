@@ -1,11 +1,14 @@
 import { prisma } from '@/lib/prisma';
 import { ProjectStatus } from '@prisma/client';
 import { MESSAGES, buildResponse } from '@/constants/messages';
+import { logger } from '@/lib/logger';
+
+const CONTEXT = 'checkProjectStatus';
 
 export async function checkProjectStatus(projectId: string) {
-  console.log(
-    `\n🔍 Verificando contagem de stacks para o projeto: ${projectId}`
-  );
+  logger.info('Verificando contagem de stacks do projeto', CONTEXT, {
+    projectId,
+  });
 
   // Verifica se existe algum registro em StackTaken com esse projectId
   const existsInStackTaken = await prisma.stackTaken.findFirst({
@@ -13,11 +16,13 @@ export async function checkProjectStatus(projectId: string) {
   });
 
   if (!existsInStackTaken) {
-    console.log(
-      '⚠️ Nenhum registro encontrado na tabela StackTaken para este projeto.'
-    );
+    logger.warn('Nenhum registro encontrado na tabela StackTaken', CONTEXT, {
+      projectId,
+    });
   } else {
-    console.log('✅ Projeto encontrado na tabela StackTaken.');
+    logger.info('Projeto encontrado na tabela StackTaken', CONTEXT, {
+      projectId,
+    });
   }
 
   // Se o projeto já estiver concluído, não alterar o status
@@ -27,7 +32,8 @@ export async function checkProjectStatus(projectId: string) {
   });
 
   if (!project) {
-    console.log('❌ Projeto não encontrado.');
+    logger.warn('Projeto não encontrado', CONTEXT, { projectId });
+
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT.NOT_FOUND,
@@ -36,7 +42,11 @@ export async function checkProjectStatus(projectId: string) {
   }
 
   if (project.status === ProjectStatus.CONCLUIDO) {
-    console.log('✅ Projeto já está concluído — sem alterações.');
+    logger.info('Projeto já está concluído sem alterações', CONTEXT, {
+      projectId,
+      status: project.status,
+    });
+
     return buildResponse({
       success: true,
       message: MESSAGES.PROJECT.FETCH_SUCCESS,
@@ -53,9 +63,11 @@ export async function checkProjectStatus(projectId: string) {
     where: { projectId },
   });
 
-  // Exibe os resultados no console
-  console.log(`📊 Total de ProjectStack: ${totalProjectStack}`);
-  console.log(`📊 Total de StackTaken: ${totalStackTaken}`);
+  logger.info('Contagem de stacks do projeto calculada', CONTEXT, {
+    projectId,
+    totalProjectStack,
+    totalStackTaken,
+  });
 
   // Decidir novo status
   let newStatus = project.status;
@@ -72,9 +84,16 @@ export async function checkProjectStatus(projectId: string) {
       where: { id: projectId },
       data: { status: newStatus },
     });
-    console.log(`✅ Status do projeto atualizado para: ${newStatus}`);
+    logger.info('Status do projeto atualizado', CONTEXT, {
+      projectId,
+      previousStatus: project.status,
+      newStatus,
+    });
   } else {
-    console.log(`ℹ️ Nenhuma alteração no status (${newStatus})`);
+    logger.info('Status do projeto mantido', CONTEXT, {
+      projectId,
+      status: newStatus,
+    });
   }
 
   return {

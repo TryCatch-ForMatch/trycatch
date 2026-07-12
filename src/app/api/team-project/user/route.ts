@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { MESSAGES, buildResponse } from '@/constants/messages';
 import { checkProjectStatus } from '@/lib/check-project-status';
 import { ROLE_GROUPS } from '@/lib/roles';
+import { logger } from '@/lib/logger';
 
 const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 
@@ -78,7 +79,14 @@ export async function GET() {
 
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
-    console.error('[team-project/user GET] Erro:', error);
+    logger.error(
+      'Erro ao buscar projetos do usuário',
+      'GET /api/team-project/user',
+      {
+        error: error instanceof Error ? error.message : String(error),
+      }
+    );
+
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT.INTERNAL_ERROR,
@@ -130,17 +138,73 @@ export async function PATCH(request: NextRequest) {
       });
     }
 
-    const updated = await prisma.project.update({
-      where: { id: projectId },
-      data: { status },
+    if (status !== ProjectStatus.CONCLUIDO) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.GENERAL.INVALID_DATA,
+        status: 400,
+        errors: ['O encerramento manual só permite status CONCLUIDO.'],
+      });
+    }
+
+    if (existing.ownerId !== session.user.id) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.AUTH.UNAUTHORIZED,
+        status: 403,
+        errors: ['Apenas o owner pode concluir este projeto.'],
+      });
+    }
+
+    if (existing.status !== ProjectStatus.EM_ANDAMENTO) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.GENERAL.INVALID_DATA,
+        status: 400,
+        errors: ['Projeto só pode ser concluído em status EM_ANDAMENTO.'],
+      });
+    }
+
+    const updated = await prisma.$transaction(async (tx) => {
+      const totalProjectStacks = await tx.projectStack.count({
+        where: { projectId },
+      });
+      const totalStackTaken = await tx.stackTaken.count({
+        where: { projectId },
+      });
+
+      if (totalProjectStacks === 0 || totalStackTaken < totalProjectStacks) {
+        return null;
+      }
+
+      return tx.project.update({
+        where: { id: projectId },
+        data: { status },
+      });
     });
+
+    if (!updated) {
+      return buildResponse({
+        success: false,
+        message: MESSAGES.GENERAL.INVALID_DATA,
+        status: 400,
+        errors: ['Todas as stacks devem estar assumidas para concluir.'],
+      });
+    }
 
     // se houver lógica de verificação pós-update
     await checkProjectStatus(projectId);
 
     return NextResponse.json(updated, { status: 200 });
   } catch (error) {
-    console.error('[team-project/user PATCH] Erro ao alterar status:', error);
+    logger.error(
+      'Erro ao alterar status do projeto',
+      'PATCH /api/team-project/user',
+      {
+        error: error instanceof Error ? error.message : String(error),
+      }
+    );
+
     return buildResponse({
       success: false,
       message: MESSAGES.PROJECT.INTERNAL_ERROR,

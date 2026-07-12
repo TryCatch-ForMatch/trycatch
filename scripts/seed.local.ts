@@ -10,12 +10,11 @@
  * Rodar: npx tsx scripts/seed.local.ts
  */
 
-import { PrismaClient, ProjectStatus } from '@prisma/client';
+import { ProjectStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { prisma } from '../src/lib/prisma';
 
-const prisma = new PrismaClient();
-
-async function main() {
+export async function seedLocalPortfolio() {
   console.log('🌱 Iniciando seed local para feature de portfólio...\n');
 
   const hashedPassword = await bcrypt.hash('teste123', 10);
@@ -298,14 +297,24 @@ async function main() {
   console.log('\n  🔑 Senha de todos os usuários de teste: teste123');
 }
 
-main()
-  .then(async () => {
-    console.log('\n✅ Seed local finalizado com sucesso!');
-    await prisma.$disconnect();
-    process.exit(0);
-  })
-  .catch(async (e) => {
-    console.error('\n❌ Erro no seed:', e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+function isDirectRun() {
+  return process.argv[1]
+    ?.replaceAll('\\', '/')
+    .endsWith('/scripts/seed.local.ts');
+}
+
+/* c8 ignore start */
+if (isDirectRun()) {
+  seedLocalPortfolio()
+    .then(async () => {
+      console.log('\n✅ Seed local finalizado com sucesso!');
+      await prisma.$disconnect();
+      process.exit(0);
+    })
+    .catch(async (e) => {
+      console.error('\n❌ Erro no seed:', e);
+      await prisma.$disconnect();
+      process.exit(1);
+    });
+}
+/* c8 ignore stop */

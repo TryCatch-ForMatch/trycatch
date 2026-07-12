@@ -31,6 +31,30 @@ This flow guarantees control, equity in the distribution and traceability of res
 
 ---
 
+## 🧭 Task tracking flow
+
+After the task is assigned, keep the card updated so the team knows the real state of the work.
+
+### ✔️ Card status:
+- **In progress:** use this when you start implementing or reviewing the task.
+- **Blocked:** use this when you need a decision, access, scope adjustment or technical help to continue.
+- **Done:** use this only after opening the Pull Request, validating locally and leaving the PR link on the card.
+
+### ✔️ Communication on the card:
+- Share the agreed deadline before starting.
+- Record deadline changes on the card itself.
+- Explain blockers with enough context for another person to help.
+- When opening the PR, share the link and list which validations were executed.
+
+### ✔️ Branch and PR flow:
+- Create the branch from `develop`.
+- Use a prefix that matches the type of work: `feat`, `fix`, `docs`, `test`, `refactor`, `style` or `chore`.
+- Make small and clear commits.
+- Always open the Pull Request against `develop`.
+- Link the PR to the issue with a closing keyword, for example `Fixes: #123`, when the PR completes the task.
+
+---
+
 ## 🗂️ Rules and Organization
 
 ### ✔️ When showing interest in a task (card):

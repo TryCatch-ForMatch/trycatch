@@ -10,7 +10,7 @@
     "lint": "eslint . --no-cache",
     "lint:fix": "eslint . --no-cache --fix",
     "format": "prettier --write .",
-    "seed": "node scripts/createTestUser.js",
+    "seed": "tsx scripts/createTestUser.ts",
     "test": "jest  --passWithNoTests --maxWorkers=50%",
     "test:watchAll": "jest --watchAll",
     "test:watch": "jest --watch --maxWorkers=25%",
