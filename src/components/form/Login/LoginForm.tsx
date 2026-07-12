@@ -49,12 +49,14 @@ export function LoginForm() {
   }
 
   return (
-    <section className="flex min-h-screen flex-col items-center justify-center gap-3">
-      <section className="flex w-full max-w-md flex-col gap-4 rounded-md border border-[#71717b67] p-8 px-4">
+    <section className="flex min-h-screen flex-col items-center justify-center gap-3 px-10">
+      <section className="flex w-full max-w-xl flex-col gap-4 rounded-md border border-[#71717b25] p-8 px-3 shadow">
         <h2 className="mx-auto text-2xl font-bold text-[#3B38A0]">TryCatch</h2>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-2 px-4">
           <Input
+            autoComplete="off"
+            className="py-6"
             label="Email"
             name="email"
             type="email"
@@ -65,6 +67,7 @@ export function LoginForm() {
           />
           <div className="relative">
             <Input
+              className="py-6"
               label="Senha"
               name="password"
               type={showPassword ? 'text' : 'password'}
@@ -94,7 +97,7 @@ export function LoginForm() {
           <Button
             type="submit"
             variant="default"
-            className="w-full"
+            className="w-full py-6"
             disabled={loading}
           >
             {loading ? (

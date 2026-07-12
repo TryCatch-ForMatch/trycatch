@@ -79,16 +79,17 @@ export default function RegisterForm() {
   };
 
   return (
-    <section className="flex min-h-screen items-center justify-center">
-      <div className="flex w-full max-w-md flex-col gap-4 rounded-md border border-[#71717b67] p-8 px-4">
+    <section className="flex min-h-screen items-center justify-center px-10">
+      <div className="flex w-full max-w-xl flex-col gap-4 rounded-2xl border border-[#71717b25] p-8 px-3 shadow">
         <h2 className="mx-auto text-2xl font-bold text-[#3B38A0]">
           Validar Convite
         </h2>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-2 px-4">
           <div className="space-y-1">
             <Input
               label="Email"
               type="email"
+              className="py-6"
               placeholder="Seu email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -102,6 +103,7 @@ export default function RegisterForm() {
           <div className="space-y-1">
             <Input
               label="Código de Convite"
+              className="py-6"
               type="text"
               placeholder="Código de convite recebido por email"
               value={inviteCode}
@@ -115,7 +117,7 @@ export default function RegisterForm() {
 
           <Button
             type="submit"
-            className="w-full"
+            className="w-full py-6"
             disabled={loading}
             variant="default"
           >
