@@ -83,7 +83,7 @@ const createRequest = (body: unknown) =>
   }) as NextRequest;
 
 const createContext = () => ({
-  params: { id: projectId },
+  params: Promise.resolve({ id: projectId }),
 });
 
 const authorizeOwner = () => {
@@ -148,7 +148,14 @@ describe('PUT /api/team-project/[id]', () => {
     });
   });
 
-  it('bloqueia alteração de name após formação da equipe', async () => {
+  // Estes três testes cobrem o bloqueio de edição estrutural após a formação da
+  // equipe, que está TEMPORARIAMENTE DESATIVADO na rota — veja a constante
+  // BLOQUEAR_EDICAO_APOS_FORMACAO_DE_EQUIPE em
+  // src/app/api/team-project/[id]/route.ts.
+  //
+  // Ficam como `skip` de propósito: descrevem o comportamento esperado quando a
+  // regra voltar, e servem de ponto de partida para quem for reativá-la.
+  it.skip('bloqueia alteração de name após formação da equipe', async () => {
     (prisma.project.findUnique as jest.Mock).mockResolvedValue(
       existingProject({
         stacksTaken: [{ id: 'stack-taken-1' }],
@@ -172,7 +179,7 @@ describe('PUT /api/team-project/[id]', () => {
     expect(prisma.project.update).not.toHaveBeenCalled();
   });
 
-  it('bloqueia alteração de skills após formação da equipe', async () => {
+  it.skip('bloqueia alteração de skills após formação da equipe', async () => {
     (prisma.project.findUnique as jest.Mock).mockResolvedValue(
       existingProject({
         stacksTaken: [{ id: 'stack-taken-1' }],
@@ -188,7 +195,7 @@ describe('PUT /api/team-project/[id]', () => {
     expect(prisma.project.update).not.toHaveBeenCalled();
   });
 
-  it('bloqueia alteração de stacks após formação da equipe', async () => {
+  it.skip('bloqueia alteração de stacks após formação da equipe', async () => {
     (prisma.project.findUnique as jest.Mock).mockResolvedValue(
       existingProject({
         stacksTaken: [{ id: 'stack-taken-1' }],

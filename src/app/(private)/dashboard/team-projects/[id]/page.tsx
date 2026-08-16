@@ -1,9 +1,11 @@
 import { ProjectDetails } from '@/components/Dashboard/TeamProject';
 
-export default function ProjectDetailsPage({
+export default async function ProjectDetailsPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  return <ProjectDetails projectId={params.id} />;
+  const { id } = await params;
+
+  return <ProjectDetails projectId={id} />;
 }

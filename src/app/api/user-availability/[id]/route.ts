@@ -23,14 +23,15 @@ const userAvailabilityUpdateSchema = z.object({
 
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   const { authorized, response } = await checkAuth({
     allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized) return response;
 
-  const { id } = context.params;
+  const { id } = params;
 
   const idParse = idSchema.safeParse(id);
 
@@ -103,14 +104,15 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   const { authorized, response, session } = await checkAuth({
     allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized || !session) return response;
 
-  const idParse = idSchema.safeParse(context.params.id);
+  const idParse = idSchema.safeParse(params.id);
 
   if (!idParse.success) {
     return buildResponse({
@@ -205,15 +207,16 @@ export async function PUT(
 }
 
 export async function DELETE(
-  // request: NextRequest,
-  context: { params: { id: string } }
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   const { authorized, response, session } = await checkAuth({
     allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized || !session) return response;
 
-  const idParse = idSchema.safeParse(context.params.id);
+  const idParse = idSchema.safeParse(params.id);
 
   if (!idParse.success) {
     return buildResponse({

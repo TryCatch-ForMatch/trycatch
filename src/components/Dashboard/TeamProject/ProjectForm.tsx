@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { ProjectDetailsType } from '@/types/interface/team-project';
-import { useForm, FormProvider } from 'react-hook-form';
+import { useForm, FormProvider, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -103,8 +103,6 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
         stacks: data.stacks,
       };
 
-      console.log('Payload enviado:', payload);
-
       let res: Response;
       if (editId) {
         res = await fetch(`/api/team-project/${editId}`, {
@@ -121,11 +119,27 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
       }
 
       if (!res.ok) {
-        const error = await res.json().catch(() => null);
-        console.error('Erro da API:', error);
-        throw new Error(
-          editId ? 'Erro ao atualizar projeto' : 'Erro ao criar projeto'
-        );
+        // A API responde no formato { success, message, data, errors }.
+        // Aproveitamos a mensagem dela em vez de mostrar um erro genérico —
+        // quase sempre ela explica exatamente o que impediu o salvamento.
+        const corpo = await res.text();
+        let mensagem = editId
+          ? 'Erro ao atualizar projeto'
+          : 'Erro ao criar projeto';
+
+        try {
+          const dados = JSON.parse(corpo);
+          const detalhe = Array.isArray(dados?.errors)
+            ? dados.errors.join(' · ')
+            : '';
+          mensagem =
+            [dados?.message, detalhe].filter(Boolean).join(' — ') || mensagem;
+        } catch {
+          // resposta sem JSON — mantém a mensagem padrão
+        }
+
+        console.error(`Erro da API (${res.status}):`, corpo);
+        throw new Error(mensagem);
       }
 
       router.push(
@@ -135,7 +149,11 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
       );
     } catch (err) {
       console.error(err);
-      toast.error('Erro ao salvar projeto');
+      toast.error(
+        err instanceof Error && err.message
+          ? err.message
+          : 'Erro ao salvar projeto'
+      );
     }
   };
 
@@ -176,10 +194,39 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editId]);
 
+  // Sem isto, uma validação que falha num campo fora da área visível não dá
+  // retorno nenhum: a pessoa clica em "Salvar" e nada acontece.
+  const onInvalid = (validationErrors: FieldErrors<ProjectFormData>) => {
+    const campos: Record<string, string> = {
+      name: 'Nome',
+      description: 'Descrição',
+      deadline: 'Prazo',
+      totalValue: 'Valor total',
+      github: 'GitHub',
+      stacks: 'Stacks',
+      skills: 'Skills',
+    };
+
+    const pendencias = Object.entries(validationErrors).map(([campo, erro]) => {
+      const rotulo = campos[campo] ?? campo;
+      const mensagem =
+        erro && typeof erro === 'object' && 'message' in erro
+          ? String(erro.message ?? '')
+          : '';
+      return mensagem ? `${rotulo}: ${mensagem}` : rotulo;
+    });
+
+    toast.error(
+      pendencias.length === 1
+        ? pendencias[0]
+        : `Verifique os campos: ${pendencias.join(' · ')}`
+    );
+  };
+
   return (
     <FormProvider {...methods}>
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmit, onInvalid)}
         className="m-5 mx-auto grid max-w-5xl grid-cols-1 gap-6 p-6 md:grid-cols-2"
       >
         {/* Coluna Esquerda */}
