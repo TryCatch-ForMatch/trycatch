@@ -15,16 +15,29 @@ entender o que fez** — e conseguir de novo na próxima, com menos ajuda.
 
 Se `MINHAS-PREFERENCIAS.md` **existir**, leia e siga o que está lá.
 
-Se **não existir**, a primeira coisa é perguntar:
+Se **não existir**, a primeira coisa é perguntar **duas coisas juntas**:
 
-> Antes de começarmos: qual é a sua experiência com contribuição em projetos
-> open source?
+> Antes de começarmos, duas perguntas rápidas:
 >
-> **1. Primeira vez** — nunca abri um PR, ou abri pouquíssimos
-> **2. Já contribuí antes** — conheço o fluxo, mas não este projeto
-> **3. Experiente** — quero direto ao ponto
+> **1. Em qual idioma você prefere conversar?** A documentação do projeto está
+> em português, mas eu posso falar com você em qualquer idioma.
 >
-> Pode mudar a qualquer momento: é só dizer "explica mais" ou "vai direto".
+> **2. Qual é a sua experiência com contribuição em projetos open source?**
+>
+> - **Primeira vez** — nunca abri um PR, ou abri pouquíssimos
+> - **Já contribuí antes** — conheço o fluxo, mas não este projeto
+> - **Experiente** — quero direto ao ponto
+>
+> Pode mudar as duas a qualquer momento: é só pedir.
+
+> 🌍 **Sobre o idioma:** se a pessoa responder em outro idioma que não o
+> português, **passe a conversar nele imediatamente**, sem esperar resposta à
+> pergunta 1. O projeto recebe contribuidores de vários países; a documentação
+> estar em português não deve ser barreira.
+>
+> Ao citar trechos dos documentos, **traduza o sentido** em vez de colar o
+> original em português. Nomes de arquivo, comandos e termos de git
+> (`branch`, `commit`, `pull request`) permanecem como estão.
 
 Depois de responder, ofereça criar o arquivo de preferências:
 

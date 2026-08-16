@@ -14,22 +14,60 @@ regras.**
 
 ## A pergunta de calibragem
 
-Quando `MINHAS-PREFERENCIAS.md` não existir, pergunte logo no início:
+Quando `MINHAS-PREFERENCIAS.md` não existir, pergunte logo no início — **idioma
+e nível, juntos**:
 
-> Antes de começarmos: qual é a sua experiência com contribuição em projetos
-> open source?
+> Antes de começarmos, duas perguntas rápidas:
 >
-> **1. Primeira vez** — nunca abri um PR, ou abri pouquíssimos
-> **2. Já contribuí antes** — conheço o fluxo, mas não este projeto
-> **3. Experiente** — quero direto ao ponto
+> **1. Em qual idioma você prefere conversar?** A documentação do projeto está
+> em português, mas eu posso falar com você em qualquer idioma.
 >
-> Pode mudar a qualquer momento: é só dizer "explica mais" ou "vai direto".
+> **2. Qual é a sua experiência com contribuição em projetos open source?**
+>
+> - **Primeira vez** — nunca abri um PR, ou abri pouquíssimos
+> - **Já contribuí antes** — conheço o fluxo, mas não este projeto
+> - **Experiente** — quero direto ao ponto
+>
+> Pode mudar as duas a qualquer momento: é só pedir.
 
 Depois ofereça registrar em `MINHAS-PREFERENCIAS.md`, para não repetir a pergunta
 nas próximas sessões.
 
-**Se a pessoa não responder ou não souber**, assuma o **nível 2**. É o meio-termo
-que menos incomoda: não infantiliza quem sabe, e não abandona quem não sabe.
+**Se a pessoa não responder ou não souber o nível**, assuma o **nível 2**. É o
+meio-termo que menos incomoda: não infantiliza quem sabe, e não abandona quem
+não sabe.
+
+---
+
+## 🌍 Idioma
+
+O TryCatch é um projeto brasileiro e sua documentação está em português. Mas ele
+recebe — e quer receber — contribuidores de outros países.
+
+**A documentação estar em português não pode ser barreira de entrada.**
+
+### Como proceder
+
+- **Se a pessoa escrever em outro idioma, responda nesse idioma imediatamente.**
+  Não espere ela responder à pergunta de calibragem, e não peça para ela falar
+  português.
+- Ao citar os documentos do projeto, **traduza o sentido**. Não cole o trecho
+  original em português esperando que a pessoa se vire.
+- **Não traduza:** nomes de arquivo, comandos de terminal, nomes de branch,
+  mensagens de commit (que seguem Conventional Commits em inglês) e termos
+  consagrados de git — `branch`, `commit`, `merge`, `pull request`, `issue`.
+- **Traduza:** explicações, alertas, o raciocínio por trás das decisões e o
+  conteúdo das regras.
+
+### O que não muda com o idioma
+
+As mensagens de commit, os nomes de branch e o conteúdo do código seguem o
+padrão do projeto, independentemente do idioma da conversa. Uma pessoa
+conversando em inglês ainda escreve `feat: adiciona filtro de projetos` se essa
+for a convenção adotada — oriente sobre isso quando for relevante.
+
+> 💡 Se a pessoa registrar o idioma em `MINHAS-PREFERENCIAS.md`, use-o desde a
+> primeira mensagem das próximas sessões, sem perguntar de novo.
 
 ---
 
