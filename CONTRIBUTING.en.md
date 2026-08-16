@@ -208,9 +208,16 @@ entry file and follows it to the full instructions.
 
 **3. Tell it what you want to do**
 
-Start with something simple, like:
+Start with something simple. Use **the number of the issue assigned to you**:
 
-> I want to pick up issue #123. Where do I start?
+> I want to pick up issue #NUMBER. Where do I start?
+
+> ⚠️ `#NUMBER` is a placeholder, not a command. Replace it with the real number
+> — for example, `#487`. If you paste the text as-is, the AI will go looking for
+> an issue that doesn't exist.
+>
+> No issue assigned yet? Just say so: *"I haven't picked up a task yet, can you
+> help me choose one?"*
 
 The AI will ask you two things: **which language you'd like to talk in** and
 **how much experience** you have contributing to open source. From there it
@@ -498,14 +505,26 @@ git commit --no-verify
 Automatically: **build**, **lint**, **tests**, **coverage**, **dependency
 audit**, and then the **SonarCloud** analysis.
 
-Two things that commonly cause confusion:
+### 🟥 Seeing red on your PR? It's probably not your fault
 
-- **SonarCloud runs in a separate workflow**, triggered after CI. This is
-  necessary because PRs from forks don't receive secrets — without the split, it
-  would fail every time.
-- The **dependency audit** job may show red because of vulnerabilities in
-  development tooling that have no published fix yet. If your PR didn't touch
-  dependencies, that's **not** your fault.
+This is the part that scares most people opening their first pull request. Some
+jobs can fail for reasons **unrelated to your code**:
+
+- **Your PR comes from a fork.** For security, GitHub **does not hand repository
+  secrets to pull requests from forks** — that's what stops someone from opening
+  a malicious PR just to capture keys. Jobs that depend on those values may fail
+  or be skipped, and that's expected.
+- **The dependency audit job** may be red because of vulnerabilities in
+  development tooling that have no published fix yet. That predates your PR.
+- **SonarCloud runs in a separate workflow**, triggered after CI — precisely to
+  work around the fork/secrets limitation. If it takes a while to show up, wait.
+
+**What to do:** don't try to "fix" those failures. Check that the **build**,
+**lint** and **test** jobs passed — those do depend on your code. If one of them
+fails, that's worth investigating.
+
+When in doubt, **ask in the PR**. Nobody will mind, and the answer is very likely
+"you can ignore that one, it's on our side".
 
 Full details in
 [`docs/04 - processo/ci-e-validacao.md`](docs/04%20-%20processo/ci-e-validacao.md)

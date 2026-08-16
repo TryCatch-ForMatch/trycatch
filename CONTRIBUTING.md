@@ -196,9 +196,16 @@ de porta e é direcionada para as instruções completas.
 
 **3. Diga o que você quer fazer**
 
-Comece por algo simples, como:
+Comece por algo simples. Use **o número da issue que foi atribuída a você**:
 
-> Quero pegar a issue #123. Por onde começo?
+> Quero pegar a issue #NÚMERO. Por onde começo?
+
+> ⚠️ `#NÚMERO` é um espaço a preencher, não um comando. Troque pelo número real
+> — por exemplo, `#487`. Se você colar o texto como está, a IA vai procurar uma
+> issue que não existe.
+>
+> Ainda não tem issue atribuída? Diga isso mesmo: *"ainda não peguei nenhuma
+> tarefa, pode me ajudar a escolher?"*
 
 A IA vai perguntar duas coisas: **em qual idioma você prefere conversar** e
 **qual é a sua experiência** com contribuição em open source. A partir daí ela
@@ -476,13 +483,28 @@ git commit --no-verify
 Automaticamente: **build**, **lint**, **testes**, **cobertura**, **auditoria de
 dependências** e, em seguida, a análise do **SonarCloud**.
 
-Pontos que costumam gerar dúvida:
+### 🟥 Viu vermelho no seu PR? Provavelmente não é culpa sua
 
-- O **SonarCloud roda num workflow separado**, disparado após a CI. É necessário
-  porque PRs vindos de forks não recebem secrets — sem isso, ele falharia sempre.
-- O job de **auditoria de dependências** pode aparecer vermelho por
-  vulnerabilidades em ferramentas de desenvolvimento que ainda não têm correção
-  publicada. Se o seu PR não mexeu em dependências, isso **não** é culpa dele.
+Esta é a parte que mais assusta quem abre o primeiro pull request. Alguns jobs
+podem falhar por motivos **que não têm relação com o seu código**:
+
+- **Seu PR vem de um fork.** Por segurança, o GitHub **não entrega os secrets do
+  repositório** para pull requests vindos de forks — é o que impede que alguém
+  abra um PR malicioso só para capturar chaves. Jobs que dependem desses valores
+  podem falhar ou ser pulados, e isso é esperado.
+- **O job de auditoria de dependências** pode estar vermelho por vulnerabilidades
+  em ferramentas de desenvolvimento que ainda não têm correção publicada. É
+  anterior ao seu PR.
+- **O SonarCloud roda num workflow separado**, disparado depois da CI —
+  justamente para contornar a limitação de secrets em forks. Se ele demorar a
+  aparecer, aguarde.
+
+**O que fazer:** não tente "consertar" esses erros. Confira se os jobs de
+**build**, **lint** e **testes** passaram — esses sim dependem do seu código. Se
+algum deles falhar, aí vale investigar.
+
+Na dúvida, **comente no PR perguntando**. Ninguém vai achar ruim, e é bem
+provável que a resposta seja "pode ignorar, é do nosso lado".
 
 O detalhamento está em
 [`docs/04 - processo/ci-e-validacao.md`](docs/04%20-%20processo/ci-e-validacao.md).

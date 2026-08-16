@@ -98,6 +98,26 @@ Depois de identificar a issue, **leia o conteúdo dela**. Se a ferramenta tiver
 acesso à internet ou ao `gh`, busque direto. Se não tiver, peça para a pessoa
 colar a descrição.
 
+### ⚠️ Quando o número da issue não resolve
+
+Se a busca não encontrar a issue, ou se o número parecer um exemplo copiado da
+documentação — `#123`, `#NÚMERO`, `#NUMBER`, `#000` —, **não insista na busca e
+não peça a descrição como se fosse problema de acesso.** Diga com clareza o que
+aconteceu:
+
+> Não encontrei a issue #123 no repositório. Esse número aparece como exemplo no
+> guia de contribuição — se você copiou de lá, me diga o número real da issue que
+> te atribuíram.
+>
+> Se ainda não tem uma tarefa atribuída, posso te ajudar a escolher.
+
+Isso poupa a pessoa de achar que ela errou alguma configuração. O caso mais comum
+é justamente esse: alguém colando o exemplo da documentação literalmente.
+
+> 💡 O mesmo vale para qualquer valor de exemplo que apareça na documentação —
+> `SEU-USUARIO`, `feat/nome-da-sua-feature`, `<pacote>`. São espaços a preencher.
+> Ao encontrar um deles literalmente, pergunte o valor real em vez de tentar usar.
+
 > ⚠️ Várias issues deste projeto descrevem um estado que já mudou. Antes de
 > agir, **confira contra o código atual**. Se a issue disser que algo não existe
 > e você encontrar que existe, avise a pessoa.

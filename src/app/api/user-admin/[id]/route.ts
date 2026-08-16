@@ -21,12 +21,11 @@ const updateUserSchema = z.object({
 
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   const { authorized, response } = await checkAuth({ requireAdmin: true });
   if (!authorized) return response;
-
-  const params = await context.params;
 
   const idParse = idSchema.safeParse(params.id);
   if (!idParse.success) {
@@ -72,12 +71,11 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   const { authorized, response } = await checkAuth({ requireAdmin: true });
   if (!authorized) return response;
-
-  const params = await context.params;
 
   const idParse = idSchema.safeParse(params.id);
   if (!idParse.success) {
@@ -182,12 +180,11 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   const { authorized, response } = await checkAuth({ requireAdmin: true });
   if (!authorized) return response;
-
-  const params = await context.params;
 
   const idParse = idSchema.safeParse(params.id);
   if (!idParse.success) {

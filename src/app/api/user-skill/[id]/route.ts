@@ -49,8 +49,9 @@ export async function GET(request: NextRequest) {
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   const auth = await checkAuth();
   if (!auth.authorized) return auth.response;
 

@@ -9,12 +9,13 @@ const idSchema = z.string().min(25, 'ID inválido').max(36, 'ID inválido');
 
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   const auth = await checkAuth();
   if (!auth.authorized) return auth.response;
 
-  const idParse = idSchema.safeParse(context.params.id);
+  const idParse = idSchema.safeParse(params.id);
   if (!idParse.success) {
     return buildResponse({
       success: false,
@@ -54,8 +55,9 @@ export async function GET(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   const auth = await checkAuth();
   if (!auth.authorized) return auth.response;
 
