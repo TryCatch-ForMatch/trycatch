@@ -33,7 +33,14 @@
 - [ ] Cursor
 - [ ] Outra: ______
 
-**Idioma:** português
+**Idioma em que quero conversar:**
+<!-- A documentação do projeto está em português, mas a IA pode conversar com
+     você em qualquer idioma. Escreva o seu abaixo. -->
+
+- [ ] Português
+- [ ] English
+- [ ] Español
+- [ ] Outro: ______
 
 ---
 
