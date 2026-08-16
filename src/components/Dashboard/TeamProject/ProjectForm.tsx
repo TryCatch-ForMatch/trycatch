@@ -103,8 +103,6 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
         stacks: data.stacks,
       };
 
-      console.log('Payload enviado:', payload);
-
       let res: Response;
       if (editId) {
         res = await fetch(`/api/team-project/${editId}`, {
