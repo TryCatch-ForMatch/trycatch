@@ -1,335 +1,581 @@
-# 🤝 Contribution Guide - TryCatch For Match
+# 🤝 Contributing Guide - TryCatch For Match
 
 ---
-#### 🌐 **Languages / Idiomas:** [English](./README.en.md) | [Português](./README.md)
+#### 🌐 **Languages / Idiomas:** [English](./CONTRIBUTING.en.md) | [Português](./CONTRIBUTING.md)
 ---
 
-You are very welcome! 🚀  
-Here are the rules, standards and agreements to ensure that everyone can collaborate in an organized, light and productive way.
+Welcome aboard! 🚀
 
----
+This project exists to help people **learn how to contribute to open source**.
+It doesn't matter whether this is your first contribution ever or you have years
+of experience — there is room and there are tasks for both.
 
-## ✔️ Task distribution
+This guide walks you through the whole journey: picking up a task, setting up
+your environment, doing the work and opening the pull request.
 
-Tasks are organized into cards/issues, which can be divided into sub-issues, when necessary, for better distribution of work.
+> 💡 **First time contributing to open source?** You don't need to know
+> everything. Read through the *Getting started* section and ask for help on
+> [Discord](https://discord.gg/ZgUHkzf3r) whenever you get stuck. Asking is part
+> of the process.
 
-⚠️ **Important:**
-Those interested in contributing do not create or assume the issue/card on their own.
-
-### 📌 Correct assignment flow
-
-1. The employee comments on the existing issue/card, stating that he or she is interested in taking on the task.
-
-2. A project owner will:
-- Evaluate the request
-- Officially assign the collaborator to the issue/card
-- Define or validate the delivery deadline
-
-3. If necessary, the employee can request an extension of the deadline, exclusively via a comment on the issue/card itself.
-
-This flow guarantees control, equity in the distribution and traceability of responsibilities.
+> 🌍 **A note on language:** most of this project's documentation is written in
+> Portuguese, since the community is Brazilian. **You do not need to speak
+> Portuguese to contribute.** This guide is kept in English, and if you use an
+> AI assistant in your editor it will talk to you in your own language and
+> translate the rest as needed — see
+> [Using AI? Set it up before you start](#-using-ai-set-it-up-before-you-start).
 
 ---
 
-## 🧭 Task tracking flow
+## 📖 Table of contents
 
-After the task is assigned, keep the card updated so the team knows the real state of the work.
-
-### ✔️ Card status:
-- **In progress:** use this when you start implementing or reviewing the task.
-- **Blocked:** use this when you need a decision, access, scope adjustment or technical help to continue.
-- **Done:** use this only after opening the Pull Request, validating locally and leaving the PR link on the card.
-
-### ✔️ Communication on the card:
-- Share the agreed deadline before starting.
-- Record deadline changes on the card itself.
-- Explain blockers with enough context for another person to help.
-- When opening the PR, share the link and list which validations were executed.
-
-### ✔️ Branch and PR flow:
-- Create the branch from `develop`.
-- Use a prefix that matches the type of work: `feat`, `fix`, `docs`, `test`, `refactor`, `style` or `chore`.
-- Make small and clear commits.
-- Always open the Pull Request against `develop`.
-- Link the PR to the issue with a closing keyword, for example `Fixes: #123`, when the PR completes the task.
+1. [How tasks are assigned](#-how-tasks-are-assigned)
+2. [Getting started: from fork to running project](#-getting-started-from-fork-to-running-project)
+3. [Using AI? Set it up before you start](#-using-ai-set-it-up-before-you-start)
+4. [The workflow: branch, commit and PR](#-the-workflow-branch-commit-and-pr)
+5. [Working with dependencies](#-working-with-dependencies)
+6. [AI code review agent](#-ai-code-review-agent)
+7. [Husky and Continuous Integration](#-husky-and-continuous-integration)
+8. [Task tracking](#-task-tracking)
+9. [Where to ask for help](#-where-to-ask-for-help)
+10. [Golden rules](#-golden-rules)
+11. [Contributor recognition](#-contributor-recognition)
 
 ---
 
-## 🗂️ Rules and Organization
+## ✔️ How tasks are assigned
 
-### ✔️ When showing interest in a task (card):
-- Clearly state that you want to take on the task.
-- Wait for formal assignment by a responsible person.
-- Once assigned, respect the agreed deadline.
-- Assess your availability before committing.
+Work is organised as **cards/issues** on GitHub Projects, which may be split
+into sub-issues when needed.
 
-### ✔️ Discipline:
-- Task assigned = responsibility assumed.
-- Don't leave tasks idle without updating.
-- If you realize that you will not be able to meet the deadline, let us know as soon as possible via comment.
+⚠️ **Important:** you don't create or assign yourself to an issue on your own.
 
-### ✔️ Constant feedback:
-- If you have any doubts, ask.
-- If someone asks for help, help.
+### 📌 The assignment flow
+
+1. Comment on the issue/card saying you'd like to take the task.
+2. A project maintainer will:
+   - review your request;
+   - officially assign you to the issue/card;
+   - set or confirm the delivery deadline.
+3. If you need more time, ask for an extension **on the issue itself**.
+
+This keeps the workload fair, traceable and under control.
+
+### ✔️ Before you volunteer
+
+- Check your availability **before** committing to a task.
+- Wait for the formal assignment before you start coding.
+- Assigned task = responsibility accepted.
+- If you realise you won't make the deadline, say so as early as you can.
+
+> 💡 **First contribution?** Look for issues labelled `good first issue`. They
+> were picked because they're a safe place to start.
 
 ---
 
-## ⚙️ Local Environment Setup
+## 🚀 Getting started: from fork to running project
 
-Before starting, install dependencies with:
+Follow these in order. Each step depends on the previous one.
+
+### 1. Fork the project
+
+Click **Fork** at the top of the repository page on GitHub. This creates a copy
+of the project under your account.
+
+> Never worked with forks before? See the
+> [official GitHub tutorial](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo).
+
+### 2. Clone your fork
+
+```bash
+git clone https://github.com/YOUR-USERNAME/trycatch.git
+cd trycatch
+```
+
+Replace `YOUR-USERNAME` with your GitHub username.
+
+> ⚠️ **On Windows:** don't put the project inside a synced folder (OneDrive,
+> Google Drive, Dropbox). Sync locks files and git fails when switching
+> branches. Prefer something like `C:\projects\trycatch`.
+
+### 3. Connect to the original repository
+
+This lets you pull updates from the main project into your fork:
+
+```bash
+git remote add upstream https://github.com/TryCatch-ForMatch/trycatch.git
+```
+
+Check it with `git remote -v`. You should see both `origin` (your fork) and
+`upstream` (the original project).
+
+### 4. Install dependencies
 
 ```bash
 npm run setup
 ```
 
-> This command is an alias for `npm ci`, which installs **exactly** what is in `package-lock.json` without modifying it. **Never use `npm install` just to set up your environment** — it may rewrite `package-lock.json` and generate unnecessary diffs in your PR.
+This runs `npm ci`, which installs **exactly** what's in `package-lock.json`.
 
-**Node version:** use Node 18 or higher (CI uses Node 24). This guarantees the v3 lockfile format, which is cross-platform compatible (Windows, Linux, macOS).
+> ⚠️ **Don't use `npm install` just to set up your environment.** It can rewrite
+> `package-lock.json` and break continuous integration for everyone. Details in
+> [Working with dependencies](#-working-with-dependencies).
 
-**If you need to add or update a package**, use `npm install <package>` normally — in that case it is expected that both `package.json` and `package-lock.json` will change. Commit both together:
+**Node version:** the project runs on **Node 24**, the same version used by CI
+and production. If you use `nvm` or `fnm`, run `nvm use` in the project root.
+
+> The Prisma Client is generated automatically by `postinstall`. You do **not**
+> need to run `npx prisma generate` yourself.
+
+### 5. Set up your environment variables
+
+Copy the template and fill it in:
 
 ```bash
-git add package.json package-lock.json
-git commit -m "chore(deps): add <package>"
+cp .env.example .env
 ```
 
-**If `package-lock.json` appears modified after setup**, you accidentally ran `npm install`. Restore it with:
+Every variable is documented inside the file. At a minimum you'll need
+`DATABASE_URL`, `NEXTAUTH_SECRET` and `JWT_SECRET`. Ask on
+[Discord](https://discord.gg/ZgUHkzf3r) if you're unsure about any of them.
+
+> 🔒 Your `.env` **never** goes into the repository. It's already in
+> `.gitignore` — don't force-add it under any circumstances.
+
+### 6. Run the project
+
+```bash
+npm run dev
+```
+
+Open <http://localhost:3000>. If the page loads, your environment is ready. 🎉
+
+### 7. Check that everything works
+
+```bash
+npm test            # tests
+npm run lint        # code standards
+npx tsc --noEmit    # type checking
+```
+
+> ℹ️ The project has **known type errors** that are being fixed gradually. If
+> `npx tsc --noEmit` reports errors in files you didn't touch, they're not
+> yours — move on and don't try to fix them.
+
+---
+
+## 🤖 Using AI? Set it up before you start
+
+Plenty of people use an AI assistant in their editor, and that's **welcome
+here**. The project ships its own instructions for those tools: they cover the
+rules, the conventions and the workflow, and they adapt the level of explanation
+to your experience.
+
+**You don't need AI to contribute.** If you'd rather work without it, skip this
+section — the rest of the guide is enough on its own.
+
+### How it works
+
+The content lives in `docs/05 - contribuicao/`, and each tool automatically
+reads an "entry point" file in the project root:
+
+| Tool | File it reads automatically |
+|---|---|
+| GitHub Copilot | `.github/copilot-instructions.md` |
+| Claude Code | `CLAUDE.md` |
+| Cursor | `.cursor/rules/trycatch.mdc` |
+
+In other words: **just open the project with the tool installed.** It finds the
+instructions on its own and starts following the project's workflow.
+
+### Step by step
+
+**1. Pick and install a tool**
+
+| Tool | How to install | Cost |
+|---|---|---|
+| **GitHub Copilot** | *GitHub Copilot* extension in VS Code → sign in with your GitHub account | Free tier with a monthly limit; free for students and open source maintainers |
+| **Claude Code** | VS Code extension, or from the terminal — see the [official docs](https://docs.claude.com/en/docs/claude-code/overview) | Free tier with a limit; paid plans available |
+| **Cursor** | Standalone editor built on VS Code — [cursor.com](https://cursor.com) | Free tier with a limit; paid plans available |
+
+If you've never used any of them, **Copilot** is usually the easiest starting
+point: it installs like any other VS Code extension and has a free tier.
+
+**2. Open the project in your tool**
+
+Nothing else to configure. When you open the project folder, the AI reads the
+entry file and follows it to the full instructions.
+
+**3. Tell it what you want to do**
+
+Start with something simple, like:
+
+> I want to pick up issue #123. Where do I start?
+
+The AI will ask you two things: **which language you'd like to talk in** and
+**how much experience** you have contributing to open source. From there it
+adjusts how much it explains — more detail if you're starting out, straight to
+the point if you already know the flow.
+
+> 🌍 **The project's documentation is in Portuguese, but you don't need to speak
+> Portuguese to contribute.** The AI talks to you in your language and
+> translates the documents as needed. Just write in English, Spanish or whatever
+> you're comfortable with — it will follow.
+
+**4. (Optional) Save your preferences**
+
+So you don't answer the same questions every time:
+
+```bash
+cp "docs/05 - contribuicao/MINHAS-PREFERENCIAS.example.md" "docs/05 - contribuicao/MINHAS-PREFERENCIAS.md"
+```
+
+Then edit the file with your language, experience level, tool and how you prefer
+to work. It stays **on your machine only** — it's in `.gitignore`, just like
+`.env`.
+
+### What to expect from AI on this project
+
+- **It teaches before it does.** When you ask for something you'd learn by doing
+  — a git command, running a test, reading an error message — it shows you the
+  way and waits. If you insist, it does it and explains what it did. The point
+  here is for you to learn, not just for the code to get written.
+- **`git commit`, `git push` and opening the PR are always yours.** The AI helps
+  draft the message, but you run the commands.
+- **It warns you when something breaks the project's rules**, even if you asked
+  for it. When that happens, read the warning — it's usually about security or
+  real people's data.
+
+### Documents, if you want to dig deeper
+
+These are written in Portuguese. Your AI assistant can translate them for you,
+or read them and explain in your language.
+
+| File | Contents |
+|---|---|
+| [`IA-REGRAS.md`](docs/05%20-%20contribuicao/IA-REGRAS.md) | Non-negotiable rules: security, authorisation, personal data, git flow |
+| [`IA-GUIA.md`](docs/05%20-%20contribuicao/IA-GUIA.md) | The complete workflow, step by step |
+| [`IA-NIVEIS.md`](docs/05%20-%20contribuicao/IA-NIVEIS.md) | How the AI adapts to your experience level and language |
+
+> 💡 If the AI does something different from what's documented, **the
+> documentation wins**. Let us know on Discord or open an issue.
+
+---
+
+## 🌿 The workflow: branch, commit and PR
+
+This is the full cycle of a contribution, start to finish.
+
+### The project's branches
+
+| Branch | What it's for |
+|---|---|
+| `main` | Stable, production version. **Never** work on it directly |
+| `develop` | Where everything is integrated. **Your branch starts here, and your PR goes back here** |
+| `feat/`, `fix/`, … | Your working branch |
+
+Prefixes:
+
+| Prefix | When to use it | Example |
+|---|---|---|
+| `feat/` | new feature | `feat/criar-login` |
+| `fix/` | bug fix | `fix/erro-no-formulario` |
+| `docs/` | documentation | `docs/atualizar-readme` |
+| `style/` | formatting, no behaviour change | `style/ajustar-espacamento` |
+| `refactor/` | refactoring, no behaviour change | `refactor/extrair-service` |
+| `test/` | tests | `test/cobertura-de-login` |
+| `chore/` | maintenance, dependencies, config | `chore/atualizar-eslint` |
+
+### 1. Update develop before you start
+
+**Every time**, at the beginning of a task:
+
+```bash
+git checkout develop
+git pull upstream develop
+git push origin develop
+```
+
+`pull upstream` brings in changes from the original project; `push origin`
+updates your fork.
+
+### 2. Create your working branch
+
+```bash
+git checkout -b feat/your-feature-name
+```
+
+`-b` creates the branch and switches to it.
+
+### 3. Work and commit
+
+Use [Conventional Commits](https://www.conventionalcommits.org/) for your
+messages:
+
+```
+feat: criar tela de cadastro de projeto
+fix: corrigir bug no login
+docs: atualizar guia de contribuição
+```
+
+> ℹ️ Commit messages in this project are usually written in Portuguese, matching
+> the rest of the codebase. The **type prefix** (`feat`, `fix`, `docs`…) is
+> always in English. If you're not comfortable writing in Portuguese, English is
+> fine — just be consistent within your PR.
+
+If you'd rather be guided step by step:
+
+```bash
+npm run commit
+```
+
+That opens **Commitizen**, which builds the message with you. No need to
+memorise the format.
+
+**Linking to an issue** — at the end of the message:
+
+- `Refs: #42` just references the issue;
+- `Fixes: #42` closes it automatically when the PR is merged.
+
+### 4. Check before you push
+
+```bash
+npm test
+npm run lint
+npx tsc --noEmit
+```
+
+### 5. Push and open the pull request
+
+```bash
+git push origin feat/your-feature-name
+```
+
+On GitHub, open the PR **from your branch to `develop`** on the organisation's
+repository — never to `main`.
+
+Fill in the template that shows up: what you did, the related issue, how to test
+it. A good description speeds up review.
+
+### 6. Review
+
+Someone from the team reviews it and may ask for changes. **That's normal and
+it's not personal criticism** — it's how the code gets better and how we all
+learn. Reply to the comments, adjust and push a new commit.
+
+Once approved, your PR is merged into `develop`. When everything is ready for
+production, we merge `develop → main`.
+
+---
+
+## 📦 Working with dependencies
+
+This section matters even if you're not touching any package — because it's easy
+to change `package-lock.json` by accident.
+
+### Just installing the project
+
+```bash
+npm run setup
+```
+
+Never `npm install`. `npm ci` installs exactly what's in the lockfile without
+rewriting it.
+
+### 🔴 `package-lock.json` can only be generated on Linux
+
+If you're on **Windows or macOS**, **do not run `npm install`** in this project.
+
+**Why:** some dependencies ship platform-specific compiled builds. npm resolves
+the dependency tree differently on each operating system, and the CI's `npm ci`
+— which runs on Linux — rejects a lockfile generated elsewhere. This has already
+taken the project's CI down for hours.
+
+**So how do you add or update a package?**
+
+| Situation | What to do |
+|---|---|
+| Bumping a package version | Let **Dependabot** handle it — it runs on Linux |
+| Adding a new dependency | Use **GitHub Codespaces** (Linux, in the browser), WSL or Docker |
+| Just installing to work | `npm run setup` — doesn't touch the lockfile |
+
+In Codespaces:
+
+```bash
+npm install <package>
+npm ci                              # validate on the same platform as CI
+git add package.json package-lock.json
+```
+
+> ⚠️ **Talk to the team before adding any dependency.** Every new dependency is
+> attack surface, bundle weight and future maintenance.
+
+### If `package-lock.json` shows up modified by accident
+
+If you **didn't touch any dependency** and it shows as changed, you ran
+`npm install` by mistake. Restore it:
 
 ```bash
 git checkout -- package-lock.json
 npm run setup
 ```
 
----
-
-## 🌿 Git Flow - Branches Pattern
-
-### 🔥 Branch principal:
-- `main`: stable version ready for production.
-
-### 🧪 Development branch:
-- `develop`: where we integrate all the features before going to `main`.
-
-### 🌱 Feature branches and fixes:
-- `feat/feature-name`: new functionality (Ex: `feat/criar-login`)
-- `fix/descricao-da-correcao`: bug fix (Ex: `fix/erro-no-formulario`)
-- `docs/descricao`: change in documentation  
-- `style/descricao`: formatting without code changes  
-- `refactor/descricao`: refactoring without changing behavior  
-- `test/description`: tests added or corrected  
-- `chore/description`: maintenance (dependencies, configs, etc.)
+> ⚠️ **Only do this if the change really was accidental.** If you were fixing
+> the lockfile on purpose, this command throws your work away. When in doubt,
+> ask first.
 
 ---
 
-## 🔧 Before starting any task:
+## 🔍 AI code review agent
 
-1. Fork the project via GitHub. If you don't know how, see this [tutorial](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo).
+Beyond the instructions for your editor assistant, the project has a **code
+review bot** that analyses your changed files and writes a report to
+`docs/codereview_reports/`, pointing out improvements in security, performance
+and best practices.
 
-2. Update the `develop` branch on your computer:
+It's optional, free, and runs on your machine.
+
+### 1. Create your API key (free)
+
+- Go to [Google AI Studio](https://aistudio.google.com/api-keys).
+- Sign in with a regular Google account.
+- Click **Get API key** → **Create API Key** → **Create API key in new project**.
+- Copy the key that appears (don't close the page before copying!).
+
+### 2. Set the environment variable
+
+Open your `.env` file (the one from step 5 of *Getting started*) and add:
+
+```
+GEMINI_API_KEY=paste_your_key_here_without_quotes
+```
+
+> 🔒 The key is personal and yours. `.env` never goes into the repository —
+> never share the key in an issue, a PR or a message.
+
+### 3. Run the review
+
 ```bash
-git checkout develop
-git pull origin develop
-```
-
-3. Create a new branch for your work:
-
-```bash
-git checkout -b feat/feature-name
-```
-
-4. Work, make clear commits (use Husky for this)
-
-5. When finished:
-
-```bash
-git push origin feat/your-feature-name
-```
-
-6. Open a Pull Request (PR) to the `develop` branch of the organization's repository.
-
----
-
-## 🤖 How to use the Smart Code Review Agent
-
-To help maintain the quality of our code and give you quick feedback even before you submit your Pull Request, we use a Code Review robot powered by Gemini artificial intelligence!
-
-It will read the files you changed and generate a super organized report in the `docs/codereview_reports/` folder pointing out security, performance and best practices improvements.
-
-### Here is the step-by-step guide for you to configure and use this tool on your computer:
-
-1. Creating your API Key (Free)
-Don't worry, you don't have to pay anything to use this artificial intelligence in your project!
-
-- Access the [Google AI Studio] website (https://aistudio.google.com/api-keys).
-
-- Log in using any regular Google (Gmail) account.
-
-- In the side or top menu, look for and click the "Get API key" button.
-
-- Click on "Create API Key" and then on "Create API key in new project".
-
-- A large sequence of letters and numbers will appear. Click the button to copy this key and save it (do not close the page before copying!).
-
-
-2. Configuring your Environment Variables
-The project needs to know what your key is to be able to talk to Gemini.
-
-- Open your `.env.local` file (which you created following the [README](./README.md#-4-configure-o-arquivo-env) step by step).
-
-- Add the following line (replacing the code you copied from the Google website):
-
-```
-GEMINI_API_KEY=Paste_Your_Key_Here_Without_Quotes
-```
-
-3. Running the Code Review
-With everything configured, now it's easy! Whenever you want to review your code, open the terminal at the root of the project and type:
-
-```Bash
 npm run review
 ```
 
-The terminal will give you 3 really cool options:
+The terminal offers three options:
 
-- [1] Only the changed files: Perfect to run before sending your code to us! It only reviews what you have changed and that has not yet been committed.
+- **[1] Changed files only** — ideal right before opening your PR;
+- **[2] A specific folder** — good for studying a module;
+- **[3] The whole project** — in batches, to avoid overloading the model.
 
-- [2] Choose a specific folder/module: Great for when you want to study or review an entire folder (like src/app or src/components).
-
-- [3] The entire project: It will read the entire project, dividing it into small batches so the AI doesn't crash.
-
-Open the file generated in the `docs/codereview_reports/` folder to see tips from your virtual Senior Reviewer! 🚀
+Then open the generated report in `docs/codereview_reports/`. 🚀
 
 ---
 
-## 🔥 Pull Request (PR) - Fluxo
+## 🐶 Husky and Continuous Integration
 
-1. Create the branch → Work on it → Commit → Push
-2. Open PR of your branch to `develop`
-3. Describe what was done clearly
-4. Someone does the proofreading
-5. PR approved → merge to `develop`
+### Husky: automatic checks before commits
 
-When everything is ready for production, we do `develop → main`.
+**Husky** runs automatic checks before `commit` and `push`:
 
----
+- formatting with Prettier;
+- tests related to your changed files, with Jest;
+- commit message format, with Commitlint;
+- a guard against unintended `package-lock.json` changes.
 
-## 🏗️ Standard Commits (Conventional Commits)
+**Nothing to configure** — it works automatically after `npm run setup`.
 
-We use standardized commit messages. Examples:
-
-- `feat: create project registration screen`
-- `fix: fix login bug`
-- `docs: update README`
-- `style: format code with Prettier`
-- `refactor: improve form structure`
-- `test: add authentication tests`
-- `chore: update dependencies`
-
-### 💡 How to create a commit correctly:
-
-Use the command:
-
-```bash
-npm run commit
-```
-
-This will open the **Commitizen**, which guides you step by step.
-You don't need to memorize the patterns, the wizard helps with everything.
-
----
-
-## 🔗 Vincular commits a issues
-
-If the commit is related to an open issue, add at the end:
-
-- For reference only: `Refs: #42`
-- To close automatically: `Fixes: #42`
-
-Example in long description:
-
-```
-Update login button. Cool: #42
-```
-
----
-
-## 🐶 Husky: why do we use?
-
-**Husky** runs automatic checks before you `commit` or `push`, ensuring that:
-
-- Your code is formatted correctly (with Prettier)
-- Didn't break any tests (with Jest)
-- The commit message follows the pattern (with Commitlint)
-
-This way, we prevent bugs or non-standard code from entering the database.
-
-**No need to worry**, everything runs automatically!
-
-If necessary, you can bypass the hooks with:
+If a hook blocks your commit, **read the message**: it almost always tells you
+what to do. There is an escape hatch:
 
 ```bash
 git commit --no-verify
 ```
 
----
+> ⚠️ Use it **only** when you know exactly why the hook is wrong, and explain
+> your reasoning in the PR description. Skipping checks out of impatience
+> usually just moves the problem onto someone else.
 
-## 🤖 Continuous Integration (CI)
+### CI: what runs when you open a PR
 
-When you open a Pull Request, CI runs automatically: **build**, **lint**,
-**tests**, **coverage**, **dependency audit**, and then the **SonarCloud**
-analysis.
+Automatically: **build**, **lint**, **tests**, **coverage**, **dependency
+audit**, and then the **SonarCloud** analysis.
 
-Key points for contributors:
+Two things that commonly cause confusion:
 
-- The **SonarCloud analysis runs in a separate workflow** (triggered after
-  CI). This is required because PRs from **forks** don't receive secrets —
-  without this split, Sonar would always fail.
-- To install dependencies use `npm ci` (and **avoid `npm install` on
-  Windows** just to install, as it may rewrite `package-lock.json` and
-  break CI).
-- The **Prisma Client** is generated automatically via `postinstall`; you
-  don't need to run `npx prisma generate` manually after installing.
+- **SonarCloud runs in a separate workflow**, triggered after CI. This is
+  necessary because PRs from forks don't receive secrets — without the split, it
+  would fail every time.
+- The **dependency audit** job may show red because of vulnerabilities in
+  development tooling that have no published fix yet. If your PR didn't touch
+  dependencies, that's **not** your fault.
 
-The full flow, the reasoning, and detailed guidance are in
-[`docs/04 - processo/ci-e-validacao.md`](docs/04%20-%20processo/ci-e-validacao.md).
-
----
-
-## 💬 Where to ask for help?
-
-- In the community group [Discord](https://discord.gg/ZgUHkzf3r)
-- Opening an issue on GitHub
+Full details in
+[`docs/04 - processo/ci-e-validacao.md`](docs/04%20-%20processo/ci-e-validacao.md)
+(in Portuguese).
 
 ---
 
-## 💛 Golden Rules
+## 🧭 Task tracking
+
+Once a task is assigned to you, keep the card up to date so the team knows the
+real state of the work.
+
+### Card status
+
+| Status | When to use it |
+|---|---|
+| **In progress** | when you start implementing or reviewing |
+| **Blocked** | when you need a decision, access, scope change or technical help |
+| **Done** | only after opening the PR, validating locally and leaving the link on the card |
+
+### Communication
+
+- State the agreed deadline before you start.
+- Record any deadline change on the card itself.
+- Explain blockers with enough context for someone else to help.
+- When you open the PR, share the link and say which checks you ran.
+
+---
+
+## 💬 Where to ask for help
+
+- On our community [Discord](https://discord.gg/ZgUHkzf3r)
+- By commenting on the issue itself
+- By opening a new issue, if it's something that doesn't exist yet
+
+**Don't stay stuck on your own.** Asking early saves everyone's time, and nobody
+here will think your question is silly.
+
+---
+
+## 💛 Golden rules
 
 - People > Technology
-- Commitment > technical knowledge.
-- No one walks alone: ask and help.
-- Quality over quantity.
-- Communication always.
-- Responsibility with assumed deadlines.
+- Commitment > technical knowledge
+- Nobody walks alone: ask, and help
+- Quality over quantity
+- Always communicate
+- Own the deadlines you accept
 
 ---
 
-## 🧑u200d💻 Recognition of collaborators in the project
+## 🧑‍💻 Contributor recognition
 
-To ensure that all employees are recognized, follow these instructions:
-
-1. Comment on the issue or PR:
+To make sure everyone gets credited, comment on the issue or PR:
 
 ```
-@all-contributors please add @usuario for code, doc
+@all-contributors please add @username for code, doc
 ```
 
-> Replace `@user` with the contributor's GitHub username.
-> You can add multiple contribution types, separated by commas (`code`, `doc`, `test`, etc.).
+> Replace `@username` with the GitHub username. You can list several
+> contribution types separated by commas (`code`, `doc`, `test`, etc.).
 
-3. The bot will automatically update:
-- The file `CONTRIBUTORS.md` with the contributor
-- The contributor count badge in the README
+The bot automatically updates:
 
-To see all the contribution emoji options, check out the [All Contributors emoji key](https://allcontributors.org/docs/en/emoji-key).
+- the `CONTRIBUTORS.md` file;
+- the contributor count badge in the README.
+
+See all the types in the
+[All Contributors emoji key](https://allcontributors.org/docs/en/emoji-key).
 
 ---
+
+**Thank you for contributing to TryCatch For Match!** 💛
