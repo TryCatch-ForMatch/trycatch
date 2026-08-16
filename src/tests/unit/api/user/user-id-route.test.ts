@@ -54,7 +54,7 @@ const createRequest = (body?: unknown) =>
   }) as MockRequest as NextRequest;
 
 const createContext = (id = userId) => ({
-  params: { id },
+  params: Promise.resolve({ id }),
 });
 
 const authorizeUser = (id = userId, role = 'USER') => {

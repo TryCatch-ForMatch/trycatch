@@ -1,9 +1,11 @@
 import { ProjectForm } from '@/components/Dashboard/TeamProject';
 
-export default function ProjectEditPage({
+export default async function ProjectEditPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  return <ProjectForm editIdProp={params.id} />;
+  const { id } = await params;
+
+  return <ProjectForm editIdProp={id} />;
 }

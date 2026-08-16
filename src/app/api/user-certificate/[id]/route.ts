@@ -15,8 +15,9 @@ const updateSchema = z.object({
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   const { authorized, response, session } = await checkAuth({
     allowedRoles: ROLE_GROUPS.ALL,
   });
@@ -48,8 +49,9 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   const { authorized, response, session } = await checkAuth({
     allowedRoles: ROLE_GROUPS.ALL,
   });
@@ -102,8 +104,9 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   const { authorized, response, session } = await checkAuth({
     allowedRoles: ROLE_GROUPS.ALL,
   });

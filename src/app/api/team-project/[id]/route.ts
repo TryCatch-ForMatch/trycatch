@@ -132,14 +132,15 @@ async function applyProjectStackChanges(
 
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   const { authorized, response, session } = await checkAuth({
     allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized || !session) return response;
 
-  const { id } = context.params;
+  const { id } = params;
 
   const idParse = idSchema.safeParse(id);
 
@@ -228,14 +229,15 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   const { authorized, response, session } = await checkAuth({
     allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized || !session) return response;
 
-  const idParse = idSchema.safeParse(context.params.id);
+  const idParse = idSchema.safeParse(params.id);
 
   if (!idParse.success) {
     return buildResponse({
@@ -296,7 +298,28 @@ export async function PUT(
       github,
     } = parse.data;
 
+    // ------------------------------------------------------------------
+    // Bloqueio de edição estrutural — TEMPORARIAMENTE DESATIVADO
+    //
+    // A regra impedia alterar o projeto depois que alguém assumisse uma stack.
+    // Ela está desligada até a plataforma entrar em operação de fato, por dois
+    // motivos:
+    //
+    // 1. O escopo estava largo demais: `hasStructuralProjectChanges` considera
+    //    nome, prazo e valor total como "estrutura", travando edições que não
+    //    têm relação com a composição da equipe.
+    //
+    // 2. A comparação de prazo gera falso positivo. O formulário carrega a data
+    //    como `deadline.split('T')[0]`, perdendo a hora; o banco guarda o
+    //    timestamp completo. Os dois nunca coincidem, então abrir a tela e
+    //    salvar sem mudar nada já disparava o bloqueio.
+    //
+    // Ao reativar, corrija os dois pontos antes.
+    // ------------------------------------------------------------------
+    const BLOQUEAR_EDICAO_APOS_FORMACAO_DE_EQUIPE = false;
+
     if (
+      BLOQUEAR_EDICAO_APOS_FORMACAO_DE_EQUIPE &&
       existing.stacksTaken.length > 0 &&
       hasStructuralProjectChanges(existing, parse.data)
     ) {
@@ -350,14 +373,15 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
   const { authorized, response, session } = await checkAuth({
     allowedRoles: ROLE_GROUPS.ALL,
   });
   if (!authorized || !session) return response;
 
-  const idParse = idSchema.safeParse(context.params.id);
+  const idParse = idSchema.safeParse(params.id);
 
   if (!idParse.success) {
     return buildResponse({
