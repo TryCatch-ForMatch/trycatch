@@ -47,3 +47,6 @@ storybook-static
 
 #yarn.lock para evitar conflito com npm
 yarn.lock
+
+# preferencias pessoais de cada contribuidor (o .example vai versionado)
+docs/**/MINHAS-PREFERENCIAS.md
