@@ -1,12 +1,18 @@
 name: Docs Auto Translate
 
+# Traduz automaticamente apenas o README.
+#
+# O CONTRIBUTING.md ficou de fora de propósito: ele é o documento operacional,
+# cheio de tabelas, âncoras de índice, comandos e nomes de arquivo. A tradução
+# automática quebra esse tipo de estrutura — traduz conteúdo dentro de blocos de
+# código e desalinha os links do índice. O CONTRIBUTING.en.md é mantido à mão,
+# junto com a versão em português, no mesmo pull request.
 on:
   push:
     branches:
       - main
     paths:
       - 'README.md'
-      - 'CONTRIBUTING.md'
 
 jobs:
   translate:
@@ -20,28 +26,20 @@ jobs:
       - name: Install translate-shell
         run: sudo apt-get update && sudo apt-get install -y translate-shell
 
-      - name: Translate files to English
+      - name: Translate README to English
         run: |
-          # Traduz o README para o novo padrão
           if [ -f README.md ]; then
             trans -b :en < README.md > README.en.md
             echo "README translated."
           fi
 
-          # Traduz o CONTRIBUTING para o novo padrão
-          if [ -f CONTRIBUTING.md ]; then
-            trans -b :en < CONTRIBUTING.md > CONTRIBUTING.en.md
-            echo "CONTRIBUTING translated."
-          fi
-
-      - name: Commit translated files
+      - name: Commit translated file
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
 
-          # Adiciona os arquivos com a extensão correta
-          git add README.en.md CONTRIBUTING.en.md
+          # Apenas o README — o CONTRIBUTING.en.md e mantido a mao
+          git add README.en.md
 
-          # Commita as alterações
-          git commit -m "docs: auto-translate docs to English [skip ci]" || echo "No changes"
+          git commit -m "docs: auto-translate README to English [skip ci]" || echo "No changes"
           git push origin HEAD:main
