@@ -66,6 +66,24 @@ export function ProjectDetails({ projectId }: Readonly<{ projectId: string }>) {
     }
   };
 
+  const handleCompleteProject = async () => {
+    try {
+      const response = await apiTryCatch.patch('/team-project/user', {
+        id: project.id,
+        status: 'CONCLUIDO',
+      });
+      toast.success(
+        response?.data?.message || 'Projeto marcado como concluído!'
+      );
+      fetchDetailsProject();
+    } catch {
+      toast.error('Erro ao concluir projeto');
+    }
+  };
+
+  const canComplete =
+    user?.id === project.owner.id && project.status === 'EM_ANDAMENTO';
+
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6 p-4 md:p-6 lg:p-8">
       <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
@@ -114,6 +132,11 @@ export function ProjectDetails({ projectId }: Readonly<{ projectId: string }>) {
                 }
               >
                 Editar
+              </Button>
+            )}
+            {canComplete && (
+              <Button size="sm" onClick={handleCompleteProject}>
+                Marcar como Concluído
               </Button>
             )}
           </div>
