@@ -4,9 +4,12 @@ import { checkAuth } from '@/lib/check-auth';
 import { ROLES } from '@/lib/roles';
 
 export async function GET() {
-  const session = await checkAuth({ requireAdmin: true });
-  if (!session)
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  // `checkAuth` sempre devolve um objeto — `{ authorized: false, response }` ao
+  // negar e `{ authorized: true, session }` ao permitir. Testar a existência do
+  // objeto (`if (!auth)`) nunca é falso, e a rota ficava aberta a qualquer
+  // requisição, inclusive anônima.
+  const auth = await checkAuth({ requireAdmin: true });
+  if (!auth.authorized) return auth.response;
 
   // Skills mais frequentes (users)
   const userSkills = await prisma.userSkill.groupBy({
