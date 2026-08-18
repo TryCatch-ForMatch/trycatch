@@ -2,7 +2,9 @@
 
 **Classificação:** Documento de Produto / Conteúdo  
 **Camada:** 2 - Documentos de Produto e Funcionalidades  
-**Status:** Documento inicial consolidado
+**Status do documento:** Documento inicial consolidado  
+**Status da implementação:** 🔴 não iniciada — a tela de FAQ é um placeholder  
+**Estado consolidado:** ver [estado-das-funcionalidades.md](../estado-das-funcionalidades.md)
 
 ------------------------------------------------------------------------
 

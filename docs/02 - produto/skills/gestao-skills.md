@@ -2,7 +2,9 @@
 
 Classificação: Documento de Produto / Funcionalidade\
 Camada: 2 --- Produto\
-Status: Versão consolidada baseada no schema.prisma
+**Status do documento:** Versão consolidada baseada no schema.prisma  
+**Status da implementação:** 🟢 completa — CRUD no painel e vínculo com usuários e projetos  
+**Estado consolidado:** ver [estado-das-funcionalidades.md](../estado-das-funcionalidades.md)
 
 ------------------------------------------------------------------------
 

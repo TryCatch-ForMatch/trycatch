@@ -2,7 +2,9 @@
 
 Classificação: Documento de Produto / Funcionalidade\
 Camada: 2 --- Produto\
-Status: Versão atualizada com regra de edição controlada e encerramento
+**Status do documento:** Versão atualizada com regra de edição controlada e encerramento  
+**Status da implementação:** 🟡 parcial — falta encerramento manual e notificação da equipe  
+**Estado consolidado:** ver [estado-das-funcionalidades.md](../estado-das-funcionalidades.md)
 manual
 
 ------------------------------------------------------------------------

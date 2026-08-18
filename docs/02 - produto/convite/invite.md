@@ -2,7 +2,9 @@
 
 Classificação: Documento de Produto / Funcionalidade\
 Camada: 2 --- Produto\
-Status: Versão consolidada alinhada ao schema.prisma
+**Status do documento:** Versão consolidada alinhada ao schema.prisma  
+**Status da implementação:** 🟢 completa — criação, uso no cadastro e gestão no painel  
+**Estado consolidado:** ver [estado-das-funcionalidades.md](../estado-das-funcionalidades.md)
 
 ------------------------------------------------------------------------
 

@@ -2,7 +2,9 @@
 
 **Classificação:** Documento de Produto / Funcionalidade\
 **Camada:** 2 — Documentos de Produto e Funcionalidades\
-**Status:** Implementado (versão consolidada com visibilidade e segurança)
+**Status do documento:** Implementado (versão consolidada com visibilidade e segurança)  
+**Status da implementação:** 🟢 completa — portfólio público, listagem e controle de visibilidade  
+**Estado consolidado:** ver [estado-das-funcionalidades.md](../estado-das-funcionalidades.md)
 
 ---
 
