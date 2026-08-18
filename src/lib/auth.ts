@@ -16,6 +16,9 @@ export const authOptions: NextAuthOptions = {
         try {
           const user = await prisma.user.findUnique({
             where: { email: credentials?.email },
+            // Única exceção ao `omit` global definido em src/lib/prisma.ts:
+            // aqui o hash é necessário para validar a senha.
+            omit: { password: false },
           });
 
           if (!user) throw new Error('Email não encontrado.');
