@@ -3,6 +3,10 @@
 Classificação: Documento de Produto\
 Camada: 2 --- Produto
 
+**Status do documento:** consolidado
+**Status da implementação:** 🟢 completa — painel e subtelas em uso
+**Estado consolidado:** ver [estado-das-funcionalidades.md](../estado-das-funcionalidades.md)
+
 ## 1. Objetivo
 
 Centralizar gestão de usuários, convites e cadastros.

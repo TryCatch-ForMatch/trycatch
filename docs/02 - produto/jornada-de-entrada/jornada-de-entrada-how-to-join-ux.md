@@ -2,7 +2,9 @@
 
 Classificação: Documento de Produto / UX\
 Camada: 2 --- Produto\
-Status: Estrutura proposta para validação de UX baseada na issue #570
+**Status do documento:** Estrutura proposta para validação de UX baseada na issue #570  
+**Status da implementação:** 🟡 parcial — página pública existe; onboarding pós-cadastro não  
+**Estado consolidado:** ver [estado-das-funcionalidades.md](../estado-das-funcionalidades.md)
 
 ------------------------------------------------------------------------
 

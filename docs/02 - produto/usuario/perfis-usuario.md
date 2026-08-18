@@ -2,7 +2,9 @@
 
 Classificação: Documento de Produto / Funcionalidade\
 Camada: 2 --- Produto\
-Status: Atualizado após implementação do Portfólio Público e correções de Disponibilidade
+**Status do documento:** Atualizado após implementação do Portfólio Público e correções de Disponibilidade  
+**Status da implementação:** 🟡 parcial — perfil e disponibilidade prontos; falta cadastrar certificados  
+**Estado consolidado:** ver [estado-das-funcionalidades.md](../estado-das-funcionalidades.md)
 
 ------------------------------------------------------------------------
 

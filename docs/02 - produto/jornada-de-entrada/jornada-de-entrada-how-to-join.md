@@ -2,7 +2,9 @@
 
 Classificação: Documento de Produto / Jornada\
 Camada: 2 --- Produto\
-Status: Versão inicial baseada na issue #569
+**Status do documento:** Versão inicial baseada na issue #569  
+**Status da implementação:** 🟡 parcial — página pública existe; onboarding pós-cadastro não  
+**Estado consolidado:** ver [estado-das-funcionalidades.md](../estado-das-funcionalidades.md)
 
 ------------------------------------------------------------------------
 

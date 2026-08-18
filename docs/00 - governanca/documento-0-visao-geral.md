@@ -65,13 +65,29 @@ Podem evoluir conforme o produto amadurece.
 ### Camada 2 --- Documentos de Produto (Evolutivos)
 
 -   Sistema de Feedback e Reputação;
--   Convites de Acesso;
+-   Convites de Acesso e Solicitação de Convite;
 -   Jornada de Entrada e How-to-Join;
 -   Gestão de Projetos;
 -   Perfis de Usuário;
 -   Permissões e Papéis;
+-   Portfólio Público;
+-   Gestão de Skills;
+-   Gestão de Tech Stacks;
 -   Conteúdos Informativos e Educacionais;
 -   Painel Administrativo.
+
+**Estado das Funcionalidades** --- índice consolidado que responde o que já
+está no ar e o que falta, com o estado de cada item verificado contra o código:
+[`docs/02 - produto/estado-das-funcionalidades.md`](../02%20-%20produto/estado-das-funcionalidades.md).
+
+Cada documento desta camada declara dois estados no cabeçalho:
+
+-   **Status do documento** --- o texto é confiável e está consolidado?
+-   **Status da implementação** --- isto está funcionando na plataforma?
+
+A separação existe porque documento consolidado e funcionalidade entregue são
+coisas distintas: uma especificação pode estar perfeitamente alinhada ao
+`schema.prisma` sem que exista tela para a pessoa usar.
 
 ### Camada 3 --- Documentos Técnicos (Evolutivos)
 

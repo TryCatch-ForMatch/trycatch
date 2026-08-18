@@ -2,7 +2,9 @@
 
 Classificação: Documento de Produto / Funcionalidade\
 Camada: 2 --- Produto\
-Status: Versão consolidada baseada no schema.prisma
+**Status do documento:** Versão consolidada baseada no schema.prisma  
+**Status da implementação:** 🟢 completa — papéis aplicados via checkAuth nas rotas  
+**Estado consolidado:** ver [estado-das-funcionalidades.md](../estado-das-funcionalidades.md)
 
 ------------------------------------------------------------------------
 
