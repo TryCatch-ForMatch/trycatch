@@ -106,8 +106,9 @@ export function UserAdminForm() {
       if (!res.ok) throw new Error('Falha no upload do avatar');
 
       const json = await res.json();
-      if (json.url) {
-        setValue('avatar', json.url); // Atualiza o campo avatar no hook form
+      const urlEnviada = json?.data?.url;
+      if (urlEnviada) {
+        setValue('avatar', urlEnviada); // Atualiza o campo avatar no hook form
       } else {
         toast.error('URL do avatar não retornada');
       }

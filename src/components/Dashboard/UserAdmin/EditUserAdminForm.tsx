@@ -83,8 +83,9 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
       if (!res.ok) throw new Error('Falha no upload do avatar');
 
       const json = await res.json();
-      if (json.url) {
-        setValue('avatar', json.url);
+      const urlEnviada = json?.data?.url;
+      if (urlEnviada) {
+        setValue('avatar', urlEnviada);
         toast.success('Avatar atualizado com sucesso!');
       } else {
         throw new Error('URL do avatar não retornada');
