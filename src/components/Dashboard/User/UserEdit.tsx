@@ -75,8 +75,9 @@ export function UserEdit({ user }: UserEditProps) {
       if (!res.ok) throw new Error('Falha no upload do avatar');
 
       const json = await res.json();
-      if (json.url) {
-        setValue('avatar', json.url, { shouldValidate: true });
+      const urlEnviada = json?.data?.url;
+      if (urlEnviada) {
+        setValue('avatar', urlEnviada, { shouldValidate: true });
         toast.success('Avatar atualizado com sucesso!');
       } else {
         throw new Error('Servidor não retornou a URL do avatar');
