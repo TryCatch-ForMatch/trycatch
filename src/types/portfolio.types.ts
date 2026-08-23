@@ -59,10 +59,11 @@ export interface PortfolioCertificate {
 
 export interface PortfolioFeedback {
   id: string;
-  rating: number;
   comment: string | null;
   projectName: string;
-  givenBy: string | null; // null quando anonymous = true
+  /** Sempre null na camada pública: o anonimato deixou de ser escolha do
+   *  avaliador e passou a ser regra fixa. Ver seção 7 do documento de produto. */
+  givenBy: string | null;
 }
 
 export interface PortfolioSummaryItem {
@@ -74,7 +75,6 @@ export interface PortfolioSummaryItem {
   // Campos do summary (opcionais — só presentes no /summary)
   github?: string | null;
   linkedin?: string | null;
-  feedback?: number | null;
   skills: Array<{ id: string; name: string; iconUrl: string | null }>;
 }
 
