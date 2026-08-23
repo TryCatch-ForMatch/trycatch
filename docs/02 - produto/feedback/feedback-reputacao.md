@@ -388,9 +388,13 @@ enum FeedbackAttrEnum {
 }
 ```
  
-> ⚠️ Este bloco é **proposta de produto**, não especificação técnica final. A
-> decisão entre tabela relacional e array de enum deve sair da spike da seção 16,
-> considerando o custo da query de agregação por perfil.
+> ✅ **Decidido em 19/08/2026** pela
+> [spike de schema](../../03%20-%20tecnico/spikes/spike-schema-atributos-feedback.md):
+> **tabela relacional**, como proposto acima. O critério não foi desempenho — em
+> memória, agregar ~120 linhas por perfil é irrelevante — e sim **integridade**:
+> só a tabela impede, no banco, que o mesmo eixo seja contado duas vezes na mesma
+> avaliação. Com array de enum o Postgres aceita repetição, e a contagem pública
+> — que é o valor da corroboração — fica à mercê de um bug de aplicação.
  
 ### 12.2 Agregação para o portfólio
  
@@ -533,7 +537,7 @@ Documentos técnicos relacionados:
 **Ordem de execução:**
  
 1. ⛔ **Encerramento manual de projeto** (épico #553) — bloqueia tudo
-2. 🔬 **Spike de schema** — estrutura dos atributos e custo da agregação
+2. ✅ ~~Spike de schema~~ — concluída em 19/08/2026: tabela relacional
 3. 🛠️ Migration + rotas (criação, agregação, publicação de texto)
 4. 🖥️ Tela `/dashboard/feedbacks` (abas Pendentes e Recebidos)
 5. 🎨 Bloco de corroborações no portfólio público
@@ -541,7 +545,6 @@ Documentos técnicos relacionados:
 7. 📄 FAQ e termos: o que acontece com o feedback ao excluir a conta
 **Decisões ainda em aberto:**
  
-- Estrutura final do schema dos atributos (spike);
 - Prazo do blind duplo — 14 dias é proposta, não validada;
 - N mínimo = 3 — proposta, revisar com dados reais;
 - Manutenção ou remoção definitiva do `rating` interno;
@@ -558,6 +561,7 @@ Documentos técnicos relacionados:
 | v2 | Rótulos com verbo e lastro; proibidos superlativos e traços inatos |
 | v2 | Proibida representação com teto (termômetro, barra, estrelas) |
 | v2 | Anonimato público fixo; identificação interna permanente |
+| 19/08/2026 | Schema dos atributos: **tabela relacional**, por integridade — ver [spike](../../03%20-%20tecnico/spikes/spike-schema-atributos-feedback.md) |
 | v2 | Blind duplo como mitigação de retaliação |
 | v2 | N mínimo de 3 atestados para exibição pública |
 | v2 | Duplo denominador (pessoas × projetos) |
