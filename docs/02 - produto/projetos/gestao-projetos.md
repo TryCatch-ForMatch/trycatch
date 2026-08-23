@@ -146,6 +146,54 @@ participantes.
 
 ------------------------------------------------------------------------
 
+### 6.4 Revisão de 19/08/2026 — notificar em vez de bloquear
+
+**Decisão:** a restrição da seção 6.3 passa a ser **notificação**, não bloqueio.
+O owner pode editar o projeto após a formação da equipe; as pessoas envolvidas
+são avisadas da alteração.
+
+**Por que mudou.** A regra foi implementada e desativada em 16/08/2026, por dois
+defeitos que só apareceram no uso:
+
+1. **Escopo largo demais.** A verificação tratava `name`, `deadline` e
+   `totalValue` como estrutura, travando edições sem relação com a composição da
+   equipe — inclusive corrigir um erro de digitação na descrição.
+
+2. **Falso positivo na comparação de datas.** O formulário carregava o prazo sem
+   a hora (`deadline.split('T')[0]`) enquanto o banco guardava o timestamp
+   completo. Os dois nunca coincidiam, então **abrir a tela de edição e salvar
+   sem alterar nada já disparava o bloqueio.** Na prática a regra não protegia a
+   estrutura: travava a edição inteira, sem saída pela interface.
+
+**Por que notificar é melhor.** O bloqueio parte da premissa de que mudar é
+errado. Notificar parte de que **mudar sem avisar** é que é. Num projeto onde as
+pessoas estão aprendendo a trabalhar em equipe, a segunda premissa é mais fiel ao
+que acontece no mercado: escopo muda, e a equipe é comunicada.
+
+O bloqueio também criava um beco sem saída — uma vez formada a equipe, nem o
+owner nem um ADMIN conseguiam corrigir nada pela tela.
+
+**A regra da observação com data continua valendo.** Ela é o registro histórico
+da mudança; a notificação é o aviso ativo. As duas se complementam.
+
+#### O que ainda precisa ser definido
+
+- **Quem é notificado** — todos que assumiram stack, ou apenas os afetados pela
+  alteração específica?
+- **Por qual canal** — e-mail (o projeto já usa Resend), aviso no painel, ou os
+  dois?
+- **O que a mensagem informa** — que houve alteração, ou quais campos mudaram?
+- **Alguma alteração ainda exige confirmação prévia?** Trocar uma stack já
+  assumida afeta diretamente o trabalho de alguém — talvez mereça tratamento
+  diferente de corrigir a descrição.
+
+> ⚠️ **Estado atual do código:** a verificação existe em
+> `src/app/api/team-project/[id]/route.ts`, desativada por uma constante, com o
+> motivo documentado no próprio arquivo. Os três testes que a cobriam estão como
+> `it.skip`, descrevendo o comportamento esperado caso a regra volte.
+
+------------------------------------------------------------------------
+
 ## 7. Impacto em Dados
 
 -   Criação de registros em Project
