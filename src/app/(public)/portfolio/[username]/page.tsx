@@ -6,8 +6,6 @@ import {
   PortfolioNotFoundError,
 } from '@/lib/portfolio.service';
 
-// ─── Metadata dinâmica para SEO ─────────────────────────────────────────────
-
 export async function generateMetadata({
   params,
 }: {
@@ -18,16 +16,14 @@ export async function generateMetadata({
   try {
     const data = await getPublicPortfolio(username);
     return {
-      title: `${data.name} · TryCatch`,
+      title: data.name,
       description:
         data.bio ?? `Portfólio de ${data.name} na plataforma TryCatch.`,
     };
   } catch {
-    return { title: 'Portfólio não encontrado · TryCatch' };
+    return { title: 'Portfólio não encontrado' };
   }
 }
-
-// ─── Page (Server Component) ─────────────────────────────────────────────────
 
 export default async function PortfolioPage({
   params,

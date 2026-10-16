@@ -1,9 +1,9 @@
 import { LoginForm } from '@/components/form/Login/LoginForm';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Login | TryCatch For Match',
-  description: 'Bem vindo a melhor plataforma de gerenciamento de projectos',
+  title: 'Entrar',
+  description: 'Acesse sua conta no TryCatch For Match.',
 };
 
 export default function LoginPage() {

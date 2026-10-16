@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/card';
 
 export const metadata: Metadata = {
-  title: 'Como participar do TryCatch',
+  title: 'Como participar',
   description:
     'Conheça as formas de participar do TryCatch contribuindo com a plataforma, cadastrando projetos, participando como membro ou atuando como mentor.',
 };

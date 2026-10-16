@@ -1,4 +1,11 @@
+import type { Metadata } from 'next';
 import { InviteRequestForm } from '@/components/form/InviteRequest/InviteRequestForm';
+
+export const metadata: Metadata = {
+  title: 'Solicitar convite',
+  description:
+    'Solicite seu convite para participar do TryCatch For Match como membro ou mentor.',
+};
 
 type InviteRequestPageProps = {
   searchParams?: Promise<{
