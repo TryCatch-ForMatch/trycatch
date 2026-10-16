@@ -79,11 +79,11 @@ export default function RegisterForm() {
   };
 
   return (
-    <section className="flex min-h-screen items-center justify-center">
+    <div className="flex min-h-screen items-center justify-center">
       <div className="flex w-full max-w-md flex-col gap-4 rounded-md border border-[#71717b67] p-8 px-4">
-        <h2 className="mx-auto text-2xl font-bold text-[#3B38A0]">
+        <h1 className="mx-auto text-2xl font-bold text-primary-default">
           Validar Convite
-        </h2>
+        </h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
           <div className="space-y-1">
             <Input
@@ -139,6 +139,6 @@ export default function RegisterForm() {
           <span className="underline">Solicite aqui</span>
         </Link>
       </div>
-    </section>
+    </div>
   );
 }

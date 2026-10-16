@@ -47,7 +47,9 @@ export function LoginForm() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-3">
       <section className="flex w-full max-w-md flex-col gap-4 rounded-md border border-[#71717b67] p-8 px-4">
-        <h1 className="mx-auto text-2xl font-bold text-[#3B38A0]">TryCatch</h1>
+        <h1 className="mx-auto text-2xl font-bold text-primary-default">
+          TryCatch
+        </h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
           <Input
@@ -83,7 +85,7 @@ export function LoginForm() {
           <div className="text-right">
             <Link
               href="/forgot-password"
-              className="text-xs text-zinc-500 transition-colors hover:text-[#3B38A0]"
+              className="text-xs text-zinc-500 transition-colors hover:text-primary-default"
             >
               Esqueci minha senha
             </Link>

@@ -17,7 +17,7 @@ export function PortfolioCard({ portfolio }: PortfolioCardProps) {
 
   return (
     <Link href={`/portfolio/${username}`}>
-      <article className="relative min-h-[360px] w-full max-w-[500px] overflow-hidden rounded-2xl border border-[#EAEAEB] bg-white p-5 shadow-sm transition hover:shadow-md sm:p-6">
+      <article className="relative min-h-[360px] w-full max-w-[500px] overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition hover:shadow-md sm:p-6">
         {/* Background top strip */}
         <div className="pointer-events-none absolute top-0 left-0 h-1/4 w-full">
           <Image
@@ -30,7 +30,7 @@ export function PortfolioCard({ portfolio }: PortfolioCardProps) {
         </div>
 
         {/* Top right icon */}
-        <div className="absolute top-4 right-4 z-10 text-[#5C5C65]">
+        <div className="absolute top-4 right-4 z-10 text-gray-300">
           <Code2 size={18} />
         </div>
 
@@ -42,13 +42,13 @@ export function PortfolioCard({ portfolio }: PortfolioCardProps) {
               name={name}
               src={avatar}
               size="md"
-              className="bg-[#D9D9ED] ring-0!"
+              className="bg-primary-light ring-0!"
             />
           </div>
 
           {/* Name + skills + role */}
           <div className="mt-3 flex flex-col items-start gap-2">
-            <h3 className="text-sm font-semibold text-[#101014] sm:text-base">
+            <h3 className="text-sm font-semibold text-gray-500 sm:text-base">
               {name}
             </h3>
 
@@ -68,27 +68,27 @@ export function PortfolioCard({ portfolio }: PortfolioCardProps) {
                     </Fragment>
                   ))
               ) : (
-                <span className="text-xs text-[#A6A6AA]">
+                <span className="text-xs text-gray-200">
                   Sem skills cadastradas
                 </span>
               )}
             </div>
 
-            <span className="text-[11px] text-[#5C5C65] sm:text-xs">
+            <span className="text-[11px] text-gray-300 sm:text-xs">
               {getRoleLabel(role)}
             </span>
           </div>
 
           {/* Bio */}
           {bio && (
-            <p className="mt-3 line-clamp-4 text-xs leading-relaxed text-[#35343C] sm:text-sm">
+            <p className="mt-3 line-clamp-4 text-xs leading-relaxed text-gray-400 sm:text-sm">
               {bio}
             </p>
           )}
 
           {/* Social icons — pinned to bottom-right */}
           {(github || linkedin) && (
-            <div className="absolute right-6 bottom-6 flex gap-3 text-[#5C5C65]">
+            <div className="absolute right-6 bottom-6 flex gap-3 text-gray-300">
               {github && (
                 <a
                   href={github}
