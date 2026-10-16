@@ -37,7 +37,7 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <Link href="#aboutUs" className="hover:text-[#35343C]">
+                  <Link href="/#aboutUs" className="hover:text-[#35343C]">
                     Sobre
                   </Link>
                 </li>
@@ -49,7 +49,7 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <Link href="#FAQ" className="hover:text-[#35343C]">
+                  <Link href="/#FAQ" className="hover:text-[#35343C]">
                     Dúvidas
                   </Link>
                 </li>

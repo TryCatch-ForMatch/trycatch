@@ -8,8 +8,8 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <section className="min-h-screen">
+    <main>
       <LoginForm />
-    </section>
+    </main>
   );
 }

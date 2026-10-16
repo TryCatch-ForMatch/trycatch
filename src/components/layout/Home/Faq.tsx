@@ -53,20 +53,22 @@ export default function FAQ() {
       className="mt-[150px] scroll-mt-16 sm:mt-[284px] md:mt-[113px] lg:mt-[109px] xl:mt-36 xxl:mt-[199px]"
     >
       <div className="grid grid-cols-4 lg:grid-cols-12">
-        <h3 className="col-span-4 text-[24px] leading-[120%] font-medium text-[#35343C] sm:text-[26px] md:text-[44px] lg:col-start-2 lg:col-end-8 xxl:text-[64px]">
+        <h2 className="col-span-4 text-[24px] leading-[120%] font-medium text-[#35343C] sm:text-[26px] md:text-[44px] lg:col-start-2 lg:col-end-8 xxl:text-[64px]">
           O que você precisa <br /> saber
-        </h3>
+        </h2>
       </div>
 
-      {/* MOBILE + TABLET */}
       <div className="block lg:hidden">
-        {/* Bloco superior */}
-        <div className="relative mt-10 flex h-auto flex-col justify-between rounded-2xl bg-[#35343C] px-6 py-8 md:mt-16">
+        <div
+          id="faq-resposta-mobile"
+          aria-live="polite"
+          className="relative mt-10 flex h-auto flex-col justify-between rounded-2xl bg-[#35343C] px-6 py-8 md:mt-16"
+        >
           <div className="flex">
             <p className="text-[14px] leading-[140%] font-medium text-[#D9D9ED] md:text-[16px]">
               {perguntas[ativo].pergunta}
             </p>
-            <MoveUp className="h-5! w-5! stroke-3 text-[#D9D9ED]" />
+            <MoveUp aria-hidden className="h-5! w-5! stroke-3 text-[#D9D9ED]" />
           </div>
 
           <p className="mt-4 text-[14px] text-white md:text-[16px]">
@@ -75,14 +77,14 @@ export default function FAQ() {
 
           <Image
             src="/icon_faq_2.svg"
-            alt="ColabWork"
+            alt=""
+            aria-hidden
             width={57}
             height={25}
             className="mt-4 ml-auto hidden md:block"
           />
         </div>
 
-        {/* Lista inferior */}
         <div className="mt-4 flex flex-col gap-4">
           {perguntas
             .filter((_, index) => index !== ativo)
@@ -92,52 +94,59 @@ export default function FAQ() {
               );
 
               return (
-                <div
+                <button
                   key={i}
+                  type="button"
                   onClick={() => setAtivo(i)}
-                  className="flex cursor-pointer items-center justify-between rounded-2xl bg-[#D9D9ED] px-6 py-5"
+                  aria-expanded={false}
+                  aria-controls="faq-resposta-mobile"
+                  className="flex w-full cursor-pointer items-center justify-between rounded-2xl bg-[#D9D9ED] px-6 py-5 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-default"
                 >
-                  <p className="text-[14px] leading-[140%] font-medium text-[#101014] md:text-[16px]">
+                  <span className="text-[14px] leading-[140%] font-medium text-[#101014] md:text-[16px]">
                     {item.pergunta}
-                  </p>
-                  <MoveDown className="h-5! w-5! text-[#101014]" />
-                </div>
+                  </span>
+                  <MoveDown aria-hidden className="h-5! w-5! text-[#101014]" />
+                </button>
               );
             })}
         </div>
       </div>
 
-      {/* DESKTOP (lg+) */}
       <div className="hidden lg:block">
         <div className="mt-10 grid grid-cols-12 items-stretch gap-4">
-          {/* Coluna esquerda – lista completa */}
           <div className="col-start-2 col-end-7">
             <div className="flex h-full flex-col justify-evenly gap-4">
               {perguntas.map((item, index) => (
-                <div
+                <button
                   key={index}
+                  type="button"
                   onClick={() => setAtivo(index)}
-                  className={`flex h-full cursor-pointer items-center justify-between rounded-[20px] px-6 py-5 transition-colors xxl:h-[104px] ${
+                  aria-expanded={ativo === index}
+                  aria-controls="faq-resposta-desktop"
+                  className={`flex h-full w-full cursor-pointer items-center justify-between rounded-[20px] px-6 py-5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-default xxl:h-[104px] ${
                     ativo === index ? 'bg-[#35343C] text-white' : 'bg-[#D9D9ED]'
                   }`}
                 >
-                  <p className="flex h-auto w-[359px] items-center text-[16px] leading-[140%] font-medium xl:w-[417px] xxl:w-[471px] xxl:text-[18px]">
+                  <span className="flex h-auto w-[359px] items-center text-[16px] leading-[140%] font-medium xl:w-[417px] xxl:w-[471px] xxl:text-[18px]">
                     {item.pergunta}
-                  </p>
+                  </span>
                   <MoveRight
+                    aria-hidden
                     className={`h-5! w-5! transition-opacity xl:h-6! xl:w-6! xxl:h-8! xxl:w-8! ${
                       ativo === index ? 'opacity-100' : 'opacity-0'
                     }`}
                   />
-                </div>
+                </button>
               ))}
             </div>
           </div>
 
-          {/* Coluna direita – resposta */}
           <div className="col-start-7 col-end-12">
-            <div className="relative flex min-h-[360px] flex-col justify-between rounded-[28px] bg-[#35343C] px-10 py-10 xl:min-h-[420px] xxl:min-h-[520px]">
-              {/* Ícone superior decorativo */}
+            <div
+              id="faq-resposta-desktop"
+              aria-live="polite"
+              className="relative flex min-h-[360px] flex-col justify-between rounded-[28px] bg-[#35343C] px-10 py-10 xl:min-h-[420px] xxl:min-h-[520px]"
+            >
               <Image
                 src="/icon_faq_1.svg"
                 alt=""
@@ -147,7 +156,6 @@ export default function FAQ() {
                 className="absolute top-9 right-9 xl:top-8 xl:right-8 xl:h-[34px]! xl:w-20! xxl:h-[68px]! xxl:w-[30px]!"
               />
 
-              {/* ZONA SEGURA DO TEXTO */}
               <div className="mx-auto flex h-auto max-w-[80%] items-center px-6 py-12 xl:py-14 xxl:py-16">
                 <div className="flex flex-col gap-4">
                   <p className="text-[20px] leading-[140%] font-medium text-white xl:text-[22px] xxl:text-[26px]">
@@ -165,7 +173,6 @@ export default function FAQ() {
                   )}
                 </div>
               </div>
-              {/* Ícone inferior decorativo */}
               <Image
                 src="/icon_faq_2.svg"
                 alt=""
