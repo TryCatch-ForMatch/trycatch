@@ -6,6 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 
 export function TechStackForm() {
   const [name, setName] = useState('');
@@ -16,24 +18,12 @@ export function TechStackForm() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/tech-stack', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name }),
-      });
+      const { data } = await apiTryCatch.post('/tech-stack', { name });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        //  console.log(data.data.name, ':: STACK ::');
-        toast.success(`Stack "${data.data.name}" cadastrada com sucesso!`);
-        setName('');
-      } else {
-        toast.error(data.error || 'Erro ao cadastrar stack.');
-      }
+      toast.success(`Stack "${data.data.name}" cadastrada com sucesso!`);
+      setName('');
     } catch (error) {
-      console.error('Erro na requisição:', error);
-      toast.error('Erro na requisição. Tente novamente.');
+      toast.error(getApiErrorMessage(error, 'Erro ao cadastrar stack.'));
     } finally {
       setLoading(false);
     }

@@ -4,21 +4,21 @@ import { UserEdit, DeleteAccountButton } from '@/components/Dashboard/User';
 import { useEffect, useState } from 'react';
 import { User } from '@/types/interface/user';
 import { toast } from 'sonner';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 
 export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/user/me', { credentials: 'include' })
-      .then(async (res) => {
-        if (!res.ok) throw new Error('Erro ao buscar usuário');
-        return res.json();
-      })
-      .then(setUser)
+    apiTryCatch
+      .get<User>('/user/me')
+      .then(({ data }) => setUser(data))
       .catch((err) => {
-        setError(err.message);
-        toast.error(err.message); // dispara toast de erro
+        const message = getApiErrorMessage(err, 'Erro ao buscar usuário');
+        setError(message);
+        toast.error(message);
       });
   }, []);
 

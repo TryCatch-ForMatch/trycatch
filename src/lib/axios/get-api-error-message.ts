@@ -13,3 +13,7 @@ export function getApiErrorMessage(error: unknown, fallback: string) {
 
   return fallback;
 }
+
+export function getApiErrorStatus(error: unknown) {
+  return isAxiosError(error) ? error.response?.status : undefined;
+}

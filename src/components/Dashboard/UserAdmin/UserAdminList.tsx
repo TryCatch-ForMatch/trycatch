@@ -8,6 +8,8 @@ import { BasicUser, FullUser } from '@/types/interface/user';
 import { EditUserAdminForm } from './EditUserAdminForm';
 import Modal from '@/components/ui/modal';
 import { toast } from 'sonner';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 
 export function UserAdminList() {
   const [users, setUsers] = useState<BasicUser[]>([]);
@@ -16,12 +18,10 @@ export function UserAdminList() {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch('/api/user-admin');
-      if (!res.ok) throw new Error('Erro ao buscar usuários');
-      const data: BasicUser[] = await res.json();
+      const { data } = await apiTryCatch.get<BasicUser[]>('/user-admin');
       setUsers(data);
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Erro desconhecido');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Erro ao buscar usuários'));
     }
   };
 
@@ -34,19 +34,12 @@ export function UserAdminList() {
     if (!confirmed) return;
 
     try {
-      const res = await fetch(`/api/user-admin/${userId}`, {
-        method: 'DELETE',
-      });
-
-      if (!res.ok) throw new Error('Erro ao excluir usuário.');
+      await apiTryCatch.delete(`/user-admin/${userId}`);
 
       setUsers((prev) => prev.filter((user) => user.id !== userId));
       toast.success('Usuário excluído com sucesso!');
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : 'Erro ao excluir usuário'
-      );
-      console.error(error);
+      toast.error(getApiErrorMessage(error, 'Erro ao excluir usuário.'));
     }
   };
 
@@ -58,13 +51,11 @@ export function UserAdminList() {
 
   const handleEdit = async (userId: string) => {
     try {
-      const res = await fetch(`/api/user-admin/${userId}`);
-      if (!res.ok) throw new Error('Erro ao carregar usuário');
-      const userData: FullUser = await res.json();
-      setSelectedUser(userData);
+      const { data } = await apiTryCatch.get<FullUser>(`/user-admin/${userId}`);
+      setSelectedUser(data);
       setIsDialogOpen(true);
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Erro desconhecido');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Erro ao carregar usuário'));
     }
   };
 

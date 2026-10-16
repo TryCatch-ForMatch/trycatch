@@ -14,6 +14,8 @@ import { z } from 'zod';
 import { toast } from 'sonner';
 
 import { IAvailability } from '@/types/interface/IAvailability';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 
 const weekdays = [
   'Domingo',
@@ -75,11 +77,16 @@ export function UserAvailability() {
   });
 
   useEffect(() => {
-    fetch('/api/user-availability/me')
-      .then((res) => res.json())
-      .then((data) => setUserAvailability(data))
-      .catch(() => {
-        toast.error('Erro ao carregar disponibilidade do usuário');
+    apiTryCatch
+      .get<UserAvailabilityResponse>('/user-availability/me')
+      .then(({ data }) => setUserAvailability(data))
+      .catch((error) => {
+        toast.error(
+          getApiErrorMessage(
+            error,
+            'Erro ao carregar disponibilidade do usuário'
+          )
+        );
       });
   }, []);
 
@@ -110,23 +117,12 @@ export function UserAvailability() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      const res = await fetch('/api/user-availability', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      if (!res.ok) {
-        const json = await res.json();
-        throw new Error(json.error || 'Erro ao salvar configurações');
-      }
+      await apiTryCatch.post('/user-availability', data);
 
       toast.success('Configurações salvas com sucesso!');
       router.push('/dashboard/team-projects');
-    } catch (err) {
-      if (err instanceof Error) {
-        toast.error(err.message);
-      }
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Erro ao salvar configurações'));
     }
   };
 

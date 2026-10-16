@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { signOut } from 'next-auth/react';
 import { toast } from 'sonner';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 
 export function DeleteAccountButton({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(false);
@@ -18,24 +20,12 @@ export function DeleteAccountButton({ userId }: { userId: string }) {
     setError(null);
 
     try {
-      const res = await fetch(`/api/user/${userId}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
+      const { data } = await apiTryCatch.delete(`/user/${userId}`);
 
-      const json = await res.json(); // ✅ sempre há JSON
-      if (!res.ok)
-        throw new Error(json.error || json.message || 'Erro ao excluir conta');
-
-      toast.error(json.message || 'Conta excluída com sucesso.');
+      toast.success(data?.message || 'Conta excluída com sucesso.');
       await signOut({ callbackUrl: '/login' });
-    } catch (err: unknown) {
-      console.error(err);
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('Erro inesperado ao excluir conta');
-      }
+    } catch (error) {
+      setError(getApiErrorMessage(error, 'Erro ao excluir conta'));
     } finally {
       setLoading(false);
     }
