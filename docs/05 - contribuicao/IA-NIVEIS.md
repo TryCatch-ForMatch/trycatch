@@ -139,8 +139,8 @@ a pessoa sabe que este projeto usa `develop` como branch principal.
 - Cite regras apenas quando forem violadas ou quando forem contraintuitivas.
 - Assuma familiaridade com o ecossistema — Next, Prisma, Zod, Jest.
 - **As armadilhas do projeto ainda valem a pena**: `ignoreBuildErrors` ligado,
-  `params` como `Promise`, `User` saindo com o hash da senha. São coisas que
-  ninguém adivinha, por mais experiente que seja.
+  o `omit` global da senha no Prisma, o `package-lock.json` que só pode ser
+  gerado em Linux. São coisas que ninguém adivinha, por mais experiente que seja.
 
 **Exemplo — criar branch:**
 

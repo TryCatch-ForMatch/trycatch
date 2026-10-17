@@ -1,4 +1,11 @@
+import type { Metadata } from 'next';
 import { ContactForm } from '@/components/form/ContactForm/ContactForm';
+
+export const metadata: Metadata = {
+  title: 'Contato',
+  description:
+    'Envie dúvidas, sugestões ou mensagens para a equipe do TryCatch For Match.',
+};
 
 export default function ContactPage() {
   return (
