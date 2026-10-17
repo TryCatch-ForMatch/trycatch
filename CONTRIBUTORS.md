@@ -27,6 +27,9 @@ Agradecemos a cada pessoa que dedicou tempo, código, testes e ideias para melho
       <td align="center" valign="top" width="14.28%"><a href="https://usmanliaqat.com"><img src="https://avatars.githubusercontent.com/u/178957449?v=4?s=100" width="100px;" alt="Usman Liaqat"/><br /><sub><b>Usman Liaqat</b></sub></a><br /><a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=usmanliaqat0" title="Code">💻</a> <a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=usmanliaqat0" title="Documentation">📖</a> <a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=usmanliaqat0" title="Tests">⚠️</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/dev-mauricioAB"><img src="https://avatars.githubusercontent.com/u/62599099?v=4?s=100" width="100px;" alt="Maurício Alexandre Barroso"/><br /><sub><b>Maurício Alexandre Barroso</b></sub></a><br /><a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=dev-mauricioAB" title="Code">💻</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="http://guns.lol/sharma07"><img src="https://avatars.githubusercontent.com/u/164751031?v=4?s=100" width="100px;" alt="Sharma"/><br /><sub><b>Sharma</b></sub></a><br /><a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=sharmao07" title="Code">💻</a></td>
+    </tr>
   </tbody>
 </table>
 

@@ -566,6 +566,25 @@ Para garantir que todo mundo seja reconhecido, comente na issue ou no PR:
 > Substitua `@usuario` pelo nome de usuário no GitHub. Você pode listar vários
 > tipos de contribuição separados por vírgula (`code`, `doc`, `test`, etc.).
 
+Faça o pedido **depois do merge**, para registrar a contribuição que já entrou.
+Os tipos mais usados no projeto:
+
+| Tipo | Quando usar |
+|---|---|
+| `code` | Código da aplicação |
+| `test` | Testes automatizados |
+| `doc` | Documentação |
+| `bug` | Encontrou e reportou um bug |
+| `design` | Design, interface ou experiência de uso |
+| `a11y` | Acessibilidade |
+| `review` | Revisão de pull requests |
+| `ideas` | Ideias e planejamento |
+| `infra` | Infraestrutura, CI e build |
+| `maintenance` | Manutenção do projeto |
+| `security` | Segurança |
+| `translation` | Tradução |
+| `mentoring` | Mentoria |
+
 O bot atualiza automaticamente:
 
 - o arquivo `CONTRIBUTORS.md`;
