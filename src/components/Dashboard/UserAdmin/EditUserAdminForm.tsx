@@ -21,6 +21,8 @@ import { toast } from 'sonner';
 import { ROLES, Role } from '@/lib/roles';
 import { ROLE_OPTIONS } from '@/lib/role-labels';
 import Image from 'next/image';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 
 const editUserSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
@@ -75,23 +77,17 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
       const formData = new FormData();
       formData.append('file', file);
 
-      const res = await fetch('/api/upload/avatar', {
-        method: 'POST',
-        body: formData,
-      });
+      const { data: json } = await apiTryCatch.post('/upload/avatar', formData);
 
-      if (!res.ok) throw new Error('Falha no upload do avatar');
-
-      const json = await res.json();
       const urlEnviada = json?.data?.url;
       if (urlEnviada) {
         setValue('avatar', urlEnviada);
         toast.success('Avatar atualizado com sucesso!');
       } else {
-        throw new Error('URL do avatar não retornada');
+        toast.error('URL do avatar não retornada');
       }
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Erro desconhecido');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Falha no upload do avatar'));
     } finally {
       setUploadingAvatar(false);
     }
@@ -99,24 +95,13 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
 
   const onSubmit = async (data: EditUserFormData) => {
     try {
-      const res = await fetch(`/api/user-admin/${user.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      if (!res.ok) {
-        throw new Error('Erro ao atualizar usuário');
-      }
+      await apiTryCatch.put(`/user-admin/${user.id}`, data);
 
       toast.success('Usuário atualizado com sucesso!');
-      onSuccess(); // atualiza a lista
-      onClose(); // fecha o modal
-    } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : 'Erro ao atualizar usuário'
-      );
-      console.error(err);
+      onSuccess();
+      onClose();
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Erro ao atualizar usuário'));
     }
   };
 
@@ -149,7 +134,6 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
             <p className="text-sm text-red-500">{errors.bio.message}</p>
           )}
 
-          {/* Avatar com upload */}
           <div className="space-y-1">
             <Label>Avatar</Label>
             <input

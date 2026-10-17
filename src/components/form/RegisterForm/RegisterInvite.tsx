@@ -5,13 +5,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 import { toast } from 'sonner';
-
-//import components
+import { Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-
-//import icons
-import { Loader2 } from 'lucide-react';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 
 const inviteSchema = z.object({
   email: z.email({ message: 'Email inválido.' }),
@@ -52,27 +50,15 @@ export default function RegisterForm() {
     }
 
     try {
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+      const { data } = await apiTryCatch.post('/auth/register', formData);
+      const role = data?.data?.role;
 
-      if (res.ok) {
-        const data = await res.json();
-        const role = data?.data?.role;
-
-        toast.success('Convite validado com sucesso! 🎉');
-        router.push(
-          `/signup?email=${encodeURIComponent(email)}&inviteCode=${encodeURIComponent(inviteCode)}&role=${encodeURIComponent(role)}`
-        );
-      } else {
-        const data = await res.json();
-        toast.error(data.error || 'Erro ao validar convite.');
-      }
+      toast.success('Convite validado com sucesso! 🎉');
+      router.push(
+        `/signup?email=${encodeURIComponent(email)}&inviteCode=${encodeURIComponent(inviteCode)}&role=${encodeURIComponent(role)}`
+      );
     } catch (error) {
-      console.error(error);
-      toast.error('Erro inesperado. Tente novamente.');
+      toast.error(getApiErrorMessage(error, 'Erro ao validar convite.'));
     } finally {
       setLoading(false);
     }

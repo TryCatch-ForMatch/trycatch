@@ -8,6 +8,11 @@ import { Pencil, Trash, Check, X } from 'lucide-react';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { toast } from 'sonner';
 import Image from 'next/image';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import {
+  getApiErrorMessage,
+  getApiErrorStatus,
+} from '@/lib/axios/get-api-error-message';
 
 type Skill = {
   id: string;
@@ -23,7 +28,6 @@ export function SkillList() {
   const [editedName, setEditedName] = useState('');
   const [editedIconUrl, setEditedIconUrl] = useState('');
 
-  // Controle de modal para DELETE
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const [deleteMode, setDeleteMode] = useState<'confirm' | 'blocked'>(
@@ -32,23 +36,15 @@ export function SkillList() {
   const [modalTitle, setModalTitle] = useState('');
   const [modalDescription, setModalDescription] = useState('');
 
-  // Controle de modal para FORCE UPDATE
   const [confirmUpdateOpen, setConfirmUpdateOpen] = useState(false);
   const [pendingUpdateId, setPendingUpdateId] = useState<string | null>(null);
 
   const fetchSkills = async () => {
     try {
-      const res = await fetch('/api/skill');
-      const data = await res.json();
-
-      if (res.ok) {
-        setSkills(data);
-      } else {
-        toast.error(data.error || 'Erro ao carregar skills.');
-      }
+      const { data } = await apiTryCatch.get('/skill');
+      setSkills(data);
     } catch (error) {
-      console.error('Erro ao buscar skills:', error);
-      toast.error('Erro na requisição. Tente novamente.');
+      toast.error(getApiErrorMessage(error, 'Erro ao carregar skills.'));
     } finally {
       setLoading(false);
     }
@@ -58,7 +54,6 @@ export function SkillList() {
     fetchSkills();
   }, []);
 
-  // Abrir modal de confirmação de exclusão
   const handleDeleteClick = (id: string) => {
     setPendingDeleteId(id);
     setDeleteMode('confirm');
@@ -69,33 +64,26 @@ export function SkillList() {
     setConfirmDeleteOpen(true);
   };
 
-  // Confirmar exclusão
   const confirmDelete = async () => {
     if (!pendingDeleteId) return;
 
     try {
-      const res = await fetch(`/api/skill/${pendingDeleteId}`, {
-        method: 'DELETE',
-      });
-      const data = await res.json();
+      await apiTryCatch.delete(`/skill/${pendingDeleteId}`);
 
-      if (res.ok) {
-        setSkills((prev) => prev.filter((s) => s.id !== pendingDeleteId));
-        setConfirmDeleteOpen(false);
-        setPendingDeleteId(null);
-        toast.success('Skill excluída com sucesso!');
-      } else if (res.status === 409) {
-        // Vinculada → bloqueia exclusão
+      setSkills((prev) => prev.filter((s) => s.id !== pendingDeleteId));
+      setConfirmDeleteOpen(false);
+      setPendingDeleteId(null);
+      toast.success('Skill excluída com sucesso!');
+    } catch (error) {
+      const message = getApiErrorMessage(error, 'Erro inesperado ao deletar.');
+
+      if (getApiErrorStatus(error) === 409) {
         setDeleteMode('blocked');
         setModalTitle('Exclusão bloqueada');
-        setModalDescription(data.error);
+        setModalDescription(message);
       } else {
-        console.error('Erro inesperado ao deletar skill:', data.error);
-        toast.error(data.error || 'Erro inesperado ao deletar.');
+        toast.error(message);
       }
-    } catch (error) {
-      console.error('Erro ao deletar skill:', error);
-      toast.error('Erro na requisição ao deletar skill.');
     }
   };
 
@@ -104,64 +92,51 @@ export function SkillList() {
     setPendingDeleteId(null);
   };
 
-  // Abrir edição
   const handleEdit = (skill: Skill) => {
     setEditingId(skill.id);
     setEditedName(skill.name);
     setEditedIconUrl(skill.iconUrl ?? '');
   };
 
-  // PATCH da atualização
   const handleUpdate = async (id: string, forceUpdate = false) => {
     try {
-      const res = await fetch(`/api/skill/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: editedName,
-          iconUrl: editedIconUrl,
-          forceUpdate,
-        }),
+      await apiTryCatch.patch(`/skill/${id}`, {
+        name: editedName,
+        iconUrl: editedIconUrl,
+        forceUpdate,
       });
 
-      const data = await res.json();
+      setSkills((prev) =>
+        prev.map((skill) =>
+          skill.id === id
+            ? {
+                ...skill,
+                name: editedName,
+                iconUrl: editedIconUrl || null,
+              }
+            : skill
+        )
+      );
+      setEditingId(null);
+      toast.success('Skill atualizada com sucesso!');
+    } catch (error) {
+      const message = getApiErrorMessage(
+        error,
+        'Erro inesperado ao atualizar.'
+      );
 
-      if (res.ok) {
-        // Atualiza localmente
-        setSkills((prev) =>
-          prev.map((skill) =>
-            skill.id === id
-              ? {
-                  ...skill,
-                  name: editedName,
-                  iconUrl: editedIconUrl || null,
-                }
-              : skill
-          )
-        );
-        setEditingId(null);
-        toast.success('Skill atualizada com sucesso!');
-      } else if (
-        res.status === 409 &&
-        (data.error?.includes('Alterações podem impactar') ||
-          data.message?.includes('Alterações podem impactar'))
+      if (
+        getApiErrorStatus(error) === 409 &&
+        message.includes('Alterações podem impactar')
       ) {
-        // Backend informou que está vinculada → abrir modal de confirmação
         setPendingUpdateId(id);
         setConfirmUpdateOpen(true);
       } else {
-        console.error('Erro ao atualizar skill:', data.error || data.message);
-        toast.error(
-          data.error || data.message || 'Erro inesperado ao atualizar.'
-        );
+        toast.error(message);
       }
-    } catch (error) {
-      console.error('Erro ao atualizar skill:', error);
-      toast.error('Erro na requisição ao atualizar skill.');
     }
   };
 
-  // Confirma forçar update
   const confirmForceUpdate = async () => {
     if (!pendingUpdateId) return;
     setConfirmUpdateOpen(false);
@@ -179,7 +154,6 @@ export function SkillList() {
       <div className="space-y-4 p-6">
         <h2 className="text-xl font-semibold text-gray-800">Lista de Skills</h2>
 
-        {/* Feedback visual */}
         {loading ? (
           <p className="text-gray-600">Carregando...</p>
         ) : skills.length === 0 ? (
@@ -191,7 +165,6 @@ export function SkillList() {
                 key={skill.id}
                 className="flex items-center justify-between rounded-md border p-3 hover:bg-gray-50"
               >
-                {/* Ícone + nome ou inputs */}
                 <div className="skill-icon flex items-center gap-3">
                   {skill.iconUrl && (
                     <Image
@@ -225,7 +198,6 @@ export function SkillList() {
                   )}
                 </div>
 
-                {/* Botões de ação */}
                 <div className="flex gap-2">
                   {editingId === skill.id ? (
                     <>
@@ -268,7 +240,6 @@ export function SkillList() {
           </ul>
         )}
 
-        {/* Modal de confirmação para deletar */}
         <ConfirmDialog
           open={confirmDeleteOpen}
           onConfirm={deleteMode === 'confirm' ? confirmDelete : cancelDelete}
@@ -277,7 +248,6 @@ export function SkillList() {
           description={modalDescription}
         />
 
-        {/* Modal de confirmação para atualização forçada */}
         <ConfirmDialog
           open={confirmUpdateOpen}
           onConfirm={confirmForceUpdate}

@@ -7,6 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import Image from 'next/image';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 
 export function SkillForm() {
   const [name, setName] = useState('');
@@ -14,7 +16,6 @@ export function SkillForm() {
   const [loading, setLoading] = useState(false);
   const [previewError, setPreviewError] = useState(false);
 
-  // Atualiza o ícone automaticamente conforme o nome digitado
   useEffect(() => {
     setPreviewError(false);
 
@@ -33,23 +34,12 @@ export function SkillForm() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/skill', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name }),
-      });
+      const { data } = await apiTryCatch.post('/skill', { name });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        toast.success(`Skill "${data.data.name}" cadastrada com sucesso!`);
-        setName('');
-      } else {
-        toast.error(data.error || 'Erro ao cadastrar skill.');
-      }
+      toast.success(`Skill "${data.data.name}" cadastrada com sucesso!`);
+      setName('');
     } catch (error) {
-      console.error(error);
-      toast.error('Erro na requisição.');
+      toast.error(getApiErrorMessage(error, 'Erro ao cadastrar skill.'));
     } finally {
       setLoading(false);
     }
@@ -75,7 +65,6 @@ export function SkillForm() {
             />
           </div>
 
-          {/* Pré-visualização do ícone */}
           {(iconUrl || name) && (
             <div className="flex flex-col items-center space-y-2">
               <p className="text-sm text-gray-500">Pré-visualização:</p>

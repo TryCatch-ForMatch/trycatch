@@ -7,6 +7,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { toast } from 'sonner';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import {
+  getApiErrorMessage,
+  getApiErrorStatus,
+} from '@/lib/axios/get-api-error-message';
 
 type Stack = {
   id: string;
@@ -19,7 +24,6 @@ export function TechStackList() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editedName, setEditedName] = useState('');
 
-  // DELETE modal
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const [deleteMode, setDeleteMode] = useState<'confirm' | 'blocked'>(
@@ -28,23 +32,15 @@ export function TechStackList() {
   const [modalTitle, setModalTitle] = useState('');
   const [modalDescription, setModalDescription] = useState('');
 
-  // UPDATE modal (force)
   const [confirmUpdateOpen, setConfirmUpdateOpen] = useState(false);
   const [pendingUpdateId, setPendingUpdateId] = useState<string | null>(null);
 
   const fetchStacks = async () => {
     try {
-      const res = await fetch('/api/tech-stack');
-      const data = await res.json();
-
-      if (res.ok) {
-        setStacks(data);
-      } else {
-        toast.error(data.error || data.message || 'Erro ao carregar stacks.');
-      }
+      const { data } = await apiTryCatch.get('/tech-stack');
+      setStacks(data);
     } catch (error) {
-      console.error('Erro ao buscar stacks:', error);
-      toast.error('Erro na requisição. Tente novamente.');
+      toast.error(getApiErrorMessage(error, 'Erro ao carregar stacks.'));
     } finally {
       setLoading(false);
     }
@@ -68,29 +64,22 @@ export function TechStackList() {
     if (!pendingDeleteId) return;
 
     try {
-      const res = await fetch(`/api/tech-stack/${pendingDeleteId}`, {
-        method: 'DELETE',
-      });
-      const data = await res.json();
+      await apiTryCatch.delete(`/tech-stack/${pendingDeleteId}`);
 
-      if (res.ok) {
-        setStacks((prev) => prev.filter((s) => s.id !== pendingDeleteId));
-        setConfirmDeleteOpen(false);
-        setPendingDeleteId(null);
-        toast.success('Stack excluída com sucesso!');
-      } else if (res.status === 409) {
+      setStacks((prev) => prev.filter((s) => s.id !== pendingDeleteId));
+      setConfirmDeleteOpen(false);
+      setPendingDeleteId(null);
+      toast.success('Stack excluída com sucesso!');
+    } catch (error) {
+      const message = getApiErrorMessage(error, 'Erro inesperado ao deletar.');
+
+      if (getApiErrorStatus(error) === 409) {
         setDeleteMode('blocked');
         setModalTitle('Exclusão bloqueada');
-        setModalDescription(data.error);
+        setModalDescription(message);
       } else {
-        toast.error(data.error || 'Erro inesperado ao deletar.');
+        toast.error(message);
       }
-    } catch (error) {
-      toast.error(
-        `Erro ao deletar stack: ${
-          error instanceof Error ? error.message : String(error)
-        }`
-      );
     }
   };
 
@@ -101,41 +90,34 @@ export function TechStackList() {
 
   const handleUpdate = async (id: string, forceUpdate = false) => {
     try {
-      const res = await fetch(`/api/tech-stack/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: editedName, forceUpdate }),
+      const { data } = await apiTryCatch.patch(`/tech-stack/${id}`, {
+        name: editedName,
+        forceUpdate,
       });
 
-      const data = await res.json();
+      setStacks((prev) =>
+        prev.map((stack) =>
+          stack.id === id ? { ...stack, name: data.name } : stack
+        )
+      );
+      setEditingId(null);
+      setEditedName('');
+      toast.success('Stack atualizada com sucesso!');
+    } catch (error) {
+      const message = getApiErrorMessage(
+        error,
+        'Erro inesperado ao atualizar.'
+      );
 
-      if (res.ok) {
-        setStacks((prev) =>
-          prev.map((stack) =>
-            stack.id === id ? { ...stack, name: data.name } : stack
-          )
-        );
-        setEditingId(null);
-        setEditedName('');
-        toast.success('Stack atualizada com sucesso!');
-      } else if (
-        res.status === 409 &&
-        (data.error?.includes('Alterações podem impactar') ||
-          data.message?.includes('Alterações podem impactar'))
+      if (
+        getApiErrorStatus(error) === 409 &&
+        message.includes('Alterações podem impactar')
       ) {
         setPendingUpdateId(id);
         setConfirmUpdateOpen(true);
       } else {
-        toast.error(
-          data.error || data.message || 'Erro inesperado ao atualizar.'
-        );
+        toast.error(message);
       }
-    } catch (error) {
-      toast.error(
-        `Erro ao atualizar stack: ${
-          error instanceof Error ? error.message : String(error)
-        }`
-      );
     }
   };
 
@@ -227,7 +209,6 @@ export function TechStackList() {
           </ul>
         )}
 
-        {/* Modal de confirmação para deletar */}
         <ConfirmDialog
           open={confirmDeleteOpen}
           onConfirm={deleteMode === 'confirm' ? confirmDelete : cancelDelete}
@@ -236,7 +217,6 @@ export function TechStackList() {
           description={modalDescription}
         />
 
-        {/* Modal de confirmação para atualização forçada */}
         <ConfirmDialog
           open={confirmUpdateOpen}
           onConfirm={confirmForceUpdate}
