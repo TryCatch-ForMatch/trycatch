@@ -1,10 +1,10 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import UserSignupForm from '@/components/form/RegisterForm/UserSignupForm';
 
 export const metadata: Metadata = {
-  title: 'Registro | TryCatch For Match',
-  description: 'Bem vindo a melhor plataforma de gerenciamento de projectos',
+  title: 'Criar conta',
+  description: 'Crie sua conta no TryCatch For Match.',
 };
 
 export default function SignupPage() {

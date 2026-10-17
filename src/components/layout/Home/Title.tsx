@@ -1,11 +1,8 @@
-'use client';
-
 import Image from 'next/image';
 
 export default function Title() {
   return (
     <h1 className="relative text-center text-[29px] leading-[140%] font-semibold sm:text-[35px] sm:leading-[120%] md:mt-10 md:text-[40px] lg:text-left xl:text-[45px] xxl:text-[70px]">
-      {/* Linha 1 */}
       <span className="relative inline-block">
         Conectando <span className="hidden lg:inline-block">talentos</span>
         <Image
@@ -20,13 +17,11 @@ export default function Title() {
 
       <br />
 
-      {/* Linha 2 */}
       <span className="inline-block lg:hidden">talentos a projetos reais,</span>
       <span className="hidden lg:inline-block">a projetos reais,</span>
 
       <br />
 
-      {/* Linha 3 */}
       <span className="relative inline-block">
         juntos
         <Image

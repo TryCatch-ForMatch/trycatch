@@ -135,9 +135,11 @@ export async function getPublicPortfolio(
   if (user.showProjects) response.projects = Array.from(projectMap.values());
   if (user.showCertificates) response.certificates = user.certificates;
   if (user.showFeedback) {
+    // `rating` deixou de ser exposto publicamente — seção 14 do documento de
+    // produto. A camada pública passa a ser as corroborações por eixo; o texto
+    // é complemento, nunca evidência quantificada.
     response.feedback = user.feedbacksReceived.map((fb) => ({
       id: fb.id,
-      rating: fb.rating,
       comment: fb.comment,
       projectName: fb.project.name,
       givenBy: fb.anonymous ? null : fb.fromUser.name,
@@ -303,9 +305,6 @@ export async function listPortfolioSummary(
           skill: { select: { id: true, name: true, iconUrl: true } },
         },
       },
-      feedbacksReceived: {
-        select: { rating: true },
-      },
     },
   });
 
@@ -315,12 +314,9 @@ export async function listPortfolioSummary(
 
   return {
     items: page.map((u) => {
-      const avgFeedback =
-        u.feedbacksReceived.length > 0
-          ? u.feedbacksReceived.reduce((sum, fb) => sum + fb.rating, 0) /
-            u.feedbacksReceived.length
-          : null;
-
+      // A média pública de ratings foi revogada na v2 do documento de produto:
+      // duas médias lado a lado são um ranking, independentemente do rótulo.
+      // Ver seções 3 (princípio 2) e 14.
       return {
         username: u.userName!,
         name: u.name,
@@ -329,7 +325,6 @@ export async function listPortfolioSummary(
         role: u.role,
         github: u.showGithub ? u.github : null,
         linkedin: u.showLinkedin ? u.linkedin : null,
-        feedback: u.showFeedback ? avgFeedback : null,
         skills: u.skills.map((us) => us.skill),
       };
     }),

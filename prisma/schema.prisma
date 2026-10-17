@@ -152,16 +152,67 @@ model Feedback {
   projectId    String
   fromUserId   String
   toUserId     String
-  rating       Int
-  comment      String?
-  anonymous    Boolean
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
   stackTakenId String?
-  fromUser     User        @relation("FeedbackGiver", fields: [fromUserId], references: [id])
-  project      Project     @relation(fields: [projectId], references: [id])
-  stackTaken   StackTaken? @relation(fields: [stackTakenId], references: [id])
-  toUser       User        @relation("FeedbackReceiver", fields: [toUserId], references: [id])
+
+  // Camada B — texto de desenvolvimento. Vive na área privada do avaliado.
+  // Só é publicado se o avaliador permitir na origem (publicationAllowed) E o
+  // avaliado decidir publicar (publishedByReceiver). As duas condições valem.
+  comment             String?
+  publicationAllowed  Boolean @default(false)
+  publishedByReceiver Boolean @default(false)
+
+  // Moderação — ver seção 16 do documento de produto.
+  hiddenByAdmin Boolean @default(false)
+  hiddenReason  String?
+
+  // Camada A — corroborações por eixo comportamental.
+  attributes FeedbackAttribute[]
+
+  // Legado. `rating` deixa de ser exibido e agregado publicamente; permanece
+  // como sinal operacional interno consultável por ADMIN. `anonymous` perde
+  // função de produto — o anonimato público passou a ser regra fixa.
+  // Código novo não deve ler nenhum dos dois. Ver seção 14.
+  rating    Int?
+  anonymous Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  fromUser   User        @relation("FeedbackGiver", fields: [fromUserId], references: [id])
+  project    Project     @relation(fields: [projectId], references: [id])
+  stackTaken StackTaken? @relation(fields: [stackTakenId], references: [id])
+  toUser     User        @relation("FeedbackReceiver", fields: [toUserId], references: [id])
+
+  // Uma avaliação por par de pessoas em cada projeto.
+  @@unique([projectId, fromUserId, toUserId])
+  // Suporta a agregação do portfólio público.
+  @@index([toUserId, hiddenByAdmin])
+}
+
+// Tabela relacional em vez de array de enum: só ela impede, no banco, que o
+// mesmo eixo seja contado duas vezes na mesma avaliação. Como o valor público
+// da corroboração é a contagem, dado duplicado corrompe o que a funcionalidade
+// entrega. Decidido na spike de 19/08/2026.
+model FeedbackAttribute {
+  id         String           @id @default(cuid())
+  feedbackId String
+  attribute  FeedbackAttrEnum
+  feedback   Feedback         @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+
+  @@unique([feedbackId, attribute])
+  @@index([attribute])
+}
+
+// Lista fechada por decisão de produto: eixo livre viraria elogio genérico e
+// destruiria a comparabilidade entre perfis. Ver seção 5.1.
+enum FeedbackAttrEnum {
+  COMUNICA_IMPEDIMENTOS
+  ENTREGA_O_COMBINADO
+  ENTREGA_NO_PRAZO
+  APOIA_A_EQUIPE
+  PERGUNTA_ANTES_DE_DECIDIR
+  RECEBE_REVISAO
+  ADAPTA_A_MUDANCA
 }
 
 model Invite {

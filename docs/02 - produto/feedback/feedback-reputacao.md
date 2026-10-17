@@ -102,15 +102,36 @@ genérico e destruiria a comparabilidade entre perfis.
 |---|---|---|
 | `COMUNICA_IMPEDIMENTOS` | 🗣️ Avisa antes de travar | Comunicou bloqueio ou atraso com antecedência útil |
 | `ENTREGA_O_COMBINADO` | 📦 Entrega o que assume | Cumpriu o escopo da stack que assumiu |
+| `ENTREGA_NO_PRAZO` | ⏱️ Entrega no prazo | Cumpriu o prazo acordado, não apenas o escopo |
 | `APOIA_A_EQUIPE` | 🤝 Puxa a equipe junto | Ajudou colega, revisou trabalho de outro, destravou alguém |
 | `PERGUNTA_ANTES_DE_DECIDIR` | 🧭 Pergunta antes de decidir | Não inventou regra de negócio por conta própria |
-| `RECEBE_REVISAO_BEM` | 🔄 Recebe revisão bem | Absorveu crítica técnica sem travar o fluxo do time |
-| `AUTONOMIA_NA_STACK` | 🛠️ Resolve sem ser conduzido | Avançou na própria stack sem precisar ser conduzido |
+| `RECEBE_REVISAO` | 🔄 Recebe revisão sem travar o time | Absorveu crítica técnica e seguiu, sem parar o fluxo |
+| `ADAPTA_A_MUDANCA` | 🛠️ Se ajusta quando o plano muda | Seguiu produzindo quando escopo ou prazo mudaram |
  
 **Regra dos rótulos:** todo selo começa com verbo na terceira pessoa e descreve
 ação. É proibido rótulo com superlativo (*"Mestre em..."*), com traço inato
 (*"...nato"*) ou que implique escala (*"nível avançado em..."*). Superlativo
 pressupõe hierarquia, e hierarquia é ranking.
+
+#### Eixos avaliados e não incluídos — 19/08/2026
+
+Registrado para não serem repropostos sem contexto.
+
+| Proposta | Por que ficou de fora |
+|---|---|
+| **Criatividade** | Não testemunhável — como se comprova? Julgamento de criatividade carrega viés documentado: a mesma ideia é lida como criativa ou estranha conforme quem propôs |
+| **Disciplina** | Sinônimo de comprometimento no uso corrente, já coberto por *Entrega o que assume*. Carrega julgamento moral |
+| **Trabalha bem em equipe** | Já coberto por *Puxa a equipe junto*, que diz a mesma coisa como ação observada em vez de qualidade da pessoa |
+| **Comprometimento** | Idem — *Entrega o que assume* é a versão testemunhável |
+| **Domínio da stack** | "Domínio" implica escala, e escala é nível. O portfólio já exibe as stacks assumidas por projeto — isso é registro factual, não precisa de atestado |
+| **Aprende rápido** | Único eixo comparativo proposto: rápido em relação a quem? Fere o princípio 6 com mais força que qualquer outro, porque quem está começando *está aprendendo por definição*. Há ainda o efeito perverso de que "aprende rápido" costuma significar "já sabia" |
+| **Encara stack que não conhecia** | Versão comportamental do anterior, e viável. Ficou de fora para não passar de sete eixos — com limite de 3, cada eixo a mais dilui a escolha. Primeiro candidato a entrar se algum eixo se mostrar morto pela métrica da seção 17 |
+| **Autonomia na stack** *(existia na v2)* | Substituído por *Se ajusta quando o plano muda*. A frase original — "Resolve sem ser conduzido" — definia a pessoa pela ausência de ajuda e colidia com *Pergunta antes de decidir*, podendo ensinar a quem chega que pedir ajuda custa um selo |
+
+> 💡 **Critério que guiou a lista:** adjetivo é opinião, comportamento é
+> testemunho. Como aval profissional, *"Entrega o que assume · 5 pessoas ·
+> 3 projetos"* vale mais que *"é comprometida"* — todo perfil se diz
+> comprometido, e recrutador desconta adjetivo.
  
 ### 5.2 Como se avalia
  
@@ -388,9 +409,13 @@ enum FeedbackAttrEnum {
 }
 ```
  
-> ⚠️ Este bloco é **proposta de produto**, não especificação técnica final. A
-> decisão entre tabela relacional e array de enum deve sair da spike da seção 16,
-> considerando o custo da query de agregação por perfil.
+> ✅ **Decidido em 19/08/2026** pela
+> [spike de schema](../../03%20-%20tecnico/spikes/spike-schema-atributos-feedback.md):
+> **tabela relacional**, como proposto acima. O critério não foi desempenho — em
+> memória, agregar ~120 linhas por perfil é irrelevante — e sim **integridade**:
+> só a tabela impede, no banco, que o mesmo eixo seja contado duas vezes na mesma
+> avaliação. Com array de enum o Postgres aceita repetição, e a contagem pública
+> — que é o valor da corroboração — fica à mercê de um bug de aplicação.
  
 ### 12.2 Agregação para o portfólio
  
@@ -533,7 +558,7 @@ Documentos técnicos relacionados:
 **Ordem de execução:**
  
 1. ⛔ **Encerramento manual de projeto** (épico #553) — bloqueia tudo
-2. 🔬 **Spike de schema** — estrutura dos atributos e custo da agregação
+2. ✅ ~~Spike de schema~~ — concluída em 19/08/2026: tabela relacional
 3. 🛠️ Migration + rotas (criação, agregação, publicação de texto)
 4. 🖥️ Tela `/dashboard/feedbacks` (abas Pendentes e Recebidos)
 5. 🎨 Bloco de corroborações no portfólio público
@@ -541,7 +566,6 @@ Documentos técnicos relacionados:
 7. 📄 FAQ e termos: o que acontece com o feedback ao excluir a conta
 **Decisões ainda em aberto:**
  
-- Estrutura final do schema dos atributos (spike);
 - Prazo do blind duplo — 14 dias é proposta, não validada;
 - N mínimo = 3 — proposta, revisar com dados reais;
 - Manutenção ou remoção definitiva do `rating` interno;
@@ -558,6 +582,7 @@ Documentos técnicos relacionados:
 | v2 | Rótulos com verbo e lastro; proibidos superlativos e traços inatos |
 | v2 | Proibida representação com teto (termômetro, barra, estrelas) |
 | v2 | Anonimato público fixo; identificação interna permanente |
+| 19/08/2026 | Schema dos atributos: **tabela relacional**, por integridade — ver [spike](../../03%20-%20tecnico/spikes/spike-schema-atributos-feedback.md) |
 | v2 | Blind duplo como mitigação de retaliação |
 | v2 | N mínimo de 3 atestados para exibição pública |
 | v2 | Duplo denominador (pessoas × projetos) |

@@ -30,9 +30,7 @@ export default function AboutUs() {
         </p>
       </div>
 
-      {/* cards */}
       <div className="mt-10 flex flex-col gap-4 md:mt-16 lg:mt-12 lg:grid lg:grid-cols-12 lg:gap-5">
-        {/* Card Projetos que ganham equipe */}
         <div className="col-span-4 h-56 rounded-2xl bg-[url('https://res.cloudinary.com/daxa1bpny/image/upload/v1763427408/ui_assets/BgCardAboutUs.jpg')] bg-cover bg-center bg-no-repeat p-[23px] md:col-span-6 md:p-[23px] lg:col-start-2 lg:col-end-7 lg:row-span-2 lg:h-auto lg:rounded-[28px] lg:p-7 xl:p-8 xxl:p-11">
           <div className="flex h-full flex-col justify-between">
             <div className="flex h-[30px] w-[131px] items-center gap-1.5 self-end rounded-[6px] bg-white/20 px-[9px] py-1.5 backdrop-blur-md md:w-[156px] md:gap-2 lg:h-[33px] lg:w-[158px] lg:px-2.5 lg:py-[7px] xl:h-9 xl:w-[164px] xl:px-3 xl:py-2 xxl:h-[54px] xxl:w-[250px] xxl:px-[17px] xxl:py-[11px]">
@@ -49,7 +47,7 @@ export default function AboutUs() {
             </div>
 
             <Link
-              href="about/#projetos"
+              href="/about#projetos"
               className="flex h-[82px] max-w-[289px] items-center justify-center gap-2.5 self-center rounded-[12px] bg-white/20 px-[23px] py-[17px] backdrop-blur-xl md:h-[98px] md:w-full md:max-w-[708px] md:justify-between lg:h-[105px] lg:w-[394px] lg:gap-[30px] xl:h-[120px] xl:w-[457px] xl:p-8 xxl:h-[168px] xxl:w-[633px] xxl:px-11 xxl:py-8"
             >
               <h3 className="text-[16px] font-medium text-white sm:text-[24px] md:w-[261px] md:text-[32px] lg:w-[261px] xl:w-[293px] xl:text-[36px] xxl:w-[423px] xxl:text-[52px]">
@@ -63,9 +61,8 @@ export default function AboutUs() {
           </div>
         </div>
 
-        {/* Card Conecte talentos certos */}
         <Link
-          href="about/#equipes"
+          href="/about#equipes"
           className="flex w-full flex-col rounded-2xl bg-[#EAEAF2] p-5 md:p-[23px] lg:col-start-7 lg:col-end-12 lg:p-7"
         >
           <div className="flex flex-col sm:justify-between">
@@ -81,9 +78,8 @@ export default function AboutUs() {
           </div>
         </Link>
 
-        {/* Card da ideia até a entrega final */}
         <Link
-          href="about/#entrega"
+          href="/about#entrega"
           className="flex w-full flex-col rounded-2xl bg-[#D9D9ED] p-5 md:p-[23px] lg:col-start-7 lg:col-end-12 lg:p-7"
         >
           <div className="flex items-end justify-between md:items-center">
@@ -94,9 +90,7 @@ export default function AboutUs() {
           </div>
         </Link>
 
-        {/* Card nossa proposta */}
         <div className="w-full overflow-hidden rounded-2xl bg-[#A1A0D1] lg:col-start-2 lg:col-end-12 lg:grid lg:grid-cols-2 lg:rounded-[28px]">
-          {/* TEXTO */}
           <div className="flex flex-col justify-center gap-3 p-6 md:p-8 xl:p-[34px] xxl:p-[77px]">
             <p className="text-[12px] font-medium text-white md:text-[14px] xxl:text-[16px]">
               Nossa proposta
@@ -113,7 +107,6 @@ export default function AboutUs() {
             </p>
           </div>
 
-          {/* IMAGEM */}
           <div className="hidden lg:block lg:h-full lg:w-full lg:bg-[url('/BgNossaProposta.svg')] lg:bg-cover lg:bg-right lg:bg-no-repeat" />
         </div>
       </div>

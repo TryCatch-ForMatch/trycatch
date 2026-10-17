@@ -1,4 +1,4 @@
-import { Star } from 'lucide-react';
+import { MessageSquareQuote } from 'lucide-react';
 import type { PortfolioPublicResponse } from '@/types/portfolio.types';
 import { Section } from '@/components/ui/section';
 
@@ -6,42 +6,43 @@ interface PortfolioFeedbackSectionProps {
   data: PortfolioPublicResponse;
 }
 
+/**
+ * Camada B do sistema de feedback: texto de desenvolvimento publicado pelo
+ * próprio avaliado.
+ *
+ * As estrelas foram removidas por decisão de produto (seção 5.4 — antipadrões
+ * visuais proibidos): nota e escala transformam a página em ranking, e o
+ * documento é explícito em que a camada pública não comunica quantidade nem
+ * teto. Aqui o texto vale por si.
+ *
+ * A autoria não é exibida: o anonimato público deixou de ser escolha do
+ * avaliador e passou a ser regra fixa (seção 7).
+ */
 export function PortfolioFeedbackSection({
   data,
 }: PortfolioFeedbackSectionProps) {
-  if (!data.feedback || data.feedback.length === 0) return null;
+  const comentarios = (data.feedback ?? []).filter((fb) => fb.comment);
+
+  if (comentarios.length === 0) return null;
 
   return (
-    <Section icon={<Star className="h-4 w-4" />} title="Feedback recebido">
+    <Section
+      icon={<MessageSquareQuote className="h-4 w-4" />}
+      title="Feedback recebido"
+    >
       <div className="space-y-3">
-        {data.feedback.map((fb) => (
-          <div
+        {comentarios.map((fb) => (
+          <figure
             key={fb.id}
             className="space-y-2 rounded-lg border border-border bg-card p-4"
           >
-            <div className="flex items-center justify-between">
-              <div className="flex gap-0.5">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`h-3.5 w-3.5 ${
-                      i < fb.rating
-                        ? 'fill-amber-400 text-amber-400'
-                        : 'text-muted-foreground/30'
-                    }`}
-                  />
-                ))}
-              </div>
-              <span className="text-xs text-muted-foreground">
-                {fb.givenBy ?? 'Avaliação anônima'} · {fb.projectName}
-              </span>
-            </div>
-            {fb.comment && (
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                &quot;{fb.comment}&quot;
-              </p>
-            )}
-          </div>
+            <blockquote className="text-sm leading-relaxed text-muted-foreground">
+              &quot;{fb.comment}&quot;
+            </blockquote>
+            <figcaption className="text-xs text-muted-foreground">
+              {fb.projectName}
+            </figcaption>
+          </figure>
         ))}
       </div>
     </Section>
