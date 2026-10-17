@@ -4,7 +4,6 @@
 
 import { renderToStaticMarkup } from 'react-dom/server';
 import RootLayout from '@/app/layout';
-import { ReactNode } from 'react';
 
 jest.mock('next/font/google', () => ({
   Poppins: () => ({ variable: 'font-poppins' }),
@@ -13,13 +12,6 @@ jest.mock('next/font/google', () => ({
 jest.mock('@/components/ui/sonner', () => ({
   Toaster: ({ position }: { position: string }) => (
     <div data-position={position}>Toaster</div>
-  ),
-}));
-
-jest.mock('@/providers', () => ({
-  __esModule: true,
-  default: ({ children }: { children: ReactNode }) => (
-    <section>{children}</section>
   ),
 }));
 
