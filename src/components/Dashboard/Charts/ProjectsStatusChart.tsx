@@ -1,73 +1,26 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import BaseDonutChart from '@/components/ui/BaseCharts/BaseDonutChart';
+import type { ProjectStatusCount } from '@/lib/admin-metrics';
 
-type ProjectStatusData = {
-  status: string;
-  count: number;
+const STATUS_LABELS: Record<string, string> = {
+  BUSCANDO: 'Aberto',
+  EM_ANDAMENTO: 'Em Produção',
+  CONCLUIDO: 'Finalizado',
 };
 
-export default function ProjectsStatusChart() {
-  const [data, setData] = useState<ProjectStatusData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await apiTryCatch.get('/metrics');
-        setData(res.data.projectsByStatus || []);
-      } catch (err) {
-        console.error(err);
-        setError('Erro ao carregar dados de projetos por status.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return (
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle>Projetos por Status</CardTitle>
-        </CardHeader>
-        <CardContent>Carregando...</CardContent>
-      </Card>
-    );
-  }
-
-  if (error) {
-    return (
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle>Projetos por Status</CardTitle>
-        </CardHeader>
-        <CardContent className="text-red-500">{error}</CardContent>
-      </Card>
-    );
-  }
-
-  // Mapeia "status" -> labels amigáveis
+export default function ProjectsStatusChart({
+  data,
+}: {
+  data: ProjectStatusCount[];
+}) {
   const formattedData = data.map((item) => ({
     ...item,
-    statusLabel:
-      item.status === 'BUSCANDO'
-        ? 'Aberto'
-        : item.status === 'EM_ANDAMENTO'
-          ? 'Em Produção'
-          : item.status === 'CONCLUIDO'
-            ? 'Finalizado'
-            : item.status,
+    statusLabel: STATUS_LABELS[item.status] ?? item.status,
   }));
 
   return (
-    <BaseDonutChart<ProjectStatusData & { statusLabel: string }>
+    <BaseDonutChart<ProjectStatusCount & { statusLabel: string }>
       title="Projetos por Status"
       data={formattedData}
       dataKey="count"

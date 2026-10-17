@@ -1,77 +1,25 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { useMemo } from 'react';
 import BaseBarChart from '@/components/ui/BaseCharts/BaseBarChart';
 import { getRoleLabel } from '@/lib/role-labels';
+import type { UsersGrowthEntry } from '@/lib/admin-metrics';
 
-type UsersGrowthData = {
-  month: string;
-  [role: string]: number | string;
-};
-
-export default function UsersGrowthChart() {
-  const [data, setData] = useState<UsersGrowthData[]>([]);
-  const [roles, setRoles] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
+export default function UsersGrowthChart({
+  data,
+}: {
+  data: UsersGrowthEntry[];
+}) {
   const transformedData = useMemo(() => {
-    if (!data.length || !roles.length) return [];
+    if (!data.length) return [];
+
+    const roles = Object.keys(data[0]).filter((key) => key !== 'month');
 
     return roles.map((role) => ({
       role,
       total: data.reduce((acc, item) => acc + (Number(item[role]) || 0), 0),
     }));
-  }, [data, roles]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await apiTryCatch.get('/metrics');
-        const apiData = res.data.usersGrowthByMonth || [];
-
-        setData(apiData);
-
-        // Detecta automaticamente as roles existentes no retorno da API
-        if (apiData.length > 0) {
-          const detectedRoles = Object.keys(apiData[0]).filter(
-            (key) => key !== 'month'
-          );
-          setRoles(detectedRoles);
-        }
-      } catch {
-        setError('Erro ao carregar crescimento de usuários.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return (
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle>Crescimento de Usuários</CardTitle>
-        </CardHeader>
-        <CardContent>Carregando...</CardContent>
-      </Card>
-    );
-  }
-
-  if (error) {
-    return (
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle>Crescimento de Usuários</CardTitle>
-        </CardHeader>
-        <CardContent className="text-red-500">{error}</CardContent>
-      </Card>
-    );
-  }
+  }, [data]);
 
   return (
     <BaseBarChart
