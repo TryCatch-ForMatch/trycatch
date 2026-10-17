@@ -13,7 +13,7 @@ export default function Hero() {
         <div className="pb-8 text-center lg:text-left">
           <Title />
 
-          <p className="mx-auto mt-8 max-w-[377px] text-[12px] leading-[140%] text-[#5C5C65] sm:text-[14px] md:text-[16px] lg:mx-0 xl:mt-14 xxl:max-w-[600px] xxl:text-[25px]">
+          <p className="mx-auto mt-8 max-w-[377px] text-[12px] leading-[140%] text-gray-300 sm:text-[14px] md:text-[16px] lg:mx-0 xl:mt-14 xxl:max-w-[600px] xxl:text-[25px]">
             Uma rede colaborativa para desenvolvimento de soluções digitais com
             aprendizado prático, mentoria e trabalho em equipe.
           </p>
@@ -34,7 +34,7 @@ export default function Hero() {
           />
         </div>
 
-        <div className="absolute bottom-5 flex gap-2 text-[#5C5C65] md:hidden lg:right-10 lg:bottom-10">
+        <div className="absolute bottom-5 flex gap-2 text-gray-300 md:hidden lg:right-10 lg:bottom-10">
           <ArrowDown className="h-4 w-4 md:hidden" />
           <Mouse className="hidden lg:block" />
           <p className="text-[10px] md:text-[11px] lg:text-[14px]">
