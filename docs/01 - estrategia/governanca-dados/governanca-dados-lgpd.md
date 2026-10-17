@@ -164,6 +164,7 @@ por ADMIN.
 | Feedbacks e corroborações dados | Mantidos | Tabela 6.3; autoria anônima pelo registro anonimizado |
 | Projetos de que é owner e `StackTaken` | Mantidos | Fazem parte do histórico da equipe |
 | E-mail nos convites recebidos (`Invite.email`) | Anonimizado | Dado pessoal; evita conflito de duplicidade se a pessoa for convidada de novo |
+| Nome e e-mail no pedido de convite (`InviteRequest`) | Anonimizados | Dado pessoal; o e-mail é único, e um novo pedido da mesma pessoa daria conflito |
  
 ### 6.4 Por que a autoria não pode simplesmente ser apagada junto
  
@@ -315,5 +316,5 @@ Alinhado a:
 | v2 | Corrigida afirmação sobre exclusão de conta — direito ainda não implementado |
 | v2 | Registrada contradição entre compromisso de proteção e a dívida SEC-03 |
 | v2.1 | SEC-03 resolvida pelo `omit` global do PR #719 (17/10/2026) |
-| v2.1 | Exclusão de conta: soft delete com anonimização quando há vínculo, hard delete sem vínculo, inclusive por ADMIN; e-mail dos convites anonimizado (17/10/2026) |
+| v2.1 | Exclusão de conta: soft delete com anonimização quando há vínculo, hard delete sem vínculo, inclusive por ADMIN; e-mail dos convites e dos pedidos de convite anonimizado (17/10/2026) |
 | v2.1 | Exclusão de conta reclassificada: o fluxo existe, falta a anonimização |
