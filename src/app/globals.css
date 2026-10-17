@@ -11,6 +11,11 @@ html{
   scroll-behavior: smooth;
   overscroll-behavior-y: none;
 }
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
