@@ -127,8 +127,43 @@ Ao excluir a conta:
 | Corroborações dadas a terceiros | **Preservadas**, autoria anonimizada | Idem |
 | Contadores das outras pessoas | **Recalculados** | O atestado continua contando como "1 pessoa", sem vínculo |
  
-O campo `fromUserId` é substituído por marcador de conta removida. **A
-anonimização é irreversível.**
+A autoria é anonimizada pelo próprio registro da conta (ver 6.3.2): o
+`fromUserId` continua apontando para o registro, que deixa de identificar a
+pessoa. **A anonimização é irreversível.**
+ 
+#### 6.3.1 Soft delete ou hard delete
+ 
+*Decidido em 17/10/2026.* A conta é **apagada de vez** (*hard delete*) só
+quando não tem nenhum vínculo com outra pessoa. Contam como vínculo:
+ 
+- ter assumido stack em projeto (`StackTaken`);
+- ser owner de projeto;
+- ter dado feedback ou corroboração;
+- ter enviado convite (`Invite.invitedBy`).
+Com qualquer vínculo, a conta passa por *soft delete* **com anonimização**
+(6.3.2). Sem vínculo, o *hard delete* remove tudo o que é da pessoa.
+ 
+A regra vale igual para a exclusão pedida pela própria pessoa e para a feita
+por ADMIN.
+ 
+#### 6.3.2 Anonimização da conta (soft delete)
+ 
+| Dado | Destino | Por quê |
+|---|---|---|
+| `name` | Substituído por "Conta removida" | Campo obrigatório; é o que aparece onde a pessoa é citada |
+| `email` | Substituído por endereço único não entregável (domínio reservado `.invalid`) | Campo obrigatório e único; libera o e-mail para um novo cadastro |
+| `userName` | Removido | Libera o nome de usuário e retira o portfólio público |
+| `password` | Substituída por hash de valor aleatório | Impede o acesso à conta |
+| `bio`, `avatar`, `github`, `linkedin` | Removidos | Dados pessoais |
+| `portfolioPublic` e opções de exibição (`show*`) | Desligados | Nada permanece público |
+| `isActive` | `false` | Marca a conta como removida |
+| `role`, `createdAt` | Mantidos | Não identificam a pessoa; usados em métricas agregadas |
+| Imagem do avatar no serviço de imagens | Apagada | O arquivo continuaria acessível pela URL |
+| Certificados, disponibilidade e skills | Excluídos | Dados sobre a pessoa |
+| Feedbacks e corroborações recebidos | Excluídos | Tabela 6.3 |
+| Feedbacks e corroborações dados | Mantidos | Tabela 6.3; autoria anônima pelo registro anonimizado |
+| Projetos de que é owner e `StackTaken` | Mantidos | Fazem parte do histórico da equipe |
+| E-mail nos convites recebidos (`Invite.email`) | Anonimizado | Dado pessoal; evita conflito de duplicidade se a pessoa for convidada de novo |
  
 ### 6.4 Por que a autoria não pode simplesmente ser apagada junto
  
@@ -188,16 +223,19 @@ Nenhuma das duas partes publica sozinha.
 |---|---|---|
 | Acesso aos próprios dados | Dashboard privado + exportação | 🔴 exportação não implementada |
 | Correção | Edição de perfil e portfólio | 🟢 |
-| Exclusão de conta | Fluxo de exclusão com regra da seção 6.3 | 🔴 não implementado |
+| Exclusão de conta | Fluxo de exclusão com regra da seção 6.3 | 🟡 fluxo existe, sem anonimização |
 | Portabilidade | Exportação em formato legível | 🔴 não implementado |
 | Oposição | Toggles de visibilidade; denúncia de feedback | 🟡 parcial |
 | Informação sobre tratamento | Termos, FAQ, avisos em tela | 🟡 parcial |
  
-> ⚠️ **Divergência conhecida, registrada conforme Documento 0, seção 4:** a versão
-> anterior deste documento afirmava que a exclusão de conta era um direito
-> atendido. **Ela não está implementada.** A afirmação foi corrigida acima.
-> Enquanto o fluxo não existir, pedidos de exclusão devem ser tratados
-> manualmente por ADMIN, seguindo a regra 6.3, com registro da execução.
+> ⚠️ **Divergência conhecida, registrada conforme Documento 0, seção 4
+> (atualizada em 17/10/2026):** o fluxo de exclusão existe
+> (`DELETE /api/user/[id]`), mas ainda não segue a regra 6.3. Quando a conta
+> tem vínculo em `StackTaken`, ela só é desativada e os dados pessoais
+> permanecem; nos demais casos, é apagada. Até a anonimização (6.3.2) ser
+> implementada, pedidos de exclusão de quem tem vínculos devem ser
+> complementados manualmente por ADMIN, seguindo a 6.3.2, com registro da
+> execução.
  
 ---
  
@@ -206,10 +244,10 @@ Nenhuma das duas partes publica sozinha.
 | Dado | Retenção |
 |---|---|
 | Conta ativa | Enquanto durar o vínculo |
-| Dados de conta excluída | Removidos, exceto o previsto em 6.3 |
+| Dados de conta excluída | Removidos ou anonimizados, conforme 6.3.1 e 6.3.2 |
 | Feedback anonimizado | Indeterminado (deixou de ser dado pessoal do autor) |
 | Logs estruturados | Prazo a definir — **decisão em aberto** |
-| Convites usados | Mantidos para auditoria, com e-mail anonimizável a pedido |
+| Convites usados | Mantidos para auditoria; e-mail anonimizado na exclusão da conta (6.3.2) |
 | InviteRequest rejeitada | Prazo a definir — **decisão em aberto** |
  
 ---
@@ -224,10 +262,9 @@ Nenhuma das duas partes publica sozinha.
 - Portfólio privado retorna 404 idêntico ao de usuário inexistente, não revelando
   existência de conta;
 - Objeto `User` do Prisma nunca retornado íntegro em resposta de API.
-> ⚠️ **Dívida conhecida:** nenhuma rota usa `select`/`omit` do Prisma atualmente,
-> e objetos `User` saem com hash de senha (ver SEC-03). Isso **contradiz o
-> compromisso acima** e é falha de segurança ativa, não apenas dívida técnica.
-> Correção prioritária.
+> ✅ **SEC-03 resolvida (PR #719):** o hash da senha é omitido de `User` por
+> padrão em todo o projeto (`omit` global em `src/lib/prisma.ts`). Os demais
+> campos pessoais continuam exigindo `select` explícito em cada rota.
  
 ---
  
@@ -277,3 +314,6 @@ Alinhado a:
 | v2 | Publicação de texto exige consentimento das duas partes |
 | v2 | Corrigida afirmação sobre exclusão de conta — direito ainda não implementado |
 | v2 | Registrada contradição entre compromisso de proteção e a dívida SEC-03 |
+| v2.1 | SEC-03 resolvida pelo `omit` global do PR #719 (17/10/2026) |
+| v2.1 | Exclusão de conta: soft delete com anonimização quando há vínculo, hard delete sem vínculo, inclusive por ADMIN; e-mail dos convites anonimizado (17/10/2026) |
+| v2.1 | Exclusão de conta reclassificada: o fluxo existe, falta a anonimização |

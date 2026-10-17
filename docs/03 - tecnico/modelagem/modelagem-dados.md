@@ -237,10 +237,11 @@ garantindo consistência da coleção.
 - Não exposição de identificadores internos;
 - Rastreabilidade via logger estruturado;
 - Regras de negócio aplicadas no backend.
-> 🔴 **Dívida que contradiz os princípios acima (SEC-03):** nenhuma rota usa
-> `select`/`omit` do Prisma, e objetos `User` são retornados íntegros — com o hash
-> da senha. Isso viola "sem dados sensíveis em queries públicas". É falha ativa,
-> não dívida de estilo. Em código novo, nunca retornar `User` cru.
+> ✅ **SEC-03 resolvida (PR #719):** o cliente Prisma em `src/lib/prisma.ts`
+> omite `password` de `User` por padrão (`omit` global). Quem realmente precisa
+> do campo, como a validação de login, pede com `omit: { password: false }`.
+> Mesmo assim, em código novo, escolha os campos com `select` em vez de devolver
+> `User` inteiro: o `omit` protege a senha, não os outros dados pessoais.
  
 ---
  
@@ -253,3 +254,4 @@ garantindo consistência da coleção.
 | Documentado o modelo alvo de corroborações e o destino dos campos legados |
 | Registrada a regra de anonimização assimétrica na exclusão de conta |
 | Registrada a dívida SEC-03 como contradição ativa com os princípios |
+| SEC-03 marcada como resolvida pelo `omit` global do PR #719 (17/10/2026) |
