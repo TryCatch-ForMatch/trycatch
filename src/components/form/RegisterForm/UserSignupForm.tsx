@@ -8,13 +8,13 @@ import { Loader2 } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
-
-//import components
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { getRoleLabel } from '@/lib/role-labels';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 
 const schema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
@@ -75,25 +75,12 @@ export default function UserSignupForm() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      const res = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      if (!res.ok) {
-        const json = await res.json();
-        throw new Error(json.error || 'Erro ao cadastrar usuário');
-      }
+      await apiTryCatch.post('/auth/signup', data);
 
       toast.success('Usuário criado com sucesso! 🎉');
       router.push('/login');
-    } catch (err) {
-      if (err instanceof Error) {
-        toast.error(err.message);
-      } else {
-        toast.error('Erro inesperado, tente novamente.');
-      }
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Erro ao cadastrar usuário'));
     }
   };
 

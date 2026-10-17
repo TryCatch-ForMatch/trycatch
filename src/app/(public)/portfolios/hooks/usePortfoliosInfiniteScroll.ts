@@ -1,6 +1,6 @@
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { PortfolioSummaryItem } from '@/types/portfolio.types';
-import { useCallback } from 'react';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { Filters } from '../models';
 
 export function usePortfoliosInfiniteScroll(filters: Filters) {
@@ -12,30 +12,20 @@ export function usePortfoliosInfiniteScroll(filters: Filters) {
     fetchMoreOnBottomReached,
     error,
   } = useInfiniteScroll<PortfolioSummaryItem>({
-    // filtros no queryKey garantem refetch automático ao mudar filtros
-    // e resetam o cursor para undefined (nova query = começa do zero)
     queryKey: ['portfolios', filters],
     fetcher: async (cursor) => {
-      const res = await fetch(buildUrl(cursor));
-      if (!res.ok)
-        throw new Error(`Erro ao buscar portfólios: HTTP ${res.status}`);
-      return res.json();
+      const { data } = await apiTryCatch.get('/portfolios', {
+        params: {
+          cursor: cursor || undefined,
+          name: filters.name || undefined,
+          role: filters.role || undefined,
+          skills: filters.skills || undefined,
+          take: 20,
+        },
+      });
+      return data;
     },
   });
-
-  // Monta a URL com os filtros ativos
-  const buildUrl = useCallback(
-    (cursor: string | undefined) => {
-      const params = new URLSearchParams();
-      if (cursor) params.set('cursor', cursor);
-      if (filters.name) params.set('name', filters.name);
-      if (filters.role) params.set('role', filters.role);
-      if (filters.skills) params.set('skills', filters.skills);
-      params.set('take', '20');
-      return `/api/portfolios?${params.toString()}`;
-    },
-    [filters]
-  );
 
   return {
     flatData,

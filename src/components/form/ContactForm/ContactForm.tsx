@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 
 export function ContactForm() {
   const [loading, setLoading] = useState(false);
@@ -24,15 +25,7 @@ export function ContactForm() {
     };
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        throw new Error('Erro ao enviar mensagem');
-      }
+      await apiTryCatch.post('/contact', payload);
 
       setSuccess(true);
       setError(null);
