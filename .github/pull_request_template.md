@@ -70,3 +70,35 @@ Exemplo:
 - [ ] Os testes existentes continuam passando.
 - [ ] A documentação foi atualizada (quando necessário).
 - [ ] Este PR resolve apenas um objetivo.
+
+---
+
+## 🙌 Reconhecimento
+
+Depois do merge, comente **neste PR** para entrar na lista de colaboradores
+(`CONTRIBUTORS.md`):
+
+```
+@all-contributors please add @SEU_USUARIO for code
+```
+
+Troque `@SEU_USUARIO` pelo seu usuário do GitHub e `code` pelo tipo da sua
+contribuição. Para mais de um tipo, separe por vírgula: `for code, test`.
+
+| Tipo | Quando usar |
+|---|---|
+| `code` | Código da aplicação |
+| `test` | Testes automatizados |
+| `doc` | Documentação |
+| `bug` | Encontrou e reportou um bug |
+| `design` | Design, interface ou experiência de uso |
+| `a11y` | Acessibilidade |
+| `review` | Revisão de pull requests |
+| `ideas` | Ideias e planejamento |
+| `infra` | Infraestrutura, CI e build |
+| `maintenance` | Manutenção do projeto |
+| `security` | Segurança |
+| `translation` | Tradução |
+| `mentoring` | Mentoria |
+
+Lista completa dos tipos: https://allcontributors.org/docs/en/emoji-key
