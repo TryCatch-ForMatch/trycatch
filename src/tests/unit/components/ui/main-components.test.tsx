@@ -27,7 +27,7 @@ describe('main reusable UI components', () => {
     const button = screen.getByRole('button', { name: 'Salvar' });
 
     expect(button).toHaveAttribute('data-slot', 'button');
-    expect(button).toHaveClass('bg-[#3B38A0]');
+    expect(button).toHaveClass('bg-primary-default');
 
     fireEvent.click(button);
 
