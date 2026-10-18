@@ -18,7 +18,7 @@ import {
   SelectContent,
   SelectItem,
 } from '@/components/ui/select';
-import { X } from 'lucide-react';
+import { SkillTag } from '@/components/shared/SkillSelector';
 import { Skill } from '@prisma/client';
 import { toast } from 'sonner';
 import { ROLES, Role } from '@/lib/roles';
@@ -157,7 +157,7 @@ export function UserAdminForm() {
             <Label>Nome</Label>
             <Input {...register('name')} />
             {errors.name && (
-              <p className="text-xs text-red-500">{errors.name.message}</p>
+              <p className="text-xs text-destructive">{errors.name.message}</p>
             )}
           </div>
 
@@ -166,7 +166,9 @@ export function UserAdminForm() {
               <Label>Email</Label>
               <Input type="email" {...register('email')} />
               {errors.email && (
-                <p className="text-xs text-red-500">{errors.email.message}</p>
+                <p className="text-xs text-destructive">
+                  {errors.email.message}
+                </p>
               )}
             </div>
 
@@ -178,7 +180,7 @@ export function UserAdminForm() {
                 {...register('password')}
               />
               {errors.password && (
-                <p className="text-xs text-red-500">
+                <p className="text-xs text-destructive">
                   {errors.password.message}
                 </p>
               )}
@@ -190,7 +192,7 @@ export function UserAdminForm() {
               <Label>LinkedIn</Label>
               <Input {...register('linkedin')} />
               {errors.linkedin && (
-                <p className="text-xs text-red-500">
+                <p className="text-xs text-destructive">
                   {errors.linkedin.message}
                 </p>
               )}
@@ -200,7 +202,9 @@ export function UserAdminForm() {
               <Label>GitHub</Label>
               <Input {...register('github')} />
               {errors.github && (
-                <p className="text-xs text-red-500">{errors.github.message}</p>
+                <p className="text-xs text-destructive">
+                  {errors.github.message}
+                </p>
               )}
             </div>
           </div>
@@ -224,20 +228,12 @@ export function UserAdminForm() {
               {selectedSkills?.map((skillId) => {
                 const skill = skills.find((s) => s.id === skillId);
                 return (
-                  <span
+                  <SkillTag
                     key={skillId}
-                    className="flex items-center gap-1 rounded-full bg-gray-200 px-3 py-1 text-xs"
-                  >
-                    {skill?.name || skillId}
-                    <button
-                      title="button name"
-                      type="button"
-                      onClick={() => handleRemoveSkill(skillId)}
-                      className="ml-1 text-gray-500 hover:text-red-500"
-                    >
-                      <X size={12} />
-                    </button>
-                  </span>
+                    id={skillId}
+                    name={skill?.name || skillId}
+                    onRemove={handleRemoveSkill}
+                  />
                 );
               })}
             </div>
@@ -257,10 +253,12 @@ export function UserAdminForm() {
                 title="input file"
                 onChange={handleAvatarChange}
                 disabled={uploadingAvatar}
-                className="block w-full text-sm text-gray-900 file:mr-4 file:rounded-full file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 hover:file:bg-indigo-100"
+                className="block w-full text-sm text-foreground file:mr-4 file:rounded-full file:border-0 file:bg-secondary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-secondary-foreground hover:file:bg-secondary/80"
               />
               {errors.avatar && (
-                <p className="text-xs text-red-500">{errors.avatar.message}</p>
+                <p className="text-xs text-destructive">
+                  {errors.avatar.message}
+                </p>
               )}
 
               {avatarUrl && (
@@ -271,7 +269,9 @@ export function UserAdminForm() {
                 />
               )}
               {uploadingAvatar && (
-                <p className="text-sm text-gray-500">Enviando avatar...</p>
+                <p className="text-sm text-muted-foreground">
+                  Enviando avatar...
+                </p>
               )}
             </div>
 
@@ -295,7 +295,9 @@ export function UserAdminForm() {
                 </SelectContent>
               </Select>
               {errors.role && (
-                <p className="text-xs text-red-500">{errors.role.message}</p>
+                <p className="text-xs text-destructive">
+                  {errors.role.message}
+                </p>
               )}
             </div>
           </div>

@@ -9,7 +9,7 @@ type Props = {
 export default function UnderDevelopment({ title = '' }: Props) {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 p-6 text-center">
-      <span className="text-5xl text-gray-600">{title}</span>
+      <span className="text-5xl text-muted-foreground">{title}</span>
       <Image
         src="/under-construction.png"
         alt="Página em desenvolvimento"
@@ -18,7 +18,7 @@ export default function UnderDevelopment({ title = '' }: Props) {
         className="h-auto max-w-full"
         priority
       />
-      <p className="mt-2 max-w-md text-gray-600">
+      <p className="mt-2 max-w-md text-muted-foreground">
         Essa página ainda está em desenvolvimento. Em breve você poderá acessar
         essa funcionalidade!
       </p>

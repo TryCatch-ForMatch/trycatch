@@ -1,13 +1,21 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { AxiosError } from 'axios';
 
@@ -38,6 +46,7 @@ export function InviteRequestForm({
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors },
@@ -97,16 +106,32 @@ export function InviteRequestForm({
       />
 
       <div className="flex flex-col gap-1">
-        <label className="text-sm">Perfil desejado</label>
-        <select
-          {...register('role')}
-          className="h-10 rounded-md border border-input bg-background px-3 text-sm"
-        >
-          <option value="USER">Membro (em início de carreira)</option>
-          <option value="MENTOR">Mentor (profissional experiente)</option>
-        </select>
+        <Label htmlFor="invite-request-role" className="font-normal">
+          Perfil desejado
+        </Label>
+        <Controller
+          name="role"
+          control={control}
+          render={({ field }) => (
+            <Select value={field.value} onValueChange={field.onChange}>
+              <SelectTrigger id="invite-request-role" className="h-10 w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="USER">
+                  Membro (em início de carreira)
+                </SelectItem>
+                <SelectItem value="MENTOR">
+                  Mentor (profissional experiente)
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+        />
         {errors.role && (
-          <span className="text-xs text-red-500">{errors.role.message}</span>
+          <span className="text-xs text-destructive">
+            {errors.role.message}
+          </span>
         )}
       </div>
 

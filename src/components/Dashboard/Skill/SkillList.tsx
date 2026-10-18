@@ -152,18 +152,22 @@ export function SkillList() {
   return (
     <CardContent className="mx-auto mt-6 max-w-4xl rounded-2xl shadow-md">
       <div className="space-y-4 p-6">
-        <h2 className="text-xl font-semibold text-gray-800">Lista de Skills</h2>
+        <h2 className="text-xl font-semibold text-foreground">
+          Lista de Skills
+        </h2>
 
         {loading ? (
-          <p className="text-gray-600">Carregando...</p>
+          <p className="text-muted-foreground">Carregando...</p>
         ) : skills.length === 0 ? (
-          <p className="text-gray-600">Nenhuma skill cadastrada ainda.</p>
+          <p className="text-muted-foreground">
+            Nenhuma skill cadastrada ainda.
+          </p>
         ) : (
           <ul className="space-y-2">
             {skills.map((skill) => (
               <li
                 key={skill.id}
-                className="flex items-center justify-between rounded-md border p-3 hover:bg-gray-50"
+                className="flex items-center justify-between rounded-md border p-3 hover:bg-accent"
               >
                 <div className="skill-icon flex items-center gap-3">
                   {skill.iconUrl && (

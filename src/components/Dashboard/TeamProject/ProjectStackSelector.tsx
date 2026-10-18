@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
+import { X } from 'lucide-react';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 
 interface Stack {
@@ -74,20 +75,16 @@ export function ProjectStackSelector({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2">
+      <div className="flex items-center justify-between rounded-xl border border-border bg-muted/70 px-3 py-2">
         <div>
-          <p className="text-sm font-semibold text-slate-800">
+          <p className="text-sm font-semibold text-foreground">
             Stacks do projeto
           </p>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-muted-foreground">
             Defina cada stack e seu percentual. A soma precisa fechar em 100%.
           </p>
         </div>
-        <Button
-          type="button"
-          onClick={addStack}
-          className="rounded-lg bg-[#3B38A0] px-3 py-2 text-sm text-white shadow-sm hover:bg-[#33318c]"
-        >
+        <Button type="button" onClick={addStack}>
           + Adicionar
         </Button>
       </div>
@@ -96,7 +93,7 @@ export function ProjectStackSelector({
         {stacks.map((stack, index) => (
           <div
             key={index}
-            className="flex flex-col gap-2 rounded-xl border border-slate-200 bg-white p-3 shadow-sm"
+            className="flex flex-col gap-2 rounded-xl border border-border bg-white p-3 shadow-sm"
           >
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <div className="flex-1">
@@ -108,7 +105,7 @@ export function ProjectStackSelector({
                       value={field.value}
                       onValueChange={(val) => field.onChange(val)}
                     >
-                      <SelectTrigger className="h-11 w-full rounded-xl border border-slate-300 bg-white shadow-sm">
+                      <SelectTrigger className="h-11 w-full rounded-xl border border-border bg-white shadow-sm">
                         <SelectValue placeholder="Selecione a stack..." />
                       </SelectTrigger>
                       <SelectContent>
@@ -128,7 +125,7 @@ export function ProjectStackSelector({
                   control={control}
                   name={`stacks.${index}.percentage`}
                   render={({ field }) => (
-                    <div className="flex h-10 w-full items-center rounded-xl border border-slate-300 bg-white px-3 shadow-sm">
+                    <div className="flex h-10 w-full items-center rounded-xl border border-border bg-white px-3 shadow-sm">
                       <Input
                         type="number"
                         min="0"
@@ -147,25 +144,27 @@ export function ProjectStackSelector({
                         onChange={(e) => field.onChange(Number(e.target.value))}
                         className="mt-4 h-full w-full border-0 bg-transparent p-0 text-center text-sm shadow-none focus-visible:ring-0"
                       />
-                      <span className="text-sm font-medium text-slate-500">
+                      <span className="text-sm font-medium text-muted-foreground">
                         %
                       </span>
                     </div>
                   )}
                 />
-                <button
+                <Button
                   type="button"
+                  variant="outline"
+                  size="icon"
                   onClick={() => removeStack(index)}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-lg text-slate-500 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600"
                   aria-label="Remover stack"
+                  className="rounded-full text-muted-foreground hover:border-destructive/40 hover:bg-destructive/10 hover:text-destructive"
                 >
-                  ×
-                </button>
+                  <X aria-hidden />
+                </Button>
               </div>
             </div>
 
             {stack.stackId && stackAssignments[stack.stackId] ? (
-              <span className="text-[10px] leading-4 text-slate-500">
+              <span className="text-[10px] leading-4 text-muted-foreground">
                 {stackAssignments[stack.stackId]}
               </span>
             ) : null}

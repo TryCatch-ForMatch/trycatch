@@ -17,6 +17,8 @@ import {
 } from '@/components/ui/settings-card';
 import { ToggleField } from '@/components/ui/toggle-field';
 import { FormField } from '@/components/ui/form-field';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 import { PortfolioPageSkeleton } from '@/components/Dashboard/Portfolio/PortfolioPageSkeleton';
 import { usePortfolioSettings } from './hooks/usePortfolioSettings';
 import { SkillSelector } from '@/components/shared/SkillSelector';
@@ -39,7 +41,6 @@ export default function DashboardPortfolioClient() {
 
   return (
     <main className="container mx-auto max-w-2xl space-y-8 px-4 py-10">
-      {/* Header */}
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-xl font-semibold tracking-tight">
@@ -82,7 +83,6 @@ export default function DashboardPortfolioClient() {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-        {/* ── Visibilidade geral ─────────────────────────────────────── */}
         <SettingsCard>
           <SettingsCardHeader
             icon={
@@ -109,7 +109,6 @@ export default function DashboardPortfolioClient() {
           />
         </SettingsCard>
 
-        {/* ── Dados pessoais ────────────────────────────────────────── */}
         <SettingsCard>
           <SettingsCardHeader
             icon={<User className="h-4 w-4" />}
@@ -117,22 +116,35 @@ export default function DashboardPortfolioClient() {
           />
 
           <div className="space-y-4">
-            <FormField label="Bio" error={errors.bio?.message}>
-              <textarea
+            <FormField
+              label="Bio"
+              htmlFor="portfolio-bio"
+              error={errors.bio?.message}
+            >
+              <Textarea
+                id="portfolio-bio"
                 {...register('bio')}
                 rows={3}
                 placeholder="Conte um pouco sobre você..."
-                className="w-full resize-none rounded-md border border-border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:ring-1 focus:ring-ring focus:outline-none"
+                className="resize-none"
               />
               <p className="mt-1 text-[11px] text-muted-foreground">
                 {watch('bio')?.length ?? 0}/500 caracteres
               </p>
             </FormField>
 
-            <FormField label="GitHub" error={errors.github?.message}>
+            <FormField
+              label="GitHub"
+              htmlFor="portfolio-github"
+              error={errors.github?.message}
+            >
               <div className="relative">
-                <Code className="absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+                <Code
+                  aria-hidden
+                  className="absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
+                />
                 <input
+                  id="portfolio-github"
                   {...register('github')}
                   type="url"
                   placeholder="https://github.com/seu-usuario"
@@ -141,10 +153,18 @@ export default function DashboardPortfolioClient() {
               </div>
             </FormField>
 
-            <FormField label="LinkedIn" error={errors.linkedin?.message}>
+            <FormField
+              label="LinkedIn"
+              htmlFor="portfolio-linkedin"
+              error={errors.linkedin?.message}
+            >
               <div className="relative">
-                <Link className="absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+                <Link
+                  aria-hidden
+                  className="absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
+                />
                 <input
+                  id="portfolio-linkedin"
                   {...register('linkedin')}
                   type="url"
                   placeholder="https://linkedin.com/in/seu-usuario"
@@ -155,7 +175,6 @@ export default function DashboardPortfolioClient() {
           </div>
         </SettingsCard>
 
-        {/* ── Toggles de visibilidade ───────────────────────────────── */}
         <SettingsCard>
           <SettingsCardHeader
             icon={<Eye className="h-4 w-4" />}
@@ -214,7 +233,6 @@ export default function DashboardPortfolioClient() {
           </div>
         </SettingsCard>
 
-        {/* ── Salvar ───────────────────────────────────────────────── */}
         <div className="flex items-center justify-between pt-2">
           <div className="text-sm">
             {saveStatus === 'success' && (
@@ -229,14 +247,10 @@ export default function DashboardPortfolioClient() {
             )}
           </div>
 
-          <button
-            type="submit"
-            disabled={isSaving || !isDirty}
-            className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <Save className="h-3.5 w-3.5" />
+          <Button type="submit" disabled={isSaving || !isDirty}>
+            <Save aria-hidden className="h-3.5 w-3.5" />
             {isSaving ? 'Salvando...' : 'Salvar alterações'}
-          </button>
+          </Button>
         </div>
       </form>
     </main>

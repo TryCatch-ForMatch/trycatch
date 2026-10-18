@@ -7,11 +7,13 @@ import { Input } from '@/components/ui/input';
 type MoneyInputProps<FormData extends FieldValues> = {
   name: Path<FormData>;
   control: Control<FormData>;
+  id?: string;
 };
 
 export function MoneyInput<FormData extends FieldValues>({
   name,
   control,
+  id,
 }: MoneyInputProps<FormData>) {
   const [text, setText] = useState('');
 
@@ -21,6 +23,7 @@ export function MoneyInput<FormData extends FieldValues>({
       control={control}
       render={({ field }) => (
         <Input
+          id={id}
           type="text"
           inputMode="decimal"
           placeholder="0,00"

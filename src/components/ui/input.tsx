@@ -8,15 +8,20 @@ interface InputProps extends React.ComponentProps<'input'> {
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, label, error, ...props }, ref) => {
+  ({ className, type, label, error, id, ...props }, ref) => {
+    const generatedId = React.useId();
+    const inputId = id ?? generatedId;
+    const errorId = `${inputId}-error`;
+
     return (
       <div className="mb-4">
         {label && (
-          <label className="mb-1 block text-sm font-medium" htmlFor={props.id}>
+          <label className="mb-1 block text-sm font-medium" htmlFor={inputId}>
             {label}
           </label>
         )}
         <input
+          id={inputId}
           type={type}
           ref={ref}
           data-slot="input"
@@ -28,10 +33,15 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             className
           )}
           aria-invalid={!!error}
+          aria-describedby={error ? errorId : undefined}
           {...props}
         />
         {error && (
-          <p className="mt-1 text-sm text-destructive" role="alert">
+          <p
+            id={errorId}
+            className="mt-1 text-sm text-destructive"
+            role="alert"
+          >
             {error}
           </p>
         )}

@@ -116,7 +116,9 @@ export function SkillSelector({
         </button>
       )}
 
-      {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
+      {errorMessage && (
+        <p className="text-sm text-destructive">{errorMessage}</p>
+      )}
 
       <div className="mt-3 flex flex-wrap gap-2">
         {selectedSkills.map((skillId) => {

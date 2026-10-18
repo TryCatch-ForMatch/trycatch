@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { Badge } from '@/components/ui/badge';
 
 interface SkillIconProps {
   src: string;
@@ -13,9 +14,12 @@ export function SkillIcon({ src, name }: SkillIconProps) {
 
   if (errored) {
     return (
-      <span className="inline-flex items-center rounded-full border border-border/50 bg-secondary px-2 py-0.5 text-xs text-secondary-foreground">
+      <Badge
+        variant="secondary"
+        className="rounded-full border-border/50 font-normal"
+      >
         {name}
-      </span>
+      </Badge>
     );
   }
 

@@ -82,7 +82,6 @@ export function InviteForm() {
   return (
     <div className="mt-4 w-full rounded-2xl bg-white p-6 shadow-lg">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Email */}
         <div className="space-y-1">
           <Label htmlFor="email">E-mail do convidado</Label>
           <Input
@@ -92,11 +91,10 @@ export function InviteForm() {
             {...register('email')}
           />
           {errors.email && (
-            <p className="text-xs text-red-500">{errors.email.message}</p>
+            <p className="text-xs text-destructive">{errors.email.message}</p>
           )}
         </div>
 
-        {/* Perfil */}
         <div className="space-y-1">
           <Label htmlFor="role">Perfil</Label>
           <Select
@@ -119,7 +117,7 @@ export function InviteForm() {
           </Select>
 
           {errors.role && (
-            <p className="text-xs text-red-500">{errors.role.message}</p>
+            <p className="text-xs text-destructive">{errors.role.message}</p>
           )}
         </div>
 
@@ -128,9 +126,8 @@ export function InviteForm() {
         </Button>
       </form>
 
-      {/* Exibir o código criado */}
       {inviteCode && (
-        <div className="mt-6 rounded-xl border bg-gray-100 p-4">
+        <div className="mt-6 rounded-xl border bg-muted p-4">
           <p className="mb-2 text-sm font-medium">Código de convite criado:</p>
 
           <div className="flex items-center gap-2">

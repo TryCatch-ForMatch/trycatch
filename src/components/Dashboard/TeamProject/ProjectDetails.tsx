@@ -36,11 +36,10 @@ export function ProjectDetails({ projectId }: Readonly<{ projectId: string }>) {
     fetchDetailsProject();
   }, [projectId, fetchDetailsProject]);
   if (loading)
-    return <p className="p-6 text-gray-500">Carregando detalhes...</p>;
+    return <p className="p-6 text-muted-foreground">Carregando detalhes...</p>;
   if (!project)
-    return <p className="p-6 text-gray-500">Projeto não encontrado</p>;
+    return <p className="p-6 text-muted-foreground">Projeto não encontrado</p>;
 
-  // Funções de ação
   const handleTakeStack = async (stack: { id: string; stackId: string }) => {
     const data = {
       projectId: project.id,
@@ -86,25 +85,25 @@ export function ProjectDetails({ projectId }: Readonly<{ projectId: string }>) {
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6 p-4 md:p-6 lg:p-8">
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+      <section className="rounded-2xl border border-border bg-white p-5 shadow-sm sm:p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="space-y-3">
-            <h2 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
+            <h2 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
               {project.name}
             </h2>
 
-            <div className="flex flex-wrap items-center gap-2 text-sm text-slate-600">
-              <div className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5">
+            <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+              <div className="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1.5">
                 <DollarSign className="h-4 w-4 text-emerald-600" />
-                <span className="font-medium text-slate-700">
+                <span className="font-medium text-foreground">
                   {project.totalValue.toLocaleString('pt-BR', {
                     style: 'currency',
                     currency: 'BRL',
                   })}
                 </span>
               </div>
-              <div className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5">
-                <Calendar className="h-4 w-4 text-slate-600" />
+              <div className="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1.5">
+                <Calendar className="h-4 w-4 text-muted-foreground" />
                 <span>
                   {new Date(project.deadline).toLocaleDateString('pt-BR')}
                 </span>
@@ -118,7 +117,7 @@ export function ProjectDetails({ projectId }: Readonly<{ projectId: string }>) {
                 href={project.github}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-3 py-1.5 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-50"
+                className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary-light/50"
               >
                 <Github className="h-4 w-4" />
                 <span>Repositório</span>
@@ -143,9 +142,9 @@ export function ProjectDetails({ projectId }: Readonly<{ projectId: string }>) {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 sm:p-5">
+      <section className="rounded-2xl border border-border bg-muted/70 p-4 sm:p-5">
         <div className="mb-3 flex items-center justify-between">
-          <h3 className="text-xs font-semibold tracking-[0.24em] text-slate-500 uppercase">
+          <h3 className="text-xs font-semibold tracking-[0.24em] text-muted-foreground uppercase">
             Skills
           </h3>
         </div>
@@ -154,7 +153,7 @@ export function ProjectDetails({ projectId }: Readonly<{ projectId: string }>) {
             skill.iconUrl ? (
               <div
                 key={skill.id}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white p-1 shadow-sm"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white p-1 shadow-sm"
                 title={skill.name}
               >
                 <Image
@@ -168,7 +167,7 @@ export function ProjectDetails({ projectId }: Readonly<{ projectId: string }>) {
             ) : (
               <span
                 key={skill.id}
-                className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700"
+                className="rounded-full border border-border bg-white px-3 py-1.5 text-sm font-medium text-foreground"
               >
                 {skill.name}
               </span>
@@ -177,21 +176,21 @@ export function ProjectDetails({ projectId }: Readonly<{ projectId: string }>) {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-        <h3 className="mb-3 text-xs font-semibold tracking-[0.24em] text-slate-500 uppercase">
+      <section className="rounded-2xl border border-border bg-white p-5 shadow-sm">
+        <h3 className="mb-3 text-xs font-semibold tracking-[0.24em] text-muted-foreground uppercase">
           Descrição
         </h3>
-        <p className="max-w-4xl text-sm leading-7 wrap-break-word whitespace-pre-line text-slate-600">
+        <p className="max-w-4xl text-sm leading-7 wrap-break-word whitespace-pre-line text-muted-foreground">
           {project.description}
         </p>
       </section>
 
       <section className="space-y-3">
         <div className="flex items-center justify-between px-1">
-          <h3 className="text-xs font-semibold tracking-[0.24em] text-slate-500 uppercase">
+          <h3 className="text-xs font-semibold tracking-[0.24em] text-muted-foreground uppercase">
             Stacks
           </h3>
-          <span className="text-xs text-slate-500">
+          <span className="text-xs text-muted-foreground">
             {project.stacks?.length ?? 0} itens
           </span>
         </div>
@@ -207,23 +206,23 @@ export function ProjectDetails({ projectId }: Readonly<{ projectId: string }>) {
                 key={stack.id}
                 className={`rounded-xl border transition-colors ${
                   takenBy
-                    ? 'border-blue-200 bg-blue-50/70'
-                    : 'border-slate-200 bg-white hover:border-slate-300'
+                    ? 'border-primary/30 bg-primary-light/50'
+                    : 'border-border bg-white hover:border-border'
                 }`}
               >
                 <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-slate-800">
+                    <p className="text-sm font-semibold text-foreground">
                       {stack.name}
                     </p>
-                    <p className="mt-1 text-xs text-slate-500">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       {stack.percentage}% do projeto
                     </p>
                   </div>
 
                   {takenBy ? (
                     <div className="flex flex-wrap items-center gap-2">
-                      <div className="inline-flex items-center gap-2 rounded-full bg-white px-2.5 py-1 text-xs font-medium text-blue-700">
+                      <div className="inline-flex items-center gap-2 rounded-full bg-white px-2.5 py-1 text-xs font-medium text-primary">
                         <User className="h-3.5 w-3.5" />
                         <span>{takenBy.name}</span>
                       </div>

@@ -33,7 +33,7 @@ export function TechStackForm() {
     <Card className="mx-auto mt-4 max-w-md rounded-2xl p-6 shadow-lg">
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <h2 className="text-xl font-semibold text-gray-800">
+          <h2 className="text-xl font-semibold text-foreground">
             Cadastrar Stack
           </h2>
 

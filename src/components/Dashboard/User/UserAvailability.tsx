@@ -1,12 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import * as Switch from '@radix-ui/react-switch';
 import { useRouter } from 'next/navigation';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import { Moon } from 'lucide-react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -131,7 +132,9 @@ export function UserAvailability() {
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
-            <Label className="font-semibold">Disponibilidade de horários</Label>
+            <h2 className="text-sm leading-none font-semibold">
+              Disponibilidade de horários
+            </h2>
 
             <div className="mt-6 flex flex-col gap-2">
               {weekdays.map((day, i) => {
@@ -143,36 +146,35 @@ export function UserAvailability() {
                     className="grid grid-cols-[160px_1fr] items-center gap-6 rounded-lg p-3"
                   >
                     <Label className="flex items-center gap-4">
-                      <Switch.Root
+                      <Switch
                         checked={!!field}
                         onCheckedChange={(checked) =>
                           onToggleWeekday(i, checked)
                         }
-                        className="relative h-6 w-11 rounded-full bg-gray-300 transition data-[state=checked]:bg-indigo-600"
-                      >
-                        <Switch.Thumb />
-                      </Switch.Root>
+                      />
                       {day}
                     </Label>
 
                     {field ? (
                       <div className="flex gap-6">
-                        <input
+                        <Input
                           type="time"
+                          aria-label={`Início em ${day}`}
                           {...register(
                             `availabilities.${fields.indexOf(field)}.startTime`
                           )}
                         />
-                        <input
+                        <Input
                           type="time"
+                          aria-label={`Fim em ${day}`}
                           {...register(
                             `availabilities.${fields.indexOf(field)}.endTime`
                           )}
                         />
                       </div>
                     ) : (
-                      <span className="flex gap-2 text-sm text-gray-400">
-                        <Moon /> Indisponível
+                      <span className="flex gap-2 text-sm text-muted-foreground">
+                        <Moon aria-hidden /> Indisponível
                       </span>
                     )}
                   </div>
@@ -181,7 +183,7 @@ export function UserAvailability() {
             </div>
 
             {errors.availabilities && (
-              <p className="text-sm text-red-600">
+              <p className="text-sm text-destructive">
                 {errors.availabilities.message}
               </p>
             )}

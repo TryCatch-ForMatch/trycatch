@@ -22,7 +22,7 @@ export default function ProfilePage() {
       });
   }, []);
 
-  if (error) return <p className="text-red-500">{error}</p>;
+  if (error) return <p className="text-destructive">{error}</p>;
   if (!user) return <p>Carregando perfil...</p>;
 
   return (

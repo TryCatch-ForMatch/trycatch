@@ -7,6 +7,7 @@ import { Pencil, Trash } from 'lucide-react';
 import { BasicUser, FullUser } from '@/types/interface/user';
 import { EditUserAdminForm } from './EditUserAdminForm';
 import Modal from '@/components/ui/modal';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { toast } from 'sonner';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
@@ -15,6 +16,7 @@ export function UserAdminList() {
   const [users, setUsers] = useState<BasicUser[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<FullUser | null>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
   const fetchUsers = async () => {
     try {
@@ -29,9 +31,10 @@ export function UserAdminList() {
     fetchUsers();
   }, []);
 
-  const handleDelete = async (userId: string) => {
-    const confirmed = confirm('Tem certeza que deseja excluir este usuário?');
-    if (!confirmed) return;
+  const confirmDelete = async () => {
+    const userId = pendingDeleteId;
+    if (!userId) return;
+    setPendingDeleteId(null);
 
     try {
       await apiTryCatch.delete(`/user-admin/${userId}`);
@@ -69,7 +72,7 @@ export function UserAdminList() {
           >
             <div className="items-left flex flex-col gap-1">
               <p className="w-100 truncate font-semibold">{user.name}</p>
-              <p className="w-40 truncate text-sm text-gray-600">
+              <p className="w-40 truncate text-sm text-muted-foreground">
                 {user.email}
               </p>
             </div>
@@ -80,14 +83,14 @@ export function UserAdminList() {
                 variant="outline"
                 onClick={() => handleEdit(user.id)}
               >
-                <Pencil size={12} className="mr-1" /> Editar
+                <Pencil aria-hidden size={12} className="mr-1" /> Editar
               </Button>
               <Button
                 size="sm"
                 variant="destructive"
-                onClick={() => handleDelete(user.id)}
+                onClick={() => setPendingDeleteId(user.id)}
               >
-                <Trash size={12} className="mr-1" /> Excluir
+                <Trash aria-hidden size={12} className="mr-1" /> Excluir
               </Button>
             </div>
           </div>
@@ -107,6 +110,14 @@ export function UserAdminList() {
           />
         )}
       </Modal>
+
+      <ConfirmDialog
+        open={pendingDeleteId !== null}
+        title="Excluir usuário"
+        description="Tem certeza que deseja excluir este usuário?"
+        onConfirm={confirmDelete}
+        onCancel={() => setPendingDeleteId(null)}
+      />
     </CardContent>
   );
 }

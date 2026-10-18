@@ -34,9 +34,9 @@ export default function ForgotPasswordPage() {
   return (
     <section className="flex min-h-screen flex-col items-center justify-center gap-3">
       <section className="flex w-full max-w-md flex-col gap-4 rounded-md border border-[#71717b67] p-8 px-4">
-        <h2 className="mx-auto text-2xl font-bold text-[#3B38A0]">TryCatch</h2>
+        <h2 className="mx-auto text-2xl font-bold text-primary">TryCatch</h2>
 
-        <p className="text-center text-sm text-zinc-500">
+        <p className="text-center text-sm text-muted-foreground">
           Informe seu e-mail para redefinir sua senha
         </p>
 
@@ -62,7 +62,10 @@ export default function ForgotPasswordPage() {
           </Button>
         </form>
 
-        <Link href="/login" className="text-center text-sm text-zinc-500">
+        <Link
+          href="/login"
+          className="text-center text-sm text-muted-foreground"
+        >
           Voltar para <span className="underline">login</span>
         </Link>
       </section>

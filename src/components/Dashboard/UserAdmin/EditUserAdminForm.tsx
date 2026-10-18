@@ -131,7 +131,7 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
           />
           <Textarea {...register('bio')} placeholder="Bio" />
           {errors.bio && (
-            <p className="text-sm text-red-500">{errors.bio.message}</p>
+            <p className="text-sm text-destructive">{errors.bio.message}</p>
           )}
 
           <div className="space-y-1">
@@ -142,10 +142,12 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
               title="input file"
               onChange={handleAvatarChange}
               disabled={uploadingAvatar}
-              className="block w-full text-sm text-gray-900 file:mr-4 file:rounded-full file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 hover:file:bg-indigo-100"
+              className="block w-full text-sm text-foreground file:mr-4 file:rounded-full file:border-0 file:bg-secondary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-secondary-foreground hover:file:bg-secondary/80"
             />
             {errors.avatar && (
-              <p className="text-xs text-red-500">{errors.avatar.message}</p>
+              <p className="text-xs text-destructive">
+                {errors.avatar.message}
+              </p>
             )}
             {avatarUrl && (
               <Image
@@ -155,19 +157,21 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
               />
             )}
             {uploadingAvatar && (
-              <p className="text-sm text-gray-500">Enviando avatar...</p>
+              <p className="text-sm text-muted-foreground">
+                Enviando avatar...
+              </p>
             )}
           </div>
 
           <div>
-            <label className="text-sm font-medium">Perfil</label>
+            <Label htmlFor="edit-user-role">Perfil</Label>
             <Select
               defaultValue={user.role}
               onValueChange={(value: 'USER' | 'ADMIN' | 'MENTOR') =>
                 setValue('role', value)
               }
             >
-              <SelectTrigger>
+              <SelectTrigger id="edit-user-role">
                 <SelectValue placeholder="Selecione" />
               </SelectTrigger>
               <SelectContent>
@@ -179,7 +183,7 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
               </SelectContent>
             </Select>
             {errors.role && (
-              <p className="text-sm text-red-500">{errors.role.message}</p>
+              <p className="text-sm text-destructive">{errors.role.message}</p>
             )}
           </div>
 

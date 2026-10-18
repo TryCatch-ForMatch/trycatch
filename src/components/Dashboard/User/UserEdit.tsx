@@ -136,7 +136,9 @@ export function UserEdit({ user }: UserEditProps) {
             />
 
             {errors.avatar && (
-              <p className="text-sm text-red-500">{errors.avatar.message}</p>
+              <p className="text-sm text-destructive">
+                {errors.avatar.message}
+              </p>
             )}
           </div>
 
@@ -144,7 +146,7 @@ export function UserEdit({ user }: UserEditProps) {
             <Label>Nome</Label>
             <Input {...register('name')} aria-invalid={!!errors.name} />
             {errors.name && (
-              <p className="text-sm text-red-500">{errors.name.message}</p>
+              <p className="text-sm text-destructive">{errors.name.message}</p>
             )}
           </div>
 
@@ -153,7 +155,9 @@ export function UserEdit({ user }: UserEditProps) {
               <Label>Email</Label>
               <Input type="email" {...register('email')} />
               {errors.email && (
-                <p className="text-sm text-red-500">{errors.email.message}</p>
+                <p className="text-sm text-destructive">
+                  {errors.email.message}
+                </p>
               )}
             </div>
 
@@ -161,7 +165,7 @@ export function UserEdit({ user }: UserEditProps) {
               <Label>Senha (opcional)</Label>
               <Input type="password" {...register('password')} />
               {errors.password && (
-                <p className="text-sm text-red-500">
+                <p className="text-sm text-destructive">
                   {errors.password.message}
                 </p>
               )}
@@ -173,7 +177,7 @@ export function UserEdit({ user }: UserEditProps) {
               <Label>LinkedIn</Label>
               <Input {...register('linkedin')} />
               {errors.linkedin && (
-                <p className="text-sm text-red-500">
+                <p className="text-sm text-destructive">
                   {errors.linkedin.message}
                 </p>
               )}
@@ -182,7 +186,9 @@ export function UserEdit({ user }: UserEditProps) {
               <Label>GitHub</Label>
               <Input {...register('github')} />
               {errors.github && (
-                <p className="text-sm text-red-500">{errors.github.message}</p>
+                <p className="text-sm text-destructive">
+                  {errors.github.message}
+                </p>
               )}
             </div>
           </div>
