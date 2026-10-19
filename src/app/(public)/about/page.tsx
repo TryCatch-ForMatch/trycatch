@@ -1,4 +1,11 @@
+import type { Metadata } from 'next';
 import About from '@/components/layout/About/About';
+
+export const metadata: Metadata = {
+  title: 'Sobre',
+  description:
+    'Conheça a proposta do TryCatch For Match: projetos reais, equipes multidisciplinares e entregas acompanhadas por mentores.',
+};
 
 export default function AboutPage() {
   return (

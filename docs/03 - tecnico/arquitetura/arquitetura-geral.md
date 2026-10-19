@@ -167,13 +167,18 @@ Registradas aqui porque afetam decisão arquitetural, não apenas manutenção.
 | Dívida | Impacto | Ref. |
 |---|---|---|
 | `typescript.ignoreBuildErrors: true` no `next.config.ts` | Build passar não significa que compila; ~120 erros de tipo conhecidos | BUG-01 |
-| `params` como `Promise` no Next 16, ~20 rotas tipadas como síncrono | Rotas quebradas em runtime | BUG-02 |
-| Nenhuma rota usa `select`/`omit` do Prisma | `User` retornado com hash de senha — **falha de segurança ativa** | SEC-03 |
 | Dependências com vulnerabilidade | 10 apontamentos em `npm audit` | SEC-07 |
 | `package-lock.json` só pode ser gerado em Linux | Lockfile de Windows/macOS quebra o CI | Regra 7 |
  
 **Não replicar esses padrões em código novo.** Correção segue o backlog; não
 corrigir por conta própria fora de escopo.
+
+**Resolvidas** (verificado em 17/10/2026):
+
+| Dívida | Resolução | Ref. |
+|---|---|---|
+| `params` tipado como síncrono no Next 16 | Todas as rotas migradas para `await context.params` (PR #713) | BUG-02 |
+| `User` retornado com hash de senha | `omit: { user: { password: true } }` global em `src/lib/prisma.ts` (PR #719). Quem precisa da senha pede com `omit: { password: false }` | SEC-03 |
  
 ---
  
