@@ -1,4 +1,11 @@
+import type { Metadata } from 'next';
 import { InviteRequestForm } from '@/components/form/InviteRequest/InviteRequestForm';
+
+export const metadata: Metadata = {
+  title: 'Solicitar convite',
+  description:
+    'Solicite seu convite para participar do TryCatch For Match como membro ou mentor.',
+};
 
 type InviteRequestPageProps = {
   searchParams?: Promise<{
@@ -23,7 +30,7 @@ export default async function InviteRequestPage({
       <section className="flex flex-1 items-center justify-center px-5 py-10 md:px-7 lg:px-6 xl:px-10">
         <div className="flex w-full max-w-6xl flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
           <header className="flex w-full flex-col gap-3 text-center lg:max-w-xl lg:text-left">
-            <h1 className="py-5 text-3xl font-bold text-[#3B38A0] md:text-4xl">
+            <h1 className="py-5 text-3xl font-bold text-primary-default md:text-4xl">
               Sua jornada começa aqui
             </h1>
 

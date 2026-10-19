@@ -214,6 +214,18 @@ como secret no repositório base.
 > que os demais checks estejam verdes; o Sonar passa a decorar o PR
 > quando o `SONAR_TOKEN` está configurado no repositório base.
 
+#### Quality gate e cobertura
+
+O quality gate do SonarCloud exige, no código novo de cada PR, cobertura
+de pelo menos 80%, confiabilidade A e no máximo 3% de duplicação.
+
+> ⚠️ **Cobertura distorcida (17/10/2026):** o `sonar-project.properties`
+> ainda não declara onde ficam os testes, então os próprios arquivos
+> `*.test.ts(x)` são contados como código a cobrir, sempre com 0%. PRs
+> que adicionam testes têm a porcentagem reduzida. Correção em
+> andamento na issue #740. Até lá, a falha de cobertura do SonarCloud é
+> avaliada pela mantenedora caso a caso.
+
 ### 5.6 Audit Dependencies
 
 Objetivo: bloquear dependências com vulnerabilidades de severidade alta
@@ -324,6 +336,12 @@ Um PR só deve ser considerado pronto para merge quando:
 -   Houver aprovação de revisão, quando aplicável;
 -   A documentação estiver atualizada quando a mudança alterar fluxo,
     regra de negócio ou comportamento visível.
+
+> ℹ️ **Estado atual da proteção da `develop` (17/10/2026):** o GitHub
+> exige 1 aprovação, mas **nenhum check é obrigatório**. O merge não é
+> bloqueado automaticamente quando a CI falha, então a conferência dos
+> checks é feita na revisão. Tornar a CI obrigatória é o objetivo da
+> issue #530.
 
 ------------------------------------------------------------------------
 

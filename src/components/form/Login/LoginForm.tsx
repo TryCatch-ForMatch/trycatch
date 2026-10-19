@@ -5,12 +5,8 @@ import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { toast } from 'sonner';
-
-//import components
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-
-//import icons
 import { Loader2, Eye, EyeClosed } from 'lucide-react';
 
 export function LoginForm() {
@@ -49,9 +45,11 @@ export function LoginForm() {
   }
 
   return (
-    <section className="flex min-h-screen flex-col items-center justify-center gap-3">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-3">
       <section className="flex w-full max-w-md flex-col gap-4 rounded-md border border-[#71717b67] p-8 px-4">
-        <h2 className="mx-auto text-2xl font-bold text-[#3B38A0]">TryCatch</h2>
+        <h1 className="mx-auto text-2xl font-bold text-primary-default">
+          TryCatch
+        </h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
           <Input
@@ -76,16 +74,18 @@ export function LoginForm() {
             <button
               className="absolute bottom-[28%] left-[89%]"
               type="button"
+              aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+              aria-pressed={showPassword}
               onClick={() => setShowPassword((show) => !show)}
             >
-              {showPassword ? <Eye /> : <EyeClosed />}
+              {showPassword ? <Eye aria-hidden /> : <EyeClosed aria-hidden />}
             </button>
           </div>
 
           <div className="text-right">
             <Link
               href="/forgot-password"
-              className="text-xs text-zinc-500 transition-colors hover:text-[#3B38A0]"
+              className="text-xs text-zinc-500 transition-colors hover:text-primary-default"
             >
               Esqueci minha senha
             </Link>
@@ -112,6 +112,6 @@ export function LoginForm() {
           Não tem uma conta ? <span className="underline">Registrar</span>
         </Link>
       </section>
-    </section>
+    </div>
   );
 }

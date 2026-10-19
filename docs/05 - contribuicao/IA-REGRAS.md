@@ -47,8 +47,9 @@ Não é para travar a conversa — é para não deixar passar em silêncio.
 
 ## 2. Dados pessoais
 
-- **Nunca** devolver o objeto `User` do Prisma direto na resposta da API. Ele
-  contém o hash da senha. Use `select` ou `omit` para escolher os campos.
+- **Nunca** devolver o objeto `User` do Prisma direto na resposta da API. Mesmo
+  sem a senha, ele traz e-mail e outros dados pessoais. Use `select` para
+  escolher os campos.
 - **Nunca** registrar em log: senha, hash, token, e-mail completo ou dado pessoal.
   Registre identificadores (`userId`), não conteúdo.
 - Ao criar rota que devolve dados de outra pessoa, pergunte-se: **esta pessoa
@@ -205,10 +206,12 @@ Coisas que já existem no código e podem confundir quem chega:
 
 - **`next.config.ts` tem `typescript.ignoreBuildErrors: true`.** O build passar
   **não** significa que o código compila. Rode `npx tsc --noEmit`.
-- **`params` é `Promise`** no Next 16. Parte das rotas ainda tipa como síncrono.
-  Em código novo, use sempre `const { id } = await context.params`.
-- **Nenhuma rota usa `select`/`omit` do Prisma** ainda, então objetos `User`
-  saem inteiros com o hash da senha. Em código novo, nunca devolva `User` cru.
+- **`params` é `Promise`** no Next 16. Todas as rotas já foram migradas (PR #713);
+  em código novo, use sempre `const { id } = await context.params`.
+- **O Prisma omite a senha de `User` por padrão** (`omit` global em
+  `src/lib/prisma.ts`, PR #719). Se você precisar do hash, como na validação de
+  login, peça com `omit: { password: false }`. Isso **não** dispensa o `select`:
+  o `omit` protege só a senha, e o resto do `User` continua sendo dado pessoal.
 - **O hook de pre-commit** bloqueia `package-lock.json` sem `package.json`, e a
   mensagem manda rodar `git checkout -- package-lock.json`. Se você estiver
   **corrigindo** um lockfile quebrado, esse comando desfaz a sua correção. Pare e

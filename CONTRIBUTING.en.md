@@ -587,6 +587,25 @@ To make sure everyone gets credited, comment on the issue or PR:
 > Replace `@username` with the GitHub username. You can list several
 > contribution types separated by commas (`code`, `doc`, `test`, etc.).
 
+Make the request **after the merge**, so it records a contribution that has
+already landed. The types most used in the project:
+
+| Type | When to use |
+|---|---|
+| `code` | Application code |
+| `test` | Automated tests |
+| `doc` | Documentation |
+| `bug` | Found and reported a bug |
+| `design` | Design, interface or user experience |
+| `a11y` | Accessibility |
+| `review` | Pull request reviews |
+| `ideas` | Ideas and planning |
+| `infra` | Infrastructure, CI and build |
+| `maintenance` | Project maintenance |
+| `security` | Security |
+| `translation` | Translation |
+| `mentoring` | Mentoring |
+
 The bot automatically updates:
 
 - the `CONTRIBUTORS.md` file;
