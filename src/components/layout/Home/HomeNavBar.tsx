@@ -5,6 +5,14 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useEffect, useRef, useState } from 'react';
 
+const navLinks = [
+  { href: '/', label: 'Início' },
+  { href: '/#aboutUs', label: 'Sobre' },
+  { href: '/portfolios', label: 'Portfolios' },
+  { href: '/#FAQ', label: 'Dúvidas' },
+  { href: '/contact', label: 'Contato' },
+];
+
 export function HomeNavBar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -67,31 +75,13 @@ export function HomeNavBar() {
           </Link>
 
           <ul className="hidden items-center gap-6 lg:flex">
-            <li>
-              <Link href="/" onClick={() => setOpen(false)}>
-                Início
-              </Link>
-            </li>
-            <li>
-              <Link href="/#aboutUs" onClick={() => setOpen(false)}>
-                Sobre
-              </Link>
-            </li>
-            <li>
-              <Link href="/portfolios" onClick={() => setOpen(false)}>
-                Portfolios
-              </Link>
-            </li>
-            <li>
-              <Link href="/#FAQ" onClick={() => setOpen(false)}>
-                Dúvidas
-              </Link>
-            </li>
-            <li>
-              <Link href="/contact" onClick={() => setOpen(false)}>
-                Contato
-              </Link>
-            </li>
+            {navLinks.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} onClick={() => setOpen(false)}>
+                  {link.label}
+                </Link>
+              </li>
+            ))}
             <li>
               <Button
                 asChild
@@ -122,21 +112,11 @@ export function HomeNavBar() {
             className="absolute top-full left-0 w-full bg-white/95 shadow-md backdrop-blur-md lg:hidden"
           >
             <ul className="flex flex-col gap-4 px-6 py-6 text-lg">
-              <li onClick={() => setOpen(false)}>
-                <Link href="/">Início</Link>
-              </li>
-              <li onClick={() => setOpen(false)}>
-                <Link href="/#aboutUs">Sobre</Link>
-              </li>
-              <li onClick={() => setOpen(false)}>
-                <Link href="/portfolios">Portfolios</Link>
-              </li>
-              <li onClick={() => setOpen(false)}>
-                <Link href="/#FAQ">Dúvidas</Link>
-              </li>
-              <li onClick={() => setOpen(false)}>
-                <Link href="/contact">Contato</Link>
-              </li>
+              {navLinks.map((link) => (
+                <li key={link.href} onClick={() => setOpen(false)}>
+                  <Link href={link.href}>{link.label}</Link>
+                </li>
+              ))}
               <li onClick={() => setOpen(false)}>
                 <Button
                   asChild
