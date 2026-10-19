@@ -95,7 +95,7 @@ export function HomeNavBar() {
             <li>
               <Button
                 asChild
-                className="rounded-full bg-[#35343C] hover:bg-[#35343C]/90"
+                className="rounded-full bg-gray-400 hover:bg-gray-400/90"
               >
                 <Link href="/login">Login</Link>
               </Button>
@@ -140,7 +140,7 @@ export function HomeNavBar() {
               <li onClick={() => setOpen(false)}>
                 <Button
                   asChild
-                  className="mt-2 rounded-full bg-[#35343C] hover:bg-[#35343C]/90"
+                  className="mt-2 rounded-full bg-gray-400 hover:bg-gray-400/90"
                 >
                   <Link href="/login">Login</Link>
                 </Button>

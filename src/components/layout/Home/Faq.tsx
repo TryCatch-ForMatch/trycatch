@@ -53,7 +53,7 @@ export default function FAQ() {
       className="mt-[150px] scroll-mt-16 sm:mt-[284px] md:mt-[113px] lg:mt-[109px] xl:mt-36 xxl:mt-[199px]"
     >
       <div className="grid grid-cols-4 lg:grid-cols-12">
-        <h2 className="col-span-4 text-[24px] leading-[120%] font-medium text-[#35343C] sm:text-[26px] md:text-[44px] lg:col-start-2 lg:col-end-8 xxl:text-[64px]">
+        <h2 className="col-span-4 text-[24px] leading-[120%] font-medium text-gray-400 sm:text-[26px] md:text-[44px] lg:col-start-2 lg:col-end-8 xxl:text-[64px]">
           O que você precisa <br /> saber
         </h2>
       </div>
@@ -62,13 +62,16 @@ export default function FAQ() {
         <div
           id="faq-resposta-mobile"
           aria-live="polite"
-          className="relative mt-10 flex h-auto flex-col justify-between rounded-2xl bg-[#35343C] px-6 py-8 md:mt-16"
+          className="relative mt-10 flex h-auto flex-col justify-between rounded-2xl bg-gray-400 px-6 py-8 md:mt-16"
         >
           <div className="flex">
-            <p className="text-[14px] leading-[140%] font-medium text-[#D9D9ED] md:text-[16px]">
+            <p className="text-[14px] leading-[140%] font-medium text-primary-light md:text-[16px]">
               {perguntas[ativo].pergunta}
             </p>
-            <MoveUp aria-hidden className="h-5! w-5! stroke-3 text-[#D9D9ED]" />
+            <MoveUp
+              aria-hidden
+              className="h-5! w-5! stroke-3 text-primary-light"
+            />
           </div>
 
           <p className="mt-4 text-[14px] text-white md:text-[16px]">
@@ -100,12 +103,12 @@ export default function FAQ() {
                   onClick={() => setAtivo(i)}
                   aria-expanded={false}
                   aria-controls="faq-resposta-mobile"
-                  className="flex w-full cursor-pointer items-center justify-between rounded-2xl bg-[#D9D9ED] px-6 py-5 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-default"
+                  className="flex w-full cursor-pointer items-center justify-between rounded-2xl bg-primary-light px-6 py-5 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-default"
                 >
-                  <span className="text-[14px] leading-[140%] font-medium text-[#101014] md:text-[16px]">
+                  <span className="text-[14px] leading-[140%] font-medium text-gray-500 md:text-[16px]">
                     {item.pergunta}
                   </span>
-                  <MoveDown aria-hidden className="h-5! w-5! text-[#101014]" />
+                  <MoveDown aria-hidden className="h-5! w-5! text-gray-500" />
                 </button>
               );
             })}
@@ -124,7 +127,9 @@ export default function FAQ() {
                   aria-expanded={ativo === index}
                   aria-controls="faq-resposta-desktop"
                   className={`flex h-full w-full cursor-pointer items-center justify-between rounded-[20px] px-6 py-5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-default xxl:h-[104px] ${
-                    ativo === index ? 'bg-[#35343C] text-white' : 'bg-[#D9D9ED]'
+                    ativo === index
+                      ? 'bg-gray-400 text-white'
+                      : 'bg-primary-light'
                   }`}
                 >
                   <span className="flex h-auto w-[359px] items-center text-[16px] leading-[140%] font-medium xl:w-[417px] xxl:w-[471px] xxl:text-[18px]">
@@ -145,7 +150,7 @@ export default function FAQ() {
             <div
               id="faq-resposta-desktop"
               aria-live="polite"
-              className="relative flex min-h-[360px] flex-col justify-between rounded-[28px] bg-[#35343C] px-10 py-10 xl:min-h-[420px] xxl:min-h-[520px]"
+              className="relative flex min-h-[360px] flex-col justify-between rounded-[28px] bg-gray-400 px-10 py-10 xl:min-h-[420px] xxl:min-h-[520px]"
             >
               <Image
                 src="/icon_faq_1.svg"

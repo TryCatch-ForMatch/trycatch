@@ -11,12 +11,12 @@ export default function About() {
         <div className="mx-auto max-w-[1280px] px-5 md:px-8 lg:px-10">
           <h1
             id="about-intro-title"
-            className="text-[26px] leading-[120%] font-medium text-[#35343C] md:text-[44px] xxl:text-[64px]"
+            className="text-[26px] leading-[120%] font-medium text-gray-400 md:text-[44px] xxl:text-[64px]"
           >
             Sobre nossa rede colaborativa
           </h1>
 
-          <p className="mt-6 max-w-[720px] text-[14px] leading-[140%] text-[#5C5C65] md:text-[16px] xxl:text-[18px]">
+          <p className="mt-6 max-w-[720px] text-[14px] leading-[140%] text-gray-300 md:text-[16px] xxl:text-[18px]">
             O TryCatch 4Match é uma rede colaborativa criada para conectar
             desenvolvedores a projetos reais, promovendo aprendizado prático,
             troca de conhecimento e desenvolvimento de soluções digitais em
@@ -37,12 +37,12 @@ export default function About() {
         <div className="mx-auto max-w-[1280px] px-5 md:px-8 lg:px-10">
           <h2
             id="projetos-title"
-            className="text-[22px] font-medium text-[#35343C] md:text-[32px] xxl:text-[48px]"
+            className="text-[22px] font-medium text-gray-400 md:text-[32px] xxl:text-[48px]"
           >
             Projetos que ganham equipe
           </h2>
 
-          <p className="mt-6 max-w-[860px] text-[14px] leading-[140%] text-[#5C5C65] md:text-[16px] xxl:text-[18px]">
+          <p className="mt-6 max-w-[860px] text-[14px] leading-[140%] text-gray-300 md:text-[16px] xxl:text-[18px]">
             O TryCatch 4Match recebe projetos de diferentes naturezas, desde
             iniciativas educacionais até projetos profissionais. Pessoas ou
             empresas podem cadastrar projetos informando objetivos, prazos,
@@ -53,7 +53,7 @@ export default function About() {
           </p>
           <br />
 
-          <ul className="mt-4 list-disc pl-5 text-[#5C5C65]">
+          <ul className="mt-4 list-disc pl-5 text-gray-300">
             <li>
               <Link
                 href="/dashboard/team-projects/new"
@@ -80,12 +80,12 @@ export default function About() {
         <div className="mx-auto max-w-[1280px] px-5 md:px-8 lg:px-10">
           <h2
             id="equipes-title"
-            className="text-[22px] font-medium text-[#35343C] md:text-[32px] xxl:text-[48px]"
+            className="text-[22px] font-medium text-gray-400 md:text-[32px] xxl:text-[48px]"
           >
             Colaboração por habilidades
           </h2>
 
-          <p className="mt-6 max-w-[860px] text-[14px] leading-[140%] text-[#5C5C65] md:text-[16px] xxl:text-[18px]">
+          <p className="mt-6 max-w-[860px] text-[14px] leading-[140%] text-gray-300 md:text-[16px] xxl:text-[18px]">
             Os desenvolvedores podem se candidatar a projetos de acordo com suas
             habilidades, interesses e disponibilidade. As equipes se formam
             considerando as necessidades do projeto e as skills declaradas pelos
@@ -100,7 +100,7 @@ export default function About() {
           </p>
           <br />
 
-          <ul className="mt-4 list-disc pl-5 text-[#5C5C65]">
+          <ul className="mt-4 list-disc pl-5 text-gray-300">
             <li>
               <Link
                 href="/invite-request"
@@ -130,12 +130,12 @@ export default function About() {
         <div className="mx-auto max-w-[1280px] px-5 md:px-8 lg:px-10">
           <h2
             id="entrega-title"
-            className="text-[22px] font-medium text-[#35343C] md:text-[32px] xxl:text-[48px]"
+            className="text-[22px] font-medium text-gray-400 md:text-[32px] xxl:text-[48px]"
           >
             Da ideia até a entrega final
           </h2>
 
-          <p className="mt-6 max-w-[860px] text-[14px] leading-[140%] text-[#5C5C65] md:text-[16px] xxl:text-[18px]">
+          <p className="mt-6 max-w-[860px] text-[14px] leading-[140%] text-gray-300 md:text-[16px] xxl:text-[18px]">
             Os projetos no TryCatch 4Match seguem etapas de planejamento,
             execução e entrega adequadas ao seu contexto. Cada iniciativa é
             organizada para garantir clareza de objetivos, divisão de
@@ -148,7 +148,7 @@ export default function About() {
           </p>
           <br />
 
-          <ul className="mt-4 list-disc pl-5 text-[#5C5C65]">
+          <ul className="mt-4 list-disc pl-5 text-gray-300">
             <li>
               <Link
                 href="/dashboard/team-projects/new"
