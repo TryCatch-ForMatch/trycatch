@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { Mail, Wrench, Layers, Users, Folders } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CountCard } from '@/components/Dashboard/PainelCards';
@@ -7,6 +8,7 @@ import TopProjectSkillsChart from '@/components/Dashboard/Charts/TopProjectSkill
 import ProjectsStatusChart from '@/components/Dashboard/Charts/ProjectsStatusChart';
 import UsersGrowthChart from '@/components/Dashboard/Charts/UsersGrowthChart';
 import InviteUsageChart from '@/components/Dashboard/Charts/InviteUsageChart';
+import { checkAuth } from '@/lib/check-auth';
 import { getAdminCounts, getAdminMetrics } from '@/lib/admin-metrics';
 
 const adminLinks = [
@@ -26,6 +28,12 @@ const adminLinks = [
 ];
 
 export default async function AdminPage() {
+  const auth = await checkAuth({ requireAdmin: true });
+
+  if (!auth.authorized) {
+    redirect('/dashboard');
+  }
+
   const [counts, metrics] = await Promise.all([
     getAdminCounts(),
     getAdminMetrics(),

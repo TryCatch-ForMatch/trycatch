@@ -92,6 +92,7 @@ async function getStacksInProjects(): Promise<StackCount[]> {
 async function getUsersGrowthByMonth(): Promise<UsersGrowthEntry[]> {
   const users = await prisma.user.findMany({
     select: { createdAt: true, role: true },
+    orderBy: { createdAt: 'asc' },
   });
   const allRoles = Object.values(ROLES);
   const byMonth: Record<string, Record<string, number>> = {};
@@ -113,6 +114,7 @@ async function getUsersGrowthByMonth(): Promise<UsersGrowthEntry[]> {
 async function getProjectsByMonth(): Promise<ProjectsByMonthEntry[]> {
   const projects = await prisma.project.findMany({
     select: { createdAt: true },
+    orderBy: { createdAt: 'asc' },
   });
   const byMonth: Record<string, number> = {};
 
