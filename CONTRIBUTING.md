@@ -240,6 +240,28 @@ Ele fica **só na sua máquina** — está no `.gitignore`, como o `.env`.
   isso acontecer, leia o alerta — em geral é sobre segurança ou dados de pessoas
   reais.
 
+### 🙋 Uma pessoa por trás de cada contribuição
+
+Usar IA para escrever código, entender um erro ou montar a descrição do PR é
+normal aqui, inclusive no seu primeiro PR. A gente pede só uma coisa: **que
+exista uma pessoa por trás da contribuição**, alguém que:
+
+- pediu a issue e foi atribuída a ela;
+- entende o que está enviando, mesmo que a IA tenha escrito boa parte;
+- responde à revisão e faz os ajustes.
+
+Você não precisa saber tudo. Não entendeu um trecho que a IA gerou? Pergunte a
+ela, ou pergunte no próprio PR. Escrever "usei IA nesta parte e não entendi
+isto" é uma ótima forma de aprender, e ninguém vai te julgar por isso.
+
+O que **não** aceitamos são PRs abertos por **agentes de IA autônomos**, sem uma
+pessoa responsável. As issues deste projeto, principalmente as
+`good first issue`, existem para alguém aprender fazendo. Um PR sem ninguém por
+trás ocupa essa vaga sem que ninguém aprenda.
+
+Nesses casos, pedimos no PR que uma pessoa se identifique. Se ninguém se
+apresentar, o PR é fechado e a issue volta a ficar disponível.
+
 ### Documentos, se quiser se aprofundar
 
 | Arquivo | Conteúdo |

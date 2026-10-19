@@ -253,6 +253,28 @@ to work. It stays **on your machine only** — it's in `.gitignore`, just like
   for it. When that happens, read the warning — it's usually about security or
   real people's data.
 
+### 🙋 A person behind every contribution
+
+Using AI to write code, understand an error or draft the PR description is
+normal here, including on your first PR. We ask for just one thing: **that there
+is a person behind the contribution**, someone who:
+
+- asked for the issue and was assigned to it;
+- understands what they are submitting, even if the AI wrote a good part of it;
+- answers the review and makes the changes.
+
+You don't need to know everything. Didn't understand a piece the AI generated?
+Ask the AI, or ask in the PR itself. Writing "I used AI for this part and didn't
+understand this" is a great way to learn, and nobody will judge you for it.
+
+What we **don't** accept are PRs opened by **autonomous AI agents** with no
+person responsible for them. The issues in this project, especially the
+`good first issue` ones, exist so that someone can learn by doing them. A PR
+with nobody behind it takes that spot without anyone learning.
+
+In those cases, we ask in the PR for a person to identify themselves. If nobody
+does, the PR is closed and the issue becomes available again.
+
 ### Documents, if you want to dig deeper
 
 These are written in Portuguese. Your AI assistant can translate them for you,
