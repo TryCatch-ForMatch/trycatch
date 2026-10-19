@@ -1,6 +1,47 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
+interface FooterLink {
+  href: string;
+  label: string;
+  isExternal?: boolean;
+}
+
+interface FooterColumn {
+  title: string;
+  links: FooterLink[];
+}
+
+const footerColumns: FooterColumn[] = [
+  {
+    title: 'Navegue',
+    links: [
+      { href: '/', label: 'Início' },
+      { href: '/#aboutUs', label: 'Sobre' },
+      { href: '/portfolios', label: 'Portfólios' },
+      { href: '/#FAQ', label: 'Dúvidas' },
+    ],
+  },
+  {
+    title: 'Contato',
+    links: [
+      {
+        href: 'https://www.linkedin.com/company/trycatch-app',
+        label: 'LinkedIn',
+        isExternal: true,
+      },
+      { href: '/contact', label: 'Fale Conosco' },
+    ],
+  },
+  {
+    title: 'Institucional',
+    links: [
+      { href: '/privacy', label: 'Política de Privacidade' },
+      { href: '/terms', label: 'Termos de Uso' },
+    ],
+  },
+];
+
 export default function Footer() {
   return (
     <footer className="mt-16 pb-6 md:mt-28 lg:mt-[121px] xl:mt-[145px] xxl:mt-[202px]">
@@ -24,82 +65,30 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-24">
-            <div className="flex flex-col gap-4">
-              <h4 className="text-[16px] font-medium text-gray-400 md:text-[18px]">
-                Navegue
-              </h4>
+            {footerColumns.map((column) => (
+              <div key={column.title} className="flex flex-col gap-4">
+                <h4 className="text-[16px] font-medium text-gray-400 md:text-[18px]">
+                  {column.title}
+                </h4>
 
-              <ul className="flex flex-col gap-2 text-[14px] text-gray-300 md:text-[16px]">
-                <li>
-                  <Link href="/" className="hover:text-gray-400">
-                    Início
-                  </Link>
-                </li>
-
-                <li>
-                  <Link href="/#aboutUs" className="hover:text-gray-400">
-                    Sobre
-                  </Link>
-                </li>
-
-                <li>
-                  <Link href="/portfolios" className="hover:text-gray-400">
-                    Portfólios
-                  </Link>
-                </li>
-
-                <li>
-                  <Link href="/#FAQ" className="hover:text-gray-400">
-                    Dúvidas
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div className="flex flex-col gap-4">
-              <h4 className="text-[16px] font-medium text-gray-400 md:text-[18px]">
-                Contato
-              </h4>
-
-              <ul className="flex flex-col gap-2 text-[14px] text-gray-300 md:text-[16px]">
-                <li>
-                  <Link
-                    href="https://www.linkedin.com/company/trycatch-app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-gray-400"
-                  >
-                    LinkedIn
-                  </Link>
-                </li>
-
-                <li>
-                  <Link href="/contact" className="hover:text-gray-400">
-                    Fale Conosco
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div className="flex flex-col gap-4">
-              <h4 className="text-[16px] font-medium text-gray-400 md:text-[18px]">
-                Institucional
-              </h4>
-
-              <ul className="flex flex-col gap-2 text-[14px] text-gray-300 md:text-[16px]">
-                <li>
-                  <Link href="/privacy" className="hover:text-gray-400">
-                    Política de Privacidade
-                  </Link>
-                </li>
-
-                <li>
-                  <Link href="/terms" className="hover:text-gray-400">
-                    Termos de Uso
-                  </Link>
-                </li>
-              </ul>
-            </div>
+                <ul className="flex flex-col gap-2 text-[14px] text-gray-300 md:text-[16px]">
+                  {column.links.map((link) => (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        {...(link.isExternal && {
+                          target: '_blank',
+                          rel: 'noopener noreferrer',
+                        })}
+                        className="hover:text-gray-400"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
 
