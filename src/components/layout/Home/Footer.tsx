@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <footer className="mt-16 pb-6 md:mt-28 lg:mt-[121px] xl:mt-[145px] xxl:mt-[202px]">
       <div className="mx-auto max-w-[1440px] px-8 md:px-12 lg:px-16 xl:px-20">
-        <div className="flex flex-col gap-12 border-t border-[#EAEAEB] pt-12 lg:flex-row lg:items-start lg:justify-between lg:gap-24">
+        <div className="flex flex-col gap-12 border-t border-gray-100 pt-12 lg:flex-row lg:items-start lg:justify-between lg:gap-24">
           <div>
             <div className="flex max-w-[320px] flex-col items-center text-center">
               <div className="relative mb-5 h-20 w-52">
@@ -17,7 +17,7 @@ export default function Footer() {
                 />
               </div>
 
-              <p className="text-[16px] leading-[160%] text-[#5C5C65] md:text-[18px] xxl:text-[20px]">
+              <p className="text-[16px] leading-[160%] text-gray-300 md:text-[18px] xxl:text-[20px]">
                 Transformando aprendizado em experiência prática.
               </p>
             </div>
@@ -25,31 +25,31 @@ export default function Footer() {
 
           <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-24">
             <div className="flex flex-col gap-4">
-              <h4 className="text-[16px] font-medium text-[#35343C] md:text-[18px]">
+              <h4 className="text-[16px] font-medium text-gray-400 md:text-[18px]">
                 Navegue
               </h4>
 
-              <ul className="flex flex-col gap-2 text-[14px] text-[#5C5C65] md:text-[16px]">
+              <ul className="flex flex-col gap-2 text-[14px] text-gray-300 md:text-[16px]">
                 <li>
-                  <Link href="/" className="hover:text-[#35343C]">
+                  <Link href="/" className="hover:text-gray-400">
                     Início
                   </Link>
                 </li>
 
                 <li>
-                  <Link href="/#aboutUs" className="hover:text-[#35343C]">
+                  <Link href="/#aboutUs" className="hover:text-gray-400">
                     Sobre
                   </Link>
                 </li>
 
                 <li>
-                  <Link href="/portfolios" className="hover:text-[#35343C]">
+                  <Link href="/portfolios" className="hover:text-gray-400">
                     Portfólios
                   </Link>
                 </li>
 
                 <li>
-                  <Link href="/#FAQ" className="hover:text-[#35343C]">
+                  <Link href="/#FAQ" className="hover:text-gray-400">
                     Dúvidas
                   </Link>
                 </li>
@@ -57,24 +57,24 @@ export default function Footer() {
             </div>
 
             <div className="flex flex-col gap-4">
-              <h4 className="text-[16px] font-medium text-[#35343C] md:text-[18px]">
+              <h4 className="text-[16px] font-medium text-gray-400 md:text-[18px]">
                 Contato
               </h4>
 
-              <ul className="flex flex-col gap-2 text-[14px] text-[#5C5C65] md:text-[16px]">
+              <ul className="flex flex-col gap-2 text-[14px] text-gray-300 md:text-[16px]">
                 <li>
                   <Link
                     href="https://www.linkedin.com/company/trycatch-app"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-[#35343C]"
+                    className="hover:text-gray-400"
                   >
                     LinkedIn
                   </Link>
                 </li>
 
                 <li>
-                  <Link href="/contact" className="hover:text-[#35343C]">
+                  <Link href="/contact" className="hover:text-gray-400">
                     Fale Conosco
                   </Link>
                 </li>
@@ -82,19 +82,19 @@ export default function Footer() {
             </div>
 
             <div className="flex flex-col gap-4">
-              <h4 className="text-[16px] font-medium text-[#35343C] md:text-[18px]">
+              <h4 className="text-[16px] font-medium text-gray-400 md:text-[18px]">
                 Institucional
               </h4>
 
-              <ul className="flex flex-col gap-2 text-[14px] text-[#5C5C65] md:text-[16px]">
+              <ul className="flex flex-col gap-2 text-[14px] text-gray-300 md:text-[16px]">
                 <li>
-                  <Link href="/privacy" className="hover:text-[#35343C]">
+                  <Link href="/privacy" className="hover:text-gray-400">
                     Política de Privacidade
                   </Link>
                 </li>
 
                 <li>
-                  <Link href="/terms" className="hover:text-[#35343C]">
+                  <Link href="/terms" className="hover:text-gray-400">
                     Termos de Uso
                   </Link>
                 </li>
@@ -103,8 +103,8 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-4 border-t border-[#EAEAEB] pt-8 md:flex-row md:items-center md:justify-between">
-          <p className="text-[14px] text-[#5C5C65] md:text-[16px]">
+        <div className="mt-12 flex flex-col gap-4 border-t border-gray-100 pt-8 md:flex-row md:items-center md:justify-between">
+          <p className="text-[14px] text-gray-300 md:text-[16px]">
             © 2025 TryCatch® 4Match. Todos os direitos reservados.
           </p>
 
@@ -112,7 +112,7 @@ export default function Footer() {
             href="https://eduardopaiva.framer.ai/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[14px] text-[#5C5C65] hover:text-[#35343C] md:text-[16px]"
+            className="text-[14px] text-gray-300 hover:text-gray-400 md:text-[16px]"
           >
             Design by Eduardo Paiva
           </Link>
