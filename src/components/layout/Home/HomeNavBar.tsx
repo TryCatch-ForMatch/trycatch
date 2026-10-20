@@ -3,29 +3,25 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { useEffect, useState } from 'react';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export function HomeNavBar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  // Referência ao botão do menu mobile (controle de foco)
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-
-  // Referência ao container do menu mobile (controle de foco e navegação)
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const wasOpenRef = useRef(false);
 
-  // Move o foco para o menu ao abrir e retorna para o botão ao fechar (acessibilidade)
   useEffect(() => {
     if (open) {
       const firstLink = menuRef.current?.querySelector('a, button');
       (firstLink as HTMLElement | null)?.focus();
-    } else {
+    } else if (wasOpenRef.current) {
       buttonRef.current?.focus();
     }
+    wasOpenRef.current = open;
   }, [open]);
 
-  // Permite fechar o menu mobile ao pressionar ESC (navegação por teclado)
   useEffect(() => {
     if (!open) return;
 
@@ -39,10 +35,9 @@ export function HomeNavBar() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [open]);
 
-  // Detecta scroll para alterar o estilo da navbar
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -71,7 +66,6 @@ export function HomeNavBar() {
             </div>
           </Link>
 
-          {/* DESKTOP */}
           <ul className="hidden items-center gap-6 lg:flex">
             <li>
               <Link href="/" onClick={() => setOpen(false)}>
@@ -101,14 +95,13 @@ export function HomeNavBar() {
             <li>
               <Button
                 asChild
-                className="rounded-full bg-[#35343C] hover:bg-[#35343C]/90"
+                className="rounded-full bg-gray-400 hover:bg-gray-400/90"
               >
                 <Link href="/login">Login</Link>
               </Button>
             </li>
           </ul>
 
-          {/* MOBILE BUTTON */}
           <button
             ref={buttonRef}
             className="p-2 lg:hidden"
@@ -121,7 +114,6 @@ export function HomeNavBar() {
           </button>
         </div>
 
-        {/* MOBILE MENU */}
         {open && (
           <div
             ref={menuRef}
@@ -148,7 +140,7 @@ export function HomeNavBar() {
               <li onClick={() => setOpen(false)}>
                 <Button
                   asChild
-                  className="mt-2 rounded-full bg-[#35343C] hover:bg-[#35343C]/90"
+                  className="mt-2 rounded-full bg-gray-400 hover:bg-gray-400/90"
                 >
                   <Link href="/login">Login</Link>
                 </Button>

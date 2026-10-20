@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/card';
 
 export const metadata: Metadata = {
-  title: 'Como participar do TryCatch',
+  title: 'Como participar',
   description:
     'Conheça as formas de participar do TryCatch contribuindo com a plataforma, cadastrando projetos, participando como membro ou atuando como mentor.',
 };
@@ -100,33 +100,33 @@ export default function HowToJoinPage() {
     <main className="px-5 py-5 md:px-7 lg:px-6 xl:px-10 xxl:px-[39px]">
       <section
         aria-labelledby="how-to-join-title"
-        className="mx-auto max-w-[1280px] rounded-2xl bg-[#EAEAEB] px-6 py-12 md:px-10 md:py-16 lg:px-16 lg:py-20 xxl:px-24 xxl:py-28"
+        className="mx-auto max-w-[1280px] rounded-2xl bg-gray-100 px-6 py-12 md:px-10 md:py-16 lg:px-16 lg:py-20 xxl:px-24 xxl:py-28"
       >
         <div className="max-w-[820px]">
-          <p className="text-[12px] leading-[140%] font-medium tracking-normal text-[#3B38A0] md:text-[14px] xxl:text-[16px]">
+          <p className="text-[12px] leading-[140%] font-medium tracking-normal text-primary-default md:text-[14px] xxl:text-[16px]">
             Jornada de entrada
           </p>
 
           <h1
             id="how-to-join-title"
-            className="mt-4 text-[30px] leading-[120%] font-medium tracking-normal text-[#35343C] md:text-[48px] lg:text-[56px] xxl:text-[72px]"
+            className="mt-4 text-[30px] leading-[120%] font-medium tracking-normal text-gray-400 md:text-[48px] lg:text-[56px] xxl:text-[72px]"
           >
             Como participar do TryCatch
           </h1>
 
-          <p className="mt-6 max-w-[760px] text-[16px] leading-[150%] text-[#5C5C65] md:text-[18px] xxl:text-[22px]">
+          <p className="mt-6 max-w-[760px] text-[16px] leading-[150%] text-gray-300 md:text-[18px] xxl:text-[22px]">
             Escolha como deseja contribuir e desenvolva experiência prática com
             organização, processos e colaboração.
           </p>
 
           <div className="mt-6 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
             <div className="max-w-[600px]">
-              <p className="flex items-center gap-2 text-[13px] leading-[140%] font-medium text-[#3B38A0] md:text-[15px]">
+              <p className="flex items-center gap-2 text-[13px] leading-[140%] font-medium text-primary-default md:text-[15px]">
                 <UserPlus className="h-4 w-4" aria-hidden />
                 Entrada por convite
               </p>
 
-              <p className="mt-2 text-[14px] leading-[150%] text-[#5C5C65] md:text-[16px] xxl:text-[18px]">
+              <p className="mt-2 text-[14px] leading-[150%] text-gray-300 md:text-[16px] xxl:text-[18px]">
                 O acesso à plataforma acontece por convite. Envie sua
                 solicitação e escolha o perfil de participação mais adequado.
               </p>
@@ -134,7 +134,7 @@ export default function HowToJoinPage() {
 
             <Button
               asChild
-              className="h-auto min-h-12 w-full rounded-full bg-[#3B38A0] px-5 py-3 text-[14px] leading-[120%] text-white hover:bg-[#3B38A0]/90 md:w-auto xxl:text-[16px]"
+              className="h-auto min-h-12 w-full rounded-full bg-primary-default px-5 py-3 text-[14px] leading-[120%] text-white hover:bg-primary-default/90 md:w-auto xxl:text-[16px]"
             >
               <Link href="/invite-request">
                 <span>Solicitar convite</span>
@@ -143,20 +143,20 @@ export default function HowToJoinPage() {
             </Button>
           </div>
 
-          <p className="mt-5 max-w-[760px] text-[14px] leading-[150%] text-[#5C5C65] md:text-[16px] xxl:text-[18px]">
+          <p className="mt-5 max-w-[760px] text-[14px] leading-[150%] text-gray-300 md:text-[16px] xxl:text-[18px]">
             O TryCatch reúne diferentes formas de participação para quem deseja
             contribuir com a plataforma, propor projetos, integrar equipes ou
             apoiar outras pessoas como mentor.
           </p>
 
-          <div className="mt-8 border-t border-[#D9D9ED] pt-8 md:mt-10 md:pt-10">
+          <div className="mt-8 border-t border-primary-light pt-8 md:mt-10 md:pt-10">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-[680px]">
-                <h2 className="text-[22px] leading-[120%] font-medium tracking-normal text-[#35343C] md:text-[30px] xxl:text-[40px]">
+                <h2 className="text-[22px] leading-[120%] font-medium tracking-normal text-gray-400 md:text-[30px] xxl:text-[40px]">
                   Principais perfis de participação
                 </h2>
 
-                <p className="mt-4 text-[14px] leading-[150%] text-[#5C5C65] md:text-[16px] xxl:text-[18px]">
+                <p className="mt-4 text-[14px] leading-[150%] text-gray-300 md:text-[16px] xxl:text-[18px]">
                   Você pode entrar como membro, mentor, colaborador da
                   plataforma ou autor de projeto. A solicitação de convite ajuda
                   a comunidade a entender seu melhor caminho de entrada.
@@ -168,7 +168,7 @@ export default function HowToJoinPage() {
               {entryProfiles.map((profile) => (
                 <li
                   key={profile}
-                  className="rounded-full bg-white px-4 py-3 text-center text-[13px] leading-[120%] font-medium text-[#35343C] ring-1 ring-[#D9D9ED] md:text-[14px]"
+                  className="rounded-full bg-white px-4 py-3 text-center text-[13px] leading-[120%] font-medium text-gray-400 ring-1 ring-primary-light md:text-[14px]"
                 >
                   {profile}
                 </li>
@@ -186,12 +186,12 @@ export default function HowToJoinPage() {
           <div className="lg:col-start-2 lg:col-end-8">
             <h2
               id="choose-path-title"
-              className="text-[26px] leading-[120%] font-medium tracking-normal text-[#35343C] md:text-[44px] xxl:text-[64px]"
+              className="text-[26px] leading-[120%] font-medium tracking-normal text-gray-400 md:text-[44px] xxl:text-[64px]"
             >
               Escolha seu caminho
             </h2>
 
-            <p className="mt-5 max-w-[720px] text-[14px] leading-[150%] text-[#5C5C65] md:text-[16px] xxl:text-[18px]">
+            <p className="mt-5 max-w-[720px] text-[14px] leading-[150%] text-gray-300 md:text-[16px] xxl:text-[18px]">
               Cada forma de participação foi pensada para um momento diferente
               da jornada. Compare as opções e avance pelo caminho mais alinhado
               ao que você deseja construir, aprender ou apoiar.
@@ -206,23 +206,23 @@ export default function HowToJoinPage() {
             return (
               <Card
                 key={path.id}
-                className="min-h-[360px] justify-between rounded-2xl border-0 bg-white px-0 py-0 shadow-none ring-1 ring-[#EAEAEB] transition-colors hover:ring-[#D9D9ED]"
+                className="min-h-[360px] justify-between rounded-2xl border-0 bg-white px-0 py-0 shadow-none ring-1 ring-gray-100 transition-colors hover:ring-primary-light"
               >
                 <CardHeader className="gap-5 px-6 pt-6">
                   <span
                     aria-hidden
-                    className="flex h-12 w-12 items-center justify-center rounded-full bg-[#D9D9ED] text-[#3B38A0]"
+                    className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-light text-primary-default"
                   >
                     <Icon className="h-6 w-6" />
                   </span>
 
-                  <CardTitle className="text-[20px] leading-[120%] font-medium tracking-normal text-[#35343C] xxl:text-[24px]">
+                  <CardTitle className="text-[20px] leading-[120%] font-medium tracking-normal text-gray-400 xxl:text-[24px]">
                     {path.title}
                   </CardTitle>
                 </CardHeader>
 
                 <CardContent className="max-h-none overflow-visible px-6">
-                  <p className="text-[14px] leading-[150%] text-[#5C5C65] md:text-[15px] xxl:text-[16px]">
+                  <p className="text-[14px] leading-[150%] text-gray-300 md:text-[15px] xxl:text-[16px]">
                     {path.description}
                   </p>
                 </CardContent>
@@ -230,7 +230,7 @@ export default function HowToJoinPage() {
                 <CardFooter className="px-6 pb-6">
                   <Button
                     asChild
-                    className="h-auto min-h-11 w-full rounded-full bg-[#35343C] px-4 py-3 text-[13px] leading-[120%] text-white hover:bg-[#35343C]/90 xxl:text-[15px]"
+                    className="h-auto min-h-11 w-full rounded-full bg-gray-400 px-4 py-3 text-[13px] leading-[120%] text-white hover:bg-gray-400/90 xxl:text-[15px]"
                   >
                     <Link
                       href={path.href}
@@ -257,12 +257,12 @@ export default function HowToJoinPage() {
           <div className="lg:col-start-2 lg:col-end-6">
             <h2
               id="details-title"
-              className="text-[26px] leading-[120%] font-medium tracking-normal text-[#35343C] md:text-[44px] xxl:text-[64px]"
+              className="text-[26px] leading-[120%] font-medium tracking-normal text-gray-400 md:text-[44px] xxl:text-[64px]"
             >
               Entenda o que esperar de cada caminho
             </h2>
 
-            <p className="mt-5 text-[14px] leading-[150%] text-[#5C5C65] md:text-[16px] xxl:text-[18px]">
+            <p className="mt-5 text-[14px] leading-[150%] text-gray-300 md:text-[16px] xxl:text-[18px]">
               As formas de participação indicam responsabilidades diferentes
               dentro da plataforma. Escolha uma forma de entrada alinhada ao seu
               momento atual e ao tipo de experiência que deseja desenvolver.
@@ -282,21 +282,21 @@ export default function HowToJoinPage() {
                   <div className="flex items-start gap-4">
                     <span
                       aria-hidden
-                      className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#3B38A0] text-white"
+                      className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-default text-white"
                     >
                       <Icon className="h-5 w-5" />
                     </span>
 
                     <div>
-                      <h3 className="text-[20px] leading-[120%] font-medium tracking-normal text-[#35343C] md:text-[24px] xxl:text-[30px]">
+                      <h3 className="text-[20px] leading-[120%] font-medium tracking-normal text-gray-400 md:text-[24px] xxl:text-[30px]">
                         {path.title}
                       </h3>
 
-                      <p className="mt-3 text-[14px] leading-[150%] text-[#5C5C65] md:text-[16px]">
+                      <p className="mt-3 text-[14px] leading-[150%] text-gray-300 md:text-[16px]">
                         {path.detail}
                       </p>
 
-                      <p className="mt-3 text-[14px] leading-[150%] text-[#5C5C65] md:text-[16px]">
+                      <p className="mt-3 text-[14px] leading-[150%] text-gray-300 md:text-[16px]">
                         {path.expectation}
                       </p>
                     </div>
@@ -312,15 +312,15 @@ export default function HowToJoinPage() {
         aria-labelledby="future-faq-title"
         className="mx-auto mt-16 max-w-[1280px] md:mt-24 xxl:mt-32"
       >
-        <div className="rounded-2xl bg-[#D9D9ED] px-6 py-8 md:px-10 md:py-10 lg:px-16">
+        <div className="rounded-2xl bg-primary-light px-6 py-8 md:px-10 md:py-10 lg:px-16">
           <h2
             id="future-faq-title"
-            className="text-[22px] leading-[120%] font-medium tracking-normal text-[#35343C] md:text-[32px] xxl:text-[44px]"
+            className="text-[22px] leading-[120%] font-medium tracking-normal text-gray-400 md:text-[32px] xxl:text-[44px]"
           >
             Dúvidas frequentes
           </h2>
 
-          <p className="mt-4 max-w-[760px] text-[14px] leading-[150%] text-[#5C5C65] md:text-[16px] xxl:text-[18px]">
+          <p className="mt-4 max-w-[760px] text-[14px] leading-[150%] text-gray-300 md:text-[16px] xxl:text-[18px]">
             Esta página está preparada para receber uma seção de perguntas
             frequentes sobre convites, projetos, participação como membro e
             atuação como mentor conforme a jornada evoluir.
