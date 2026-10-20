@@ -6,8 +6,16 @@ import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
+import { Label } from '@/components/ui/label';
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from '@/components/ui/input-group';
 import { Loader2, Eye, EyeClosed } from 'lucide-react';
+import { Card } from '@/components/ui/card';
 
 export function LoginForm() {
   const router = useRouter();
@@ -46,13 +54,13 @@ export function LoginForm() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-3">
-      <section className="flex w-full max-w-md flex-col gap-4 rounded-md border border-[#71717b67] p-8 px-4">
+      <Card className="w-full max-w-md gap-4 px-4 py-8">
         <h1 className="mx-auto text-2xl font-bold text-primary-default">
           TryCatch
         </h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-          <Input
+          <InputField
             label="Email"
             name="email"
             type="email"
@@ -61,31 +69,41 @@ export function LoginForm() {
             placeholder="Seu email"
             required
           />
-          <div className="relative">
-            <Input
-              label="Senha"
-              name="password"
-              type={showPassword ? 'text' : 'password'}
-              value={form.password}
-              onChange={handleChange}
-              placeholder="Sua senha"
-              required
-            />
-            <button
-              className="absolute bottom-[28%] left-[89%]"
-              type="button"
-              aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-              aria-pressed={showPassword}
-              onClick={() => setShowPassword((show) => !show)}
-            >
-              {showPassword ? <Eye aria-hidden /> : <EyeClosed aria-hidden />}
-            </button>
+          <div className="mb-4">
+            <Label htmlFor="login-password" className="mb-1 block leading-5">
+              Senha
+            </Label>
+            <InputGroup>
+              <InputGroupInput
+                id="login-password"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                value={form.password}
+                onChange={handleChange}
+                placeholder="Sua senha"
+                required
+              />
+              <InputGroupAddon align="inline-end">
+                <InputGroupButton
+                  size="icon-xs"
+                  aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                  aria-pressed={showPassword}
+                  onClick={() => setShowPassword((show) => !show)}
+                >
+                  {showPassword ? (
+                    <Eye aria-hidden />
+                  ) : (
+                    <EyeClosed aria-hidden />
+                  )}
+                </InputGroupButton>
+              </InputGroupAddon>
+            </InputGroup>
           </div>
 
           <div className="text-right">
             <Link
               href="/forgot-password"
-              className="text-xs text-zinc-500 transition-colors hover:text-primary-default"
+              className="text-xs text-muted-foreground transition-colors hover:text-primary-default"
             >
               Esqueci minha senha
             </Link>
@@ -98,7 +116,7 @@ export function LoginForm() {
             disabled={loading}
           >
             {loading ? (
-              <span className="flex items-center justify-center gap-2 text-gray-50">
+              <span className="flex items-center justify-center gap-2 text-primary-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 <span>Entrando</span>
               </span>
@@ -108,10 +126,13 @@ export function LoginForm() {
           </Button>
         </form>
 
-        <Link href="/register" className="text-center text-sm text-zinc-500">
+        <Link
+          href="/register"
+          className="text-center text-sm text-muted-foreground"
+        >
           Não tem uma conta ? <span className="underline">Registrar</span>
         </Link>
-      </section>
+      </Card>
     </div>
   );
 }

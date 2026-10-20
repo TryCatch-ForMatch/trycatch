@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Github, Linkedin, Code2 } from 'lucide-react';
 import type { PortfolioSummaryItem } from '@/types/portfolio.types';
 import { Avatar } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { SkillIcon } from '@/components/ui/skill-icon';
 import { getRoleLabel } from '@/lib/role-labels';
 import { Fragment } from 'react';
@@ -54,19 +55,20 @@ export function PortfolioCard({ portfolio }: PortfolioCardProps) {
 
             <div className="flex gap-2">
               {skills.length > 0 ? (
-                skills
-                  .slice(0, 4)
-                  .map((skill) => (
-                    <Fragment key={skill.id}>
-                      {skill.iconUrl ? (
-                        <SkillIcon src={skill.iconUrl} name={skill.name} />
-                      ) : (
-                        <span className="inline-flex items-center rounded-full border border-border/50 bg-secondary px-2 py-0.5 text-xs text-secondary-foreground">
-                          {skill.name}
-                        </span>
-                      )}
-                    </Fragment>
-                  ))
+                skills.slice(0, 4).map((skill) => (
+                  <Fragment key={skill.id}>
+                    {skill.iconUrl ? (
+                      <SkillIcon src={skill.iconUrl} name={skill.name} />
+                    ) : (
+                      <Badge
+                        variant="secondary"
+                        className="rounded-full border-border/50 font-normal"
+                      >
+                        {skill.name}
+                      </Badge>
+                    )}
+                  </Fragment>
+                ))
               ) : (
                 <span className="text-xs text-gray-200">
                   Sem skills cadastradas

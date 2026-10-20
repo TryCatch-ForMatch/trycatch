@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { Check, Pencil, Trash, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { Invite } from '@/types/interface/invite';
@@ -146,7 +146,7 @@ export function InviteList() {
                     >
                       Email
                     </Label>
-                    <Input
+                    <InputField
                       id={`invite-email-${invite.id}`}
                       {...register('email')}
                       className="mt-1 w-full"

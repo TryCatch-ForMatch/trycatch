@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
@@ -109,22 +110,22 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
     <Card>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <Input
+          <InputField
             label="Nome"
             {...register('name')}
             error={errors.name?.message}
           />
-          <Input
+          <InputField
             label="Email"
             {...register('email')}
             error={errors.email?.message}
           />
-          <Input
+          <InputField
             label="LinkedIn"
             {...register('linkedin')}
             error={errors.linkedin?.message}
           />
-          <Input
+          <InputField
             label="GitHub"
             {...register('github')}
             error={errors.github?.message}
@@ -135,14 +136,13 @@ export function EditUserAdminForm({ user, onSuccess, onClose }: Props) {
           )}
 
           <div className="space-y-1">
-            <Label>Avatar</Label>
-            <input
+            <Label htmlFor="edit-user-avatar">Avatar</Label>
+            <Input
+              id="edit-user-avatar"
               type="file"
               accept="image/*"
-              title="input file"
               onChange={handleAvatarChange}
               disabled={uploadingAvatar}
-              className="block w-full text-sm text-foreground file:mr-4 file:rounded-full file:border-0 file:bg-secondary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-secondary-foreground hover:file:bg-secondary/80"
             />
             {errors.avatar && (
               <p className="text-xs text-destructive">

@@ -38,8 +38,7 @@ export default function UIAssetList() {
   useEffect(() => {
     void fetchImages();
 
-    // atualizar automaticamente após upload
-    const listener = () => fetchImages();
+    const listener = () => void fetchImages();
     window.addEventListener('ui-assets:refresh', listener);
 
     return () => window.removeEventListener('ui-assets:refresh', listener);
@@ -65,7 +64,9 @@ export default function UIAssetList() {
 
             <CardContent className="mt-2 space-y-2">
               {/* URL completa da imagem */}
-              <p className="text-xs break-all text-gray-500">{img.url}</p>
+              <p className="text-xs break-all text-muted-foreground">
+                {img.url}
+              </p>
 
               <div className="flex gap-2">
                 <Button

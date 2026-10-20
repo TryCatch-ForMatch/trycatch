@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
@@ -39,7 +39,7 @@ export function TechStackForm() {
 
           <div className="space-y-1">
             <Label htmlFor="stack">Nome da Stack</Label>
-            <Input
+            <InputField
               id="stack"
               type="text"
               required

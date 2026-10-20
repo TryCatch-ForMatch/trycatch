@@ -7,7 +7,7 @@ import { ChangeEvent } from 'react';
 
 import { CardProjectSummary } from '@/components/Dashboard/TeamProject';
 import { ProjectSummarySkeletonGrid } from '@/components/ui/SkeletonProjetcs/SkeletonProjectGrid';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Clock, Search } from 'lucide-react';
@@ -45,7 +45,7 @@ export default function TeamProjectPage() {
 
         <div className="flex w-full max-w-md flex-wrap items-center justify-end gap-2">
           <div className="relative h-10 flex-1">
-            <Input
+            <InputField
               name="search"
               type="search"
               aria-label="Pesquisar projetos"

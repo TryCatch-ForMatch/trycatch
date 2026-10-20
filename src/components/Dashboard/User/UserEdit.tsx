@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,6 +8,7 @@ import { User } from '@/types/interface/user';
 import { z } from 'zod';
 
 import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -59,6 +60,7 @@ export function UserEdit({ user }: UserEditProps) {
   });
   const avatarPreview = watch('avatar');
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
 
   async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -113,25 +115,24 @@ export function UserEdit({ user }: UserEditProps) {
               />
             )}
 
-            <label htmlFor="avatar-upload">
-              <Button
-                type="button"
-                variant="outline"
-                disabled={uploadingAvatar}
-                asChild
-              >
-                <span>
-                  {uploadingAvatar ? 'Enviando...' : 'Escolher imagem'}
-                </span>
-              </Button>
-            </label>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={uploadingAvatar}
+              onClick={() => avatarInputRef.current?.click()}
+            >
+              {uploadingAvatar ? 'Enviando...' : 'Escolher imagem'}
+            </Button>
 
-            <input
+            <Input
+              ref={avatarInputRef}
               id="avatar-upload"
               type="file"
               accept="image/*"
               onChange={handleAvatarChange}
               disabled={uploadingAvatar}
+              tabIndex={-1}
+              aria-hidden
               className="hidden"
             />
 
@@ -144,7 +145,7 @@ export function UserEdit({ user }: UserEditProps) {
 
           <div>
             <Label>Nome</Label>
-            <Input {...register('name')} aria-invalid={!!errors.name} />
+            <InputField {...register('name')} aria-invalid={!!errors.name} />
             {errors.name && (
               <p className="text-sm text-destructive">{errors.name.message}</p>
             )}
@@ -153,7 +154,7 @@ export function UserEdit({ user }: UserEditProps) {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <div className="md:col-span-2">
               <Label>Email</Label>
-              <Input type="email" {...register('email')} />
+              <InputField type="email" {...register('email')} />
               {errors.email && (
                 <p className="text-sm text-destructive">
                   {errors.email.message}
@@ -163,7 +164,7 @@ export function UserEdit({ user }: UserEditProps) {
 
             <div>
               <Label>Senha (opcional)</Label>
-              <Input type="password" {...register('password')} />
+              <InputField type="password" {...register('password')} />
               {errors.password && (
                 <p className="text-sm text-destructive">
                   {errors.password.message}
@@ -175,7 +176,7 @@ export function UserEdit({ user }: UserEditProps) {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <Label>LinkedIn</Label>
-              <Input {...register('linkedin')} />
+              <InputField {...register('linkedin')} />
               {errors.linkedin && (
                 <p className="text-sm text-destructive">
                   {errors.linkedin.message}
@@ -184,7 +185,7 @@ export function UserEdit({ user }: UserEditProps) {
             </div>
             <div>
               <Label>GitHub</Label>
-              <Input {...register('github')} />
+              <InputField {...register('github')} />
               {errors.github && (
                 <p className="text-sm text-destructive">
                   {errors.github.message}

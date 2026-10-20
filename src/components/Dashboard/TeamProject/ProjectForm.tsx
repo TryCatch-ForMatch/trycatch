@@ -7,7 +7,7 @@ import { useForm, FormProvider, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { ProjectStackSelector } from './ProjectStackSelector';
@@ -207,7 +207,7 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
             <Label htmlFor="project-name" className="mb-1">
               Nome
             </Label>
-            <Input
+            <InputField
               id="project-name"
               placeholder="Nome do projeto"
               {...register('name')}
@@ -278,7 +278,7 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
             <Label htmlFor="project-github" className="mb-1">
               GitHub (opcional)
             </Label>
-            <Input
+            <InputField
               id="project-github"
               placeholder="https://github.com/usuario/repositorio"
               {...register('github')}
@@ -295,7 +295,7 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
               <Label htmlFor="project-deadline" className="mb-1">
                 Prazo
               </Label>
-              <Input
+              <InputField
                 id="project-deadline"
                 type="date"
                 {...register('deadline')}

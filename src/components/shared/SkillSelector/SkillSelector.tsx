@@ -1,10 +1,16 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { Search } from 'lucide-react';
+import { useId, useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import {
+  Command,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
+import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 import { useSkills } from '@/hooks/api/useSkills';
 import { SkillTag } from './SkillTag';
 import { normalizeSkillName } from '@/lib/normalize-skill-name';
@@ -30,6 +36,7 @@ export function SkillSelector({
   const { allSkills, registerSkills } = useSkills();
 
   const [search, setSearch] = useState('');
+  const inputId = useId();
 
   const availableSkills = useMemo(
     () =>
@@ -62,7 +69,7 @@ export function SkillSelector({
       onAddSkill(skill.id);
       setSearch('');
     } catch (error) {
-      console.error(error);
+      toast.error(getApiErrorMessage(error, 'Erro ao criar skill.'));
     }
   };
 
@@ -73,48 +80,37 @@ export function SkillSelector({
 
   return (
     <div className="space-y-2">
-      <Label>{label}</Label>
+      <Label htmlFor={inputId}>{label}</Label>
 
-      <div className="relative">
-        <Search
-          size={16}
-          className="absolute top-1/2 left-3 -translate-y-1/2 text-muted-foreground"
-        />
-
-        <Input
+      <Command shouldFilter={false} className="rounded-md border">
+        <CommandInput
+          id={inputId}
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onValueChange={setSearch}
           placeholder={placeholder}
-          className="pl-9"
         />
-      </div>
-
-      {filteredSkills.length > 0 && (
-        <div className="max-h-56 overflow-y-auto rounded-md border bg-background">
+        <CommandList className="max-h-56">
           {filteredSkills.map((skill) => (
-            <button
+            <CommandItem
               key={skill.id}
-              type="button"
-              onClick={() => handleSelectSkill(skill.id!)}
-              className="flex w-full items-center px-3 py-2 text-left text-sm transition-colors hover:bg-muted"
+              value={skill.id}
+              onSelect={() => handleSelectSkill(skill.id!)}
             >
               {skill.name}
-            </button>
+            </CommandItem>
           ))}
-        </div>
-      )}
 
-      {filteredSkills.length === 0 && search.trim() && (
-        <button
-          type="button"
-          onClick={handleCreateSkill}
-          className="flex w-full items-center rounded-md border px-3 py-2 text-left text-sm text-primary transition-colors hover:bg-muted"
-        >
-          <>
-            + Criar <strong>{search.trim()}</strong>
-          </>
-        </button>
-      )}
+          {filteredSkills.length === 0 && search.trim() && (
+            <CommandItem
+              value="__criar-skill__"
+              onSelect={handleCreateSkill}
+              className="text-primary"
+            >
+              + Criar <strong>{search.trim()}</strong>
+            </CommandItem>
+          )}
+        </CommandList>
+      </Command>
 
       {errorMessage && (
         <p className="text-sm text-destructive">{errorMessage}</p>

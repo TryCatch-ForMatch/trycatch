@@ -4,7 +4,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import GoBackButton from '@/components/ui/go-back-button';
 import { Button } from '@/components/ui/button';
 import { FormField } from '@/components/ui/form-field';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 
 const mockBack = jest.fn();
 
@@ -49,7 +49,7 @@ describe('main reusable UI components', () => {
 
   it('connects input label, value and validation message without an explicit id', () => {
     render(
-      <Input
+      <InputField
         label="Nome"
         name="name"
         placeholder="Digite seu nome"
@@ -69,7 +69,7 @@ describe('main reusable UI components', () => {
   });
 
   it('keeps the id passed to the input', () => {
-    render(<Input id="email" label="Email" />);
+    render(<InputField id="email" label="Email" />);
 
     expect(screen.getByLabelText('Email')).toHaveAttribute('id', 'email');
   });

@@ -5,10 +5,11 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { Loader2 } from 'lucide-react';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
+import { Card } from '@/components/ui/card';
 
 export default function ResetPasswordClient() {
   const searchParams = useSearchParams();
@@ -75,15 +76,15 @@ export default function ResetPasswordClient() {
 
   return (
     <section className="flex min-h-screen flex-col items-center justify-center gap-3">
-      <section className="flex w-full max-w-md flex-col gap-4 rounded-md border border-[#71717b67] p-8 px-4">
-        <h2 className="mx-auto text-2xl font-bold text-primary">TryCatch</h2>
+      <Card className="w-full max-w-md gap-4 px-4 py-8">
+        <h1 className="mx-auto text-2xl font-bold text-primary">TryCatch</h1>
 
         <p className="text-center text-sm text-muted-foreground">
           Defina sua nova senha
         </p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-          <Input
+          <InputField
             label="Nova senha"
             type="password"
             placeholder="Digite sua nova senha"
@@ -103,7 +104,7 @@ export default function ResetPasswordClient() {
         >
           Voltar para <span className="underline">login</span>
         </Link>
-      </section>
+      </Card>
     </section>
   );
 }

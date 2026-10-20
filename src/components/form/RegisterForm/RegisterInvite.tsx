@@ -6,10 +6,11 @@ import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { Button } from '@/components/ui/button';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
+import { Card } from '@/components/ui/card';
 
 const inviteSchema = z.object({
   email: z.email({ message: 'Email inválido.' }),
@@ -66,13 +67,13 @@ export default function RegisterForm() {
 
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <div className="flex w-full max-w-md flex-col gap-4 rounded-md border border-[#71717b67] p-8 px-4">
+      <Card className="w-full max-w-md gap-4 px-4 py-8">
         <h1 className="mx-auto text-2xl font-bold text-primary-default">
           Validar Convite
         </h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
           <div className="space-y-1">
-            <Input
+            <InputField
               label="Email"
               type="email"
               placeholder="Seu email"
@@ -81,12 +82,12 @@ export default function RegisterForm() {
               required
             />
             {fieldErrors.email && (
-              <p className="text-xs text-red-500">{fieldErrors.email}</p>
+              <p className="text-xs text-destructive">{fieldErrors.email}</p>
             )}
           </div>
 
           <div className="space-y-1">
-            <Input
+            <InputField
               label="Código de Convite"
               type="text"
               placeholder="Código de convite recebido por email"
@@ -95,7 +96,9 @@ export default function RegisterForm() {
               required
             />
             {fieldErrors.inviteCode && (
-              <p className="text-xs text-red-500">{fieldErrors.inviteCode}</p>
+              <p className="text-xs text-destructive">
+                {fieldErrors.inviteCode}
+              </p>
             )}
           </div>
 
@@ -116,15 +119,21 @@ export default function RegisterForm() {
           </Button>
         </form>
 
-        <Link href="/login" className="text-center text-sm text-zinc-500">
+        <Link
+          href="/login"
+          className="text-center text-sm text-muted-foreground"
+        >
           Já tem uma conta? <span className="underline">Entrar</span>
         </Link>
 
-        <Link href="/how-to-join" className="text-center text-sm text-zinc-500">
+        <Link
+          href="/how-to-join"
+          className="text-center text-sm text-muted-foreground"
+        >
           Ainda não tem um código de convite?{' '}
           <span className="underline">Solicite aqui</span>
         </Link>
-      </div>
+      </Card>
     </div>
   );
 }

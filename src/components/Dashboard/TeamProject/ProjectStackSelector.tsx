@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useFormContext, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import {
   Select,
   SelectContent,
@@ -126,7 +126,7 @@ export function ProjectStackSelector({
                   name={`stacks.${index}.percentage`}
                   render={({ field }) => (
                     <div className="flex h-10 w-full items-center rounded-xl border border-border bg-white px-3 shadow-sm">
-                      <Input
+                      <InputField
                         type="number"
                         min="0"
                         max="100"

@@ -6,7 +6,7 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { Switch } from '@/components/ui/switch';
 import { Moon } from 'lucide-react';
 
@@ -157,14 +157,14 @@ export function UserAvailability() {
 
                     {field ? (
                       <div className="flex gap-6">
-                        <Input
+                        <InputField
                           type="time"
                           aria-label={`Início em ${day}`}
                           {...register(
                             `availabilities.${fields.indexOf(field)}.startTime`
                           )}
                         />
-                        <Input
+                        <InputField
                           type="time"
                           aria-label={`Fim em ${day}`}
                           {...register(

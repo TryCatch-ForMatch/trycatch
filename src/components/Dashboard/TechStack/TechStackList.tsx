@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Pencil, Trash, Check, X } from 'lucide-react';
 import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { toast } from 'sonner';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
@@ -154,7 +154,7 @@ export function TechStackList() {
                 className="flex items-center justify-between rounded-md border p-3 hover:bg-accent"
               >
                 {editingId === stack.id ? (
-                  <Input
+                  <InputField
                     value={editedName}
                     onChange={(e) => setEditedName(e.target.value)}
                     className="max-w-sm"

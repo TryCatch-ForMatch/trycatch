@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import Image from 'next/image';
@@ -55,7 +55,7 @@ export function SkillForm() {
 
           <div className="space-y-1">
             <Label htmlFor="skill">Nome da Skill</Label>
-            <Input
+            <InputField
               id="skill"
               type="text"
               value={name}

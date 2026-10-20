@@ -19,6 +19,11 @@ import { ToggleField } from '@/components/ui/toggle-field';
 import { FormField } from '@/components/ui/form-field';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from '@/components/ui/input-group';
 import { PortfolioPageSkeleton } from '@/components/Dashboard/Portfolio/PortfolioPageSkeleton';
 import { usePortfolioSettings } from './hooks/usePortfolioSettings';
 import { SkillSelector } from '@/components/shared/SkillSelector';
@@ -138,19 +143,17 @@ export default function DashboardPortfolioClient() {
               htmlFor="portfolio-github"
               error={errors.github?.message}
             >
-              <div className="relative">
-                <Code
-                  aria-hidden
-                  className="absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
-                />
-                <input
+              <InputGroup>
+                <InputGroupAddon>
+                  <Code aria-hidden className="h-3.5 w-3.5" />
+                </InputGroupAddon>
+                <InputGroupInput
                   id="portfolio-github"
                   {...register('github')}
                   type="url"
                   placeholder="https://github.com/seu-usuario"
-                  className="w-full rounded-md border border-border bg-background py-2 pr-3 pl-9 text-sm placeholder:text-muted-foreground focus:ring-1 focus:ring-ring focus:outline-none"
                 />
-              </div>
+              </InputGroup>
             </FormField>
 
             <FormField
@@ -158,19 +161,17 @@ export default function DashboardPortfolioClient() {
               htmlFor="portfolio-linkedin"
               error={errors.linkedin?.message}
             >
-              <div className="relative">
-                <Link
-                  aria-hidden
-                  className="absolute top-1/2 left-3 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
-                />
-                <input
+              <InputGroup>
+                <InputGroupAddon>
+                  <Link aria-hidden className="h-3.5 w-3.5" />
+                </InputGroupAddon>
+                <InputGroupInput
                   id="portfolio-linkedin"
                   {...register('linkedin')}
                   type="url"
                   placeholder="https://linkedin.com/in/seu-usuario"
-                  className="w-full rounded-md border border-border bg-background py-2 pr-3 pl-9 text-sm placeholder:text-muted-foreground focus:ring-1 focus:ring-ring focus:outline-none"
                 />
-              </div>
+              </InputGroup>
             </FormField>
           </div>
         </SettingsCard>

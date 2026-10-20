@@ -8,13 +8,14 @@ import { Loader2 } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { getRoleLabel } from '@/lib/role-labels';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
+import { Card } from '@/components/ui/card';
 
 const schema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
@@ -86,27 +87,31 @@ export default function UserSignupForm() {
 
   return (
     <section className="my-10 flex min-h-screen flex-col items-center justify-center gap-3">
-      <section className="flex w-full max-w-md flex-col gap-4 rounded-md border border-[#71717b67] p-8 px-4">
-        <h2 className="mx-auto text-2xl font-bold text-primary">
+      <Card className="w-full max-w-md gap-4 px-4 py-8">
+        <h1 className="mx-auto text-2xl font-bold text-primary">
           Cadastro de Usuario
-        </h2>
+        </h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
           <div className="space-y-1">
-            <Input {...register('name')} label="Nome" placeholder="Seu nome" />
+            <InputField
+              {...register('name')}
+              label="Nome"
+              placeholder="Seu nome"
+            />
             {errors.name && (
               <p className="text-sm text-destructive">{errors.name.message}</p>
             )}
           </div>
 
           <div className="space-y-1">
-            <Input {...register('email')} label="Email" disabled />
+            <InputField {...register('email')} label="Email" disabled />
             {errors.email && (
               <p className="text-sm text-destructive">{errors.email.message}</p>
             )}
           </div>
 
           <div className="space-y-1">
-            <Input
+            <InputField
               type="password"
               label="Senha"
               placeholder="Sua senha"
@@ -122,7 +127,11 @@ export default function UserSignupForm() {
 
           <div className="space-y-1">
             <input type="hidden" {...register('role')} />
-            <Input label="Perfil" value={getRoleLabel(selectedRole)} disabled />
+            <InputField
+              label="Perfil"
+              value={getRoleLabel(selectedRole)}
+              disabled
+            />
             {errors.role && (
               <p className="text-sm text-destructive">{errors.role.message}</p>
             )}
@@ -130,7 +139,7 @@ export default function UserSignupForm() {
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1">
-              <Input
+              <InputField
                 {...register('linkedin')}
                 label="Linkedin"
                 placeholder="Seu Linkedin"
@@ -143,7 +152,7 @@ export default function UserSignupForm() {
             </div>
 
             <div className="space-y-1">
-              <Input
+              <InputField
                 {...register('github')}
                 label="Github"
                 placeholder="Seu github"
@@ -183,7 +192,7 @@ export default function UserSignupForm() {
         >
           Já tem uma conta ? <span className="underline">Entrar</span>
         </Link>
-      </section>
+      </Card>
     </section>
   );
 }

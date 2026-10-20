@@ -85,7 +85,7 @@ export function ProjectDetails({ projectId }: Readonly<{ projectId: string }>) {
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6 p-4 md:p-6 lg:p-8">
-      <section className="rounded-2xl border border-border bg-white p-5 shadow-sm sm:p-6">
+      <Card className="gap-0 rounded-2xl p-5 sm:p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="space-y-3">
             <h2 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
@@ -140,9 +140,9 @@ export function ProjectDetails({ projectId }: Readonly<{ projectId: string }>) {
             )}
           </div>
         </div>
-      </section>
+      </Card>
 
-      <section className="rounded-2xl border border-border bg-muted/70 p-4 sm:p-5">
+      <Card className="gap-0 rounded-2xl bg-muted/70 p-4 shadow-none sm:p-5">
         <div className="mb-3 flex items-center justify-between">
           <h3 className="text-xs font-semibold tracking-[0.24em] text-muted-foreground uppercase">
             Skills
@@ -174,16 +174,16 @@ export function ProjectDetails({ projectId }: Readonly<{ projectId: string }>) {
             )
           )}
         </div>
-      </section>
+      </Card>
 
-      <section className="rounded-2xl border border-border bg-white p-5 shadow-sm">
+      <Card className="gap-0 rounded-2xl p-5">
         <h3 className="mb-3 text-xs font-semibold tracking-[0.24em] text-muted-foreground uppercase">
           Descrição
         </h3>
         <p className="max-w-4xl text-sm leading-7 wrap-break-word whitespace-pre-line text-muted-foreground">
           {project.description}
         </p>
-      </section>
+      </Card>
 
       <section className="space-y-3">
         <div className="flex items-center justify-between px-1">

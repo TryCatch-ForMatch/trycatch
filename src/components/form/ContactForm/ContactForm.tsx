@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -44,9 +44,9 @@ export function ContactForm() {
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="w-full max-w-xl">
-      <Input label="Nome" name="name" type="text" required />
-      <Input label="E-mail" name="email" type="email" required />
-      <Input label="Assunto" name="subject" type="text" required />
+      <InputField label="Nome" name="name" type="text" required />
+      <InputField label="E-mail" name="email" type="email" required />
+      <InputField label="Assunto" name="subject" type="text" required />
 
       <div className="mb-4 flex flex-col gap-1">
         <Label htmlFor="contact-message">Mensagem</Label>

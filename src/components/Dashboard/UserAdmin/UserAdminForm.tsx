@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -155,7 +156,7 @@ export function UserAdminForm() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
           <div className="space-y-1">
             <Label>Nome</Label>
-            <Input {...register('name')} />
+            <InputField {...register('name')} />
             {errors.name && (
               <p className="text-xs text-destructive">{errors.name.message}</p>
             )}
@@ -164,7 +165,7 @@ export function UserAdminForm() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1">
               <Label>Email</Label>
-              <Input type="email" {...register('email')} />
+              <InputField type="email" {...register('email')} />
               {errors.email && (
                 <p className="text-xs text-destructive">
                   {errors.email.message}
@@ -174,7 +175,7 @@ export function UserAdminForm() {
 
             <div className="space-y-1">
               <Label>Senha</Label>
-              <Input
+              <InputField
                 type="password"
                 autoComplete="new-password"
                 {...register('password')}
@@ -190,7 +191,7 @@ export function UserAdminForm() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1">
               <Label>LinkedIn</Label>
-              <Input {...register('linkedin')} />
+              <InputField {...register('linkedin')} />
               {errors.linkedin && (
                 <p className="text-xs text-destructive">
                   {errors.linkedin.message}
@@ -200,7 +201,7 @@ export function UserAdminForm() {
 
             <div className="space-y-1">
               <Label>GitHub</Label>
-              <Input {...register('github')} />
+              <InputField {...register('github')} />
               {errors.github && (
                 <p className="text-xs text-destructive">
                   {errors.github.message}
@@ -246,14 +247,13 @@ export function UserAdminForm() {
 
           <div className="grid grid-cols-1 items-center gap-4 md:grid-cols-2">
             <div className="space-y-1">
-              <Label>Avatar</Label>
-              <input
+              <Label htmlFor="new-user-avatar">Avatar</Label>
+              <Input
+                id="new-user-avatar"
                 type="file"
                 accept="image/*"
-                title="input file"
                 onChange={handleAvatarChange}
                 disabled={uploadingAvatar}
-                className="block w-full text-sm text-foreground file:mr-4 file:rounded-full file:border-0 file:bg-secondary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-secondary-foreground hover:file:bg-secondary/80"
               />
               {errors.avatar && (
                 <p className="text-xs text-destructive">

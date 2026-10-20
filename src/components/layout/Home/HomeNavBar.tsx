@@ -102,16 +102,19 @@ export function HomeNavBar() {
             </li>
           </ul>
 
-          <button
+          <Button
             ref={buttonRef}
-            className="p-2 lg:hidden"
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
             aria-label="Abrir menu"
             aria-expanded={open}
             aria-controls="mobile-menu"
             onClick={() => setOpen(!open)}
           >
             <Image src="/menuBurguer.svg" alt="" width={20} height={20} />
-          </button>
+          </Button>
         </div>
 
         {open && (

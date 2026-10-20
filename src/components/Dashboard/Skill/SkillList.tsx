@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { Pencil, Trash, Check, X } from 'lucide-react';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { toast } from 'sonner';
@@ -182,14 +182,14 @@ export function SkillList() {
 
                   {editingId === skill.id ? (
                     <div className="flex flex-col gap-2">
-                      <Input
+                      <InputField
                         type="text"
                         value={editedName}
                         onChange={(e) => setEditedName(e.target.value)}
                         placeholder="Nome da skill"
                         className="w-48"
                       />
-                      <Input
+                      <InputField
                         type="url"
                         value={editedIconUrl}
                         onChange={(e) => setEditedIconUrl(e.target.value)}
