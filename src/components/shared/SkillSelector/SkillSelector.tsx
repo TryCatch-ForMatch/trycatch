@@ -1,6 +1,6 @@
 'use client';
 
-import { useId, useMemo, useState } from 'react';
+import { useId, useMemo, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import { Search } from 'lucide-react';
 import { toast } from 'sonner';
@@ -38,6 +38,8 @@ export function SkillSelector({
   const { allSkills, registerSkills } = useSkills();
 
   const [search, setSearch] = useState('');
+  const [isCreating, setIsCreating] = useState(false);
+  const creatingRef = useRef(false);
   const inputId = useId();
   const listId = `${inputId}-list`;
 
@@ -66,7 +68,10 @@ export function SkillSelector({
   const handleCreateSkill = async () => {
     const name = search.trim();
 
-    if (!name) return;
+    if (!name || creatingRef.current) return;
+
+    creatingRef.current = true;
+    setIsCreating(true);
 
     try {
       const skill = await registerSkills({ name });
@@ -75,6 +80,9 @@ export function SkillSelector({
       setSearch('');
     } catch (error) {
       toast.error(getApiErrorMessage(error, 'Erro ao criar skill.'));
+    } finally {
+      creatingRef.current = false;
+      setIsCreating(false);
     }
   };
 
@@ -143,6 +151,7 @@ export function SkillSelector({
           type="button"
           variant="outline"
           onClick={handleCreateSkill}
+          disabled={isCreating}
           className="w-full justify-start font-normal text-primary"
         >
           + Criar <strong>{search.trim()}</strong>
