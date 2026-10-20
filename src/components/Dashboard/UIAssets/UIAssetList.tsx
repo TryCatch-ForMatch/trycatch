@@ -36,9 +36,9 @@ export default function UIAssetList() {
   }
 
   useEffect(() => {
-    fetchImages();
+    void fetchImages();
 
-    const listener = () => fetchImages();
+    const listener = () => void fetchImages();
     window.addEventListener('ui-assets:refresh', listener);
 
     return () => window.removeEventListener('ui-assets:refresh', listener);

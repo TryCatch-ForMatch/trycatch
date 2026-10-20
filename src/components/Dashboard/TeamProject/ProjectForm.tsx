@@ -164,7 +164,7 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
         toast.error('Erro ao carregar dados do projeto para edição');
       }
     }
-    loadProject();
+    void loadProject();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editId]);
 

@@ -51,7 +51,7 @@ export function SkillList() {
   };
 
   useEffect(() => {
-    fetchSkills();
+    void fetchSkills();
   }, []);
 
   const handleDeleteClick = (id: string) => {
