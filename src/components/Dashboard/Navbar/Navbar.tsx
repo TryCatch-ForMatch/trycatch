@@ -14,6 +14,7 @@ import {
   ChevronLeft,
   FolderKanban,
   MessageCircleQuestion,
+  UserRound,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -101,7 +102,7 @@ export function Navbar() {
         <Link href="/dashboard/profile">
           {user && (
             <div className="mt-8 mb-8 flex items-center gap-3">
-              {user.avatar && (
+              {user.avatar ? (
                 <Image
                   src={user.avatar}
                   alt={user.name || 'Avatar'}
@@ -109,6 +110,10 @@ export function Navbar() {
                   height={45}
                   className="rounded-full"
                 />
+              ) : (
+                <span className="flex size-[45px] shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
+                  <UserRound aria-hidden size={22} />
+                </span>
               )}
               <div
                 className={cn('flex flex-col', isCollapsed ? 'sr-only' : '')}

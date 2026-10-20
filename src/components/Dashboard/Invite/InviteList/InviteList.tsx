@@ -14,7 +14,6 @@ import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 import { CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
-import { RoleBadge } from '@/components/ui/role-badge';
 import {
   Select,
   SelectContent,
@@ -22,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ROLE_OPTIONS } from '@/lib/role-labels';
+import { getRoleLabel, ROLE_OPTIONS } from '@/lib/role-labels';
 
 const editInviteSchema = z.object({
   email: z.email('Email inválido'),
@@ -152,12 +151,8 @@ export function InviteList() {
                       className="mt-1 w-full"
                       type="email"
                       placeholder="email@exemplo.com"
+                      error={errors.email?.message}
                     />
-                    {errors.email && (
-                      <p className="mt-1 text-xs text-destructive">
-                        {errors.email.message}
-                      </p>
-                    )}
                   </div>
 
                   <div className="flex flex-col md:w-1/3">
@@ -223,7 +218,9 @@ export function InviteList() {
                       <span className="truncate font-medium">
                         {invite.email}
                       </span>
-                      <RoleBadge role={invite.role} />
+                      <span className="text-sm text-muted-foreground">
+                        Perfil: {getRoleLabel(invite.role)}
+                      </span>
                       <span className="text-sm text-muted-foreground">
                         Usado: {invite.used ? 'Sim' : 'Não'}
                       </span>

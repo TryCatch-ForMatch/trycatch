@@ -1,15 +1,17 @@
 'use client';
 
 import { useId, useMemo, useState } from 'react';
+import type { KeyboardEvent } from 'react';
+import { Search } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import {
-  Command,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from '@/components/ui/input-group';
 import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 import { useSkills } from '@/hooks/api/useSkills';
 import { SkillTag } from './SkillTag';
@@ -37,6 +39,7 @@ export function SkillSelector({
 
   const [search, setSearch] = useState('');
   const inputId = useId();
+  const listId = `${inputId}-list`;
 
   const availableSkills = useMemo(
     () =>
@@ -58,6 +61,8 @@ export function SkillSelector({
     );
   }, [availableSkills, search]);
 
+  const canCreate = filteredSkills.length === 0 && !!search.trim();
+
   const handleCreateSkill = async () => {
     const name = search.trim();
 
@@ -78,39 +83,71 @@ export function SkillSelector({
     setSearch('');
   };
 
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== 'Enter') return;
+
+    event.preventDefault();
+
+    if (!search.trim()) return;
+
+    const [firstSkill] = filteredSkills;
+
+    if (firstSkill?.id) {
+      handleSelectSkill(firstSkill.id);
+    } else if (canCreate) {
+      void handleCreateSkill();
+    }
+  };
+
   return (
     <div className="space-y-2">
       <Label htmlFor={inputId}>{label}</Label>
 
-      <Command shouldFilter={false} className="rounded-md border">
-        <CommandInput
+      <InputGroup>
+        <InputGroupAddon>
+          <Search aria-hidden />
+        </InputGroupAddon>
+        <InputGroupInput
           id={inputId}
           value={search}
-          onValueChange={setSearch}
+          onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder={placeholder}
+          aria-controls={filteredSkills.length > 0 ? listId : undefined}
         />
-        <CommandList className="max-h-56">
-          {filteredSkills.map((skill) => (
-            <CommandItem
-              key={skill.id}
-              value={skill.id}
-              onSelect={() => handleSelectSkill(skill.id!)}
-            >
-              {skill.name}
-            </CommandItem>
-          ))}
+      </InputGroup>
 
-          {filteredSkills.length === 0 && search.trim() && (
-            <CommandItem
-              value="__criar-skill__"
-              onSelect={handleCreateSkill}
-              className="text-primary"
-            >
-              + Criar <strong>{search.trim()}</strong>
-            </CommandItem>
-          )}
-        </CommandList>
-      </Command>
+      {filteredSkills.length > 0 && (
+        <ul
+          id={listId}
+          aria-label={label}
+          className="max-h-56 overflow-y-auto rounded-md border bg-background p-1"
+        >
+          {filteredSkills.map((skill) => (
+            <li key={skill.id}>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => handleSelectSkill(skill.id!)}
+                className="w-full justify-start font-normal"
+              >
+                {skill.name}
+              </Button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {canCreate && (
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleCreateSkill}
+          className="w-full justify-start font-normal text-primary"
+        >
+          + Criar <strong>{search.trim()}</strong>
+        </Button>
+      )}
 
       {errorMessage && (
         <p className="text-sm text-destructive">{errorMessage}</p>
