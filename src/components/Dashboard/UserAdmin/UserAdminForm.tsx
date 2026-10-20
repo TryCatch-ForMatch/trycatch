@@ -24,6 +24,8 @@ import { toast } from 'sonner';
 import { ROLES, Role } from '@/lib/roles';
 import { ROLE_OPTIONS } from '@/lib/role-labels';
 import Image from 'next/image';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 
 const userAdminSchema = z.object({
   name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
@@ -75,14 +77,10 @@ export function UserAdminForm() {
   useEffect(() => {
     const fetchSkills = async () => {
       try {
-        const res = await fetch('/api/skill');
-        if (!res.ok) throw new Error('Erro ao carregar as skills.');
-        const data = await res.json();
+        const { data } = await apiTryCatch.get<Skill[]>('/skill');
         setSkills(data);
       } catch (error) {
-        toast.error(
-          error instanceof Error ? error.message : 'Erro desconhecido.'
-        );
+        toast.error(getApiErrorMessage(error, 'Erro ao carregar as skills.'));
       }
     };
     fetchSkills();
@@ -98,22 +96,19 @@ export function UserAdminForm() {
       const formDataUpload = new FormData();
       formDataUpload.append('file', file);
 
-      const res = await fetch('/api/upload/avatar', {
-        method: 'POST',
-        body: formDataUpload,
-      });
+      const { data: json } = await apiTryCatch.post(
+        '/upload/avatar',
+        formDataUpload
+      );
 
-      if (!res.ok) throw new Error('Falha no upload do avatar');
-
-      const json = await res.json();
       const urlEnviada = json?.data?.url;
       if (urlEnviada) {
-        setValue('avatar', urlEnviada); // Atualiza o campo avatar no hook form
+        setValue('avatar', urlEnviada);
       } else {
         toast.error('URL do avatar não retornada');
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Erro desconhecido');
+      toast.error(getApiErrorMessage(error, 'Falha no upload do avatar'));
     } finally {
       setUploadingAvatar(false);
     }
@@ -142,24 +137,13 @@ export function UserAdminForm() {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/user-admin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      if (!res.ok) {
-        const json = await res.json();
-        throw new Error(json.error || 'Erro ao cadastrar usuário.');
-      }
+      await apiTryCatch.post('/user-admin', data);
 
       toast.success('Usuário criado com sucesso!');
-      reset(); // limpa todos os campos
+      reset();
       router.refresh();
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : 'Erro desconhecido.'
-      );
+      toast.error(getApiErrorMessage(error, 'Erro ao cadastrar usuário.'));
     } finally {
       setLoading(false);
     }
@@ -169,7 +153,6 @@ export function UserAdminForm() {
     <Card className="mx-auto mt-1 max-w-4xl rounded-2xl p-6 shadow-lg">
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-          {/* Nome */}
           <div className="space-y-1">
             <Label>Nome</Label>
             <Input {...register('name')} />
@@ -178,7 +161,6 @@ export function UserAdminForm() {
             )}
           </div>
 
-          {/* Email e Senha */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1">
               <Label>Email</Label>
@@ -203,7 +185,6 @@ export function UserAdminForm() {
             </div>
           </div>
 
-          {/* LinkedIn e GitHub */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1">
               <Label>LinkedIn</Label>
@@ -224,7 +205,6 @@ export function UserAdminForm() {
             </div>
           </div>
 
-          {/* Skills */}
           <div className="space-y-1">
             <Label>Skills</Label>
             <Select onValueChange={handleAddSkill} value="">
@@ -263,13 +243,11 @@ export function UserAdminForm() {
             </div>
           </div>
 
-          {/* Bio */}
           <div className="space-y-1">
             <Label>Bio</Label>
             <Textarea {...register('bio')} />
           </div>
 
-          {/* Avatar e Permissão */}
           <div className="grid grid-cols-1 items-center gap-4 md:grid-cols-2">
             <div className="space-y-1">
               <Label>Avatar</Label>
@@ -322,7 +300,6 @@ export function UserAdminForm() {
             </div>
           </div>
 
-          {/* Mensagens de erro/sucesso */}
           <div className="space-y-2">
             <Button type="submit" disabled={loading} className="w-full">
               {loading ? 'Cadastrando...' : 'Cadastrar Usuário'}

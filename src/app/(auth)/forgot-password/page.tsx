@@ -3,13 +3,11 @@
 import { useState, FormEvent } from 'react';
 import Link from 'next/link';
 import { toast } from 'sonner';
-
-// components
+import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-
-// icons
-import { Loader2 } from 'lucide-react';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -20,16 +18,14 @@ export default function ForgotPasswordPage() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/auth/forgot-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+      const { data } = await apiTryCatch.post('/auth/forgot-password', {
+        email,
       });
-
-      const data = await response.json();
       toast.success(data.message);
-    } catch {
-      toast.error('Erro ao enviar e-mail. Tente novamente.');
+    } catch (error) {
+      toast.error(
+        getApiErrorMessage(error, 'Erro ao enviar e-mail. Tente novamente.')
+      );
     } finally {
       setLoading(false);
     }

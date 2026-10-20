@@ -7,6 +7,8 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2 } from 'lucide-react';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 
 export default function ResetPasswordClient() {
   const searchParams = useSearchParams();
@@ -24,41 +26,32 @@ export default function ResetPasswordClient() {
     }
 
     async function validateToken() {
-      const response = await fetch(
-        `/api/auth/validate-reset-token?token=${token}`
-      );
-
-      if (response.ok) {
+      try {
+        await apiTryCatch.get('/auth/validate-reset-token', {
+          params: { token },
+        });
         setValidToken(true);
-      } else {
+      } catch {
         toast.error('Token inválido ou expirado.');
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     }
 
-    validateToken();
+    void validateToken();
   }, [token]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
     try {
-      const response = await fetch('/api/auth/reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, password }),
+      const { data } = await apiTryCatch.post('/auth/reset-password', {
+        token,
+        password,
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast.success(data.message);
-      } else {
-        toast.error(data.message);
-      }
-    } catch {
-      toast.error('Erro ao redefinir senha.');
+      toast.success(data.message);
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Erro ao redefinir senha.'));
     }
   }
 

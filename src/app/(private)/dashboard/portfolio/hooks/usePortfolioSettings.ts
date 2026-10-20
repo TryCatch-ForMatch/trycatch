@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { portfolioSchema, type PortfolioFormData } from '../portfolio.schema';
 
 const DEFAULT_VALUES: PortfolioFormData = {
@@ -32,14 +33,10 @@ export function usePortfolioSettings() {
     defaultValues: DEFAULT_VALUES,
   });
 
-  // ── Load current data ──────────────────────────────────────────────────────
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch('/api/portfolio/me');
-        if (!res.ok)
-          throw new Error('Falha ao carregar configurações do portfólio');
-        const data = await res.json();
+        const { data } = await apiTryCatch.get('/portfolio/me');
 
         setUsername(data.userName ?? null);
 
@@ -60,29 +57,20 @@ export function usePortfolioSettings() {
           showFeedback: data.showFeedback ?? false,
         });
       } catch {
-        // Keep defaults — don't block the UI
       } finally {
         setIsLoading(false);
       }
     }
 
-    load();
+    void load();
   }, [form.reset]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ── Submit ─────────────────────────────────────────────────────────────────
   async function onSubmit(values: PortfolioFormData) {
     setIsSaving(true);
     setSaveStatus('idle');
 
     try {
-      const res = await fetch('/api/portfolio/me', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values),
-      });
-
-      if (!res.ok)
-        throw new Error('Falha ao salvar configurações do portfólio');
+      await apiTryCatch.patch('/portfolio/me', values);
 
       setSaveStatus('success');
       form.reset(values);

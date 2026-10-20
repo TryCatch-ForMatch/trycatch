@@ -11,6 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { toast } from 'sonner';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 
 interface Stack {
   id: string;
@@ -34,40 +36,34 @@ export function ProjectStackSelector({
 
   const [availableStacks, setAvailableStacks] = useState<Stack[]>([]);
 
-  // Buscar stacks da API
   useEffect(() => {
     const fetchStacks = async () => {
       try {
-        const res = await fetch('/api/tech-stack');
-        const data = await res.json();
+        const { data } = await apiTryCatch.get<Stack[]>('/tech-stack');
         setAvailableStacks(data || []);
-      } catch (err) {
-        console.error('Erro ao buscar stacks:', err);
+      } catch {
+        toast.error('Erro ao carregar stacks.');
       }
     };
-    fetchStacks();
+    void fetchStacks();
   }, []);
 
-  // Inicializa uma linha se não houver nenhuma
   useEffect(() => {
     if (stacks.length === 0) {
       setValue('stacks', [{ stackId: '', percentage: 0 }]);
     }
   }, [stacks, setValue]);
 
-  // Adicionar nova linha
   const addStack = () => {
     setValue('stacks', [...stacks, { stackId: '', percentage: 0 }]);
   };
 
-  // Remover linha
   const removeStack = (index: number) => {
     const newStacks = [...stacks];
     newStacks.splice(index, 1);
     setValue('stacks', newStacks);
   };
 
-  // Soma dos percentuais
   const total = stacks.reduce((sum, s) => sum + (s.percentage || 0), 0);
   const errorMessage =
     total < 100
