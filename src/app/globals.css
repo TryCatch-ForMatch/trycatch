@@ -3,10 +3,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ===========================
-   THEME / TOKENS DO SISTEMA
-=========================== */
-
 html{
   scroll-behavior: smooth;
   overscroll-behavior-y: none;

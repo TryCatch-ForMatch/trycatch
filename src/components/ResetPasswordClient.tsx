@@ -38,7 +38,7 @@ export default function ResetPasswordClient() {
       }
     }
 
-    validateToken();
+    void validateToken();
   }, [token]);
 
   async function handleSubmit(e: FormEvent) {

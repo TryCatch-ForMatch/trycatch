@@ -9,7 +9,7 @@ export default function AboutUs() {
       className="mt-12 scroll-mt-24 md:mt-20 lg:mt-15 xl:mt-26 xxl:mt-32"
     >
       <div className="flex flex-col lg:grid lg:grid-cols-12">
-        <h2 className="mt-4 text-[26px] leading-[120%] font-medium text-[#35343C] md:text-[44px] lg:col-start-2 lg:col-end-7 xxl:text-[64px]">
+        <h2 className="mt-4 text-[26px] leading-[120%] font-medium text-gray-400 md:text-[44px] lg:col-start-2 lg:col-end-7 xxl:text-[64px]">
           Sobre nossa rede
           <span className="flex items-center">
             <Image
@@ -23,7 +23,7 @@ export default function AboutUs() {
             colaborativa
           </span>
         </h2>
-        <p className="mt-[18px] text-[14px] leading-[140%] text-[#5C5C65] md:w-[496px] md:text-[16px] lg:col-start-7 lg:col-end-12 lg:ml-4 lg:w-full xxl:ml-5 xxl:w-auto xxl:text-2xl">
+        <p className="mt-[18px] text-[14px] leading-[140%] text-gray-300 md:w-[496px] md:text-[16px] lg:col-start-7 lg:col-end-12 lg:ml-4 lg:w-full xxl:ml-5 xxl:w-auto xxl:text-2xl">
           Conectamos talentos a projetos reais em um ambiente colaborativo, com
           aprendizado prático e troca de conhecimento entre diferentes níveis de
           experiência.
@@ -66,27 +66,27 @@ export default function AboutUs() {
           className="flex w-full flex-col rounded-2xl bg-[#EAEAF2] p-5 md:p-[23px] lg:col-start-7 lg:col-end-12 lg:p-7"
         >
           <div className="flex flex-col sm:justify-between">
-            <h3 className="text-[18px] font-medium text-[#3B38A0] sm:text-[24px] md:text-[32px] xl:text-[36px] xxl:text-[52px]">
+            <h3 className="text-[18px] font-medium text-primary-default sm:text-[24px] md:text-[32px] xl:text-[36px] xxl:text-[52px]">
               Colaboração por habilidades
             </h3>
             <div className="center mt-[27px] flex items-center justify-between rounded-[14px] bg-white px-[17px] py-[11px] lg:px-[21px] lg:py-3.5 xl:h-[72px] xl:px-6 xl:py-4 xxl:h-[100px] xxl:px-[33] xxl:py-[22px]">
-              <p className="text-[14px] leading-[140%] text-[#5C5C65] sm:text-[16px] md:text-[20px] xxl:text-[32px]">
+              <p className="text-[14px] leading-[140%] text-gray-300 sm:text-[16px] md:text-[20px] xxl:text-[32px]">
                 Equipe sob medida
               </p>
-              <ChartNoAxesColumnIncreasing className="ml-2 h-7 w-7 text-[#3B38A0] sm:ml-0 lg:h-[34px] lg:w-[34px] xl:h-10 xl:w-10 xxl:h-14 xxl:w-14" />
+              <ChartNoAxesColumnIncreasing className="ml-2 h-7 w-7 text-primary-default sm:ml-0 lg:h-[34px] lg:w-[34px] xl:h-10 xl:w-10 xxl:h-14 xxl:w-14" />
             </div>
           </div>
         </Link>
 
         <Link
           href="/about#entrega"
-          className="flex w-full flex-col rounded-2xl bg-[#D9D9ED] p-5 md:p-[23px] lg:col-start-7 lg:col-end-12 lg:p-7"
+          className="flex w-full flex-col rounded-2xl bg-primary-light p-5 md:p-[23px] lg:col-start-7 lg:col-end-12 lg:p-7"
         >
           <div className="flex items-end justify-between md:items-center">
-            <p className="h-12 w-[175px] text-[24px] leading-6 font-medium text-[#3B38A0] md:w-auto md:text-[32px] md:leading-normal lg:h-16 lg:w-[233px] lg:text-[32px] lg:leading-9 xl:w-[262px] xl:text-[36px] xl:lg:leading-10 xxl:h-[104px] xxl:w-[379px] xxl:text-[52px] xxl:leading-12">
+            <p className="h-12 w-[175px] text-[24px] leading-6 font-medium text-primary-default md:w-auto md:text-[32px] md:leading-normal lg:h-16 lg:w-[233px] lg:text-[32px] lg:leading-9 xl:w-[262px] xl:text-[36px] xl:lg:leading-10 xxl:h-[104px] xxl:w-[379px] xxl:text-[52px] xxl:leading-12">
               Da ideia até a entrega final
             </p>
-            <SquarePen className="h-7 w-7 text-[#3B38A0] lg:h-[34px] lg:w-[34px] xl:h-10 xl:w-10 xxl:h-14 xxl:w-14" />
+            <SquarePen className="h-7 w-7 text-primary-default lg:h-[34px] lg:w-[34px] xl:h-10 xl:w-10 xxl:h-14 xxl:w-14" />
           </div>
         </Link>
 

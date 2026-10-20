@@ -46,7 +46,7 @@ export function ProjectStackSelector({
         toast.error('Erro ao carregar stacks.');
       }
     };
-    fetchStacks();
+    void fetchStacks();
   }, []);
 
   useEffect(() => {

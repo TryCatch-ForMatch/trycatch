@@ -62,7 +62,7 @@ export function usePortfolioSettings() {
       }
     }
 
-    load();
+    void load();
   }, [form.reset]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function onSubmit(values: PortfolioFormData) {

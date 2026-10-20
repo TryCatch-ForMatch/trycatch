@@ -28,7 +28,7 @@ export function UserAdminList() {
   };
 
   useEffect(() => {
-    fetchUsers();
+    void fetchUsers();
   }, []);
 
   const confirmDelete = async () => {
@@ -49,7 +49,7 @@ export function UserAdminList() {
   const handleDialogClose = () => {
     setIsDialogOpen(false);
     setSelectedUser(null);
-    fetchUsers();
+    void fetchUsers();
   };
 
   const handleEdit = async (userId: string) => {

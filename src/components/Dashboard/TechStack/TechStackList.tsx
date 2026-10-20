@@ -47,7 +47,7 @@ export function TechStackList() {
   };
 
   useEffect(() => {
-    fetchStacks();
+    void fetchStacks();
   }, []);
 
   const handleDeleteClick = (id: string) => {
