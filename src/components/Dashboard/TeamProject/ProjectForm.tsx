@@ -16,6 +16,8 @@ import { useCurrentUser } from '@/lib/use-current-user';
 import { toast } from 'sonner';
 import { MoneyInput } from '@/components/form/MoneyInput/MoneyInput';
 import { getStackAssignmentLabel } from '@/lib/stack-assignment';
+import { isAxiosError } from 'axios';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 
 const projectSchema = z.object({
   name: z.string().min(3, 'Nome do projeto é obrigatório'),
@@ -103,43 +105,10 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
         stacks: data.stacks,
       };
 
-      let res: Response;
       if (editId) {
-        res = await fetch(`/api/team-project/${editId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
+        await apiTryCatch.put(`/team-project/${editId}`, payload);
       } else {
-        res = await fetch('/api/team-project', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-      }
-
-      if (!res.ok) {
-        // A API responde no formato { success, message, data, errors }.
-        // Aproveitamos a mensagem dela em vez de mostrar um erro genérico —
-        // quase sempre ela explica exatamente o que impediu o salvamento.
-        const corpo = await res.text();
-        let mensagem = editId
-          ? 'Erro ao atualizar projeto'
-          : 'Erro ao criar projeto';
-
-        try {
-          const dados = JSON.parse(corpo);
-          const detalhe = Array.isArray(dados?.errors)
-            ? dados.errors.join(' · ')
-            : '';
-          mensagem =
-            [dados?.message, detalhe].filter(Boolean).join(' — ') || mensagem;
-        } catch {
-          // resposta sem JSON — mantém a mensagem padrão
-        }
-
-        console.error(`Erro da API (${res.status}):`, corpo);
-        throw new Error(mensagem);
+        await apiTryCatch.post('/team-project', payload);
       }
 
       router.push(
@@ -147,24 +116,30 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
           ? `/dashboard/team-projects/${editId}`
           : '/dashboard/team-projects'
       );
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      const fallback = editId
+        ? 'Erro ao atualizar projeto'
+        : 'Erro ao criar projeto';
+      const body = isAxiosError<{ message?: string; errors?: unknown }>(error)
+        ? error.response?.data
+        : undefined;
+      const detalhe = Array.isArray(body?.errors)
+        ? body.errors.join(' · ')
+        : '';
+
       toast.error(
-        err instanceof Error && err.message
-          ? err.message
-          : 'Erro ao salvar projeto'
+        [body?.message, detalhe].filter(Boolean).join(' — ') || fallback
       );
     }
   };
 
-  // Fetch project data when editing
   useEffect(() => {
     async function loadProject() {
       if (!editId) return;
       try {
-        const res = await fetch(`/api/team-project/${editId}`);
-        if (!res.ok) throw new Error('Não foi possível buscar projeto');
-        const data = (await res.json()) as ProjectDetailsType;
+        const { data } = await apiTryCatch.get<ProjectDetailsType>(
+          `/team-project/${editId}`
+        );
         setEditingProject(data);
         const assignments = Object.fromEntries(
           (data.stacks || []).map((stack) => [
@@ -185,17 +160,14 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
           })),
           skills: (data.skills || []).map((s) => s.id),
         });
-      } catch (error) {
-        console.error(error);
+      } catch {
         toast.error('Erro ao carregar dados do projeto para edição');
       }
     }
-    loadProject();
+    void loadProject();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editId]);
 
-  // Sem isto, uma validação que falha num campo fora da área visível não dá
-  // retorno nenhum: a pessoa clica em "Salvar" e nada acontece.
   const onInvalid = (validationErrors: FieldErrors<ProjectFormData>) => {
     const campos: Record<string, string> = {
       name: 'Nome',
@@ -229,7 +201,6 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
         onSubmit={handleSubmit(onSubmit, onInvalid)}
         className="m-5 mx-auto grid max-w-5xl grid-cols-1 gap-6 p-6 md:grid-cols-2"
       >
-        {/* Coluna Esquerda */}
         <div className="flex flex-col gap-4">
           <div>
             <label className="mb-1 block text-sm font-medium">Nome</label>
@@ -275,7 +246,6 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
           </div>
         </div>
 
-        {/* Coluna Direita */}
         <div className="mr-8 flex flex-col gap-4">
           <div>
             <label className="mb-1 block text-sm font-medium">Descrição</label>

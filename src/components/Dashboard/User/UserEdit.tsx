@@ -14,6 +14,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import Image from 'next/image';
+import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 
 const userEditFormSchema = z.object({
   name: z.string().min(1, 'O nome é obrigatório.'),
@@ -67,24 +69,17 @@ export function UserEdit({ user }: UserEditProps) {
       const formData = new FormData();
       formData.append('file', file);
 
-      const res = await fetch('/api/upload/avatar', {
-        method: 'POST',
-        body: formData,
-      });
+      const { data: json } = await apiTryCatch.post('/upload/avatar', formData);
 
-      if (!res.ok) throw new Error('Falha no upload do avatar');
-
-      const json = await res.json();
       const urlEnviada = json?.data?.url;
       if (urlEnviada) {
         setValue('avatar', urlEnviada, { shouldValidate: true });
         toast.success('Avatar atualizado com sucesso!');
       } else {
-        throw new Error('Servidor não retornou a URL do avatar');
+        toast.error('Servidor não retornou a URL do avatar');
       }
-    } catch (err: unknown) {
-      if (err instanceof Error) toast.error(err.message);
-      else toast.error('Erro no upload do avatar');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Falha no upload do avatar'));
     } finally {
       setUploadingAvatar(false);
     }
@@ -92,22 +87,12 @@ export function UserEdit({ user }: UserEditProps) {
 
   const onSubmit = async (values: UserEditFormValues) => {
     try {
-      const res = await fetch(`/api/user/${user.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Erro ao atualizar usuário');
+      await apiTryCatch.put(`/user/${user.id}`, values);
 
       toast.success('Perfil atualizado com sucesso!');
       router.refresh();
-    } catch (err: unknown) {
-      if (err instanceof Error) toast.error(err.message);
-      else toast.error('Erro ao atualizar usuário');
-    } finally {
-      //
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Erro ao atualizar usuário'));
     }
   };
 
@@ -115,7 +100,6 @@ export function UserEdit({ user }: UserEditProps) {
     <Card className="rounded-2xl p-6 shadow-lg">
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Avatar */}
           <div className="flex flex-col items-center gap-4">
             <Label className="text-base font-semibold">Avatar</Label>
 
@@ -156,7 +140,6 @@ export function UserEdit({ user }: UserEditProps) {
             )}
           </div>
 
-          {/* Nome */}
           <div>
             <Label>Nome</Label>
             <Input {...register('name')} aria-invalid={!!errors.name} />
@@ -166,7 +149,6 @@ export function UserEdit({ user }: UserEditProps) {
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            {/* Email */}
             <div className="md:col-span-2">
               <Label>Email</Label>
               <Input type="email" {...register('email')} />
@@ -175,7 +157,6 @@ export function UserEdit({ user }: UserEditProps) {
               )}
             </div>
 
-            {/* Senha */}
             <div>
               <Label>Senha (opcional)</Label>
               <Input type="password" {...register('password')} />
@@ -187,7 +168,6 @@ export function UserEdit({ user }: UserEditProps) {
             </div>
           </div>
 
-          {/* LinkedIn & GitHub */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <Label>LinkedIn</Label>
@@ -207,7 +187,6 @@ export function UserEdit({ user }: UserEditProps) {
             </div>
           </div>
 
-          {/* Bio */}
           <div>
             <Label>Bio</Label>
             <Textarea {...register('bio')} className="min-h-[150px] resize-y" />
