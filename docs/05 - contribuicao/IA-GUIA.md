@@ -177,6 +177,10 @@ Aqui o nível declarado muda mais as coisas. Em todos eles:
   A referência de qualidade é `src/lib/portfolio.service.ts`.
 - Validação com Zod na borda; respostas via `buildResponse`; mensagens em
   `MESSAGES`; log via `logger`, nunca `console.*`.
+- Interface com os componentes do **shadcn/ui** (`src/components/ui/`). Se o
+  componente não estiver instalado, adicione com `npx shadcn@latest add <nome>`;
+  componente próprio só compondo o shadcn. Detalhes em
+  `docs/03 - tecnico/arquitetura/componentes-interface.md`.
 - **Não faça refatoração fora do escopo.** Achou algo? Regra 10: avise, não corrija.
 
 **Nível 1** — proponha um passo por vez, explique o porquê de cada decisão, e
