@@ -1,58 +1,128 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
+  DialogTrigger,
 } from '@/components/ui/dialog';
-
-import { ReactNode } from 'react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 export type ModalSize = 'sm' | 'md' | 'lg' | 'xl';
 
-interface ModalProps {
-  open: boolean;
-  onClose: () => void;
-  title?: string;
-  description?: string;
-  children: ReactNode;
-  size?: ModalSize;
-}
-
 const sizeClasses: Record<ModalSize, string> = {
-  sm: 'max-w-md',
-  md: 'max-w-lg',
-  lg: 'max-w-3xl',
-  xl: 'max-w-6xl',
+  sm: 'sm:max-w-md',
+  md: 'sm:max-w-lg',
+  lg: 'sm:max-w-3xl',
+  xl: 'sm:max-w-6xl',
 };
 
-export default function Modal({
-  open,
-  onClose,
+interface ModalProps {
+  title: string;
+  description?: string;
+  children: ReactNode;
+  footer?: ReactNode;
+  trigger?: ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  size?: ModalSize;
+  className?: string;
+}
+
+function Modal({
   title,
   description,
   children,
-  size = 'xl',
+  footer,
+  trigger,
+  open,
+  onOpenChange,
+  size = 'md',
+  className,
 }: ModalProps) {
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(isOpen: boolean) => !isOpen && onClose()}
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent
-        className={`w-full ${sizeClasses[size]} overflow-hidden rounded-2xl p-6 shadow-lg`}
+        className={cn(
+          'max-h-[90vh] overflow-y-auto rounded-2xl',
+          sizeClasses[size],
+          className
+        )}
       >
         <DialogHeader>
-          <DialogTitle className="flex items-center justify-between">
-            <span>{title}</span>
-          </DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
 
-        <div className="mt-1">{children}</div>
+        {children}
+
+        {footer && <DialogFooter>{footer}</DialogFooter>}
       </DialogContent>
     </Dialog>
   );
 }
+
+interface ConfirmModalProps {
+  open: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+  title?: string;
+  description?: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
+  destructive?: boolean;
+}
+
+function ConfirmModal({
+  open,
+  onConfirm,
+  onCancel,
+  title = 'Confirmar ação',
+  description = 'Tem certeza que deseja continuar?',
+  confirmLabel = 'Confirmar',
+  cancelLabel = 'Cancelar',
+  destructive = false,
+}: ConfirmModalProps) {
+  return (
+    <AlertDialog open={open} onOpenChange={(isOpen) => !isOpen && onCancel()}>
+      <AlertDialogContent className={cn('rounded-2xl', sizeClasses.sm)}>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={onCancel}>
+            {cancelLabel}
+          </AlertDialogCancel>
+          <AlertDialogAction
+            onClick={onConfirm}
+            className={cn(
+              destructive && buttonVariants({ variant: 'destructive' })
+            )}
+          >
+            {confirmLabel}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+export { Modal, ConfirmModal, DialogClose as ModalClose };

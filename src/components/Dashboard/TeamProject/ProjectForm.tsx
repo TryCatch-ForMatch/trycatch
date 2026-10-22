@@ -3,13 +3,20 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { ProjectDetailsType } from '@/types/interface/team-project';
-import { useForm, FormProvider, type FieldErrors } from 'react-hook-form';
+import {
+  useForm,
+  Controller,
+  FormProvider,
+  type FieldErrors,
+} from 'react-hook-form';
+import { addDays, format, parse } from 'date-fns';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { InputField } from '@/components/ui/input-field';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { DatePicker } from '@/components/ui/date-picker';
 import { ProjectStackSelector } from './ProjectStackSelector';
 import { SkillSelector } from '@/components/shared/SkillSelector';
 import { useWatch } from 'react-hook-form';
@@ -299,10 +306,24 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
               <Label htmlFor="project-deadline" className="mb-1">
                 Prazo
               </Label>
-              <InputField
-                id="project-deadline"
-                type="date"
-                {...register('deadline')}
+              <Controller
+                name="deadline"
+                control={methods.control}
+                render={({ field }) => (
+                  <DatePicker
+                    id="project-deadline"
+                    value={
+                      field.value
+                        ? parse(field.value, 'yyyy-MM-dd', new Date())
+                        : undefined
+                    }
+                    onChange={(date) =>
+                      field.onChange(date ? format(date, 'yyyy-MM-dd') : '')
+                    }
+                    disabledDates={{ before: addDays(new Date(), 1) }}
+                    aria-invalid={!!errors.deadline}
+                  />
+                )}
               />
               {errors.deadline && (
                 <p className="text-sm text-destructive">
