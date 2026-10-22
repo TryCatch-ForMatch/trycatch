@@ -7,8 +7,9 @@ import { useForm, FormProvider, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import { ProjectStackSelector } from './ProjectStackSelector';
 import { SkillSelector } from '@/components/shared/SkillSelector';
 import { useWatch } from 'react-hook-form';
@@ -203,10 +204,16 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
       >
         <div className="flex flex-col gap-4">
           <div>
-            <label className="mb-1 block text-sm font-medium">Nome</label>
-            <Input placeholder="Nome do projeto" {...register('name')} />
+            <Label htmlFor="project-name" className="mb-1">
+              Nome
+            </Label>
+            <InputField
+              id="project-name"
+              placeholder="Nome do projeto"
+              {...register('name')}
+            />
             {errors.name && (
-              <p className="text-sm text-red-500">{errors.name.message}</p>
+              <p className="text-sm text-destructive">{errors.name.message}</p>
             )}
           </div>
 
@@ -232,14 +239,16 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
               }
             />
             {errors.skills && (
-              <p className="text-sm text-red-500">{errors.skills.message}</p>
+              <p className="text-sm text-destructive">
+                {errors.skills.message}
+              </p>
             )}
           </div>
 
           <div>
             <ProjectStackSelector stackAssignments={stackAssignments} />
             {errors.stacks && (
-              <p className="text-sm text-red-500">
+              <p className="text-sm text-destructive">
                 {'message' in errors.stacks ? errors.stacks.message : ''}
               </p>
             )}
@@ -248,52 +257,68 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
 
         <div className="mr-8 flex flex-col gap-4">
           <div>
-            <label className="mb-1 block text-sm font-medium">Descrição</label>
+            <Label htmlFor="project-description" className="mb-1">
+              Descrição
+            </Label>
             <Textarea
+              id="project-description"
               className="h-69 break-all"
               placeholder="Descreva o projeto"
               rows={5}
               {...register('description')}
             />
             {errors.description && (
-              <p className="text-sm text-red-500">
+              <p className="text-sm text-destructive">
                 {errors.description.message}
               </p>
             )}
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium">
+            <Label htmlFor="project-github" className="mb-1">
               GitHub (opcional)
-            </label>
-            <Input
+            </Label>
+            <InputField
+              id="project-github"
               placeholder="https://github.com/usuario/repositorio"
               {...register('github')}
             />
             {errors.github && (
-              <p className="text-sm text-red-500">{errors.github.message}</p>
+              <p className="text-sm text-destructive">
+                {errors.github.message}
+              </p>
             )}
           </div>
 
           <div className="flex gap-4">
             <div className="flex-1">
-              <label className="mb-1 block text-sm font-medium">Prazo</label>
-              <Input type="date" {...register('deadline')} />
+              <Label htmlFor="project-deadline" className="mb-1">
+                Prazo
+              </Label>
+              <InputField
+                id="project-deadline"
+                type="date"
+                {...register('deadline')}
+              />
               {errors.deadline && (
-                <p className="text-sm text-red-500">
+                <p className="text-sm text-destructive">
                   {errors.deadline.message}
                 </p>
               )}
             </div>
 
             <div className="flex-1">
-              <label className="mb-1 block text-sm font-medium">
+              <Label htmlFor="project-total-value" className="mb-1">
                 Valor (R$)
-              </label>
-              <MoneyInput name="totalValue" control={methods.control} />
+              </Label>
+              <MoneyInput
+                id="project-total-value"
+                name="totalValue"
+                control={methods.control}
+              />
 
               {errors.totalValue && (
-                <p className="text-sm text-red-500">
+                <p className="text-sm text-destructive">
                   {'message' in errors.totalValue
                     ? errors.totalValue.message
                     : ''}

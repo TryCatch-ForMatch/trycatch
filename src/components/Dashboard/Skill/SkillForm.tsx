@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import Image from 'next/image';
@@ -49,13 +49,13 @@ export function SkillForm() {
     <Card className="mx-auto mt-4 max-w-md rounded-2xl p-6 shadow-lg">
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <h2 className="text-xl font-semibold text-gray-800">
+          <h2 className="text-xl font-semibold text-foreground">
             Cadastrar Skill
           </h2>
 
           <div className="space-y-1">
             <Label htmlFor="skill">Nome da Skill</Label>
-            <Input
+            <InputField
               id="skill"
               type="text"
               value={name}
@@ -67,7 +67,7 @@ export function SkillForm() {
 
           {(iconUrl || name) && (
             <div className="flex flex-col items-center space-y-2">
-              <p className="text-sm text-gray-500">Pré-visualização:</p>
+              <p className="text-sm text-muted-foreground">Pré-visualização:</p>
 
               {iconUrl && !previewError ? (
                 <Image

@@ -50,7 +50,6 @@ export interface UseInfiniteScrollResult<T> {
 
 //
 // Hook genérico de scroll infinito com cursor pagination.
-// Usado tanto pelo InfiniteTable quanto pelo InfiniteCards.
 //
 // Dependências:
 //   npm install @tanstack/react-query@5

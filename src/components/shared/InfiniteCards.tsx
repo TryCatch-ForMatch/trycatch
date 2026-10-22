@@ -42,7 +42,6 @@ export interface InfiniteCardsProps<T> {
 
 // Grid de cards com scroll infinito.
 // Sem virtualização — cards têm altura variável e são poucos por página.
-// Para listas longas com cards simples, considere usar InfiniteTable.
 //
 // Uso básico:
 //   <InfiniteCards

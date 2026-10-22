@@ -2,6 +2,10 @@
 
 import { useState, useRef } from 'react';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { InputField } from '@/components/ui/input-field';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
 export function ContactForm() {
   const [loading, setLoading] = useState(false);
@@ -39,64 +43,37 @@ export function ContactForm() {
   }
 
   return (
-    <form
-      ref={formRef}
-      onSubmit={handleSubmit}
-      className="w-full max-w-xl space-y-4"
-    >
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium">Nome</label>
-        <input
-          name="name"
-          type="text"
-          required
-          className="rounded-lg border px-4 py-2"
-        />
-      </div>
+    <form ref={formRef} onSubmit={handleSubmit} className="w-full max-w-xl">
+      <InputField label="Nome" name="name" type="text" required />
+      <InputField label="E-mail" name="email" type="email" required />
+      <InputField label="Assunto" name="subject" type="text" required />
 
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium">E-mail</label>
-        <input
-          name="email"
-          type="email"
-          required
-          className="rounded-lg border px-4 py-2"
-        />
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium">Assunto</label>
-        <input
-          name="subject"
-          type="text"
-          required
-          className="rounded-lg border px-4 py-2"
-        />
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium">Mensagem</label>
-        <textarea
+      <div className="mb-4 flex flex-col gap-1">
+        <Label htmlFor="contact-message">Mensagem</Label>
+        <Textarea
+          id="contact-message"
           name="message"
           required
           rows={5}
-          className="resize-none rounded-lg border px-4 py-2"
+          className="resize-none"
         />
       </div>
 
       {success && (
-        <p className="text-sm text-green-600">Mensagem enviada com sucesso!</p>
+        <p role="status" className="mb-4 text-sm text-green-600">
+          Mensagem enviada com sucesso!
+        </p>
       )}
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && (
+        <p role="alert" className="mb-4 text-sm text-destructive">
+          {error}
+        </p>
+      )}
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="cursor-pointer rounded-lg bg-primary px-6 py-3 font-medium text-white disabled:opacity-50"
-      >
+      <Button type="submit" disabled={loading} size="lg">
         {loading ? 'Enviando...' : 'Enviar mensagem'}
-      </button>
+      </Button>
     </form>
   );
 }

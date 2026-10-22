@@ -12,9 +12,7 @@ describe('global stylesheet reduced-motion settings', () => {
       (node) => node.type === 'rule' && node.selector === 'html'
     );
 
-    expect(htmlRule?.toString()).toContain(
-      'scroll-behavior: smooth'
-    );
+    expect(htmlRule?.toString()).toContain('scroll-behavior: smooth');
   });
 
   it('uses automatic scrolling when reduced motion is requested', () => {
@@ -25,8 +23,6 @@ describe('global stylesheet reduced-motion settings', () => {
         node.params === '(prefers-reduced-motion: reduce)'
     );
 
-    expect(reducedMotionRule?.toString()).toContain(
-      'scroll-behavior: auto'
-    );
+    expect(reducedMotionRule?.toString()).toContain('scroll-behavior: auto');
   });
 });

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
@@ -33,13 +33,13 @@ export function TechStackForm() {
     <Card className="mx-auto mt-4 max-w-md rounded-2xl p-6 shadow-lg">
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <h2 className="text-xl font-semibold text-gray-800">
+          <h2 className="text-xl font-semibold text-foreground">
             Cadastrar Stack
           </h2>
 
           <div className="space-y-1">
             <Label htmlFor="stack">Nome da Stack</Label>
-            <Input
+            <InputField
               id="stack"
               type="text"
               required

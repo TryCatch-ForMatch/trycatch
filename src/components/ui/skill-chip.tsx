@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import { SkillIcon } from '@/components/ui/skill-icon';
 
 interface SkillChipProps {
@@ -7,9 +8,12 @@ interface SkillChipProps {
 
 export function SkillChip({ name, iconUrl }: SkillChipProps) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-secondary px-2 py-0.5 text-xs text-secondary-foreground">
+    <Badge
+      variant="secondary"
+      className="gap-1.5 rounded-full border-border/50 font-normal"
+    >
       {iconUrl && <SkillIcon src={iconUrl} name={name} />}
       {name}
-    </span>
+    </Badge>
   );
 }

@@ -3,7 +3,7 @@
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { AxiosError } from 'axios';
@@ -52,7 +52,7 @@ export default function UIAssetUpload() {
   return (
     <Card className="mx-auto mt-1 max-w-4xl rounded-2xl p-6 shadow-lg">
       <form onSubmit={handleUpload} className="space-y-4">
-        <Input
+        <InputField
           className="p-10"
           type="file"
           accept="image/*"

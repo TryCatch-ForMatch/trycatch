@@ -1,10 +1,9 @@
 import React from 'react';
+import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 
 export function SettingsCard({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-card">
-      {children}
-    </div>
+    <Card className="gap-0 overflow-hidden py-0 shadow-none">{children}</Card>
   );
 }
 
@@ -19,11 +18,17 @@ export function SettingsCardHeader({
 }) {
   return (
     <div className="flex items-start gap-3 border-b border-border bg-muted/30 p-5">
-      <span className="mt-0.5 text-muted-foreground">{icon}</span>
+      <span aria-hidden className="mt-0.5 text-muted-foreground">
+        {icon}
+      </span>
       <div>
-        <p className="text-sm font-medium text-foreground">{title}</p>
+        <CardTitle className="text-sm leading-normal font-medium text-foreground">
+          {title}
+        </CardTitle>
         {description && (
-          <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>
+          <CardDescription className="mt-0.5 text-xs">
+            {description}
+          </CardDescription>
         )}
       </div>
     </div>

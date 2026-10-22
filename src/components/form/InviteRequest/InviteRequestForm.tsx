@@ -1,15 +1,24 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { AxiosError } from 'axios';
+import { Card } from '@/components/ui/card';
 
 const inviteRequestSchema = z.object({
   name: z.string().min(3, 'Informe seu nome completo'),
@@ -38,6 +47,7 @@ export function InviteRequestForm({
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors },
@@ -70,49 +80,64 @@ export function InviteRequestForm({
   }
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex w-full max-w-md flex-col gap-3 rounded-md border border-[#71717b67] p-6"
-    >
-      <Input
-        label="Nome completo"
-        placeholder="Ex: Maria Silva"
-        {...register('name')}
-        error={errors.name?.message}
-      />
+    <Card className="w-full max-w-md p-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
+        <InputField
+          label="Nome completo"
+          placeholder="Ex: Maria Silva"
+          {...register('name')}
+          error={errors.name?.message}
+        />
 
-      <Input
-        label="Email"
-        type="email"
-        placeholder="exemplo@email.com"
-        {...register('email')}
-        error={errors.email?.message}
-      />
+        <InputField
+          label="Email"
+          type="email"
+          placeholder="exemplo@email.com"
+          {...register('email')}
+          error={errors.email?.message}
+        />
 
-      <Input
-        label="LinkedIn"
-        placeholder="https://www.linkedin.com/in/seuperfil"
-        {...register('linkedin')}
-        error={errors.linkedin?.message}
-      />
+        <InputField
+          label="LinkedIn"
+          placeholder="https://www.linkedin.com/in/seuperfil"
+          {...register('linkedin')}
+          error={errors.linkedin?.message}
+        />
 
-      <div className="flex flex-col gap-1">
-        <label className="text-sm">Perfil desejado</label>
-        <select
-          {...register('role')}
-          className="h-10 rounded-md border border-input bg-background px-3 text-sm"
-        >
-          <option value="USER">Membro (em início de carreira)</option>
-          <option value="MENTOR">Mentor (profissional experiente)</option>
-        </select>
-        {errors.role && (
-          <span className="text-xs text-red-500">{errors.role.message}</span>
-        )}
-      </div>
+        <div className="flex flex-col gap-1">
+          <Label htmlFor="invite-request-role" className="font-normal">
+            Perfil desejado
+          </Label>
+          <Controller
+            name="role"
+            control={control}
+            render={({ field }) => (
+              <Select value={field.value} onValueChange={field.onChange}>
+                <SelectTrigger id="invite-request-role" className="h-10 w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="USER">
+                    Membro (em início de carreira)
+                  </SelectItem>
+                  <SelectItem value="MENTOR">
+                    Mentor (profissional experiente)
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          />
+          {errors.role && (
+            <span className="text-xs text-destructive">
+              {errors.role.message}
+            </span>
+          )}
+        </div>
 
-      <Button type="submit" disabled={loading} className="mt-2">
-        {loading ? 'Enviando...' : 'Enviar solicitação'}
-      </Button>
-    </form>
+        <Button type="submit" disabled={loading} className="mt-2">
+          {loading ? 'Enviando...' : 'Enviar solicitação'}
+        </Button>
+      </form>
+    </Card>
   );
 }

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Pencil, Trash, Check, X } from 'lucide-react';
 import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { toast } from 'sonner';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
@@ -136,23 +136,25 @@ export function TechStackList() {
   return (
     <CardContent className="mx-auto mt-6 max-w-3xl rounded-2xl shadow-md">
       <div className="space-y-4 p-6">
-        <h2 className="text-xl font-semibold text-gray-800">
+        <h2 className="text-xl font-semibold text-foreground">
           Stacks Cadastradas
         </h2>
 
         {loading ? (
-          <p className="text-gray-600">Carregando...</p>
+          <p className="text-muted-foreground">Carregando...</p>
         ) : stacks.length === 0 ? (
-          <p className="text-gray-600">Nenhuma stack cadastrada ainda.</p>
+          <p className="text-muted-foreground">
+            Nenhuma stack cadastrada ainda.
+          </p>
         ) : (
           <ul className="space-y-2">
             {stacks.map((stack) => (
               <li
                 key={stack.id}
-                className="flex items-center justify-between rounded-md border p-3 hover:bg-gray-50"
+                className="flex items-center justify-between rounded-md border p-3 hover:bg-accent"
               >
                 {editingId === stack.id ? (
-                  <Input
+                  <InputField
                     value={editedName}
                     onChange={(e) => setEditedName(e.target.value)}
                     className="max-w-sm"

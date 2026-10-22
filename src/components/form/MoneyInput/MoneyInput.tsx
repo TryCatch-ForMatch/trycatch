@@ -2,16 +2,18 @@
 
 import { Controller, Control, FieldValues, Path } from 'react-hook-form';
 import { useState } from 'react';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 
 type MoneyInputProps<FormData extends FieldValues> = {
   name: Path<FormData>;
   control: Control<FormData>;
+  id?: string;
 };
 
 export function MoneyInput<FormData extends FieldValues>({
   name,
   control,
+  id,
 }: MoneyInputProps<FormData>) {
   const [text, setText] = useState('');
 
@@ -20,7 +22,8 @@ export function MoneyInput<FormData extends FieldValues>({
       name={name}
       control={control}
       render={({ field }) => (
-        <Input
+        <InputField
+          id={id}
           type="text"
           inputMode="decimal"
           placeholder="0,00"

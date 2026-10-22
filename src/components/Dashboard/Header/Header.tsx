@@ -2,77 +2,76 @@
 
 import { signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useProjects } from '@/hooks/api/useProjects';
 import { Clock, Check, Ellipsis, LogOut } from 'lucide-react';
 import { useSidebar } from '@/Context/SidebarContextOpenClose';
 
-export function DashboardHeader() {
-  const { projectsEstatistica, isProjectsLoading } = useProjects();
-  const { isOpen } = useSidebar();
-
-  // Componente reutilizável para os botões de estatística
-  const StatButton = ({
-    icon: Icon,
-    text,
-    value,
-  }: {
-    icon: React.ElementType;
-    text: string;
-    value?: number;
-  }) => (
-    <Button
+function ProjectStat({
+  icon: Icon,
+  text,
+  value,
+  isLoading,
+}: {
+  icon: React.ElementType;
+  text: string;
+  value?: number;
+  isLoading: boolean;
+}) {
+  return (
+    <Badge
       variant="outline"
-      size="default"
-      className="font-regular flex min-w-[160px] cursor-default items-center justify-center gap-2"
+      className="h-9 min-w-[160px] gap-2 bg-background px-4 text-sm font-normal shadow-xs [&>svg]:size-4"
     >
-      <span className="text-[#3B38A1]">
-        <Icon />
-      </span>
-      {isProjectsLoading ? (
-        // Efeito shimmer (carregando)
-        <span className="h-4 w-20 animate-pulse rounded bg-zinc-200" />
+      <Icon aria-hidden className="text-primary" />
+      {isLoading ? (
+        <Skeleton className="h-4 w-20" />
       ) : (
         <span>
           {value} {text}
         </span>
       )}
-    </Button>
+    </Badge>
   );
+}
+
+export function DashboardHeader() {
+  const { projectsEstatistica, isProjectsLoading } = useProjects();
+  const { isOpen } = useSidebar();
 
   return (
     <header
       className={`fixed top-0 right-0 z-50 flex items-center justify-between p-4 py-5 shadow-sm ${isOpen ? 'left-20 w-[calc(100%-80px)]' : 'left-60 w-[calc(100%-240px)]'} bg-background`}
     >
-      {/* Botões de estatísticas */}
       <div className="flex items-center gap-10">
-        <StatButton
+        <ProjectStat
           icon={Check}
           text="Finalizados"
           value={projectsEstatistica?.counts?.concluido}
+          isLoading={isProjectsLoading}
         />
-        <StatButton
+        <ProjectStat
           icon={Clock}
           text="Em produção"
           value={projectsEstatistica?.counts?.emAndamento}
+          isLoading={isProjectsLoading}
         />
-        <StatButton
+        <ProjectStat
           icon={Ellipsis}
           text="Aberto"
           value={projectsEstatistica?.counts?.buscando}
+          isLoading={isProjectsLoading}
         />
       </div>
 
-      {/* Botão de logout */}
       <div>
         <Button
           onClick={() => signOut({ callbackUrl: '/' })}
           variant="outline"
-          size="default"
-          className="font-regular flex items-center justify-center gap-2"
+          className="flex items-center justify-center gap-2 font-normal"
         >
-          <span className="text-[#3B38A1]">
-            <LogOut />
-          </span>
+          <LogOut aria-hidden className="text-primary" />
           <span>Desconectar</span>
         </Button>
       </div>

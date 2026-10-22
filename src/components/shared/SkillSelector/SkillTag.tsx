@@ -1,6 +1,8 @@
 'use client';
 
 import { X } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 type SkillTagProps = {
   readonly id: string;
@@ -10,17 +12,19 @@ type SkillTagProps = {
 
 export function SkillTag({ id, name, onRemove }: SkillTagProps) {
   return (
-    <span className="flex items-center gap-1 rounded-full bg-gray-200 px-3 py-1 text-xs">
+    <Badge variant="secondary" className="rounded-full px-3 py-1 font-normal">
       {name}
 
-      <button
+      <Button
         type="button"
-        title="Remover skill"
+        variant="ghost"
+        size="icon"
         aria-label={`Remover ${name}`}
         onClick={() => onRemove(id)}
+        className="size-4 rounded-full p-0 hover:bg-transparent hover:text-destructive"
       >
-        <X size={12} />
-      </button>
-    </span>
+        <X aria-hidden className="size-3" />
+      </Button>
+    </Badge>
   );
 }

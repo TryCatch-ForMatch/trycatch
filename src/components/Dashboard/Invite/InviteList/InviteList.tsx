@@ -2,16 +2,25 @@
 
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { Check, Pencil, Trash, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { Invite } from '@/types/interface/invite';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
-import { AxiosError } from 'axios';
+import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 import { CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { getRoleLabel, ROLE_OPTIONS } from '@/lib/role-labels';
 
 const editInviteSchema = z.object({
@@ -25,9 +34,11 @@ export function InviteList() {
   const [invites, setInvites] = useState<Invite[]>([]);
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
@@ -41,9 +52,8 @@ export function InviteList() {
     try {
       const res = await apiTryCatch.get('/invite');
       setInvites(res.data ?? []);
-    } catch (err) {
-      console.error('Erro ao carregar convites:', err);
-      toast.error('Erro ao carregar convites.');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Erro ao carregar convites.'));
     } finally {
       setLoading(false);
     }
@@ -53,7 +63,6 @@ export function InviteList() {
     fetchInvites();
   }, []);
 
-  // Quando começar a editar preenche o form
   const handleEdit = (invite: Invite) => {
     setEditingId(invite.id);
     reset({ email: invite.email, role: invite.role });
@@ -72,7 +81,6 @@ export function InviteList() {
         role: data.role,
       });
 
-      // substitui o invite atualizado na lista
       setInvites((prev) =>
         prev.map((inv) =>
           inv.id === editingId ? { ...inv, ...res.data } : inv
@@ -82,40 +90,22 @@ export function InviteList() {
       setEditingId(null);
       reset({ email: '' });
       toast.success('Convite atualizado com sucesso!');
-    } catch (err: unknown) {
-      if (err instanceof AxiosError) {
-        const msg =
-          err.response?.data?.error ||
-          err.message ||
-          'Erro ao atualizar convite.';
-
-        toast.error(msg);
-        return;
-      }
-
-      toast.error('Erro inesperado.');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Erro ao atualizar convite.'));
     }
   };
 
-  const handleDelete = async (id: string) => {
-    const confirmed = confirm('Deseja realmente deletar este convite?');
-    if (!confirmed) return;
+  const confirmDelete = async () => {
+    const id = pendingDeleteId;
+    if (!id) return;
+    setPendingDeleteId(null);
 
     try {
       await apiTryCatch.delete(`/invite/${id}`);
       setInvites((prev) => prev.filter((i) => i.id !== id));
       toast.success('Convite deletado com sucesso!');
-    } catch (err: unknown) {
-      if (err instanceof AxiosError) {
-        const msg =
-          err.response?.data?.error ||
-          err.message ||
-          'Erro ao deletar convite.';
-        toast.error(msg);
-        return;
-      }
-
-      toast.error('Erro inesperado.');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Erro ao deletar convite.'));
     }
   };
 
@@ -125,11 +115,15 @@ export function InviteList() {
         <h2 className="text-xl font-semibold">Lista de Convites</h2>
 
         {loading && (
-          <p className="text-sm text-gray-500">Carregando convites...</p>
+          <p className="text-sm text-muted-foreground">
+            Carregando convites...
+          </p>
         )}
 
         {!loading && invites.length === 0 && (
-          <p className="text-sm text-gray-500">Nenhum convite encontrado.</p>
+          <p className="text-sm text-muted-foreground">
+            Nenhum convite encontrado.
+          </p>
         )}
 
         {invites.map((invite) => {
@@ -145,32 +139,56 @@ export function InviteList() {
                   className="flex w-full flex-col gap-2 md:flex-row md:items-center md:gap-4"
                 >
                   <div className="flex flex-col md:w-1/2">
-                    <label className="text-sm text-gray-600">Email</label>
-                    <Input
+                    <Label
+                      htmlFor={`invite-email-${invite.id}`}
+                      className="text-muted-foreground"
+                    >
+                      Email
+                    </Label>
+                    <InputField
+                      id={`invite-email-${invite.id}`}
                       {...register('email')}
                       className="mt-1 w-full"
                       type="email"
                       placeholder="email@exemplo.com"
+                      error={errors.email?.message}
                     />
-                    {errors.email && (
-                      <p className="mt-1 text-xs text-red-500">
-                        {errors.email.message}
-                      </p>
-                    )}
                   </div>
 
                   <div className="flex flex-col md:w-1/3">
-                    <label className="text-sm text-gray-600">Perfil</label>
-                    <select
-                      {...register('role')}
-                      className="mt-1 w-full rounded-md border p-2 text-sm"
+                    <Label
+                      htmlFor={`invite-role-${invite.id}`}
+                      className="text-muted-foreground"
                     >
-                      {ROLE_OPTIONS.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
+                      Perfil
+                    </Label>
+                    <Controller
+                      name="role"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <SelectTrigger
+                            id={`invite-role-${invite.id}`}
+                            className="mt-1 w-full"
+                          >
+                            <SelectValue placeholder="Selecione" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {ROLE_OPTIONS.map((option) => (
+                              <SelectItem
+                                key={option.value}
+                                value={option.value}
+                              >
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
                   </div>
 
                   <div className="mt-2 flex gap-2 md:mt-0">
@@ -180,7 +198,7 @@ export function InviteList() {
                       className="flex items-center gap-1"
                       disabled={isSubmitting}
                     >
-                      <Check size={14} /> Salvar
+                      <Check aria-hidden size={14} /> Salvar
                     </Button>
                     <Button
                       size="sm"
@@ -189,7 +207,7 @@ export function InviteList() {
                       className="flex items-center gap-1"
                       type="button"
                     >
-                      <X size={14} /> Cancelar
+                      <X aria-hidden size={14} /> Cancelar
                     </Button>
                   </div>
                 </form>
@@ -200,15 +218,15 @@ export function InviteList() {
                       <span className="truncate font-medium">
                         {invite.email}
                       </span>
-                      <span className="text-sm text-gray-600">
+                      <span className="text-sm text-muted-foreground">
                         Perfil: {getRoleLabel(invite.role)}
                       </span>
-                      <span className="text-sm text-gray-600">
+                      <span className="text-sm text-muted-foreground">
                         Usado: {invite.used ? 'Sim' : 'Não'}
                       </span>
                     </div>
 
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-muted-foreground">
                       Código: {invite.code}
                     </span>
                   </div>
@@ -220,16 +238,16 @@ export function InviteList() {
                       onClick={() => handleEdit(invite)}
                       className="flex items-center gap-1"
                     >
-                      <Pencil size={14} /> Editar
+                      <Pencil aria-hidden size={14} /> Editar
                     </Button>
 
                     <Button
                       size="sm"
                       variant="destructive"
-                      onClick={() => handleDelete(invite.id)}
+                      onClick={() => setPendingDeleteId(invite.id)}
                       className="flex items-center gap-1"
                     >
-                      <Trash size={14} /> Deletar
+                      <Trash aria-hidden size={14} /> Deletar
                     </Button>
                   </div>
                 </>
@@ -238,6 +256,14 @@ export function InviteList() {
           );
         })}
       </div>
+
+      <ConfirmDialog
+        open={pendingDeleteId !== null}
+        title="Deletar convite"
+        description="Deseja realmente deletar este convite?"
+        onConfirm={confirmDelete}
+        onCancel={() => setPendingDeleteId(null)}
+      />
     </CardContent>
   );
 }
