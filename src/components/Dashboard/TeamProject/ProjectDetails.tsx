@@ -1,12 +1,13 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
 import { Calendar, DollarSign, Github, User } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
-import type { ProjectDetailsType } from '@/types/interface/team-project';
 import { useCurrentUser } from '@/lib/use-current-user';
-import { useProjects } from '@/hooks/api/useProjects';
+import {
+  useInvalidateProjects,
+  useProjectDetails,
+} from '@/hooks/api/useProjects';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -15,27 +16,10 @@ import { Card, CardContent } from '@/components/ui/card';
 export function ProjectDetails({ projectId }: Readonly<{ projectId: string }>) {
   const user = useCurrentUser();
   const router = useRouter();
-  const { getProjectDetailsById } = useProjects();
-  const [project, setProject] = useState<ProjectDetailsType | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { project, isLoading } = useProjectDetails(projectId);
+  const invalidateProjects = useInvalidateProjects();
 
-  const fetchDetailsProject = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await getProjectDetailsById(projectId);
-      setProject(response);
-    } catch (err) {
-      console.error(err);
-      toast.error('Erro ao carregar detalhes do projeto');
-    } finally {
-      setLoading(false);
-    }
-  }, [getProjectDetailsById, projectId]);
-
-  useEffect(() => {
-    fetchDetailsProject();
-  }, [projectId, fetchDetailsProject]);
-  if (loading)
+  if (isLoading)
     return <p className="p-6 text-muted-foreground">Carregando detalhes...</p>;
   if (!project)
     return <p className="p-6 text-muted-foreground">Projeto não encontrado</p>;
@@ -49,7 +33,7 @@ export function ProjectDetails({ projectId }: Readonly<{ projectId: string }>) {
     try {
       const response = await apiTryCatch.post('/stack-taken', data);
       toast.success(response?.data?.message || 'Stack assumida com sucesso!');
-      fetchDetailsProject();
+      void invalidateProjects();
     } catch {
       toast.error('Erro ao assumir stack');
     }
@@ -59,7 +43,7 @@ export function ProjectDetails({ projectId }: Readonly<{ projectId: string }>) {
     try {
       const response = await apiTryCatch.delete(`/stack-taken/${stackTakenId}`);
       toast.success(response?.data?.message || 'Stack liberada com sucesso!');
-      fetchDetailsProject();
+      void invalidateProjects();
     } catch {
       toast.error('Erro ao liberar stack');
     }
@@ -74,7 +58,7 @@ export function ProjectDetails({ projectId }: Readonly<{ projectId: string }>) {
       toast.success(
         response?.data?.message || 'Projeto marcado como concluído!'
       );
-      fetchDetailsProject();
+      void invalidateProjects();
     } catch {
       toast.error('Erro ao concluir projeto');
     }

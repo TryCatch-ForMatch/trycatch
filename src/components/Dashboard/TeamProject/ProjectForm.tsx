@@ -19,6 +19,7 @@ import { MoneyInput } from '@/components/form/MoneyInput/MoneyInput';
 import { getStackAssignmentLabel } from '@/lib/stack-assignment';
 import { isAxiosError } from 'axios';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { useInvalidateProjects } from '@/hooks/api/useProjects';
 
 const projectSchema = z.object({
   name: z.string().min(3, 'Nome do projeto é obrigatório'),
@@ -55,6 +56,7 @@ export type ProjectFormData = z.infer<typeof projectSchema>;
 
 export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
   const router = useRouter();
+  const invalidateProjects = useInvalidateProjects();
   const user = useCurrentUser();
   const editId = editIdProp;
   const [editingProject, setEditingProject] =
@@ -111,6 +113,8 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
       } else {
         await apiTryCatch.post('/team-project', payload);
       }
+
+      await invalidateProjects();
 
       router.push(
         editId
