@@ -3,7 +3,15 @@
 import { useState } from 'react';
 import { InfiniteCards } from '@/components/shared/InfiniteCards';
 import { PortfolioCard } from '@/components/Portfolio/PortfolioCard';
+import { Input } from '@/components/ui/input';
 import type { PortfolioSummaryItem } from '@/types/portfolio.types';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Filters } from './models';
 import { usePortfoliosInfiniteScroll } from './hooks/usePortfoliosInfiniteScroll';
 
@@ -36,35 +44,40 @@ export default function PortfoliosPage() {
         </p>
       </div>
 
-      {/* Filtros */}
       <div className="flex flex-wrap gap-3">
-        <input
+        <Input
           type="text"
+          aria-label="Buscar por nome"
           placeholder="Buscar por nome..."
           value={filters.name}
           onChange={(e) => handleFilterChange('name', e.target.value)}
-          className="w-52 rounded-md border border-border bg-background px-3 py-2 text-sm focus:ring-1 focus:ring-ring focus:outline-none"
+          className="w-52"
         />
-        <select
-          title="Selecionar perfil"
-          value={filters.role}
-          onChange={(e) => handleFilterChange('role', e.target.value)}
-          className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:ring-1 focus:ring-ring focus:outline-none"
+        <Select
+          value={filters.role || 'ALL'}
+          onValueChange={(value) =>
+            handleFilterChange('role', value === 'ALL' ? '' : value)
+          }
         >
-          <option value="">Todos os perfis</option>
-          <option value="USER">Devs</option>
-          <option value="MENTOR">Mentores</option>
-        </select>
-        <input
+          <SelectTrigger aria-label="Filtrar por perfil" className="w-44">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">Todos os perfis</SelectItem>
+            <SelectItem value="USER">Devs</SelectItem>
+            <SelectItem value="MENTOR">Mentores</SelectItem>
+          </SelectContent>
+        </Select>
+        <Input
           type="text"
+          aria-label="Buscar por skill"
           placeholder="Buscar por skill..."
           value={filters.skills}
           onChange={(e) => handleFilterChange('skills', e.target.value)}
-          className="w-72 rounded-md border border-border bg-background px-3 py-2 text-sm focus:ring-1 focus:ring-ring focus:outline-none"
+          className="w-72"
         />
       </div>
 
-      {/* Cards */}
       <InfiniteCards<PortfolioSummaryItem>
         data={flatData}
         containerRef={containerRef}

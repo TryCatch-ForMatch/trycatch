@@ -53,14 +53,12 @@ html{
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* BREAKPOINTS */
   --breakpoint-sm: 375px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 1200px;
   --breakpoint-xl: 1440px;
   --breakpoint-xxl: 1920px;
 
-  /* Cores padrões extras */
   --color-brand-light: var(--brand-light);
   --color-brand-dark: var(--brand-dark);
 
@@ -75,9 +73,6 @@ html{
   --color-gray-white: var(--gray-white);
 }
 
-/* ===========================
-   ROOT (LIGHT MODE)
-=========================== */
 :root {
   --radius: 0.625rem;
 
@@ -88,23 +83,23 @@ html{
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
 
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
+  --primary: var(--primary-default);
+  --primary-foreground: var(--gray-white);
 
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
+  --secondary: var(--primary-light);
+  --secondary-foreground: var(--gray-400);
 
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted-foreground: var(--gray-300);
 
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --accent: var(--gray-100);
+  --accent-foreground: var(--gray-400);
 
   --destructive: oklch(0.577 0.245 27.325);
 
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --ring: var(--primary-default);
 
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -114,14 +109,13 @@ html{
 
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-primary: var(--primary-default);
+  --sidebar-primary-foreground: var(--gray-white);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-ring: var(--primary-default);
 
-  /* Cores padrões extras */
   --brand-light: #ffffff;
   --brand-dark: #0d0d14;
 
@@ -136,9 +130,6 @@ html{
   --gray-white: #ffffff;
 }
 
-/* ===========================
-   DARK MODE
-=========================== */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -183,9 +174,6 @@ html{
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-/* ===========================
-   BASE (SEU BLOCO MANTIDO 100%)
-=========================== */
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -195,7 +183,6 @@ html{
     @apply bg-background text-foreground;
   }
 
-  /* HEADINGS */
   h1 {
     @apply text-[40px] leading-[100%] font-medium sm:text-[56px] md:text-[72px];
   }
@@ -212,15 +199,11 @@ html{
     @apply text-[14px] leading-[100%] font-medium sm:text-[16px] md:text-[18px];
   }
 
-  /* BODY */
   p {
     @apply text-[12px] leading-[150%] font-normal sm:text-[14px] md:text-[16px] lg:text-[18px];
   }
 }
 
-/* ===========================
-   UTILITIES
-=========================== */
 @layer utilities {
   .bg-branding-light {
     background-color: var(--brand-light);

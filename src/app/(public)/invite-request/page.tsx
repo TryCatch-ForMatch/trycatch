@@ -34,7 +34,7 @@ export default async function InviteRequestPage({
               Sua jornada começa aqui
             </h1>
 
-            <p className="text-sm text-zinc-600 md:text-base">
+            <p className="text-sm text-muted-foreground md:text-base">
               O TryCatch 4Match é uma plataforma colaborativa criada para
               conectar pessoas em diferentes níveis de experiência, promovendo
               aprendizado prático, colaboração e troca de experiências.

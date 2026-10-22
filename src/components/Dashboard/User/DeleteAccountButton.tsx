@@ -3,19 +3,18 @@
 import { useState } from 'react';
 import { signOut } from 'next-auth/react';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 
 export function DeleteAccountButton({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleDelete = async () => {
-    const confirmed = window.confirm(
-      'Tem certeza que deseja excluir sua conta? Esta ação não poderá ser desfeita!'
-    );
-    if (!confirmed) return;
-
+    setConfirmOpen(false);
     setLoading(true);
     setError(null);
 
@@ -33,14 +32,28 @@ export function DeleteAccountButton({ userId }: { userId: string }) {
 
   return (
     <div className="absolute top-4 right-4">
-      <button
-        onClick={handleDelete}
+      <Button
+        type="button"
+        variant="link"
+        onClick={() => setConfirmOpen(true)}
         disabled={loading}
-        className="text-sm text-red-500 hover:underline"
+        className="h-auto p-0 text-destructive"
       >
         {loading ? 'Excluindo...' : 'Excluir conta'}
-      </button>
-      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+      </Button>
+      {error && (
+        <p role="alert" className="mt-1 text-xs text-destructive">
+          {error}
+        </p>
+      )}
+
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Excluir conta"
+        description="Tem certeza que deseja excluir sua conta? Esta ação não poderá ser desfeita!"
+        onConfirm={handleDelete}
+        onCancel={() => setConfirmOpen(false)}
+      />
     </div>
   );
 }

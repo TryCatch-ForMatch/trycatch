@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { InputField } from '@/components/ui/input-field';
 import { Pencil, Trash, Check, X } from 'lucide-react';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { toast } from 'sonner';
@@ -152,18 +152,22 @@ export function SkillList() {
   return (
     <CardContent className="mx-auto mt-6 max-w-4xl rounded-2xl shadow-md">
       <div className="space-y-4 p-6">
-        <h2 className="text-xl font-semibold text-gray-800">Lista de Skills</h2>
+        <h2 className="text-xl font-semibold text-foreground">
+          Lista de Skills
+        </h2>
 
         {loading ? (
-          <p className="text-gray-600">Carregando...</p>
+          <p className="text-muted-foreground">Carregando...</p>
         ) : skills.length === 0 ? (
-          <p className="text-gray-600">Nenhuma skill cadastrada ainda.</p>
+          <p className="text-muted-foreground">
+            Nenhuma skill cadastrada ainda.
+          </p>
         ) : (
           <ul className="space-y-2">
             {skills.map((skill) => (
               <li
                 key={skill.id}
-                className="flex items-center justify-between rounded-md border p-3 hover:bg-gray-50"
+                className="flex items-center justify-between rounded-md border p-3 hover:bg-accent"
               >
                 <div className="skill-icon flex items-center gap-3">
                   {skill.iconUrl && (
@@ -178,14 +182,14 @@ export function SkillList() {
 
                   {editingId === skill.id ? (
                     <div className="flex flex-col gap-2">
-                      <Input
+                      <InputField
                         type="text"
                         value={editedName}
                         onChange={(e) => setEditedName(e.target.value)}
                         placeholder="Nome da skill"
                         className="w-48"
                       />
-                      <Input
+                      <InputField
                         type="url"
                         value={editedIconUrl}
                         onChange={(e) => setEditedIconUrl(e.target.value)}

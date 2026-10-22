@@ -4,7 +4,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import GoBackButton from '@/components/ui/go-back-button';
 import { Button } from '@/components/ui/button';
 import { FormField } from '@/components/ui/form-field';
-import { FormInput } from '@/components/ui/form-input';
+import { InputField } from '@/components/ui/input-field';
 
 const mockBack = jest.fn();
 
@@ -27,7 +27,7 @@ describe('main reusable UI components', () => {
     const button = screen.getByRole('button', { name: 'Salvar' });
 
     expect(button).toHaveAttribute('data-slot', 'button');
-    expect(button).toHaveClass('bg-[#3B38A0]');
+    expect(button).toHaveClass('bg-primary');
 
     fireEvent.click(button);
 
@@ -47,9 +47,9 @@ describe('main reusable UI components', () => {
     expect(link).toHaveAttribute('data-slot', 'button');
   });
 
-  it('connects form input labels, values and validation messages', () => {
+  it('connects input label, value and validation message without an explicit id', () => {
     render(
-      <FormInput
+      <InputField
         label="Nome"
         name="name"
         placeholder="Digite seu nome"
@@ -59,11 +59,19 @@ describe('main reusable UI components', () => {
     );
 
     const input = screen.getByLabelText('Nome');
+    const message = screen.getByText('Nome é obrigatório');
 
     expect(input).toHaveAttribute('name', 'name');
     expect(input).toHaveAttribute('placeholder', 'Digite seu nome');
     expect(input).toHaveValue('Maria');
-    expect(screen.getByText('Nome é obrigatório')).toBeInTheDocument();
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(input).toHaveAttribute('aria-describedby', message.id);
+  });
+
+  it('keeps the id passed to the input', () => {
+    render(<InputField id="email" label="Email" />);
+
+    expect(screen.getByLabelText('Email')).toHaveAttribute('id', 'email');
   });
 
   it('renders a form field label with children and optional error text', () => {

@@ -1,10 +1,18 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useRef, useState } from 'react';
+import type { KeyboardEvent } from 'react';
 import { Search } from 'lucide-react';
+import { toast } from 'sonner';
 
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from '@/components/ui/input-group';
+import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 import { useSkills } from '@/hooks/api/useSkills';
 import { SkillTag } from './SkillTag';
 import { normalizeSkillName } from '@/lib/normalize-skill-name';
@@ -30,6 +38,10 @@ export function SkillSelector({
   const { allSkills, registerSkills } = useSkills();
 
   const [search, setSearch] = useState('');
+  const [isCreating, setIsCreating] = useState(false);
+  const creatingRef = useRef(false);
+  const inputId = useId();
+  const listId = `${inputId}-list`;
 
   const availableSkills = useMemo(
     () =>
@@ -51,10 +63,15 @@ export function SkillSelector({
     );
   }, [availableSkills, search]);
 
+  const canCreate = filteredSkills.length === 0 && !!search.trim();
+
   const handleCreateSkill = async () => {
     const name = search.trim();
 
-    if (!name) return;
+    if (!name || creatingRef.current) return;
+
+    creatingRef.current = true;
+    setIsCreating(true);
 
     try {
       const skill = await registerSkills({ name });
@@ -62,7 +79,10 @@ export function SkillSelector({
       onAddSkill(skill.id);
       setSearch('');
     } catch (error) {
-      console.error(error);
+      toast.error(getApiErrorMessage(error, 'Erro ao criar skill.'));
+    } finally {
+      creatingRef.current = false;
+      setIsCreating(false);
     }
   };
 
@@ -71,52 +91,76 @@ export function SkillSelector({
     setSearch('');
   };
 
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== 'Enter') return;
+
+    event.preventDefault();
+
+    if (!search.trim()) return;
+
+    const [firstSkill] = filteredSkills;
+
+    if (firstSkill?.id) {
+      handleSelectSkill(firstSkill.id);
+    } else if (canCreate) {
+      void handleCreateSkill();
+    }
+  };
+
   return (
     <div className="space-y-2">
-      <Label>{label}</Label>
+      <Label htmlFor={inputId}>{label}</Label>
 
-      <div className="relative">
-        <Search
-          size={16}
-          className="absolute top-1/2 left-3 -translate-y-1/2 text-muted-foreground"
-        />
-
-        <Input
+      <InputGroup>
+        <InputGroupAddon>
+          <Search aria-hidden />
+        </InputGroupAddon>
+        <InputGroupInput
+          id={inputId}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="pl-9"
+          aria-controls={filteredSkills.length > 0 ? listId : undefined}
         />
-      </div>
+      </InputGroup>
 
       {filteredSkills.length > 0 && (
-        <div className="max-h-56 overflow-y-auto rounded-md border bg-background">
-          {filteredSkills.map((skill) => (
-            <button
-              key={skill.id}
-              type="button"
-              onClick={() => handleSelectSkill(skill.id!)}
-              className="flex w-full items-center px-3 py-2 text-left text-sm transition-colors hover:bg-muted"
-            >
-              {skill.name}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {filteredSkills.length === 0 && search.trim() && (
-        <button
-          type="button"
-          onClick={handleCreateSkill}
-          className="flex w-full items-center rounded-md border px-3 py-2 text-left text-sm text-primary transition-colors hover:bg-muted"
+        <ul
+          id={listId}
+          aria-label={label}
+          className="max-h-56 overflow-y-auto rounded-md border bg-background p-1"
         >
-          <>
-            + Criar <strong>{search.trim()}</strong>
-          </>
-        </button>
+          {filteredSkills.map((skill) => (
+            <li key={skill.id}>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => handleSelectSkill(skill.id!)}
+                className="w-full justify-start font-normal"
+              >
+                {skill.name}
+              </Button>
+            </li>
+          ))}
+        </ul>
       )}
 
-      {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
+      {canCreate && (
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleCreateSkill}
+          disabled={isCreating}
+          className="w-full justify-start font-normal text-primary"
+        >
+          + Criar <strong>{search.trim()}</strong>
+        </Button>
+      )}
+
+      {errorMessage && (
+        <p className="text-sm text-destructive">{errorMessage}</p>
+      )}
 
       <div className="mt-3 flex flex-wrap gap-2">
         {selectedSkills.map((skillId) => {
