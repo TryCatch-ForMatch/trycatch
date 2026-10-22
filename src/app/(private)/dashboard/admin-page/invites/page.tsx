@@ -1,17 +1,23 @@
 import { InviteForm, InviteList } from '@/components/Dashboard/Invite';
-import GenericModalButton from '@/components/ModalButton/ModalButton';
+import { Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Modal } from '@/components/ui/modal';
 
 export default function InvitePage() {
   return (
     <>
       <div className="m-8 flex justify-end">
-        <GenericModalButton
-          buttonLabel="Novo Convite"
+        <Modal
           title="Criar Novo Convite"
-          size="md"
+          trigger={
+            <Button className="h-10">
+              Novo Convite
+              <Plus aria-hidden />
+            </Button>
+          }
         >
           <InviteForm />
-        </GenericModalButton>
+        </Modal>
       </div>
 
       <InviteList />

@@ -1,5 +1,6 @@
 'use client';
 
+import { ConfirmModal } from '@/components/ui/modal';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { InputField } from '@/components/ui/input-field';
@@ -13,7 +14,6 @@ import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 import { CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import {
   Select,
   SelectContent,
@@ -257,7 +257,8 @@ export function InviteList() {
         })}
       </div>
 
-      <ConfirmDialog
+      <ConfirmModal
+        destructive
         open={pendingDeleteId !== null}
         title="Deletar convite"
         description="Deseja realmente deletar este convite?"

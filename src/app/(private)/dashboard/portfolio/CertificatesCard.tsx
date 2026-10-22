@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Award, ExternalLink, Plus, Trash } from 'lucide-react';
 import {
@@ -13,25 +13,17 @@ import { InputField } from '@/components/ui/input-field';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ConfirmDialog } from '@/components/ui/confirm-dialog';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { ConfirmModal, Modal, ModalClose } from '@/components/ui/modal';
+import { DatePicker } from '@/components/ui/date-picker';
 import { useCertificates } from './hooks/useCertificates';
 import {
   certificateSchema,
   type CertificateFormData,
 } from './certificate.schema';
 
-const EMPTY_CERTIFICATE: CertificateFormData = {
+const EMPTY_CERTIFICATE: Partial<CertificateFormData> = {
   title: '',
   issuer: '',
-  date: '',
   url: '',
   description: '',
 };
@@ -44,6 +36,7 @@ export function CertificatesCard() {
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
@@ -148,83 +141,116 @@ export function CertificatesCard() {
         </Button>
       </div>
 
-      <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Novo certificado</DialogTitle>
-            <DialogDescription>
-              Informe os dados do curso ou da certificação.
-            </DialogDescription>
-          </DialogHeader>
-
-          <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            <InputField
-              label="Título"
-              placeholder="Ex.: React Avançado"
-              error={errors.title?.message}
-              {...register('title')}
-            />
-            <InputField
-              label="Emissor"
-              placeholder="Ex.: Alura, Udemy, AWS"
-              error={errors.issuer?.message}
-              {...register('issuer')}
-            />
-            <InputField
-              label="Data de conclusão"
-              type="month"
-              error={errors.date?.message}
-              {...register('date')}
-            />
-            <InputField
-              label="Link do certificado (opcional)"
-              type="url"
-              placeholder="https://..."
-              error={errors.url?.message}
-              {...register('url')}
-            />
-
-            <div className="mb-4">
-              <Label
-                htmlFor="certificate-description"
-                className="mb-1 block leading-5"
-              >
-                Descrição (opcional)
-              </Label>
-              <Textarea
-                id="certificate-description"
-                rows={3}
-                className="resize-none"
-                aria-invalid={!!errors.description}
-                {...register('description')}
-              />
-              {errors.description && (
-                <p className="mt-1 text-sm text-destructive" role="alert">
-                  {errors.description.message}
-                </p>
-              )}
-            </div>
-
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => handleOpenChange(false)}
-              >
+      <Modal
+        title="Novo certificado"
+        description="Informe os dados do curso ou da certificação."
+        open={isDialogOpen}
+        onOpenChange={handleOpenChange}
+        footer={
+          <>
+            <ModalClose asChild>
+              <Button type="button" variant="outline">
                 Cancelar
               </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Salvando...' : 'Adicionar'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+            </ModalClose>
+            <Button
+              type="submit"
+              form="certificate-form"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Salvando...' : 'Adicionar'}
+            </Button>
+          </>
+        }
+      >
+        <form
+          id="certificate-form"
+          onSubmit={handleSubmit(onSubmit)}
+          noValidate
+        >
+          <InputField
+            label="Título"
+            placeholder="Ex.: React Avançado"
+            error={errors.title?.message}
+            {...register('title')}
+          />
+          <InputField
+            label="Emissor"
+            placeholder="Ex.: Alura, Udemy, AWS"
+            error={errors.issuer?.message}
+            {...register('issuer')}
+          />
 
-      <ConfirmDialog
+          <div className="mb-4">
+            <Label htmlFor="certificate-date" className="mb-1 block leading-5">
+              Data de conclusão
+            </Label>
+            <Controller
+              name="date"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  id="certificate-date"
+                  value={field.value}
+                  onChange={field.onChange}
+                  disabledDates={{ after: new Date() }}
+                  startMonth={new Date(1990, 0)}
+                  endMonth={new Date()}
+                  aria-invalid={!!errors.date}
+                  aria-describedby={
+                    errors.date ? 'certificate-date-error' : undefined
+                  }
+                />
+              )}
+            />
+            {errors.date && (
+              <p
+                id="certificate-date-error"
+                className="mt-1 text-sm text-destructive"
+                role="alert"
+              >
+                {errors.date.message}
+              </p>
+            )}
+          </div>
+
+          <InputField
+            label="Link do certificado (opcional)"
+            type="url"
+            placeholder="https://..."
+            error={errors.url?.message}
+            {...register('url')}
+          />
+
+          <div>
+            <Label
+              htmlFor="certificate-description"
+              className="mb-1 block leading-5"
+            >
+              Descrição (opcional)
+            </Label>
+            <Textarea
+              id="certificate-description"
+              rows={3}
+              className="resize-none"
+              aria-invalid={!!errors.description}
+              {...register('description')}
+            />
+            {errors.description && (
+              <p className="mt-1 text-sm text-destructive" role="alert">
+                {errors.description.message}
+              </p>
+            )}
+          </div>
+        </form>
+      </Modal>
+
+      <ConfirmModal
+        destructive
         open={pendingDeleteId !== null}
         title="Remover certificado"
         description="Deseja realmente remover este certificado?"
+        confirmLabel="Remover"
         onConfirm={confirmDelete}
         onCancel={() => setPendingDeleteId(null)}
       />

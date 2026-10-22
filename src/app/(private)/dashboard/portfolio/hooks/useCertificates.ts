@@ -1,16 +1,12 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 import type { PortfolioCertificate } from '@/types/portfolio.types';
 import type { CertificateFormData } from '../certificate.schema';
-
-function toMonthYear(value: string) {
-  const [year, month] = value.split('-');
-  return `${month}/${year}`;
-}
 
 export function useCertificates() {
   const [certificates, setCertificates] = useState<PortfolioCertificate[]>([]);
@@ -36,7 +32,7 @@ export function useCertificates() {
       const { data } = await apiTryCatch.post('/user-certificate', {
         title: values.title,
         issuer: values.issuer,
-        date: toMonthYear(values.date),
+        date: format(values.date, 'MM/yyyy'),
         url: values.url || undefined,
         description: values.description || undefined,
       });

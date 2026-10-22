@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const certificateSchema = z.object({
   title: z.string().trim().min(1, 'Título obrigatório'),
   issuer: z.string().trim().min(1, 'Emissor obrigatório'),
-  date: z.string().regex(/^\d{4}-\d{2}$/, 'Data obrigatória'),
+  date: z.date('Data obrigatória'),
   url: z.url('URL inválida').optional().or(z.literal('')),
   description: z
     .string()
