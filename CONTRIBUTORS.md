@@ -30,6 +30,7 @@ Agradecemos a cada pessoa que dedicou tempo, código, testes e ideias para melho
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="http://guns.lol/sharma07"><img src="https://avatars.githubusercontent.com/u/164751031?v=4?s=100" width="100px;" alt="Sharma"/><br /><sub><b>Sharma</b></sub></a><br /><a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=sharmao07" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/dheeraj1174"><img src="https://avatars.githubusercontent.com/u/119004026?v=4?s=100" width="100px;" alt="Dheeraj Kumar"/><br /><sub><b>Dheeraj Kumar</b></sub></a><br /><a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=dheeraj1174" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/bfs2021"><img src="https://avatars.githubusercontent.com/u/101915083?v=4?s=100" width="100px;" alt="zgy"/><br /><sub><b>zgy</b></sub></a><br /><a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=bfs2021" title="Code">💻</a> <a href="https://github.com/TryCatch-ForMatch/trycatch/commits?author=bfs2021" title="Tests">⚠️</a></td>
     </tr>
   </tbody>
 </table>
