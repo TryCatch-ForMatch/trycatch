@@ -29,8 +29,13 @@ const EMPTY_CERTIFICATE: Partial<CertificateFormData> = {
 };
 
 export function CertificatesCard() {
-  const { certificates, isLoading, createCertificate, deleteCertificate } =
-    useCertificates();
+  const {
+    certificates,
+    isLoading,
+    isError,
+    createCertificate,
+    deleteCertificate,
+  } = useCertificates();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
@@ -76,6 +81,10 @@ export function CertificatesCard() {
             <Skeleton className="h-16" />
             <Skeleton className="h-16" />
           </div>
+        ) : isError ? (
+          <p role="alert" className="text-sm text-destructive">
+            Erro ao carregar certificados.
+          </p>
         ) : certificates.length === 0 ? (
           <p className="text-sm text-muted-foreground">
             Nenhum certificado cadastrado.
