@@ -1,9 +1,9 @@
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { PortfolioSummaryItem } from '@/types/portfolio.types';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
-import { Filters } from '../models';
+import type { PortfolioFilters } from '@/types/portfolio-filters';
 
-export function usePortfoliosInfiniteScroll(filters: Filters) {
+export function usePortfoliosInfiniteScroll(filters: PortfolioFilters) {
   const {
     flatData,
     isLoading,

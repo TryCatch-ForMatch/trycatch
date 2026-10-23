@@ -26,7 +26,7 @@ import {
   InputGroupInput,
 } from '@/components/ui/input-group';
 import { PortfolioPageSkeleton } from '@/components/Dashboard/Portfolio/PortfolioPageSkeleton';
-import { usePortfolioSettings } from './hooks/usePortfolioSettings';
+import { usePortfolioSettings } from '@/hooks/api/usePortfolioSettings';
 import { SkillSelector } from '@/components/shared/SkillSelector';
 import { CertificatesCard } from './CertificatesCard';
 import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';

@@ -20,7 +20,7 @@ import { DatePicker } from '@/components/ui/date-picker';
 import { ProjectStackSelector } from './ProjectStackSelector';
 import { SkillSelector } from '@/components/shared/SkillSelector';
 import { useWatch } from 'react-hook-form';
-import { useCurrentUser } from '@/lib/use-current-user';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { toast } from 'sonner';
 import { MoneyInput } from '@/components/form/MoneyInput/MoneyInput';
 import { getStackAssignmentLabel } from '@/lib/stack-assignment';

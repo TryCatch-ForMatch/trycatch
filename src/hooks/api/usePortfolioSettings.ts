@@ -5,7 +5,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
-import { portfolioSchema, type PortfolioFormData } from '../portfolio.schema';
+import {
+  portfolioSchema,
+  type PortfolioFormData,
+} from '@/lib/validations/portfolio.schema';
 import { portfolioKeys } from './portfolioKeys';
 
 const DEFAULT_VALUES: PortfolioFormData = {

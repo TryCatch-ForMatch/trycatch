@@ -15,11 +15,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ConfirmModal, Modal, ModalClose } from '@/components/ui/modal';
 import { DatePicker } from '@/components/ui/date-picker';
-import { useCertificates } from './hooks/useCertificates';
+import { useCertificates } from '@/hooks/api/useCertificates';
 import {
   certificateSchema,
   type CertificateFormData,
-} from './certificate.schema';
+} from '@/lib/validations/certificate.schema';
 
 const EMPTY_CERTIFICATE: Partial<CertificateFormData> = {
   title: '',
