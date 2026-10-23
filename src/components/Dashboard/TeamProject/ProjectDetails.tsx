@@ -12,6 +12,7 @@ import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { ProjectDetailsSkeleton } from '@/components/ui/SkeletonProjetcs/ProjectDetailsSkeleton';
 
 export function ProjectDetails({ projectId }: Readonly<{ projectId: string }>) {
   const user = useCurrentUser();
@@ -20,8 +21,7 @@ export function ProjectDetails({ projectId }: Readonly<{ projectId: string }>) {
     useProjectDetails(projectId);
   const invalidateProjects = useInvalidateProjects();
 
-  if (isLoading)
-    return <p className="p-6 text-muted-foreground">Carregando detalhes...</p>;
+  if (isLoading) return <ProjectDetailsSkeleton />;
   if (!project && isError)
     return (
       <div role="alert" className="space-y-3 p-6">
