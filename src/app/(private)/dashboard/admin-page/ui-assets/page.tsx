@@ -1,4 +1,6 @@
-import GenericModalButton from '@/components/ModalButton/ModalButton';
+import { Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Modal } from '@/components/ui/modal';
 
 import UIAssetUpload from '@/components/Dashboard/UIAssets/UIAssetUpload';
 import UIAssetList from '@/components/Dashboard/UIAssets/UIAssetList';
@@ -7,13 +9,17 @@ export default function UIAssetsPage() {
   return (
     <>
       <div className="m-8 flex justify-end">
-        <GenericModalButton
-          buttonLabel="Adicionar Imagem"
+        <Modal
           title="Upload de Imagem"
-          size="md"
+          trigger={
+            <Button className="h-10">
+              Adicionar Imagem
+              <Plus aria-hidden />
+            </Button>
+          }
         >
           <UIAssetUpload />
-        </GenericModalButton>
+        </Modal>
       </div>
 
       <UIAssetList />

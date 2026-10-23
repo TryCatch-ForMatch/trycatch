@@ -6,8 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Pencil, Trash } from 'lucide-react';
 import { BasicUser, FullUser } from '@/types/interface/user';
 import { EditUserAdminForm } from './EditUserAdminForm';
-import Modal from '@/components/ui/modal';
-import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import { ConfirmModal, Modal } from '@/components/ui/modal';
 import { toast } from 'sonner';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
@@ -99,7 +98,7 @@ export function UserAdminList() {
 
       <Modal
         open={isDialogOpen}
-        onClose={handleDialogClose}
+        onOpenChange={(open) => !open && handleDialogClose()}
         title="Editar Usuário"
       >
         {selectedUser && (
@@ -111,7 +110,8 @@ export function UserAdminList() {
         )}
       </Modal>
 
-      <ConfirmDialog
+      <ConfirmModal
+        destructive
         open={pendingDeleteId !== null}
         title="Excluir usuário"
         description="Tem certeza que deseja excluir este usuário?"

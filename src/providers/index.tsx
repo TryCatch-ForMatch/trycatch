@@ -3,6 +3,7 @@
 import { ReactNode } from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { SidebarProvider } from '@/Context/SidebarContextOpenClose';
+import QueryProvider from './query.provider';
 
 export default function DashboardProviders({
   children,
@@ -10,8 +11,10 @@ export default function DashboardProviders({
   children: ReactNode;
 }) {
   return (
-    <SidebarProvider>
-      <SessionProvider>{children}</SessionProvider>
-    </SidebarProvider>
+    <QueryProvider>
+      <SidebarProvider>
+        <SessionProvider>{children}</SessionProvider>
+      </SidebarProvider>
+    </QueryProvider>
   );
 }

@@ -4,7 +4,7 @@ import { signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useProjects } from '@/hooks/api/useProjects';
+import { useProjectsCount } from '@/hooks/api/useProjects';
 import { Clock, Check, Ellipsis, LogOut } from 'lucide-react';
 import { useSidebar } from '@/Context/SidebarContextOpenClose';
 
@@ -37,7 +37,7 @@ function ProjectStat({
 }
 
 export function DashboardHeader() {
-  const { projectsEstatistica, isProjectsLoading } = useProjects();
+  const { counts, isLoading: isProjectsLoading } = useProjectsCount();
   const { isOpen } = useSidebar();
 
   return (
@@ -48,19 +48,19 @@ export function DashboardHeader() {
         <ProjectStat
           icon={Check}
           text="Finalizados"
-          value={projectsEstatistica?.counts?.concluido}
+          value={counts?.concluido}
           isLoading={isProjectsLoading}
         />
         <ProjectStat
           icon={Clock}
           text="Em produção"
-          value={projectsEstatistica?.counts?.emAndamento}
+          value={counts?.emAndamento}
           isLoading={isProjectsLoading}
         />
         <ProjectStat
           icon={Ellipsis}
           text="Aberto"
-          value={projectsEstatistica?.counts?.buscando}
+          value={counts?.buscando}
           isLoading={isProjectsLoading}
         />
       </div>
