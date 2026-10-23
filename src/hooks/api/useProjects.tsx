@@ -40,7 +40,6 @@ export function useProjectsCount() {
       );
       return response.data;
     },
-    refetchInterval: 5000,
   });
 
   return { counts: data?.counts, isLoading: isPending };
