@@ -56,7 +56,7 @@ export function usePortfolioSettings() {
   const queryClient = useQueryClient();
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
 
-  const { data, isPending } = useQuery({
+  const { data, isPending, isError, error, refetch } = useQuery({
     queryKey: portfolioKeys.settings(),
     queryFn: fetchPortfolioSettings,
   });
@@ -96,6 +96,9 @@ export function usePortfolioSettings() {
     form,
     username: data?.username ?? null,
     isLoading: isPending,
+    isError,
+    error,
+    refetch,
     isSaving,
     saveStatus,
     onSubmit,

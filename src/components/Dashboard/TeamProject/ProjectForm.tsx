@@ -9,7 +9,7 @@ import {
   FormProvider,
   type FieldErrors,
 } from 'react-hook-form';
-import { addDays, format, parse } from 'date-fns';
+import { addDays, addYears, format, parse } from 'date-fns';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -321,6 +321,8 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
                       field.onChange(date ? format(date, 'yyyy-MM-dd') : '')
                     }
                     disabledDates={{ before: addDays(new Date(), 1) }}
+                    startMonth={new Date()}
+                    endMonth={addYears(new Date(), 5)}
                     aria-invalid={!!errors.deadline}
                   />
                 )}

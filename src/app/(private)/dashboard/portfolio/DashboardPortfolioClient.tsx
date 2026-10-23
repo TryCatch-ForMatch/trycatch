@@ -29,10 +29,20 @@ import { PortfolioPageSkeleton } from '@/components/Dashboard/Portfolio/Portfoli
 import { usePortfolioSettings } from './hooks/usePortfolioSettings';
 import { SkillSelector } from '@/components/shared/SkillSelector';
 import { CertificatesCard } from './CertificatesCard';
+import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 
 export default function DashboardPortfolioClient() {
-  const { form, username, isLoading, isSaving, saveStatus, onSubmit } =
-    usePortfolioSettings();
+  const {
+    form,
+    username,
+    isLoading,
+    isError,
+    error,
+    refetch,
+    isSaving,
+    saveStatus,
+    onSubmit,
+  } = usePortfolioSettings();
   const {
     register,
     handleSubmit,
@@ -45,7 +55,18 @@ export default function DashboardPortfolioClient() {
   const selectedSkills: string[] = watch('skills') || [];
 
   if (isLoading) return <PortfolioPageSkeleton />;
-
+  if (isError) {
+    return (
+      <div role="alert" className="space-y-4 p-6">
+        <p className="text-sm text-destructive">
+          {getApiErrorMessage(error, 'Erro ao carregar portfólio.')}
+        </p>
+        <Button variant="outline" onClick={() => refetch()}>
+          Tentar novamente
+        </Button>
+      </div>
+    );
+  }
   return (
     <div className="space-y-8 p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">

@@ -2,6 +2,7 @@
 
 import { useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import type {
   ProjectCountType,
@@ -46,18 +47,30 @@ export function useProjectsCount() {
 }
 
 export function useProjectDetails(id: string) {
-  const { data, isPending, isError } = useQuery({
+  const { data, isPending, isError, refetch, isRefetching } = useQuery({
     queryKey: projectKeys.detail(id),
     queryFn: async () => {
-      const response = await apiTryCatch.get<ProjectDetailsType>(
-        `/team-project/${id}`
-      );
-      return response.data;
+      try {
+        const response = await apiTryCatch.get<ProjectDetailsType>(
+          `/team-project/${id}`
+        );
+        return response.data;
+      } catch (error) {
+        const status = isAxiosError(error) ? error.response?.status : null;
+        if (status === 404 || status === 400) return null;
+        throw error;
+      }
     },
     enabled: !!id,
   });
 
-  return { project: data ?? null, isLoading: isPending, isError };
+  return {
+    project: data ?? null,
+    isLoading: isPending,
+    isError,
+    isRefetching,
+    refetch,
+  };
 }
 
 export function useInvalidateProjects() {

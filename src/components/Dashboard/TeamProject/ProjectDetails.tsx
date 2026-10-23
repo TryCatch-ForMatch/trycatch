@@ -16,11 +16,27 @@ import { Card, CardContent } from '@/components/ui/card';
 export function ProjectDetails({ projectId }: Readonly<{ projectId: string }>) {
   const user = useCurrentUser();
   const router = useRouter();
-  const { project, isLoading } = useProjectDetails(projectId);
+  const { project, isLoading, isError, isRefetching, refetch } =
+    useProjectDetails(projectId);
   const invalidateProjects = useInvalidateProjects();
 
   if (isLoading)
     return <p className="p-6 text-muted-foreground">Carregando detalhes...</p>;
+  if (!project && isError)
+    return (
+      <div role="alert" className="space-y-3 p-6">
+        <p className="text-destructive">
+          Não foi possível carregar o projeto. Tente novamente.
+        </p>
+        <Button
+          variant="outline"
+          onClick={() => void refetch()}
+          disabled={isRefetching}
+        >
+          {isRefetching ? 'Tentando...' : 'Tentar novamente'}
+        </Button>
+      </div>
+    );
   if (!project)
     return <p className="p-6 text-muted-foreground">Projeto não encontrado</p>;
 
