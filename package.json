@@ -107,7 +107,7 @@
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.13",
     "prisma": "^7.10.1",
-    "storybook": "^9.1.21",
+    "storybook": "^10.6.3",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.4",
