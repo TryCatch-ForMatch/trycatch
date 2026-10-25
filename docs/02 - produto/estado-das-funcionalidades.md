@@ -186,6 +186,20 @@ O Documento 0, seção 4, trata divergência como falha de qualidade.
 | Vários | SEC-03 — `User` retornado com hash de senha | Resolvida pelo `omit` global do PR #719 |
 | `arquitetura-geral.md`, `IA-REGRAS.md` | BUG-02 — `params` síncrono | Resolvida pelo PR #713 |
  
+### 6.4 Corrigidas em 25/10/2026
+ 
+Encontradas na revisão de outubro e corrigidas antes de serem documentadas.
+ 
+| Documento | Divergência | Resolução |
+|---|---|---|
+| `governanca-dados-lgpd.md`, seção 9 | Conta desativada (`isActive: false`) ainda conseguia fazer login, e sessões abertas continuavam válidas | Login recusa conta desativada; sessão revalidada a cada 5 minutos (PR #889) |
+| `governanca-dados-lgpd.md`, seção 6.6 | Portfólio público e `GET /api/portfolio/me` devolviam o nome de quem avaliou | Autoria removida das respostas; continua registrada no banco (PR #891) |
+| `governanca-dados-lgpd.md`, seções 6.7 e 6.8 | Portfólio público publicava texto de feedback sem a dupla autorização e mesmo quando ocultado pela administração | Só publica com `publicationAllowed`, `publishedByReceiver` e sem `hiddenByAdmin` (PR #891) |
+ 
+> ℹ️ Consequência esperada da última correção: a seção "Feedback recebido" do
+> portfólio público fica vazia até existirem as telas em que quem avalia
+> autoriza a publicação e quem recebe decide publicar.
+ 
 ---
  
 ## 6A. Decisões pendentes da mantenedoria
@@ -232,3 +246,4 @@ documento de produto novo; ao descobrir divergência.
 | 16/08/2026 | Criação, a partir de levantamento de rotas, telas e componentes |
 | 18/08/2026 | Encerramento de projeto isolado como bloqueio do feedback; ordem de execução; decisões de feedback fechadas; divergências corrigidas registradas; adicionados Dashboard do Membro e Exclusão de Conta 
 | 17/10/2026 | Nova verificação contra o código: encerramento manual e migration v2 concluídos, feedback desbloqueado; exclusão de conta reclassificada e regra de anonimização registrada; SEC-03 e BUG-02 resolvidas; decisões pendentes da mantenedoria (seção 6A) |
+| 25/10/2026 | Seção 6.4: correções de acesso (PR #889) e de exibição do feedback (PR #891) registradas |
