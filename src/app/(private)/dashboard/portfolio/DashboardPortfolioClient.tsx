@@ -40,7 +40,6 @@ export default function DashboardPortfolioClient() {
     error,
     refetch,
     isSaving,
-    saveStatus,
     onSubmit,
   } = usePortfolioSettings();
   const {
@@ -80,19 +79,6 @@ export default function DashboardPortfolioClient() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          <span role="status" className="text-sm">
-            {saveStatus === 'success' && (
-              <span className="text-green-600 dark:text-green-400">
-                ✓ Alterações salvas
-              </span>
-            )}
-            {saveStatus === 'error' && (
-              <span className="text-destructive">
-                Erro ao salvar. Tente novamente.
-              </span>
-            )}
-          </span>
-
           {username && (
             <Button variant="outline" asChild>
               <a

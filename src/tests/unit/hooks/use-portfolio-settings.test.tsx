@@ -1,10 +1,16 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
+import { AxiosError, AxiosHeaders } from 'axios';
+import { toast } from 'sonner';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { usePortfolioSettings } from '@/app/(private)/dashboard/portfolio/hooks/usePortfolioSettings';
 import { createQueryWrapper } from './query-wrapper';
 
 jest.mock('@/lib/axios/axiosTryCatch', () => ({
   apiTryCatch: { get: jest.fn(), patch: jest.fn() },
+}));
+
+jest.mock('sonner', () => ({
+  toast: { success: jest.fn(), error: jest.fn() },
 }));
 
 const mockedApi = apiTryCatch as unknown as {
@@ -82,7 +88,7 @@ describe('usePortfolioSettings', () => {
     });
   });
 
-  it('salva as alterações e marca o status como sucesso', async () => {
+  it('salva as alterações e mostra o toast de sucesso', async () => {
     mockedApi.patch.mockResolvedValue({ data: {} });
     const { result } = await renderLoaded();
     const values = { ...result.current.form.getValues(), bio: 'Nova bio' };
@@ -90,17 +96,40 @@ describe('usePortfolioSettings', () => {
     await act(() => result.current.onSubmit(values));
 
     expect(mockedApi.patch).toHaveBeenCalledWith('/portfolio/me', values);
-    expect(result.current.saveStatus).toBe('success');
+    expect(toast.success).toHaveBeenCalledWith(
+      'Alterações salvas com sucesso!'
+    );
+    expect(toast.error).not.toHaveBeenCalled();
     expect(result.current.form.getValues('bio')).toBe('Nova bio');
     expect(result.current.form.formState.isDirty).toBe(false);
   });
 
-  it('marca o status como erro quando o salvamento falha', async () => {
-    mockedApi.patch.mockRejectedValue(new Error('falhou'));
+  it('mostra a mensagem da API no toast de erro quando o salvamento falha', async () => {
+    mockedApi.patch.mockRejectedValue(
+      new AxiosError('Request failed', 'ERR_BAD_REQUEST', undefined, null, {
+        data: { message: 'URL do GitHub inválida.' },
+        status: 400,
+        statusText: 'Bad Request',
+        headers: {},
+        config: { headers: new AxiosHeaders() },
+      })
+    );
     const { result } = await renderLoaded();
 
     await act(() => result.current.onSubmit(result.current.form.getValues()));
 
-    expect(result.current.saveStatus).toBe('error');
+    expect(toast.error).toHaveBeenCalledWith('URL do GitHub inválida.');
+    expect(toast.success).not.toHaveBeenCalled();
+  });
+
+  it('usa a mensagem padrão no toast de erro quando a API não informa o motivo', async () => {
+    mockedApi.patch.mockRejectedValue(new Error('Network Error'));
+    const { result } = await renderLoaded();
+
+    await act(() => result.current.onSubmit(result.current.form.getValues()));
+
+    expect(toast.error).toHaveBeenCalledWith(
+      'Erro ao salvar. Tente novamente.'
+    );
   });
 });
