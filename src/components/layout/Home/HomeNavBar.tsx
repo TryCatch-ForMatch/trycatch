@@ -2,8 +2,32 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
 import { useEffect, useRef, useState } from 'react';
+
+function NavAuthButton({ className }: { className?: string }) {
+  const { status } = useSession();
+
+  if (status === 'loading') {
+    return <Skeleton className={cn('h-9 w-24 rounded-full', className)} />;
+  }
+
+  const isAuthenticated = status === 'authenticated';
+
+  return (
+    <Button
+      asChild
+      className={cn('rounded-full bg-gray-400 hover:bg-gray-400/90', className)}
+    >
+      <Link href={isAuthenticated ? '/dashboard' : '/login'}>
+        {isAuthenticated ? 'Dashboard' : 'Login'}
+      </Link>
+    </Button>
+  );
+}
 
 export function HomeNavBar() {
   const [scrolled, setScrolled] = useState(false);
@@ -93,12 +117,7 @@ export function HomeNavBar() {
               </Link>
             </li>
             <li>
-              <Button
-                asChild
-                className="rounded-full bg-gray-400 hover:bg-gray-400/90"
-              >
-                <Link href="/login">Login</Link>
-              </Button>
+              <NavAuthButton />
             </li>
           </ul>
 
@@ -141,12 +160,7 @@ export function HomeNavBar() {
                 <Link href="/contact">Contato</Link>
               </li>
               <li onClick={() => setOpen(false)}>
-                <Button
-                  asChild
-                  className="mt-2 rounded-full bg-gray-400 hover:bg-gray-400/90"
-                >
-                  <Link href="/login">Login</Link>
-                </Button>
+                <NavAuthButton className="mt-2" />
               </li>
             </ul>
           </div>
