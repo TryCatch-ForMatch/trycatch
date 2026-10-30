@@ -164,6 +164,8 @@ por ADMIN.
 | Feedbacks e corroborações dados | Mantidos | Tabela 6.3; autoria anônima pelo registro anonimizado |
 | Projetos de que é owner e `StackTaken` | Mantidos | Fazem parte do histórico da equipe |
 | E-mail nos convites recebidos (`Invite.email`) | Anonimizado | Dado pessoal; evita conflito de duplicidade se a pessoa for convidada de novo |
+| Nome e e-mail no pedido de convite (`InviteRequest`) | Anonimizados | Dado pessoal; o e-mail é único, e um novo pedido da mesma pessoa daria conflito |
+| E-mail nos tokens de redefinição de senha (`PasswordResetToken`) | Anonimizado | Dado pessoal; o token não tem valor de histórico |
  
 ### 6.4 Por que a autoria não pode simplesmente ser apagada junto
  
@@ -262,6 +264,13 @@ Nenhuma das duas partes publica sozinha.
 - Portfólio privado retorna 404 idêntico ao de usuário inexistente, não revelando
   existência de conta;
 - Objeto `User` do Prisma nunca retornado íntegro em resposta de API.
+- Conta desativada (`isActive: false`) não autentica, e a sessão aberta é
+  revalidada no máximo a cada 5 minutos: desativar uma conta encerra o acesso
+  sem esperar a sessão expirar. O login usa a mesma mensagem de erro para
+  e-mail inexistente, senha errada e conta desativada;
+- A identidade de quem avaliou nunca sai em resposta de API (seção 6.6), e o
+  texto de feedback só é público com a dupla autorização da seção 6.8 e se não
+  tiver sido ocultado pela administração (seção 6.7).
 > ✅ **SEC-03 resolvida (PR #719):** o hash da senha é omitido de `User` por
 > padrão em todo o projeto (`omit` global em `src/lib/prisma.ts`). Os demais
 > campos pessoais continuam exigindo `select` explícito em cada rota.
@@ -317,3 +326,5 @@ Alinhado a:
 | v2.1 | SEC-03 resolvida pelo `omit` global do PR #719 (17/10/2026) |
 | v2.1 | Exclusão de conta: soft delete com anonimização quando há vínculo, hard delete sem vínculo, inclusive por ADMIN; e-mail dos convites anonimizado (17/10/2026) |
 | v2.1 | Exclusão de conta reclassificada: o fluxo existe, falta a anonimização |
+| v2.2 | Pedido de convite (`InviteRequest`) e tokens de redefinição de senha incluídos na anonimização (6.3.2) |
+| v2.2 | Seção 9: conta desativada não autentica e a sessão é revalidada (PR #889); regras 6.6 a 6.8 aplicadas nas respostas de API (PR #891) (25/10/2026) |
