@@ -3,13 +3,20 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { ProjectDetailsType } from '@/types/interface/team-project';
-import { useForm, FormProvider, type FieldErrors } from 'react-hook-form';
+import {
+  useForm,
+  Controller,
+  FormProvider,
+  type FieldErrors,
+} from 'react-hook-form';
+import { addDays, addYears, format, parse } from 'date-fns';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { InputField } from '@/components/ui/input-field';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { DatePicker } from '@/components/ui/date-picker';
 import { ProjectStackSelector } from './ProjectStackSelector';
 import { SkillSelector } from '@/components/shared/SkillSelector';
 import { useWatch } from 'react-hook-form';
@@ -20,6 +27,7 @@ import { MoneyInput } from '@/components/form/MoneyInput/MoneyInput';
 import { getStackAssignmentLabel } from '@/lib/stack-assignment';
 import { isAxiosError } from 'axios';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { useInvalidateProjects } from '@/hooks/api/useProjects';
 
 const projectSchema = z.object({
   name: z.string().min(3, 'Nome do projeto é obrigatório'),
@@ -56,6 +64,7 @@ export type ProjectFormData = z.infer<typeof projectSchema>;
 
 export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
   const router = useRouter();
+  const invalidateProjects = useInvalidateProjects();
   const user = useCurrentUser();
   const editId = editIdProp;
   const [editingProject, setEditingProject] =
@@ -112,6 +121,8 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
       } else {
         await apiTryCatch.post('/team-project', payload);
       }
+
+      await invalidateProjects();
 
       router.push(
         editId
@@ -301,10 +312,26 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
               <Label htmlFor="project-deadline" className="mb-1">
                 Prazo
               </Label>
-              <InputField
-                id="project-deadline"
-                type="date"
-                {...register('deadline')}
+              <Controller
+                name="deadline"
+                control={methods.control}
+                render={({ field }) => (
+                  <DatePicker
+                    id="project-deadline"
+                    value={
+                      field.value
+                        ? parse(field.value, 'yyyy-MM-dd', new Date())
+                        : undefined
+                    }
+                    onChange={(date) =>
+                      field.onChange(date ? format(date, 'yyyy-MM-dd') : '')
+                    }
+                    disabledDates={{ before: addDays(new Date(), 1) }}
+                    startMonth={new Date()}
+                    endMonth={addYears(new Date(), 5)}
+                    aria-invalid={!!errors.deadline}
+                  />
+                )}
               />
               {errors.deadline && (
                 <p className="text-sm text-destructive">

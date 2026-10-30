@@ -1,10 +1,10 @@
 'use client';
 
+import { ConfirmModal } from '@/components/ui/modal';
 import { useState } from 'react';
 import { signOut } from 'next-auth/react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 
@@ -47,7 +47,8 @@ export function DeleteAccountButton({ userId }: { userId: string }) {
         </p>
       )}
 
-      <ConfirmDialog
+      <ConfirmModal
+        destructive
         open={confirmOpen}
         title="Excluir conta"
         description="Tem certeza que deseja excluir sua conta? Esta ação não poderá ser desfeita!"

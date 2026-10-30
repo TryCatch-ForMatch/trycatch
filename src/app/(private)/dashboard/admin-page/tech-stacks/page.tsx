@@ -1,17 +1,23 @@
 import { TechStackForm, TechStackList } from '@/components/Dashboard/TechStack';
-import GenericModalButton from '@/components/ModalButton/ModalButton';
+import { Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Modal } from '@/components/ui/modal';
 
-export default function InvitePage() {
+export default function TechStacksPage() {
   return (
     <>
       <div className="m-8 flex justify-end">
-        <GenericModalButton
-          buttonLabel="Nova Stack"
+        <Modal
           title="Criar Nova Stack"
-          size="md"
+          trigger={
+            <Button className="h-10">
+              Nova Stack
+              <Plus aria-hidden />
+            </Button>
+          }
         >
           <TechStackForm />
-        </GenericModalButton>
+        </Modal>
       </div>
 
       <TechStackList />
