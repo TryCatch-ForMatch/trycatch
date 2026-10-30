@@ -2,7 +2,7 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 
-import { useProjects } from '@/hooks/api/useProjects';
+import { useProjectsSummary } from '@/hooks/api/useProjects';
 import { ChangeEvent } from 'react';
 
 import { CardProjectSummary } from '@/components/Dashboard/TeamProject';
@@ -15,7 +15,11 @@ import { Plus, Clock, Search } from 'lucide-react';
 const placeholderFilters = ['Recentes', 'Classificar', 'Filtrar'];
 
 export default function TeamProjectPage() {
-  const { allProjects, isProjectsLoading } = useProjects();
+  const {
+    projects: allProjects,
+    isLoading: isProjectsLoading,
+    isError,
+  } = useProjectsSummary();
   const [valorProject, setValorProject] = useState('');
 
   const allProjectsFiltrados = useMemo(() => {
@@ -29,7 +33,7 @@ export default function TeamProjectPage() {
       <div className="flex flex-wrap items-center justify-between">
         <div>
           <h1 className="text-2xl font-medium text-foreground">Projetos</h1>
-          <div className="mt-1 flex gap-4">
+          <div className="mt-2 flex gap-4">
             {placeholderFilters.map((label) => (
               <Badge
                 key={label}
@@ -75,6 +79,10 @@ export default function TeamProjectPage() {
 
       {isProjectsLoading ? (
         <ProjectSummarySkeletonGrid />
+      ) : isError ? (
+        <div role="alert" className="text-xl font-medium text-destructive">
+          Erro ao carregar projetos.
+        </div>
       ) : allProjectsFiltrados.length === 0 ? (
         <div className="text-xl font-medium text-muted-foreground">
           Nenhum projeto encontrado.

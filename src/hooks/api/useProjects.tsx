@@ -1,94 +1,82 @@
+'use client';
+
+import { useCallback } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
-import { useState, useEffect, useCallback } from 'react';
-import type { ProjectSummaryType } from '@/types/interface/team-project';
-import type { ProjectDetailsType } from '@/types/interface/team-project';
-import type { ProjectCountType } from '@/types/interface/team-project';
+import type {
+  ProjectCountType,
+  ProjectDetailsType,
+  ProjectSummaryType,
+} from '@/types/interface/team-project';
 
-export function useProjects() {
-  const [allProjects, setAllProjects] = useState<ProjectSummaryType[]>([]);
-  const [allProjectsDetails, setAllProjectsDetails] = useState<
-    ProjectDetailsType[]
-  >([]);
+export const projectKeys = {
+  all: ['team-projects'] as const,
+  summary: () => [...projectKeys.all, 'summary'] as const,
+  count: () => [...projectKeys.all, 'count'] as const,
+  detail: (id: string) => [...projectKeys.all, 'detail', id] as const,
+};
 
-  const [projectsEstatistica, setProjectsEstatistica] =
-    useState<ProjectCountType>({} as ProjectCountType);
-  const [isProjectsLoading, setIsProjectsLoading] = useState(false);
+export function useProjectsSummary() {
+  const { data, isPending, isError } = useQuery({
+    queryKey: projectKeys.summary(),
+    queryFn: async () => {
+      const response = await apiTryCatch.get<ProjectSummaryType[]>(
+        '/team-project/summary'
+      );
+      return response.data ?? [];
+    },
+  });
 
-  //Busca todos os projects com alguns informacoes extras
-  const fetchProjects = useCallback(async () => {
-    setIsProjectsLoading(true);
-    try {
-      const response = await apiTryCatch.get('/team-project/summary');
-      setAllProjects(response.data);
-    } catch (error) {
-      console.error('Erro ao buscar projetos:', error);
-      throw error;
-    } finally {
-      setIsProjectsLoading(false);
-    }
-  }, []);
+  return { projects: data ?? [], isLoading: isPending, isError };
+}
 
-  //Busca todos os projectos
-  const fetchProjectsDetails = useCallback(async () => {
-    setIsProjectsLoading(true);
-    try {
-      const response = await apiTryCatch.get('/team-project');
-      setAllProjectsDetails(response.data);
-    } catch (error) {
-      console.error('Erro ao buscar projetos:', error);
-      throw error;
-    } finally {
-      setIsProjectsLoading(false);
-    }
-  }, []);
-
-  //Busca as estatisca dos projectos. Concluido|Buscando|Em Adnamento
-  const fetchProjectsStatics = useCallback(async (initial = false) => {
-    if (initial === true) setIsProjectsLoading(true);
-    try {
-      const response = await apiTryCatch.get('/team-project/count');
-      const newData = response.data;
-      setProjectsEstatistica((prev) => {
-        if (JSON.stringify(prev) === JSON.stringify(newData)) return prev;
-
-        return newData;
-      });
-    } catch (error) {
-      console.error('Erro ao buscar projetos:', error);
-      throw error;
-    } finally {
-      setIsProjectsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchProjectsStatics(true);
-    const interval = setInterval(fetchProjectsStatics, 5000);
-
-    return () => clearInterval(interval);
-  }, [fetchProjectsStatics]);
-
-  useEffect(() => {
-    fetchProjects();
-    fetchProjectsDetails();
-  }, [fetchProjects, fetchProjectsDetails]);
-
-  const getProjectDetailsById = useCallback(async (id: string) => {
-    try {
-      const response = await apiTryCatch.get(`/team-project/${id}`);
+export function useProjectsCount() {
+  const { data, isPending } = useQuery({
+    queryKey: projectKeys.count(),
+    queryFn: async () => {
+      const response = await apiTryCatch.get<ProjectCountType>(
+        '/team-project/count'
+      );
       return response.data;
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
+    },
+  });
+
+  return { counts: data?.counts, isLoading: isPending };
+}
+
+export function useProjectDetails(id: string) {
+  const { data, isPending, isError, refetch, isRefetching } = useQuery({
+    queryKey: projectKeys.detail(id),
+    queryFn: async () => {
+      try {
+        const response = await apiTryCatch.get<ProjectDetailsType>(
+          `/team-project/${id}`
+        );
+        return response.data;
+      } catch (error) {
+        const status = isAxiosError(error) ? error.response?.status : null;
+        if (status === 404 || status === 400) return null;
+        throw error;
+      }
+    },
+    enabled: !!id,
+  });
 
   return {
-    allProjects,
-    allProjectsDetails,
-    isProjectsLoading,
-    fetchProjects,
-    projectsEstatistica,
-    fetchProjectsStatics,
-    getProjectDetailsById,
+    project: data ?? null,
+    isLoading: isPending,
+    isError,
+    isRefetching,
+    refetch,
   };
+}
+
+export function useInvalidateProjects() {
+  const queryClient = useQueryClient();
+
+  return useCallback(
+    () => queryClient.invalidateQueries({ queryKey: projectKeys.all }),
+    [queryClient]
+  );
 }

@@ -1,11 +1,11 @@
 'use client';
 
+import { ConfirmModal } from '@/components/ui/modal';
 import { useEffect, useState } from 'react';
 import { Pencil, Trash, Check, X } from 'lucide-react';
 import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { InputField } from '@/components/ui/input-field';
-import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { toast } from 'sonner';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import {
@@ -211,7 +211,8 @@ export function TechStackList() {
           </ul>
         )}
 
-        <ConfirmDialog
+        <ConfirmModal
+          destructive
           open={confirmDeleteOpen}
           onConfirm={deleteMode === 'confirm' ? confirmDelete : cancelDelete}
           onCancel={cancelDelete}
@@ -219,7 +220,8 @@ export function TechStackList() {
           description={modalDescription}
         />
 
-        <ConfirmDialog
+        <ConfirmModal
+          destructive
           open={confirmUpdateOpen}
           onConfirm={confirmForceUpdate}
           onCancel={cancelForceUpdate}

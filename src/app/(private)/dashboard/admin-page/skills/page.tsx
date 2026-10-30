@@ -1,17 +1,23 @@
 import { SkillForm, SkillList } from '@/components/Dashboard/Skill';
-import GenericModalButton from '@/components/ModalButton/ModalButton';
+import { Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Modal } from '@/components/ui/modal';
 
-export default function InvitePage() {
+export default function SkillsPage() {
   return (
     <>
       <div className="m-8 flex justify-end">
-        <GenericModalButton
-          buttonLabel="Nova Skill"
+        <Modal
           title="Criar Nova Skill"
-          size="md"
+          trigger={
+            <Button className="h-10">
+              Nova Skill
+              <Plus aria-hidden />
+            </Button>
+          }
         >
           <SkillForm />
-        </GenericModalButton>
+        </Modal>
       </div>
 
       <SkillList />

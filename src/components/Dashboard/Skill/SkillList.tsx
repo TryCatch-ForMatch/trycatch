@@ -1,11 +1,11 @@
 'use client';
 
+import { ConfirmModal } from '@/components/ui/modal';
 import { useEffect, useState } from 'react';
 import { CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { InputField } from '@/components/ui/input-field';
 import { Pencil, Trash, Check, X } from 'lucide-react';
-import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { toast } from 'sonner';
 import Image from 'next/image';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
@@ -244,7 +244,8 @@ export function SkillList() {
           </ul>
         )}
 
-        <ConfirmDialog
+        <ConfirmModal
+          destructive
           open={confirmDeleteOpen}
           onConfirm={deleteMode === 'confirm' ? confirmDelete : cancelDelete}
           onCancel={cancelDelete}
@@ -252,7 +253,8 @@ export function SkillList() {
           description={modalDescription}
         />
 
-        <ConfirmDialog
+        <ConfirmModal
+          destructive
           open={confirmUpdateOpen}
           onConfirm={confirmForceUpdate}
           onCancel={cancelForceUpdate}
