@@ -22,6 +22,7 @@ import { SkillSelector } from '@/components/shared/SkillSelector';
 import { useWatch } from 'react-hook-form';
 import { useCurrentUser } from '@/lib/use-current-user';
 import { toast } from 'sonner';
+import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 import { MoneyInput } from '@/components/form/MoneyInput/MoneyInput';
 import { getStackAssignmentLabel } from '@/lib/stack-assignment';
 import { isAxiosError } from 'axios';
@@ -172,8 +173,13 @@ export function ProjectForm({ editIdProp }: { editIdProp?: string } = {}) {
           })),
           skills: (data.skills || []).map((s) => s.id),
         });
-      } catch {
-        toast.error('Erro ao carregar dados do projeto para edição');
+      } catch (error) {
+        toast.error(
+          getApiErrorMessage(
+            error,
+            'Erro ao carregar dados do projeto para edição'
+          )
+        );
       }
     }
     void loadProject();
