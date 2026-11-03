@@ -33,6 +33,12 @@ let getPublicPortfolio: (username: string) => Promise<{
     stacks: Array<{ stackName: string }>;
     status?: string;
   }>;
+  feedback?: Array<{
+    id: string;
+    comment: string | null;
+    projectName: string;
+    givenBy: string | null;
+  }>;
 }>;
 
 beforeAll(async () => {
@@ -101,5 +107,90 @@ describe('getPublicPortfolio', () => {
       'status',
       ProjectStatus.EM_ANDAMENTO
     );
+  });
+
+  describe('feedback público', () => {
+    const userWithFeedback = (showFeedback: boolean) => ({
+      userName: 'user-1',
+      name: 'Test User',
+      bio: null,
+      avatar: null,
+      isActive: true,
+      portfolioPublic: true,
+      showEmail: false,
+      showGithub: false,
+      showLinkedin: false,
+      showCertificates: false,
+      showProjects: false,
+      showFeedback,
+      email: null,
+      github: null,
+      linkedin: null,
+      skills: [],
+      stacksTaken: [],
+      certificates: [],
+      feedbacksReceived: [
+        {
+          id: 'fb-1',
+          comment: 'Comunicou bem os impedimentos.',
+          project: { name: 'Projeto X' },
+        },
+      ],
+    });
+
+    it('busca só os feedbacks autorizados pelas duas partes e não ocultados', async () => {
+      (prisma.user.findUnique as jest.Mock).mockResolvedValue(
+        userWithFeedback(true)
+      );
+
+      await getPublicPortfolio('user-1');
+
+      const { select } = (prisma.user.findUnique as jest.Mock).mock.calls[0][0];
+      expect(select.feedbacksReceived.where).toEqual({
+        publicationAllowed: true,
+        publishedByReceiver: true,
+        hiddenByAdmin: false,
+      });
+    });
+
+    it('não busca a autoria nem a nota do feedback', async () => {
+      (prisma.user.findUnique as jest.Mock).mockResolvedValue(
+        userWithFeedback(true)
+      );
+
+      await getPublicPortfolio('user-1');
+
+      const { select } = (prisma.user.findUnique as jest.Mock).mock.calls[0][0];
+      expect(select.feedbacksReceived.select).not.toHaveProperty('fromUser');
+      expect(select.feedbacksReceived.select).not.toHaveProperty('anonymous');
+      expect(select.feedbacksReceived.select).not.toHaveProperty('rating');
+    });
+
+    it('devolve o feedback sempre sem autoria', async () => {
+      (prisma.user.findUnique as jest.Mock).mockResolvedValue(
+        userWithFeedback(true)
+      );
+
+      const response = await getPublicPortfolio('user-1');
+
+      expect(response.feedback).toEqual([
+        {
+          id: 'fb-1',
+          comment: 'Comunicou bem os impedimentos.',
+          projectName: 'Projeto X',
+          givenBy: null,
+        },
+      ]);
+    });
+
+    it('não devolve feedback quando a pessoa desligou a exibição', async () => {
+      (prisma.user.findUnique as jest.Mock).mockResolvedValue(
+        userWithFeedback(false)
+      );
+
+      const response = await getPublicPortfolio('user-1');
+
+      expect(response.feedback).toBeUndefined();
+    });
   });
 });

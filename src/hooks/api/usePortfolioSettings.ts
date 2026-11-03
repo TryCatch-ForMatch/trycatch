@@ -1,14 +1,15 @@
 'use client';
 
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
+import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 import {
   portfolioSchema,
   type PortfolioFormData,
-} from '@/lib/validations/portfolio.schema';
+} from './../../lib/validations/portfolio.schema';
 import { portfolioKeys } from './portfolioKeys';
 
 const DEFAULT_VALUES: PortfolioFormData = {
@@ -24,8 +25,6 @@ const DEFAULT_VALUES: PortfolioFormData = {
   showCertificates: false,
   showFeedback: false,
 };
-
-export type SaveStatus = 'idle' | 'success' | 'error';
 
 type PortfolioSettings = {
   username: string | null;
@@ -57,7 +56,6 @@ async function fetchPortfolioSettings(): Promise<PortfolioSettings> {
 
 export function usePortfolioSettings() {
   const queryClient = useQueryClient();
-  const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
 
   const { data, isPending, isError, error, refetch } = useQuery({
     queryKey: portfolioKeys.settings(),
@@ -84,14 +82,13 @@ export function usePortfolioSettings() {
   });
 
   async function onSubmit(values: PortfolioFormData) {
-    setSaveStatus('idle');
-
     try {
       await mutateAsync(values);
-      setSaveStatus('success');
-      setTimeout(() => setSaveStatus('idle'), 3000);
-    } catch {
-      setSaveStatus('error');
+      toast.success('Alterações salvas com sucesso!');
+    } catch (error) {
+      toast.error(
+        getApiErrorMessage(error, 'Erro ao salvar. Tente novamente.')
+      );
     }
   }
 
@@ -103,7 +100,6 @@ export function usePortfolioSettings() {
     error,
     refetch,
     isSaving,
-    saveStatus,
     onSubmit,
   };
 }

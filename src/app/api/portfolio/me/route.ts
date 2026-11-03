@@ -88,13 +88,6 @@ export async function GET() {
           include: { skill: true },
         },
         certificates: true,
-        feedbacksReceived: {
-          include: {
-            fromUser: {
-              select: { name: true, avatar: true },
-            },
-          },
-        },
         stacksTaken: {
           include: {
             stack: true,

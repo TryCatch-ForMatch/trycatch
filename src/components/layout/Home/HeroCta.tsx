@@ -1,11 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { SessionProvider, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { ArrowUpRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-function HeroCtaLink() {
+export default function HeroCta() {
   const { status } = useSession();
   const isAuthenticated = status === 'authenticated';
   const ctaHref = isAuthenticated ? '/dashboard' : '/how-to-join';
@@ -28,13 +28,5 @@ function HeroCtaLink() {
         </span>
       </Link>
     </Button>
-  );
-}
-
-export default function HeroCta() {
-  return (
-    <SessionProvider>
-      <HeroCtaLink />
-    </SessionProvider>
   );
 }

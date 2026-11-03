@@ -46,7 +46,8 @@
         "code",
         "bug",
         "mentoring",
-        "review"
+        "review",
+        "test"
       ]
     },
     {
@@ -170,6 +171,16 @@
       "profile": "https://github.com/dheeraj1174",
       "contributions": [
         "code"
+      ]
+    },
+    {
+      "login": "bfs2021",
+      "name": "zgy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/101915083?v=4",
+      "profile": "https://github.com/bfs2021",
+      "contributions": [
+        "code",
+        "test"
       ]
     }
   ]

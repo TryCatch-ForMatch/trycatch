@@ -4,6 +4,10 @@ import { NextAuthOptions } from 'next-auth';
 import { ROLE_GROUPS, Role } from '@/lib/roles';
 import { prisma } from '@/lib/prisma';
 
+// A sessão é um JWT e vale por dias. Para que desativar uma conta tenha efeito
+// sem esperar a sessão expirar, a conta é conferida de novo neste intervalo.
+const ACTIVE_CHECK_INTERVAL_MS = 5 * 60 * 1000;
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -26,6 +30,8 @@ export const authOptions: NextAuthOptions = {
           const isValid = await compare(credentials!.password, user.password);
 
           if (!isValid) throw new Error('Senha incorreta.');
+
+          if (!user.isActive) throw new Error('Conta inativa.');
 
           const validRoles = ROLE_GROUPS.ALL;
           const role = validRoles.includes(user.role as Role)
@@ -56,7 +62,27 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.role = user.role;
         token.avatar = user.avatar;
+        token.activeCheckedAt = Date.now();
+        return token;
       }
+
+      const userId = typeof token.id === 'string' ? token.id : undefined;
+      const lastCheck =
+        typeof token.activeCheckedAt === 'number' ? token.activeCheckedAt : 0;
+
+      if (userId && Date.now() - lastCheck > ACTIVE_CHECK_INTERVAL_MS) {
+        const current = await prisma.user.findUnique({
+          where: { id: userId },
+          select: { isActive: true },
+        });
+
+        // Lançar erro aqui faz o NextAuth apagar o cookie da sessão:
+        // a pessoa é deslogada na próxima requisição.
+        if (!current?.isActive) throw new Error('Sessão de conta inativa.');
+
+        token.activeCheckedAt = Date.now();
+      }
+
       return token;
     },
     async session({ session, token }) {

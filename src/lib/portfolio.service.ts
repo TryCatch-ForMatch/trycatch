@@ -86,13 +86,18 @@ export async function getPublicPortfolio(
           description: true,
         },
       },
+      // Só o texto que pode ser público (governanca-dados-lgpd.md, 6.6 a 6.8):
+      // autorizado por quem escreveu e por quem recebeu, e não ocultado pela
+      // administração. A autoria fica registrada no banco, mas nunca sai daqui.
       feedbacksReceived: {
+        where: {
+          publicationAllowed: true,
+          publishedByReceiver: true,
+          hiddenByAdmin: false,
+        },
         select: {
           id: true,
-          rating: true,
           comment: true,
-          anonymous: true,
-          fromUser: { select: { name: true } },
           project: { select: { name: true } },
         },
       },
@@ -142,7 +147,7 @@ export async function getPublicPortfolio(
       id: fb.id,
       comment: fb.comment,
       projectName: fb.project.name,
-      givenBy: fb.anonymous ? null : fb.fromUser.name,
+      givenBy: null,
     }));
   }
 

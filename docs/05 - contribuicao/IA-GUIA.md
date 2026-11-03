@@ -181,6 +181,10 @@ Aqui o nível declarado muda mais as coisas. Em todos eles:
   componente não estiver instalado, adicione com `npx shadcn@latest add <nome>`;
   componente próprio só compondo o shadcn. Detalhes em
   `docs/03 - tecnico/arquitetura/componentes-interface.md`.
+- Dados no cliente com os hooks de `src/hooks/api/` (TanStack Query): leitura
+  com `useQuery`, alteração com `useMutation` invalidando as queries, chaves de
+  `query-keys.ts`. Nada de `useEffect` + `apiTryCatch` no componente. Detalhes
+  em `docs/03 - tecnico/arquitetura/dados-no-cliente.md`.
 - **Não faça refatoração fora do escopo.** Achou algo? Regra 10: avise, não corrija.
 
 **Nível 1** — proponha um passo por vez, explique o porquê de cada decisão, e

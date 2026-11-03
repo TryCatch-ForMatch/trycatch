@@ -195,6 +195,7 @@ identificar:
 | Dependência nova sem combinar | Risco de supply chain e peso desnecessário |
 | `npm install` rodado em Windows ou macOS | Gera um `package-lock.json` que quebra o CI de todo mundo (regra 7) |
 | Componente de interface feito do zero, ou `<button>`, `<input>`, `<select>`, `<textarea>`, `<label>`, `<table>` e `window.confirm()` usados diretamente, quando existe equivalente no shadcn | Foge do padrão de componentes do projeto; aponte o componente certo segundo `docs/03 - tecnico/arquitetura/componentes-interface.md` |
+| Componente buscando dados com `useEffect` + `apiTryCatch`, hook de dados fora de `src/hooks/api/`, ou *query key* escrita à mão | Foge do padrão de dados no cliente; aponte o hook com TanStack Query segundo `docs/03 - tecnico/arquitetura/dados-no-cliente.md` |
 
 O alerta é curto e direto, no nível de quem está ouvindo. Não é sermão: diz o
 risco, diz o caminho certo, e segue o trabalho.

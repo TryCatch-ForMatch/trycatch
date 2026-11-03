@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
+import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 import { X } from 'lucide-react';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 
@@ -42,8 +43,8 @@ export function ProjectStackSelector({
       try {
         const { data } = await apiTryCatch.get<Stack[]>('/tech-stack');
         setAvailableStacks(data || []);
-      } catch {
-        toast.error('Erro ao carregar stacks.');
+      } catch (error) {
+        toast.error(getApiErrorMessage(error, 'Erro ao carregar stacks.'));
       }
     };
     void fetchStacks();
