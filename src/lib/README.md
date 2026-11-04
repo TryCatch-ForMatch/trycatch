@@ -20,3 +20,10 @@ Contém funções utilitárias e configurações centrais.
 - Objetivo
 
 - Função utilitária que centraliza a verificação de sessão e role (USER, ADMIN ou MENTOR)
+
+### **`validations/`** → Schemas de validação do Zod, um arquivo por domínio.
+
+- Objetivo
+
+- Usar a mesma regra de validação nas rotas da API e nos formulários.
+- Padrão em `docs/03 - tecnico/arquitetura/validacao-schemas.md`.

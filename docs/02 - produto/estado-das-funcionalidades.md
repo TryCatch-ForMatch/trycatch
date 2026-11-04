@@ -113,8 +113,12 @@ O que falta:
 | Como não desmotivar? | Não existe sinal negativo público; ausência ≠ nota baixa |
 | Anônimo é opcional ou padrão? | Público sempre anônimo; identidade registrada internamente |
  
-**Ainda em aberto:** estrutura final do schema (spike), prazo do blind duplo
-(14 dias proposto), N mínimo (3 proposto), destino definitivo do `rating`.
+**Regras do ciclo decididas em 02/11/2026** (`feedback-reputacao.md` v2.1):
+janela de 14 dias que fecha, com avaliações recebidas ocultas até a pessoa avaliar
+a equipe ou, depois do prazo, pedir a liberação com justificativa; N mínimo
+de 3; `rating` eliminado; denúncia ao avaliar e em cada texto recebido; lista
+final de 7 eixos. **Ainda em aberto:** revisão jurídica do acesso às avaliações
+por quem não avaliou.
  
 ### 🔴 Dashboard do membro
  

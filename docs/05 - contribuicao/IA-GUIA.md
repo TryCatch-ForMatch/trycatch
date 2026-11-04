@@ -177,6 +177,8 @@ Aqui o nível declarado muda mais as coisas. Em todos eles:
   A referência de qualidade é `src/lib/portfolio.service.ts`.
 - Validação com Zod na borda; respostas via `buildResponse`; mensagens em
   `MESSAGES`; log via `logger`, nunca `console.*`.
+- Schemas do Zod em `src/lib/validations/`, um arquivo por domínio. Detalhes em
+  `docs/03 - tecnico/arquitetura/validacao-schemas.md`.
 - Interface com os componentes do **shadcn/ui** (`src/components/ui/`). Se o
   componente não estiver instalado, adicione com `npx shadcn@latest add <nome>`;
   componente próprio só compondo o shadcn. Detalhes em
@@ -254,6 +256,9 @@ git push -u origin <nome-da-branch>
 O PR vai para a **`develop`**, nunca para a `main`. Use o template que aparece
 sozinho ao abrir o PR — ele pede descrição, issue relacionada, como testar e
 checklist.
+
+Se o PR traz algo que a issue não pediu, a descrição explica **o que é e para que
+serve** (regra 10).
 
 A IA pode **ajudar a redigir** a descrição, mas **quem abre o PR é a pessoa**.
 

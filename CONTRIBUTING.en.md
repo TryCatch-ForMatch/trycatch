@@ -386,6 +386,9 @@ repository — never to `main`.
 Fill in the template that shows up: what you did, the related issue, how to test
 it. A good description speeds up review.
 
+Did something the issue didn't ask for, like creating a folder or moving a file?
+Explain in the PR **what it is and what it's for**.
+
 ### 6. Review
 
 Someone from the team reviews it and may ask for changes. **That's normal and

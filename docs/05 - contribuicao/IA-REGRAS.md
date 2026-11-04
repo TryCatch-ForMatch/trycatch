@@ -72,6 +72,8 @@ Não é para travar a conversa — é para não deixar passar em silêncio.
   rota — é validado com **Zod**, no início do handler.
 - Nunca confie em validação feita só no frontend. Ela melhora a experiência,
   não protege o servidor.
+- Os schemas do Zod ficam em `src/lib/validations/`, um arquivo por domínio.
+  Detalhes em `docs/03 - tecnico/arquitetura/validacao-schemas.md`.
 
 ## 5. Banco de dados
 
@@ -177,6 +179,10 @@ Ao encontrar um problema que **não** faz parte da tarefa atual:
 
 Um PR resolve **um** objetivo.
 
+Se a tarefa exigir algo que a issue não pediu (uma pasta nova, um arquivo movido,
+um padrão novo), **descreva no PR o que é e para que serve**. Quem revisa não
+deve precisar deduzir a decisão.
+
 ---
 
 ## O que a IA deve alertar sempre
@@ -195,6 +201,8 @@ identificar:
 | Dependência nova sem combinar | Risco de supply chain e peso desnecessário |
 | `npm install` rodado em Windows ou macOS | Gera um `package-lock.json` que quebra o CI de todo mundo (regra 7) |
 | Componente de interface feito do zero, ou `<button>`, `<input>`, `<select>`, `<textarea>`, `<label>`, `<table>` e `window.confirm()` usados diretamente, quando existe equivalente no shadcn | Foge do padrão de componentes do projeto; aponte o componente certo segundo `docs/03 - tecnico/arquitetura/componentes-interface.md` |
+| Schema do Zod escrito fora de `src/lib/validations/` | Foge do padrão de validação; aponte o arquivo do domínio segundo `docs/03 - tecnico/arquitetura/validacao-schemas.md` |
+| Mudança que a issue não pediu e que a descrição do PR não explica | Quem revisa precisa entender o que é e para que serve (regra 10) |
 | Componente buscando dados com `useEffect` + `apiTryCatch`, hook de dados fora de `src/hooks/api/`, ou *query key* escrita à mão | Foge do padrão de dados no cliente; aponte o hook com TanStack Query segundo `docs/03 - tecnico/arquitetura/dados-no-cliente.md` |
 
 O alerta é curto e direto, no nível de quem está ouvindo. Não é sermão: diz o
