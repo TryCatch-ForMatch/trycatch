@@ -1,9 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { CertificatesCard } from '@/app/(private)/dashboard/portfolio/CertificatesCard';
-import { useCertificates } from '@/app/(private)/dashboard/portfolio/hooks/useCertificates';
+import { useCertificates } from '@/hooks/api/useCertificates';
 
-jest.mock('@/app/(private)/dashboard/portfolio/hooks/useCertificates', () => ({
+jest.mock('@/hooks/api/useCertificates', () => ({
   useCertificates: jest.fn(),
 }));
 

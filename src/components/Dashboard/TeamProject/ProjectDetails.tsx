@@ -3,7 +3,7 @@
 import { Calendar, DollarSign, Github, User } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
-import { useCurrentUser } from '@/lib/use-current-user';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
 import {
   useInvalidateProjects,
   useProjectDetails,

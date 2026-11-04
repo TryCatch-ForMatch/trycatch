@@ -6,7 +6,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
-import { portfolioSchema, type PortfolioFormData } from '../portfolio.schema';
+import {
+  portfolioSchema,
+  type PortfolioFormData,
+} from '@/lib/validations/portfolio.schema';
 import { portfolioKeys } from './portfolioKeys';
 
 const DEFAULT_VALUES: PortfolioFormData = {

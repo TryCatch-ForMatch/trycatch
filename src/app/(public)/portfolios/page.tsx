@@ -12,17 +12,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Filters } from './models';
-import { usePortfoliosInfiniteScroll } from './hooks/usePortfoliosInfiniteScroll';
+import type { PortfolioFilters } from '@/types/portfolio-filters';
+import { usePortfoliosInfiniteScroll } from '@/hooks/api/usePortfoliosInfiniteScroll';
 
 export default function PortfoliosPage() {
-  const [filters, setFilters] = useState<Filters>({
+  const [filters, setFilters] = useState<PortfolioFilters>({
     name: '',
     role: '',
     skills: '',
   });
 
-  function handleFilterChange(key: keyof Filters, value: string) {
+  function handleFilterChange(key: keyof PortfolioFilters, value: string) {
     setFilters((prev) => ({ ...prev, [key]: value }));
   }
 

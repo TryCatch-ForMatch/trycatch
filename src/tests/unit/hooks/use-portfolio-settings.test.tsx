@@ -2,7 +2,7 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { AxiosError, AxiosHeaders } from 'axios';
 import { toast } from 'sonner';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
-import { usePortfolioSettings } from '@/app/(private)/dashboard/portfolio/hooks/usePortfolioSettings';
+import { usePortfolioSettings } from '@/hooks/api/usePortfolioSettings';
 import { createQueryWrapper } from './query-wrapper';
 
 jest.mock('@/lib/axios/axiosTryCatch', () => ({

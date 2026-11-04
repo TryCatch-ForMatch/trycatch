@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiTryCatch } from '@/lib/axios/axiosTryCatch';
 import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 import type { PortfolioCertificate } from '@/types/portfolio.types';
-import type { CertificateFormData } from '../certificate.schema';
+import type { CertificateFormData } from '@/lib/validations/certificate.schema';
 import { portfolioKeys } from './portfolioKeys';
 
 export function useCertificates() {
