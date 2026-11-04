@@ -56,6 +56,8 @@ Adicione prints ou GIFs, caso aplicável.
 
 Informe qualquer ponto de atenção para o revisor.
 
+**Fez algo que a issue não pediu?** Descreva aqui o que é e para que serve.
+
 Exemplo:
 - Necessita executar migration.
 - Depende de outro PR.

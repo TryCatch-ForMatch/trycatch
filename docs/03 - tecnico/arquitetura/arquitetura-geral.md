@@ -190,6 +190,7 @@ corrigir por conta própria fora de escopo.
 - `docs/03 - tecnico/adrs.md`
 - `docs/03 - tecnico/arquitetura/componentes-interface.md` — padrão obrigatório de componentes de interface (shadcn/ui)
 - `docs/03 - tecnico/arquitetura/dados-no-cliente.md` — padrão de hooks e cache de dados no cliente (TanStack Query)
+- `docs/03 - tecnico/arquitetura/validacao-schemas.md` — padrão dos schemas de validação (Zod)
 - `docs/04 - processo/ci-e-validacao.md`
 ---
  
@@ -202,3 +203,4 @@ corrigir por conta própria fora de escopo.
 | Atual | **Consolidação dos dois arquivos divergentes**; adicionadas seções de padrões de rota, dívidas técnicas e dependência do Feedback sobre o encerramento de projeto |
 | 20/10/2026 | Adicionada referência a `componentes-interface.md` (padrão shadcn/ui) |
 | 23/10/2026 | Adicionada referência a `dados-no-cliente.md` (padrão TanStack Query) |
+| 04/11/2026 | Adicionada referência a `validacao-schemas.md` (padrão Zod) |

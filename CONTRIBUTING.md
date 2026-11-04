@@ -364,6 +364,9 @@ organização — nunca para a `main`.
 Preencha o template que aparece: o que foi feito, a issue relacionada, como
 testar. Descrever bem acelera a revisão.
 
+Fez algo que a issue não pediu, como criar uma pasta ou mover um arquivo? Explique
+no PR **o que é e para que serve**.
+
 ### 6. Revisão
 
 Alguém do time revisa e pode pedir ajustes. **Isso é normal e não é crítica
