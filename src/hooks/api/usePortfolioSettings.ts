@@ -9,7 +9,7 @@ import { getApiErrorMessage } from '@/lib/axios/get-api-error-message';
 import {
   portfolioSchema,
   type PortfolioFormData,
-} from './../../lib/validations/portfolio.schema';
+} from '@/lib/validations/portfolio.schema';
 import { portfolioKeys } from './portfolioKeys';
 
 const DEFAULT_VALUES: PortfolioFormData = {
