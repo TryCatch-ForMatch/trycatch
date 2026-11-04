@@ -248,9 +248,9 @@ Nenhuma das duas partes publica sozinha.
 | Conta ativa | Enquanto durar o vínculo |
 | Dados de conta excluída | Removidos ou anonimizados, conforme 6.3.1 e 6.3.2 |
 | Feedback anonimizado | Indeterminado (deixou de ser dado pessoal do autor) |
-| Logs estruturados | Prazo a definir — **decisão em aberto** |
+| Logs estruturados | 6 meses (decidido em 02/11/2026) |
 | Convites usados | Mantidos para auditoria; e-mail anonimizado na exclusão da conta (6.3.2) |
-| InviteRequest rejeitada | Prazo a definir — **decisão em aberto** |
+| InviteRequest rejeitada | 6 meses após a recusa (decidido em 02/11/2026) |
  
 ---
  
@@ -281,6 +281,8 @@ Nenhuma das duas partes publica sozinha.
  
 Orienta:
  
+- `docs/01 - estrategia/governanca-dados/politica-de-privacidade.md` (texto da página `/privacy`)
+- `docs/01 - estrategia/governanca-dados/termos-de-uso.md` (texto da página `/terms`)
 - `docs/02 - produto/feedback/feedback-reputacao.md`
 - `docs/02 - produto/portfolio/portfolio.md`
 - `docs/02 - produto/conteudos/conteudos-informativos-e-educacionais.md`
@@ -305,10 +307,7 @@ Alinhado a:
  
 ## 12. Decisões em aberto
  
-- Prazo de retenção de logs;
-- Prazo de retenção de `InviteRequest` rejeitada;
 - Formato da exportação de dados;
-- Existe fluxo de denúncia de feedback pelo avaliado? (afeta painel admin)
 - Validação jurídica das bases legais da seção 4.
 ---
  
@@ -327,4 +326,8 @@ Alinhado a:
 | v2.1 | Exclusão de conta: soft delete com anonimização quando há vínculo, hard delete sem vínculo, inclusive por ADMIN; e-mail dos convites anonimizado (17/10/2026) |
 | v2.1 | Exclusão de conta reclassificada: o fluxo existe, falta a anonimização |
 | v2.2 | Pedido de convite (`InviteRequest`) e tokens de redefinição de senha incluídos na anonimização (6.3.2) |
+| v2.3 | Portfólio público passa a exigir consentimento explícito no cadastro (caixa opcional, desmarcada), com registro da data e da versão dos termos aceitos (02/11/2026) |
+| v2.3 | Retenção de logs e de `InviteRequest` recusada: 6 meses (02/11/2026) |
+| v2.3 | Denúncia de feedback pelo avaliado confirmada, com botão no fluxo de feedback (02/11/2026) |
+| v2.3 | Textos públicos derivados: `politica-de-privacidade.md` e `termos-de-uso.md` (02/11/2026) |
 | v2.2 | Seção 9: conta desativada não autentica e a sessão é revalidada (PR #889); regras 6.6 a 6.8 aplicadas nas respostas de API (PR #891) (25/10/2026) |

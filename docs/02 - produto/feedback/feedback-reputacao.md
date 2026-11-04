@@ -2,8 +2,8 @@
  
 **Classificação:** Documento de Produto / Funcionalidade
 **Camada:** 2 — Documentos de Produto e Funcionalidades
-**Status do documento:** Versão 2 — modelo de reputação definido, pendente de migration
-**Status da implementação:** 🔴 não iniciada — API antiga (`rating`) existe; modelo desta versão exige mudança de schema
+**Status do documento:** Versão 2.1 — regras do ciclo de avaliação definidas (02/11/2026)
+**Status da implementação:** 🔴 não iniciada — schema v2 aplicado (PR #723); faltam a migration desta versão (seção 12.1), as rotas e as telas. A API antiga ainda recebe `rating`
 **Estado consolidado:** ver [estado-das-funcionalidades.md](../estado-das-funcionalidades.md)
  
 > ⚠️ **Esta versão substitui a v1.** A v1 previa `rating` numérico agregado como
@@ -47,10 +47,8 @@ em trabalho real, dado por quem estava lá.**
  
 Exclusivamente após um projeto atingir status `CONCLUIDO`.
  
-> 🔗 **Dependência bloqueante.** O encerramento manual de projeto (épico #553)
-> ainda não está implementado. Nenhum projeto alcança `CONCLUIDO` hoje, portanto
-> **nenhum feedback pode ser gerado até que aquele épico seja concluído.**
-> Ver `docs/02 - produto/projetos/gestao-projetos.md`.
+> ✅ **Dependência resolvida.** Desde o PR #708, o owner pode marcar o projeto
+> como concluído. Ver `docs/02 - produto/projetos/gestao-projetos.md`.
  
 ---
  
@@ -94,18 +92,18 @@ próprias.
  
 ### 5.1 Os eixos
  
-Seis eixos fixos, todos redigidos como **comportamento observável em projeto
+Sete eixos fixos, todos redigidos como **comportamento observável em projeto
 real**. A lista é fechada por decisão de produto: eixo livre viraria elogio
 genérico e destruiria a comparabilidade entre perfis.
  
 | Chave interna | Selo público | O que a pessoa atesta ao marcar |
 |---|---|---|
 | `COMUNICA_IMPEDIMENTOS` | 🗣️ Avisa antes de travar | Comunicou bloqueio ou atraso com antecedência útil |
-| `ENTREGA_O_COMBINADO` | 📦 Entrega o que assume | Cumpriu o escopo da stack que assumiu |
-| `ENTREGA_NO_PRAZO` | ⏱️ Entrega no prazo | Cumpriu o prazo acordado, não apenas o escopo |
-| `APOIA_A_EQUIPE` | 🤝 Puxa a equipe junto | Ajudou colega, revisou trabalho de outro, destravou alguém |
+| `ENTREGA_O_COMBINADO` | 📦 Entrega o que assume | Cumpriu o que assumiu, no escopo e no prazo combinados |
+| `ENCARA_STACK_NOVA` | 🧗 Encara stack que não conhecia | Assumiu uma tecnologia que ainda não conhecia e entregou |
+| `APOIA_A_EQUIPE` | 🤝 Ajuda a equipe a avançar | Ajudou colega, revisou trabalho de outro, destravou alguém |
 | `PERGUNTA_ANTES_DE_DECIDIR` | 🧭 Pergunta antes de decidir | Não inventou regra de negócio por conta própria |
-| `RECEBE_REVISAO` | 🔄 Recebe revisão sem travar o time | Absorveu crítica técnica e seguiu, sem parar o fluxo |
+| `RECEBE_REVISAO` | 🔄 Ouve a crítica e ajusta | Absorveu crítica técnica e seguiu, sem parar o fluxo |
 | `ADAPTA_A_MUDANCA` | 🛠️ Se ajusta quando o plano muda | Seguiu produzindo quando escopo ou prazo mudaram |
  
 **Regra dos rótulos:** todo selo começa com verbo na terceira pessoa e descreve
@@ -125,7 +123,7 @@ Registrado para não serem repropostos sem contexto.
 | **Comprometimento** | Idem — *Entrega o que assume* é a versão testemunhável |
 | **Domínio da stack** | "Domínio" implica escala, e escala é nível. O portfólio já exibe as stacks assumidas por projeto — isso é registro factual, não precisa de atestado |
 | **Aprende rápido** | Único eixo comparativo proposto: rápido em relação a quem? Fere o princípio 6 com mais força que qualquer outro, porque quem está começando *está aprendendo por definição*. Há ainda o efeito perverso de que "aprende rápido" costuma significar "já sabia" |
-| **Encara stack que não conhecia** | Versão comportamental do anterior, e viável. Ficou de fora para não passar de sete eixos — com limite de 3, cada eixo a mais dilui a escolha. Primeiro candidato a entrar se algum eixo se mostrar morto pela métrica da seção 17 |
+| **Entrega no prazo** *(existia até 02/11/2026)* | Removido em 02/11/2026: o prazo passou a fazer parte de *Entrega o que assume* ("no escopo e no prazo combinados"). Seu lugar foi ocupado por *Encara stack que não conhecia*, versão comportamental de *Aprende rápido* |
 | **Autonomia na stack** *(existia na v2)* | Substituído por *Se ajusta quando o plano muda*. A frase original — "Resolve sem ser conduzido" — definia a pessoa pela ausência de ajuda e colidia com *Pergunta antes de decidir*, podendo ensinar a quem chega que pedir ajuda custa um selo |
 
 > 💡 **Critério que guiou a lista:** adjetivo é opinião, comportamento é
@@ -146,7 +144,7 @@ Formato de exibição:
 ```
 🗣️  Avisa antes de travar        4 pessoas · 3 projetos
 📦  Entrega o que assume         5 pessoas · 3 projetos
-🤝  Puxa a equipe junto          3 pessoas · 2 projetos
+🤝  Ajuda a equipe a avançar     3 pessoas · 2 projetos
 ```
  
 Regras de exibição:
@@ -161,7 +159,8 @@ Regras de exibição:
    (peso tipográfico, opacidade, tamanho), mas **nunca exibe percentual, barra
    preenchida, termômetro, estrelas ou qualquer elemento com máximo implícito.**
 4. **Ordenação por volume de atestados**, nunca por "força" ou "pontuação".
-5. Exibição condicionada a `showFeedback = true` no perfil.
+5. Exibição condicionada a `showFeedback = true` no perfil e à liberação das
+   avaliações do projeto (seção 8).
 ### 5.4 Antipadrões visuais explicitamente proibidos
  
 - Barra de progresso, termômetro, medidor ou gauge;
@@ -262,37 +261,83 @@ quebra do anonimato.
 **Regra de comunicação:** a interface deve deixar explícito para o avaliador, no
 momento da avaliação, que a identidade dele não aparece publicamente **mas fica
 registrada na plataforma**. Omitir isso seria enganoso.
+
+### 7.1 Denúncia
+
+*Decidido em 02/11/2026.* A denúncia existe em dois momentos:
+
+| Onde | Quem usa | Para quê |
+|---|---|---|
+| Formulário de avaliação | Quem avalia | **"Relatar um problema com esta pessoa"**: aviso privado à administração sobre conduta grave durante o projeto. Não aparece para a pessoa avaliada nem afeta as corroborações |
+| Cada texto recebido, na aba "Recebidos" | Quem recebeu | **"Denunciar abuso ou desrespeito"**: pede a apuração de um texto desrespeitoso, abusivo ou falso |
+
+A denúncia vai para o painel administrativo. ADMIN apura com acesso à autoria
+(seção 6.6 de `governanca-dados-lgpd.md`, com registro em log) e, se o texto
+violar as regras, **oculta** o feedback (`hiddenByAdmin`, com motivo). Nunca
+edita. Enquanto a função não existir na plataforma, a denúncia é feita pelo
+e-mail de contato.
  
 ---
  
-## 8. Blind duplo (anti-retaliação)
- 
-O documento v1 listava "retaliação entre participantes" como risco sem mitigação
-real. Esta versão define uma:
- 
-**O avaliado só vê o que recebeu quando qualquer uma destas condições se cumpre:**
- 
-1. ele enviou as próprias avaliações daquele projeto; **ou**
-2. passaram-se **14 dias** do encerramento do projeto.
-Antes disso, o dashboard mostra apenas a contagem de feedbacks pendentes de
-liberação, sem conteúdo.
- 
-Isso impede o padrão "vi que me avaliaram mal, agora avalio mal de volta", que é
-o principal vetor de distorção em sistemas de avaliação recíproca.
- 
-O prazo de 14 dias existe para que quem não avalia não fique bloqueado
-indefinidamente de receber seu próprio retorno — a avaliação é um direito da
-pessoa avaliada, não uma recompensa por participação.
- 
+## 8. Janela de avaliação e liberação (anti-retaliação)
+
+*Decidido em 02/11/2026; substitui o "blind duplo" da v2.*
+
+**Regra:**
+
+1. Quando o projeto é concluído, cada participante tem **14 dias** para avaliar
+   a equipe.
+2. A janela **fecha** ao fim dos 14 dias. Depois disso, ninguém avalia mais
+   aquele projeto.
+3. **As avaliações recebidas nunca se perdem, mas ficam ocultas até serem
+   liberadas.** Enquanto não forem liberadas, não aparecem para a pessoa na área
+   privada nem contam no portfólio dela.
+4. "Avaliar a equipe" significa enviar avaliação para:
+
+   | Colegas no projeto (sem contar a própria pessoa) | Mínimo para liberar |
+   |---|---|
+   | até 5 | **todos** |
+   | 6 ou mais | **pelo menos 5** |
+
+5. Enviar uma avaliação sem marcar nenhum eixo conta (seção 5.6). A regra exige
+   participação, não atestado.
+6. As avaliações são liberadas **quando a pessoa cumpre o mínimo**. Antes disso, o
+   dashboard mostra apenas a contagem de avaliações recebidas e o que falta para
+   liberar.
+7. **Se a janela fechar sem o mínimo**, a liberação só acontece por pedido enviado
+   a contato@trycatch.app.br, justificando por que a pessoa não avaliou ninguém ou
+   avaliou menos colegas que o mínimo. A administração analisa o pedido e registra
+   a liberação, com o motivo.
+
+**Por que assim:** a janela fechando impede o padrão "vi que me avaliaram mal,
+agora avalio mal de volta" — quem lê o que recebeu já enviou as próprias
+avaliações. **A intenção é fazer com que todos se avaliem**, o que aumenta o
+volume de sinal para a equipe inteira.
+
+**Comunicação obrigatória:** o convite para avaliar (e-mail e pendência no
+dashboard) e o topo do formulário devem dizer, de forma explícita:
+
+> Você tem 14 dias para avaliar a sua equipe. As avaliações que você recebeu neste
+> projeto só ficam visíveis, para você e no seu portfólio, depois que você avaliar.
+> Se o prazo passar, será preciso pedir a liberação pelo e-mail
+> contato@trycatch.app.br, explicando o motivo.
+
+> ⚖️ **Ponto para revisão jurídica.** As avaliações recebidas são dados pessoais
+> de quem foi avaliado, e a LGPD garante o direito de acesso (art. 18). Exibir no
+> portfólio pode depender da liberação e da justificativa; já um pedido de acesso
+> aos próprios dados provavelmente precisará ser atendido mesmo sem justificativa,
+> sempre sem identificar o autor. Por isso as avaliações ficam "ocultas", e nunca
+> "perdidas".
+
 ---
- 
+
 ## 9. Usuários envolvidos e permissões
  
 | Papel | Pode |
 |---|---|
 | Participante confirmado de projeto `CONCLUIDO` | Avaliar os demais participantes do mesmo projeto |
-| Pessoa avaliada | Ver os próprios feedbacks (respeitado o blind duplo); escolher publicar textos autorizados; ligar/desligar `showFeedback` |
-| ADMIN | Consultar autoria em caso de denúncia; ocultar feedback que viole as regras da plataforma |
+| Pessoa avaliada | Ver os próprios feedbacks (respeitada a regra de liberação da seção 8); escolher publicar textos autorizados; ligar/desligar `showFeedback`; denunciar texto (seção 7.1) |
+| ADMIN | Receber e apurar denúncias (seção 7.1); analisar pedidos de liberação e registrar a liberação (seção 8); consultar autoria em caso de denúncia; ocultar feedback que viole as regras da plataforma |
 | Visitante | Ver corroborações agregadas e textos publicados, se `showFeedback = true` |
  
 Restrições:
@@ -310,27 +355,35 @@ Restrições:
 ### 10.1 Avaliar
  
 1. Owner marca o projeto como `CONCLUIDO`;
-2. Todos os participantes recebem notificação por e-mail e pendência no dashboard;
+2. Todos os participantes recebem notificação por e-mail e pendência no dashboard,
+   com o aviso obrigatório da seção 8 (prazo de 14 dias e consequência);
 3. A pessoa acessa `/dashboard/feedbacks`, aba "Pendentes";
 4. Vê a lista dos colegas daquele projeto, com a stack que cada um assumiu;
 5. Para cada colega:
    - seleciona até 3 eixos (ou nenhum),
    - opcionalmente escreve o feedback de desenvolvimento,
-   - se escreveu, decide se autoriza publicação;
-6. Envia. **Não há edição depois.** A interface deve avisar disso antes do envio.
+   - se escreveu, decide se autoriza publicação,
+   - se necessário, usa **"Relatar um problema com esta pessoa"** (seção 7.1);
+6. Envia. **Não há edição depois.** A interface deve avisar disso antes do envio,
+   junto com o aviso da seção 6.5 de `governanca-dados-lgpd.md` (o que acontece
+   com as avaliações dadas se a conta for excluída).
 ### 10.2 Receber
  
 1. Notificação por e-mail: existe feedback novo (sem conteúdo);
 2. Acessa `/dashboard/feedbacks`, aba "Recebidos";
-3. Se o blind duplo ainda bloqueia, vê apenas a contagem e a condição para
-   liberar;
-4. Liberado: lê os textos e vê os eixos que recebeu;
+3. Se ainda não cumpriu o mínimo da seção 8, vê apenas a contagem e o que falta
+   para liberar; se a janela fechou sem cumprir, vê como pedir a liberação pelo
+   e-mail de contato;
+4. Liberado: lê os textos e vê os eixos que recebeu; cada texto tem o botão
+   **"Denunciar abuso ou desrespeito"** (seção 7.1);
 5. Escolhe quais textos autorizados exibir no portfólio;
 6. Controla a exibição do bloco inteiro via `showFeedback`.
 ### 10.3 Estados relevantes
  
 - Projeto concluído com avaliações pendentes;
-- Avaliação enviada, aguardando liberação por blind duplo;
+- Avaliações recebidas, aguardando a pessoa cumprir o mínimo para liberar;
+- Janela de avaliação encerrada sem o mínimo (avaliações ocultas, liberação por pedido);
+- Feedback denunciado, em apuração;
 - Feedback liberado;
 - Eixo com atestados abaixo do N mínimo (existe internamente, não exibe);
 - Projeto concluído sem nenhuma avaliação enviada.
@@ -353,7 +406,13 @@ Restrições:
 12. Feedback não é editável nem excluível pelo autor.
 13. Exclusão de conta segue a regra de anonimização da seção 13.
 14. `stackTakenId` é opcional; se informado, deve pertencer ao mesmo projeto.
-15. Todas as regras aplicadas no backend e testáveis.
+15. Avaliação só pode ser criada dentro da janela de 14 dias após a conclusão do
+    projeto (seção 8).
+16. As avaliações recebidas em um projeto só são lidas e só contam no portfólio
+    depois de liberadas: pelo mínimo de avaliações enviadas ou por liberação
+    registrada pela administração (seção 8). A regra vale no backend.
+17. A avaliação não tem nota numérica (seção 14).
+18. Todas as regras aplicadas no backend e testáveis.
 ---
  
 ## 12. Impactos em dados
@@ -376,7 +435,6 @@ model Feedback {
   publicationAllowed  Boolean  @default(false)
   publishedByReceiver Boolean  @default(false)
  
-  rating              Int?     // legado — ver seção 14
   anonymous           Boolean  @default(true) // legado — ver seção 14
  
   hiddenByAdmin       Boolean  @default(false)
@@ -402,12 +460,19 @@ model FeedbackAttribute {
 enum FeedbackAttrEnum {
   COMUNICA_IMPEDIMENTOS
   ENTREGA_O_COMBINADO
+  ENCARA_STACK_NOVA
   APOIA_A_EQUIPE
   PERGUNTA_ANTES_DE_DECIDIR
-  RECEBE_REVISAO_BEM
-  AUTONOMIA_NA_STACK
+  RECEBE_REVISAO
+  ADAPTA_A_MUDANCA
 }
 ```
+
+> 🛠️ **Migration pendente (decisões de 02/11/2026):** o banco ainda tem
+> `rating` e o valor `ENTREGA_NO_PRAZO` no enum. A próxima migration remove os
+> dois, acrescenta `ENCARA_STACK_NOVA` e cria a estrutura de denúncia da seção
+> 7.1, o registro de liberação por pedido da seção 8 e `Project.completedAt`, a
+> data que marca o início da janela de 14 dias (a definir na issue de schema).
  
 > ✅ **Decidido em 19/08/2026** pela
 > [spike de schema](../../03%20-%20tecnico/spikes/spike-schema-atributos-feedback.md):
@@ -424,6 +489,7 @@ A consulta pública precisa devolver, por eixo:
 - contagem de avaliadores distintos;
 - contagem de projetos distintos;
 - filtrando `hiddenByAdmin = false`;
+- considerando só os projetos em que a pessoa teve as avaliações liberadas (seção 8);
 - aplicando o corte de N mínimo **no backend**, nunca no frontend.
 ---
  
@@ -447,28 +513,30 @@ outras permanecem. Isso deve estar explícito nos termos de uso e na FAQ, **ante
 de a pessoa avaliar — não é aceitável descobrir isso na hora de sair.
  
 Detalhamento completo em
-`docs/01 - estrategia/governanca/governanca-dados-lgpd.md`.
+`docs/01 - estrategia/governanca-dados/governanca-dados-lgpd.md`.
  
 ---
  
 ## 14. Destino dos campos legados
  
 ### `rating`
- 
-**Decisão: despublicado, não removido.**
- 
-- Deixa de ser exibido publicamente;
-- Deixa de ser agregado como média em qualquer superfície pública;
+
+**Decisão de 02/11/2026: eliminado.** Substitui a decisão anterior
+("despublicado, não removido").
+
+- O formulário de avaliação **não pede nota**;
+- A coluna é **removida do schema** na próxima migration; as notas antigas são
+  apagadas (já não apareciam em nenhuma superfície pública);
 - A afirmação de `modelagem-dados.md` — *"a reputação é calculada como média
-  simples dos ratings recebidos"* — **fica revogada por este documento**;
-- Permanece no schema como sinal operacional interno, consultável por ADMIN, útil
-  para detectar equipe em conflito;
-- Passa a ser opcional (`Int?`).
-Manter em vez de dropar evita migration destrutiva sobre dados já existentes.
- 
-> 🔓 **Decisão em aberto:** se após dois ou três ciclos o `rating` interno não
-> gerar decisão operacional real, ele deve ser removido. Reavaliar formalmente.
- 
+  simples dos ratings recebidos"* — continua revogada.
+
+**Por quê:** o objetivo do sistema é mostrar a quem visita o portfólio, inclusive
+recrutadores, em que comportamentos a pessoa se destaca, confirmados por quem
+trabalhou com ela. Isso é papel das corroborações. Uma nota, mesmo interna, vira
+ranking oculto, é dado pessoal que pode ser pedido pelo titular e contradiz os
+princípios da seção 3. O sinal de "equipe com problema", que justificava manter
+o `rating`, passa a vir da denúncia no formulário de avaliação (seção 7.1).
+
 ### `anonymous`
  
 O anonimato deixa de ser escolha do avaliador e passa a ser regra fixa da camada
@@ -498,10 +566,11 @@ os sustenta.
  
 | Risco | Mitigação |
 |---|---|
-| Retaliação | Blind duplo (seção 8) |
+| Retaliação | Janela de 14 dias que fecha, com leitura só para quem avaliou (seção 8) |
 | Conluio em grupo fechado | Duplo denominador pessoas × projetos; N mínimo |
 | Atestado de cortesia (marcar tudo) | Limite de 3 eixos por pessoa |
-| Desrespeito sob anonimato | Identidade registrada; denúncia; ocultação por ADMIN |
+| Desrespeito sob anonimato | Identidade registrada; denúncia nos dois momentos (seção 7.1); ocultação por ADMIN |
+| Avaliação apressada só para liberar a leitura | Avaliar sem marcar eixo é permitido (seção 5.6), então não há incentivo a atestado de cortesia |
 | Vitrine selecionada no texto público | Corroborações não são selecionáveis; texto é complemento, não evidência |
 | Viés inconsciente | Eixos comportamentais e observáveis, não traços de personalidade |
 | Iniciante desmotivado | Não existe sinal negativo público; ausência ≠ nota baixa |
@@ -553,11 +622,11 @@ Documentos técnicos relacionados:
  
 ## 20. Status e próximos passos
  
-**Status:** modelo de produto definido; implementação bloqueada.
+**Status:** modelo de produto e regras do ciclo definidos (02/11/2026); implementação a iniciar.
  
 **Ordem de execução:**
  
-1. ⛔ **Encerramento manual de projeto** (épico #553) — bloqueia tudo
+1. ✅ ~~Encerramento manual de projeto~~ — disponível desde o PR #708
 2. ✅ ~~Spike de schema~~ — concluída em 19/08/2026: tabela relacional
 3. 🛠️ Migration + rotas (criação, agregação, publicação de texto)
 4. 🖥️ Tela `/dashboard/feedbacks` (abas Pendentes e Recebidos)
@@ -566,10 +635,9 @@ Documentos técnicos relacionados:
 7. 📄 FAQ e termos: o que acontece com o feedback ao excluir a conta
 **Decisões ainda em aberto:**
  
-- Prazo do blind duplo — 14 dias é proposta, não validada;
-- N mínimo = 3 — proposta, revisar com dados reais;
-- Manutenção ou remoção definitiva do `rating` interno;
-- Existe fluxo de denúncia de feedback pelo avaliado? (afeta painel admin)
+- Revisão jurídica do acesso às avaliações por quem não avaliou e não justificou (seção 8);
+- N mínimo = 3 confirmado em 02/11/2026 — revisar com dados reais.
+- Prazo de 14 dias confirmado em 04/11/2026, sem avaliação atrasada, para motivar a avaliação rápida — revisar se não funcionar na prática.
 ---
  
 ## 21. Histórico de decisões
@@ -590,3 +658,9 @@ Documentos técnicos relacionados:
 | v2 | Publicação de texto por consentimento na origem |
 | v2 | Anonimização assimétrica na exclusão de conta |
 | v2 | `rating` despublicado; `anonymous` sem função de produto |
+| 02/11/2026 | Janela de avaliação de 14 dias que fecha; só vê as avaliações recebidas quem avaliou a equipe (todos os colegas até 5; pelo menos 5 acima disso); aviso explícito no convite. Substitui o blind duplo |
+| 04/11/2026 | Avaliações recebidas não se perdem: ficam ocultas, na área privada e no portfólio, até a pessoa avaliar a equipe ou, com a janela fechada, pedir a liberação por e-mail com justificativa |
+| 02/11/2026 | N mínimo de 3 confirmado |
+| 02/11/2026 | `rating` **eliminado**: fora do formulário e removido do schema |
+| 02/11/2026 | Denúncia em dois momentos: ao avaliar ("Relatar um problema com esta pessoa") e em cada texto recebido ("Denunciar abuso ou desrespeito") |
+| 02/11/2026 | Eixos: sai *Entrega no prazo* (prazo incorporado a *Entrega o que assume*); entra *Encara stack que não conhecia*; *Puxa a equipe junto* vira *Ajuda a equipe a avançar*; *Recebe revisão sem travar o time* vira *Ouve a crítica e ajusta* |
